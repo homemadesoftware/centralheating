@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ToadHallCentralHeating" GeneratedClassName="ToadHall">
+  <Profiles />
+  <Settings>
+    <Setting Name="RebootTime" Type="System.String" Scope="User">
+      <Value Profile="(Default)">10:00</Value>
+    </Setting>
+    <Setting Name="SummerProgram" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="HotWaterStart" Type="System.String" Scope="User">
+      <Value Profile="(Default)">18:00</Value>
+    </Setting>
+    <Setting Name="HotWaterEnd" Type="System.String" Scope="User">
+      <Value Profile="(Default)">19:00</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

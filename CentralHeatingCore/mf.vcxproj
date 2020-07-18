@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="DefaultOutput|Win32">
+      <Configuration>DefaultOutput</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{73E2A65B-33DB-4631-ACDB-465FD5EBE7D5}</ProjectGuid>
+    <RootNamespace>mf</RootNamespace>
+    <Keyword>MakeFileProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DefaultOutput|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DefaultOutput|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>16.0.30028.132</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DefaultOutput|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <NMakeBuildCommandLine>Build.bat</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>Build.bat</NMakeReBuildCommandLine>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Common\CentralHeating.c" />
+    <ClCompile Include="..\Common\CentralHeatingMenus.c" />
+    <ClCompile Include="..\Common\DateTime.c" />
+    <ClCompile Include="..\Common\MenuMgr.c" />
+    <ClCompile Include="..\Common\StringUtils.c" />
+    <ClCompile Include="89C51Board.c" />
+    <ClCompile Include="I2C.c" />
+    <ClCompile Include="LcdDisplay.c" />
+    <ClCompile Include="RTC1307.c" />
+    <ClCompile Include="SimpleCentralHeating.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Build.bat" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Common\CentralHeatingMenus.h" />
+    <ClInclude Include="..\Common\HardwareAbstraction.h" />
+    <ClInclude Include="..\Common\MenuMgr.h" />
+    <ClInclude Include="..\Common\StringUtils.h" />
+    <ClInclude Include="89C51Board.h" />
+    <ClInclude Include="I2C.h" />
+    <ClInclude Include="LcdDisplay.h" />
+    <ClInclude Include="RTC1307.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

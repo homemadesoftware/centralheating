@@ -1,0 +1,18 @@
+-myux
+-i Main.ihx
+-Y
+-a 0x0704
+-b HOME = 0x0000
+-b ISEG = 0x0000
+-b BSEG = 0x0000
+-k C:\SDCC\bin\..\lib\small
+-l mcs51
+-l libsdcc
+-l libint
+-l liblong
+-l libfloat
+Main.rel
+LcdDisplay.rel
+StringUtils.rel
+
+-e

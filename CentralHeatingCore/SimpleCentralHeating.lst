@@ -1,0 +1,1343 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 4.0.0 #11528 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module SimpleCentralHeating
+                                      6 	.optsdcc -mmcs51 --model-large
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _SimpleCentralHeating
+                                     12 	.globl _strcat
+                                     13 	.globl _P5_7
+                                     14 	.globl _P5_6
+                                     15 	.globl _P5_5
+                                     16 	.globl _P5_4
+                                     17 	.globl _P5_3
+                                     18 	.globl _P5_2
+                                     19 	.globl _P5_1
+                                     20 	.globl _P5_0
+                                     21 	.globl _P4_7
+                                     22 	.globl _P4_6
+                                     23 	.globl _P4_5
+                                     24 	.globl _P4_4
+                                     25 	.globl _P4_3
+                                     26 	.globl _P4_2
+                                     27 	.globl _P4_1
+                                     28 	.globl _P4_0
+                                     29 	.globl _PX0L
+                                     30 	.globl _PT0L
+                                     31 	.globl _PX1L
+                                     32 	.globl _PT1L
+                                     33 	.globl _PSL
+                                     34 	.globl _PT2L
+                                     35 	.globl _PPCL
+                                     36 	.globl _EC
+                                     37 	.globl _CCF0
+                                     38 	.globl _CCF1
+                                     39 	.globl _CCF2
+                                     40 	.globl _CCF3
+                                     41 	.globl _CCF4
+                                     42 	.globl _CR
+                                     43 	.globl _CF
+                                     44 	.globl _TF2
+                                     45 	.globl _EXF2
+                                     46 	.globl _RCLK
+                                     47 	.globl _TCLK
+                                     48 	.globl _EXEN2
+                                     49 	.globl _TR2
+                                     50 	.globl _C_T2
+                                     51 	.globl _CP_RL2
+                                     52 	.globl _T2CON_7
+                                     53 	.globl _T2CON_6
+                                     54 	.globl _T2CON_5
+                                     55 	.globl _T2CON_4
+                                     56 	.globl _T2CON_3
+                                     57 	.globl _T2CON_2
+                                     58 	.globl _T2CON_1
+                                     59 	.globl _T2CON_0
+                                     60 	.globl _PT2
+                                     61 	.globl _ET2
+                                     62 	.globl _CY
+                                     63 	.globl _AC
+                                     64 	.globl _F0
+                                     65 	.globl _RS1
+                                     66 	.globl _RS0
+                                     67 	.globl _OV
+                                     68 	.globl _F1
+                                     69 	.globl _P
+                                     70 	.globl _PS
+                                     71 	.globl _PT1
+                                     72 	.globl _PX1
+                                     73 	.globl _PT0
+                                     74 	.globl _PX0
+                                     75 	.globl _RD
+                                     76 	.globl _WR
+                                     77 	.globl _T1
+                                     78 	.globl _T0
+                                     79 	.globl _INT1
+                                     80 	.globl _INT0
+                                     81 	.globl _TXD
+                                     82 	.globl _RXD
+                                     83 	.globl _P3_7
+                                     84 	.globl _P3_6
+                                     85 	.globl _P3_5
+                                     86 	.globl _P3_4
+                                     87 	.globl _P3_3
+                                     88 	.globl _P3_2
+                                     89 	.globl _P3_1
+                                     90 	.globl _P3_0
+                                     91 	.globl _EA
+                                     92 	.globl _ES
+                                     93 	.globl _ET1
+                                     94 	.globl _EX1
+                                     95 	.globl _ET0
+                                     96 	.globl _EX0
+                                     97 	.globl _P2_7
+                                     98 	.globl _P2_6
+                                     99 	.globl _P2_5
+                                    100 	.globl _P2_4
+                                    101 	.globl _P2_3
+                                    102 	.globl _P2_2
+                                    103 	.globl _P2_1
+                                    104 	.globl _P2_0
+                                    105 	.globl _SM0
+                                    106 	.globl _SM1
+                                    107 	.globl _SM2
+                                    108 	.globl _REN
+                                    109 	.globl _TB8
+                                    110 	.globl _RB8
+                                    111 	.globl _TI
+                                    112 	.globl _RI
+                                    113 	.globl _P1_7
+                                    114 	.globl _P1_6
+                                    115 	.globl _P1_5
+                                    116 	.globl _P1_4
+                                    117 	.globl _P1_3
+                                    118 	.globl _P1_2
+                                    119 	.globl _P1_1
+                                    120 	.globl _P1_0
+                                    121 	.globl _TF1
+                                    122 	.globl _TR1
+                                    123 	.globl _TF0
+                                    124 	.globl _TR0
+                                    125 	.globl _IE1
+                                    126 	.globl _IT1
+                                    127 	.globl _IE0
+                                    128 	.globl _IT0
+                                    129 	.globl _P0_7
+                                    130 	.globl _P0_6
+                                    131 	.globl _P0_5
+                                    132 	.globl _P0_4
+                                    133 	.globl _P0_3
+                                    134 	.globl _P0_2
+                                    135 	.globl _P0_1
+                                    136 	.globl _P0_0
+                                    137 	.globl _EECON
+                                    138 	.globl _KBF
+                                    139 	.globl _KBE
+                                    140 	.globl _KBLS
+                                    141 	.globl _BRL
+                                    142 	.globl _BDRCON
+                                    143 	.globl _T2MOD
+                                    144 	.globl _SPDAT
+                                    145 	.globl _SPSTA
+                                    146 	.globl _SPCON
+                                    147 	.globl _SADEN
+                                    148 	.globl _SADDR
+                                    149 	.globl _WDTPRG
+                                    150 	.globl _WDTRST
+                                    151 	.globl _P5
+                                    152 	.globl _P4
+                                    153 	.globl _IPH1
+                                    154 	.globl _IPL1
+                                    155 	.globl _IPH0
+                                    156 	.globl _IPL0
+                                    157 	.globl _IEN1
+                                    158 	.globl _IEN0
+                                    159 	.globl _CMOD
+                                    160 	.globl _CL
+                                    161 	.globl _CH
+                                    162 	.globl _CCON
+                                    163 	.globl _CCAPM4
+                                    164 	.globl _CCAPM3
+                                    165 	.globl _CCAPM2
+                                    166 	.globl _CCAPM1
+                                    167 	.globl _CCAPM0
+                                    168 	.globl _CCAP4L
+                                    169 	.globl _CCAP3L
+                                    170 	.globl _CCAP2L
+                                    171 	.globl _CCAP1L
+                                    172 	.globl _CCAP0L
+                                    173 	.globl _CCAP4H
+                                    174 	.globl _CCAP3H
+                                    175 	.globl _CCAP2H
+                                    176 	.globl _CCAP1H
+                                    177 	.globl _CCAP0H
+                                    178 	.globl _CKCON1
+                                    179 	.globl _CKCON0
+                                    180 	.globl _CKRL
+                                    181 	.globl _AUXR1
+                                    182 	.globl _AUXR
+                                    183 	.globl _TH2
+                                    184 	.globl _TL2
+                                    185 	.globl _RCAP2H
+                                    186 	.globl _RCAP2L
+                                    187 	.globl _T2CON
+                                    188 	.globl _B
+                                    189 	.globl _ACC
+                                    190 	.globl _PSW
+                                    191 	.globl _IP
+                                    192 	.globl _P3
+                                    193 	.globl _IE
+                                    194 	.globl _P2
+                                    195 	.globl _SBUF
+                                    196 	.globl _SCON
+                                    197 	.globl _P1
+                                    198 	.globl _TH1
+                                    199 	.globl _TH0
+                                    200 	.globl _TL1
+                                    201 	.globl _TL0
+                                    202 	.globl _TMOD
+                                    203 	.globl _TCON
+                                    204 	.globl _PCON
+                                    205 	.globl _DPH
+                                    206 	.globl _DPL
+                                    207 	.globl _SP
+                                    208 	.globl _P0
+                                    209 	.globl _displayBuffer
+                                    210 ;--------------------------------------------------------
+                                    211 ; special function registers
+                                    212 ;--------------------------------------------------------
+                                    213 	.area RSEG    (ABS,DATA)
+      000000                        214 	.org 0x0000
+                           000080   215 _P0	=	0x0080
+                           000081   216 _SP	=	0x0081
+                           000082   217 _DPL	=	0x0082
+                           000083   218 _DPH	=	0x0083
+                           000087   219 _PCON	=	0x0087
+                           000088   220 _TCON	=	0x0088
+                           000089   221 _TMOD	=	0x0089
+                           00008A   222 _TL0	=	0x008a
+                           00008B   223 _TL1	=	0x008b
+                           00008C   224 _TH0	=	0x008c
+                           00008D   225 _TH1	=	0x008d
+                           000090   226 _P1	=	0x0090
+                           000098   227 _SCON	=	0x0098
+                           000099   228 _SBUF	=	0x0099
+                           0000A0   229 _P2	=	0x00a0
+                           0000A8   230 _IE	=	0x00a8
+                           0000B0   231 _P3	=	0x00b0
+                           0000B8   232 _IP	=	0x00b8
+                           0000D0   233 _PSW	=	0x00d0
+                           0000E0   234 _ACC	=	0x00e0
+                           0000F0   235 _B	=	0x00f0
+                           0000C8   236 _T2CON	=	0x00c8
+                           0000CA   237 _RCAP2L	=	0x00ca
+                           0000CB   238 _RCAP2H	=	0x00cb
+                           0000CC   239 _TL2	=	0x00cc
+                           0000CD   240 _TH2	=	0x00cd
+                           00008E   241 _AUXR	=	0x008e
+                           0000A2   242 _AUXR1	=	0x00a2
+                           000097   243 _CKRL	=	0x0097
+                           00008F   244 _CKCON0	=	0x008f
+                           0000AF   245 _CKCON1	=	0x00af
+                           0000FA   246 _CCAP0H	=	0x00fa
+                           0000FB   247 _CCAP1H	=	0x00fb
+                           0000FC   248 _CCAP2H	=	0x00fc
+                           0000FD   249 _CCAP3H	=	0x00fd
+                           0000FE   250 _CCAP4H	=	0x00fe
+                           0000EA   251 _CCAP0L	=	0x00ea
+                           0000EB   252 _CCAP1L	=	0x00eb
+                           0000EC   253 _CCAP2L	=	0x00ec
+                           0000ED   254 _CCAP3L	=	0x00ed
+                           0000EE   255 _CCAP4L	=	0x00ee
+                           0000DA   256 _CCAPM0	=	0x00da
+                           0000DB   257 _CCAPM1	=	0x00db
+                           0000DC   258 _CCAPM2	=	0x00dc
+                           0000DD   259 _CCAPM3	=	0x00dd
+                           0000DE   260 _CCAPM4	=	0x00de
+                           0000D8   261 _CCON	=	0x00d8
+                           0000F9   262 _CH	=	0x00f9
+                           0000E9   263 _CL	=	0x00e9
+                           0000D9   264 _CMOD	=	0x00d9
+                           0000A8   265 _IEN0	=	0x00a8
+                           0000B1   266 _IEN1	=	0x00b1
+                           0000B8   267 _IPL0	=	0x00b8
+                           0000B7   268 _IPH0	=	0x00b7
+                           0000B2   269 _IPL1	=	0x00b2
+                           0000B3   270 _IPH1	=	0x00b3
+                           0000C0   271 _P4	=	0x00c0
+                           0000E8   272 _P5	=	0x00e8
+                           0000A6   273 _WDTRST	=	0x00a6
+                           0000A7   274 _WDTPRG	=	0x00a7
+                           0000A9   275 _SADDR	=	0x00a9
+                           0000B9   276 _SADEN	=	0x00b9
+                           0000C3   277 _SPCON	=	0x00c3
+                           0000C4   278 _SPSTA	=	0x00c4
+                           0000C5   279 _SPDAT	=	0x00c5
+                           0000C9   280 _T2MOD	=	0x00c9
+                           00009B   281 _BDRCON	=	0x009b
+                           00009A   282 _BRL	=	0x009a
+                           00009C   283 _KBLS	=	0x009c
+                           00009D   284 _KBE	=	0x009d
+                           00009E   285 _KBF	=	0x009e
+                           0000D2   286 _EECON	=	0x00d2
+                                    287 ;--------------------------------------------------------
+                                    288 ; special function bits
+                                    289 ;--------------------------------------------------------
+                                    290 	.area RSEG    (ABS,DATA)
+      000000                        291 	.org 0x0000
+                           000080   292 _P0_0	=	0x0080
+                           000081   293 _P0_1	=	0x0081
+                           000082   294 _P0_2	=	0x0082
+                           000083   295 _P0_3	=	0x0083
+                           000084   296 _P0_4	=	0x0084
+                           000085   297 _P0_5	=	0x0085
+                           000086   298 _P0_6	=	0x0086
+                           000087   299 _P0_7	=	0x0087
+                           000088   300 _IT0	=	0x0088
+                           000089   301 _IE0	=	0x0089
+                           00008A   302 _IT1	=	0x008a
+                           00008B   303 _IE1	=	0x008b
+                           00008C   304 _TR0	=	0x008c
+                           00008D   305 _TF0	=	0x008d
+                           00008E   306 _TR1	=	0x008e
+                           00008F   307 _TF1	=	0x008f
+                           000090   308 _P1_0	=	0x0090
+                           000091   309 _P1_1	=	0x0091
+                           000092   310 _P1_2	=	0x0092
+                           000093   311 _P1_3	=	0x0093
+                           000094   312 _P1_4	=	0x0094
+                           000095   313 _P1_5	=	0x0095
+                           000096   314 _P1_6	=	0x0096
+                           000097   315 _P1_7	=	0x0097
+                           000098   316 _RI	=	0x0098
+                           000099   317 _TI	=	0x0099
+                           00009A   318 _RB8	=	0x009a
+                           00009B   319 _TB8	=	0x009b
+                           00009C   320 _REN	=	0x009c
+                           00009D   321 _SM2	=	0x009d
+                           00009E   322 _SM1	=	0x009e
+                           00009F   323 _SM0	=	0x009f
+                           0000A0   324 _P2_0	=	0x00a0
+                           0000A1   325 _P2_1	=	0x00a1
+                           0000A2   326 _P2_2	=	0x00a2
+                           0000A3   327 _P2_3	=	0x00a3
+                           0000A4   328 _P2_4	=	0x00a4
+                           0000A5   329 _P2_5	=	0x00a5
+                           0000A6   330 _P2_6	=	0x00a6
+                           0000A7   331 _P2_7	=	0x00a7
+                           0000A8   332 _EX0	=	0x00a8
+                           0000A9   333 _ET0	=	0x00a9
+                           0000AA   334 _EX1	=	0x00aa
+                           0000AB   335 _ET1	=	0x00ab
+                           0000AC   336 _ES	=	0x00ac
+                           0000AF   337 _EA	=	0x00af
+                           0000B0   338 _P3_0	=	0x00b0
+                           0000B1   339 _P3_1	=	0x00b1
+                           0000B2   340 _P3_2	=	0x00b2
+                           0000B3   341 _P3_3	=	0x00b3
+                           0000B4   342 _P3_4	=	0x00b4
+                           0000B5   343 _P3_5	=	0x00b5
+                           0000B6   344 _P3_6	=	0x00b6
+                           0000B7   345 _P3_7	=	0x00b7
+                           0000B0   346 _RXD	=	0x00b0
+                           0000B1   347 _TXD	=	0x00b1
+                           0000B2   348 _INT0	=	0x00b2
+                           0000B3   349 _INT1	=	0x00b3
+                           0000B4   350 _T0	=	0x00b4
+                           0000B5   351 _T1	=	0x00b5
+                           0000B6   352 _WR	=	0x00b6
+                           0000B7   353 _RD	=	0x00b7
+                           0000B8   354 _PX0	=	0x00b8
+                           0000B9   355 _PT0	=	0x00b9
+                           0000BA   356 _PX1	=	0x00ba
+                           0000BB   357 _PT1	=	0x00bb
+                           0000BC   358 _PS	=	0x00bc
+                           0000D0   359 _P	=	0x00d0
+                           0000D1   360 _F1	=	0x00d1
+                           0000D2   361 _OV	=	0x00d2
+                           0000D3   362 _RS0	=	0x00d3
+                           0000D4   363 _RS1	=	0x00d4
+                           0000D5   364 _F0	=	0x00d5
+                           0000D6   365 _AC	=	0x00d6
+                           0000D7   366 _CY	=	0x00d7
+                           0000AD   367 _ET2	=	0x00ad
+                           0000BD   368 _PT2	=	0x00bd
+                           0000C8   369 _T2CON_0	=	0x00c8
+                           0000C9   370 _T2CON_1	=	0x00c9
+                           0000CA   371 _T2CON_2	=	0x00ca
+                           0000CB   372 _T2CON_3	=	0x00cb
+                           0000CC   373 _T2CON_4	=	0x00cc
+                           0000CD   374 _T2CON_5	=	0x00cd
+                           0000CE   375 _T2CON_6	=	0x00ce
+                           0000CF   376 _T2CON_7	=	0x00cf
+                           0000C8   377 _CP_RL2	=	0x00c8
+                           0000C9   378 _C_T2	=	0x00c9
+                           0000CA   379 _TR2	=	0x00ca
+                           0000CB   380 _EXEN2	=	0x00cb
+                           0000CC   381 _TCLK	=	0x00cc
+                           0000CD   382 _RCLK	=	0x00cd
+                           0000CE   383 _EXF2	=	0x00ce
+                           0000CF   384 _TF2	=	0x00cf
+                           0000DF   385 _CF	=	0x00df
+                           0000DE   386 _CR	=	0x00de
+                           0000DC   387 _CCF4	=	0x00dc
+                           0000DB   388 _CCF3	=	0x00db
+                           0000DA   389 _CCF2	=	0x00da
+                           0000D9   390 _CCF1	=	0x00d9
+                           0000D8   391 _CCF0	=	0x00d8
+                           0000AE   392 _EC	=	0x00ae
+                           0000BE   393 _PPCL	=	0x00be
+                           0000BD   394 _PT2L	=	0x00bd
+                           0000BC   395 _PSL	=	0x00bc
+                           0000BB   396 _PT1L	=	0x00bb
+                           0000BA   397 _PX1L	=	0x00ba
+                           0000B9   398 _PT0L	=	0x00b9
+                           0000B8   399 _PX0L	=	0x00b8
+                           0000C0   400 _P4_0	=	0x00c0
+                           0000C1   401 _P4_1	=	0x00c1
+                           0000C2   402 _P4_2	=	0x00c2
+                           0000C3   403 _P4_3	=	0x00c3
+                           0000C4   404 _P4_4	=	0x00c4
+                           0000C5   405 _P4_5	=	0x00c5
+                           0000C6   406 _P4_6	=	0x00c6
+                           0000C7   407 _P4_7	=	0x00c7
+                           0000E8   408 _P5_0	=	0x00e8
+                           0000E9   409 _P5_1	=	0x00e9
+                           0000EA   410 _P5_2	=	0x00ea
+                           0000EB   411 _P5_3	=	0x00eb
+                           0000EC   412 _P5_4	=	0x00ec
+                           0000ED   413 _P5_5	=	0x00ed
+                           0000EE   414 _P5_6	=	0x00ee
+                           0000EF   415 _P5_7	=	0x00ef
+                                    416 ;--------------------------------------------------------
+                                    417 ; overlayable register banks
+                                    418 ;--------------------------------------------------------
+                                    419 	.area REG_BANK_0	(REL,OVR,DATA)
+      000000                        420 	.ds 8
+                                    421 ;--------------------------------------------------------
+                                    422 ; internal ram data
+                                    423 ;--------------------------------------------------------
+                                    424 	.area DSEG    (DATA)
+                                    425 ;--------------------------------------------------------
+                                    426 ; overlayable items in internal ram 
+                                    427 ;--------------------------------------------------------
+                                    428 ;--------------------------------------------------------
+                                    429 ; indirectly addressable internal ram data
+                                    430 ;--------------------------------------------------------
+                                    431 	.area ISEG    (DATA)
+                                    432 ;--------------------------------------------------------
+                                    433 ; absolute internal ram data
+                                    434 ;--------------------------------------------------------
+                                    435 	.area IABS    (ABS,DATA)
+                                    436 	.area IABS    (ABS,DATA)
+                                    437 ;--------------------------------------------------------
+                                    438 ; bit data
+                                    439 ;--------------------------------------------------------
+                                    440 	.area BSEG    (BIT)
+                                    441 ;--------------------------------------------------------
+                                    442 ; paged external ram data
+                                    443 ;--------------------------------------------------------
+                                    444 	.area PSEG    (PAG,XDATA)
+                                    445 ;--------------------------------------------------------
+                                    446 ; external ram data
+                                    447 ;--------------------------------------------------------
+                                    448 	.area XSEG    (XDATA)
+      000000                        449 _displayBuffer::
+      000000                        450 	.ds 33
+      000021                        451 _SimpleCentralHeating_keys_65536_17:
+      000021                        452 	.ds 2
+      000023                        453 _SimpleCentralHeating_inputs_65536_17:
+      000023                        454 	.ds 1
+      000024                        455 _SimpleCentralHeating_outputs_65536_17:
+      000024                        456 	.ds 1
+      000025                        457 _SimpleCentralHeating_animatedChars_65536_17:
+      000025                        458 	.ds 4
+      000029                        459 _SimpleCentralHeating_animatedBuffer_65536_17:
+      000029                        460 	.ds 3
+      00002C                        461 _SimpleCentralHeating_animatedCounter_65536_17:
+      00002C                        462 	.ds 2
+      00002E                        463 _SimpleCentralHeating_zones_65536_17:
+      00002E                        464 	.ds 3
+      000031                        465 _SimpleCentralHeating_boilerOn_65536_17:
+      000031                        466 	.ds 1
+      000032                        467 _SimpleCentralHeating_pumpOn_65536_17:
+      000032                        468 	.ds 1
+      000033                        469 _SimpleCentralHeating_actuators_65536_17:
+      000033                        470 	.ds 3
+                                    471 ;--------------------------------------------------------
+                                    472 ; absolute external ram data
+                                    473 ;--------------------------------------------------------
+                                    474 	.area XABS    (ABS,XDATA)
+                                    475 ;--------------------------------------------------------
+                                    476 ; external initialized ram data
+                                    477 ;--------------------------------------------------------
+                                    478 	.area XISEG   (XDATA)
+                                    479 	.area HOME    (CODE)
+                                    480 	.area GSINIT0 (CODE)
+                                    481 	.area GSINIT1 (CODE)
+                                    482 	.area GSINIT2 (CODE)
+                                    483 	.area GSINIT3 (CODE)
+                                    484 	.area GSINIT4 (CODE)
+                                    485 	.area GSINIT5 (CODE)
+                                    486 	.area GSINIT  (CODE)
+                                    487 	.area GSFINAL (CODE)
+                                    488 	.area CSEG    (CODE)
+                                    489 ;--------------------------------------------------------
+                                    490 ; global & static initialisations
+                                    491 ;--------------------------------------------------------
+                                    492 	.area HOME    (CODE)
+                                    493 	.area GSINIT  (CODE)
+                                    494 	.area GSFINAL (CODE)
+                                    495 	.area GSINIT  (CODE)
+                                    496 ;--------------------------------------------------------
+                                    497 ; Home
+                                    498 ;--------------------------------------------------------
+                                    499 	.area HOME    (CODE)
+                                    500 	.area HOME    (CODE)
+                                    501 ;--------------------------------------------------------
+                                    502 ; code
+                                    503 ;--------------------------------------------------------
+                                    504 	.area CSEG    (CODE)
+                                    505 ;------------------------------------------------------------
+                                    506 ;Allocation info for local variables in function 'SimpleCentralHeating'
+                                    507 ;------------------------------------------------------------
+                                    508 ;i                         Allocated with name '_SimpleCentralHeating_i_65536_17'
+                                    509 ;keys                      Allocated with name '_SimpleCentralHeating_keys_65536_17'
+                                    510 ;inputs                    Allocated with name '_SimpleCentralHeating_inputs_65536_17'
+                                    511 ;outputs                   Allocated with name '_SimpleCentralHeating_outputs_65536_17'
+                                    512 ;animatedChars             Allocated with name '_SimpleCentralHeating_animatedChars_65536_17'
+                                    513 ;animatedBuffer            Allocated with name '_SimpleCentralHeating_animatedBuffer_65536_17'
+                                    514 ;animatedCounter           Allocated with name '_SimpleCentralHeating_animatedCounter_65536_17'
+                                    515 ;zones                     Allocated with name '_SimpleCentralHeating_zones_65536_17'
+                                    516 ;boilerOn                  Allocated with name '_SimpleCentralHeating_boilerOn_65536_17'
+                                    517 ;pumpOn                    Allocated with name '_SimpleCentralHeating_pumpOn_65536_17'
+                                    518 ;actuators                 Allocated with name '_SimpleCentralHeating_actuators_65536_17'
+                                    519 ;delay                     Allocated with name '_SimpleCentralHeating_delay_65536_17'
+                                    520 ;------------------------------------------------------------
+                                    521 ;	SimpleCentralHeating.c:35: void SimpleCentralHeating()
+                                    522 ;	-----------------------------------------
+                                    523 ;	 function SimpleCentralHeating
+                                    524 ;	-----------------------------------------
+      000000                        525 _SimpleCentralHeating:
+                           000007   526 	ar7 = 0x07
+                           000006   527 	ar6 = 0x06
+                           000005   528 	ar5 = 0x05
+                           000004   529 	ar4 = 0x04
+                           000003   530 	ar3 = 0x03
+                           000002   531 	ar2 = 0x02
+                           000001   532 	ar1 = 0x01
+                           000000   533 	ar0 = 0x00
+                                    534 ;	SimpleCentralHeating.c:52: animatedChars[0] = '-';
+      000000 90r00r25         [24]  535 	mov	dptr,#_SimpleCentralHeating_animatedChars_65536_17
+      000003 74 2D            [12]  536 	mov	a,#0x2d
+      000005 F0               [24]  537 	movx	@dptr,a
+                                    538 ;	SimpleCentralHeating.c:53: animatedChars[1] = '/';
+      000006 90r00r26         [24]  539 	mov	dptr,#(_SimpleCentralHeating_animatedChars_65536_17 + 0x0001)
+      000009 74 2F            [12]  540 	mov	a,#0x2f
+      00000B F0               [24]  541 	movx	@dptr,a
+                                    542 ;	SimpleCentralHeating.c:54: animatedChars[2] = '|';
+      00000C 90r00r27         [24]  543 	mov	dptr,#(_SimpleCentralHeating_animatedChars_65536_17 + 0x0002)
+      00000F 74 7C            [12]  544 	mov	a,#0x7c
+      000011 F0               [24]  545 	movx	@dptr,a
+                                    546 ;	SimpleCentralHeating.c:55: animatedChars[3] = '\\';
+      000012 90r00r28         [24]  547 	mov	dptr,#(_SimpleCentralHeating_animatedChars_65536_17 + 0x0003)
+      000015 74 5C            [12]  548 	mov	a,#0x5c
+      000017 F0               [24]  549 	movx	@dptr,a
+                                    550 ;	SimpleCentralHeating.c:58: animatedBuffer[0] = '.';
+      000018 90r00r29         [24]  551 	mov	dptr,#_SimpleCentralHeating_animatedBuffer_65536_17
+      00001B 03               [12]  552 	rr	a
+      00001C F0               [24]  553 	movx	@dptr,a
+                                    554 ;	SimpleCentralHeating.c:59: animatedBuffer[1] = '.';
+      00001D 90r00r2A         [24]  555 	mov	dptr,#(_SimpleCentralHeating_animatedBuffer_65536_17 + 0x0001)
+      000020 F0               [24]  556 	movx	@dptr,a
+                                    557 ;	SimpleCentralHeating.c:60: animatedBuffer[2] = 0;
+      000021 90r00r2B         [24]  558 	mov	dptr,#(_SimpleCentralHeating_animatedBuffer_65536_17 + 0x0002)
+      000024 E4               [12]  559 	clr	a
+      000025 F0               [24]  560 	movx	@dptr,a
+                                    561 ;	SimpleCentralHeating.c:71: for (i = 0; i < DISPLAY_BUFFER_SIZE; ++i)
+      000026 7E 00            [12]  562 	mov	r6,#0x00
+      000028 7F 00            [12]  563 	mov	r7,#0x00
+      00002A                        564 00153$:
+                                    565 ;	SimpleCentralHeating.c:73: displayBuffer[i] = '.';
+      00002A EE               [12]  566 	mov	a,r6
+      00002B 24r00            [12]  567 	add	a,#_displayBuffer
+      00002D F5 82            [12]  568 	mov	dpl,a
+      00002F EF               [12]  569 	mov	a,r7
+      000030 34s00            [12]  570 	addc	a,#(_displayBuffer >> 8)
+      000032 F5 83            [12]  571 	mov	dph,a
+      000034 74 2E            [12]  572 	mov	a,#0x2e
+      000036 F0               [24]  573 	movx	@dptr,a
+                                    574 ;	SimpleCentralHeating.c:71: for (i = 0; i < DISPLAY_BUFFER_SIZE; ++i)
+      000037 0E               [12]  575 	inc	r6
+      000038 BE 00 01         [24]  576 	cjne	r6,#0x00,00306$
+      00003B 0F               [12]  577 	inc	r7
+      00003C                        578 00306$:
+      00003C C3               [12]  579 	clr	c
+      00003D EE               [12]  580 	mov	a,r6
+      00003E 94 20            [12]  581 	subb	a,#0x20
+      000040 EF               [12]  582 	mov	a,r7
+      000041 64 80            [12]  583 	xrl	a,#0x80
+      000043 94 80            [12]  584 	subb	a,#0x80
+      000045 40 E3            [24]  585 	jc	00153$
+                                    586 ;	SimpleCentralHeating.c:75: displayBuffer[DISPLAY_BUFFER_SIZE] = 0;
+      000047 90r00r20         [24]  587 	mov	dptr,#(_displayBuffer + 0x0020)
+      00004A E4               [12]  588 	clr	a
+      00004B F0               [24]  589 	movx	@dptr,a
+                                    590 ;	SimpleCentralHeating.c:77: pWriteDisplayBuffer(displayBuffer);
+      00004C 12r00r51         [24]  591 	lcall	00308$
+      00004F 80 11            [24]  592 	sjmp	00309$
+      000051                        593 00308$:
+      000051 90r00r00         [24]  594 	mov	dptr,#_pWriteDisplayBuffer
+      000054 E0               [24]  595 	movx	a,@dptr
+      000055 C0 E0            [24]  596 	push	acc
+      000057 A3               [24]  597 	inc	dptr
+      000058 E0               [24]  598 	movx	a,@dptr
+      000059 C0 E0            [24]  599 	push	acc
+      00005B 90r00r00         [24]  600 	mov	dptr,#_displayBuffer
+      00005E 75 F0 00         [24]  601 	mov	b,#0x00
+      000061 22               [24]  602 	ret
+      000062                        603 00309$:
+                                    604 ;	SimpleCentralHeating.c:80: animatedCounter = 0;
+      000062 90r00r2C         [24]  605 	mov	dptr,#_SimpleCentralHeating_animatedCounter_65536_17
+      000065 E4               [12]  606 	clr	a
+      000066 F0               [24]  607 	movx	@dptr,a
+      000067 A3               [24]  608 	inc	dptr
+      000068 F0               [24]  609 	movx	@dptr,a
+                                    610 ;	SimpleCentralHeating.c:82: while (1)
+      000069                        611 00151$:
+                                    612 ;	SimpleCentralHeating.c:84: *displayBuffer = 0;
+      000069 90r00r00         [24]  613 	mov	dptr,#_displayBuffer
+      00006C E4               [12]  614 	clr	a
+      00006D F0               [24]  615 	movx	@dptr,a
+                                    616 ;	SimpleCentralHeating.c:86: animatedBuffer[0] = animatedChars[animatedCounter];
+      00006E 90r00r2C         [24]  617 	mov	dptr,#_SimpleCentralHeating_animatedCounter_65536_17
+      000071 E0               [24]  618 	movx	a,@dptr
+      000072 FE               [12]  619 	mov	r6,a
+      000073 A3               [24]  620 	inc	dptr
+      000074 E0               [24]  621 	movx	a,@dptr
+      000075 FF               [12]  622 	mov	r7,a
+      000076 EE               [12]  623 	mov	a,r6
+      000077 24r25            [12]  624 	add	a,#_SimpleCentralHeating_animatedChars_65536_17
+      000079 F5 82            [12]  625 	mov	dpl,a
+      00007B EF               [12]  626 	mov	a,r7
+      00007C 34s00            [12]  627 	addc	a,#(_SimpleCentralHeating_animatedChars_65536_17 >> 8)
+      00007E F5 83            [12]  628 	mov	dph,a
+      000080 E0               [24]  629 	movx	a,@dptr
+      000081 90r00r29         [24]  630 	mov	dptr,#_SimpleCentralHeating_animatedBuffer_65536_17
+      000084 F0               [24]  631 	movx	@dptr,a
+                                    632 ;	SimpleCentralHeating.c:88: if (animatedCounter == 3)
+      000085 BE 03 0C         [24]  633 	cjne	r6,#0x03,00103$
+      000088 BF 00 09         [24]  634 	cjne	r7,#0x00,00103$
+                                    635 ;	SimpleCentralHeating.c:90: animatedCounter = 0;
+      00008B 90r00r2C         [24]  636 	mov	dptr,#_SimpleCentralHeating_animatedCounter_65536_17
+      00008E E4               [12]  637 	clr	a
+      00008F F0               [24]  638 	movx	@dptr,a
+      000090 A3               [24]  639 	inc	dptr
+      000091 F0               [24]  640 	movx	@dptr,a
+      000092 80 0B            [24]  641 	sjmp	00104$
+      000094                        642 00103$:
+                                    643 ;	SimpleCentralHeating.c:94: ++animatedCounter;
+      000094 90r00r2C         [24]  644 	mov	dptr,#_SimpleCentralHeating_animatedCounter_65536_17
+      000097 74 01            [12]  645 	mov	a,#0x01
+      000099 2E               [12]  646 	add	a,r6
+      00009A F0               [24]  647 	movx	@dptr,a
+      00009B E4               [12]  648 	clr	a
+      00009C 3F               [12]  649 	addc	a,r7
+      00009D A3               [24]  650 	inc	dptr
+      00009E F0               [24]  651 	movx	@dptr,a
+      00009F                        652 00104$:
+                                    653 ;	SimpleCentralHeating.c:98: strcat(displayBuffer, "Z123 B P A123 ");
+      00009F 90r00r00         [24]  654 	mov	dptr,#_strcat_PARM_2
+      0000A2 74r00            [12]  655 	mov	a,#___str_0
+      0000A4 F0               [24]  656 	movx	@dptr,a
+      0000A5 74s00            [12]  657 	mov	a,#(___str_0 >> 8)
+      0000A7 A3               [24]  658 	inc	dptr
+      0000A8 F0               [24]  659 	movx	@dptr,a
+      0000A9 74 80            [12]  660 	mov	a,#0x80
+      0000AB A3               [24]  661 	inc	dptr
+      0000AC F0               [24]  662 	movx	@dptr,a
+      0000AD 90r00r00         [24]  663 	mov	dptr,#_displayBuffer
+      0000B0 75 F0 00         [24]  664 	mov	b,#0x00
+      0000B3 12r00r00         [24]  665 	lcall	_strcat
+                                    666 ;	SimpleCentralHeating.c:99: strcat(displayBuffer, animatedBuffer);
+      0000B6 90r00r00         [24]  667 	mov	dptr,#_strcat_PARM_2
+      0000B9 74r29            [12]  668 	mov	a,#_SimpleCentralHeating_animatedBuffer_65536_17
+      0000BB F0               [24]  669 	movx	@dptr,a
+      0000BC 74s00            [12]  670 	mov	a,#(_SimpleCentralHeating_animatedBuffer_65536_17 >> 8)
+      0000BE A3               [24]  671 	inc	dptr
+      0000BF F0               [24]  672 	movx	@dptr,a
+      0000C0 E4               [12]  673 	clr	a
+      0000C1 A3               [24]  674 	inc	dptr
+      0000C2 F0               [24]  675 	movx	@dptr,a
+      0000C3 90r00r00         [24]  676 	mov	dptr,#_displayBuffer
+      0000C6 75 F0 00         [24]  677 	mov	b,#0x00
+      0000C9 12r00r00         [24]  678 	lcall	_strcat
+                                    679 ;	SimpleCentralHeating.c:102: strcat(displayBuffer, " ");
+      0000CC 90r00r00         [24]  680 	mov	dptr,#_strcat_PARM_2
+      0000CF 74r0F            [12]  681 	mov	a,#___str_1
+      0000D1 F0               [24]  682 	movx	@dptr,a
+      0000D2 74s00            [12]  683 	mov	a,#(___str_1 >> 8)
+      0000D4 A3               [24]  684 	inc	dptr
+      0000D5 F0               [24]  685 	movx	@dptr,a
+      0000D6 74 80            [12]  686 	mov	a,#0x80
+      0000D8 A3               [24]  687 	inc	dptr
+      0000D9 F0               [24]  688 	movx	@dptr,a
+      0000DA 90r00r00         [24]  689 	mov	dptr,#_displayBuffer
+      0000DD 75 F0 00         [24]  690 	mov	b,#0x00
+      0000E0 12r00r00         [24]  691 	lcall	_strcat
+                                    692 ;	SimpleCentralHeating.c:105: pGetInputPortValues(&inputs);
+      0000E3 12r00rE8         [24]  693 	lcall	00312$
+      0000E6 80 11            [24]  694 	sjmp	00313$
+      0000E8                        695 00312$:
+      0000E8 90r00r00         [24]  696 	mov	dptr,#_pGetInputPortValues
+      0000EB E0               [24]  697 	movx	a,@dptr
+      0000EC C0 E0            [24]  698 	push	acc
+      0000EE A3               [24]  699 	inc	dptr
+      0000EF E0               [24]  700 	movx	a,@dptr
+      0000F0 C0 E0            [24]  701 	push	acc
+      0000F2 90r00r23         [24]  702 	mov	dptr,#_SimpleCentralHeating_inputs_65536_17
+      0000F5 75 F0 00         [24]  703 	mov	b,#0x00
+      0000F8 22               [24]  704 	ret
+      0000F9                        705 00313$:
+                                    706 ;	SimpleCentralHeating.c:106: zones[0] = ((inputs & ZONE1) == 0);
+      0000F9 90r00r23         [24]  707 	mov	dptr,#_SimpleCentralHeating_inputs_65536_17
+      0000FC E0               [24]  708 	movx	a,@dptr
+      0000FD FF               [12]  709 	mov	r7,a
+      0000FE 53 07 10         [24]  710 	anl	ar7,#0x10
+      000101 7E 00            [12]  711 	mov	r6,#0x00
+      000103 E4               [12]  712 	clr	a
+      000104 BF 00 04         [24]  713 	cjne	r7,#0x00,00314$
+      000107 BE 00 01         [24]  714 	cjne	r6,#0x00,00314$
+      00010A 04               [12]  715 	inc	a
+      00010B                        716 00314$:
+      00010B 90r00r2E         [24]  717 	mov	dptr,#_SimpleCentralHeating_zones_65536_17
+      00010E F0               [24]  718 	movx	@dptr,a
+                                    719 ;	SimpleCentralHeating.c:107: zones[1] = ((inputs & ZONE2) == 0);
+      00010F 90r00r23         [24]  720 	mov	dptr,#_SimpleCentralHeating_inputs_65536_17
+      000112 E0               [24]  721 	movx	a,@dptr
+      000113 FF               [12]  722 	mov	r7,a
+      000114 53 07 20         [24]  723 	anl	ar7,#0x20
+      000117 7E 00            [12]  724 	mov	r6,#0x00
+      000119 E4               [12]  725 	clr	a
+      00011A BF 00 04         [24]  726 	cjne	r7,#0x00,00316$
+      00011D BE 00 01         [24]  727 	cjne	r6,#0x00,00316$
+      000120 04               [12]  728 	inc	a
+      000121                        729 00316$:
+      000121 90r00r2F         [24]  730 	mov	dptr,#(_SimpleCentralHeating_zones_65536_17 + 0x0001)
+      000124 F0               [24]  731 	movx	@dptr,a
+                                    732 ;	SimpleCentralHeating.c:108: zones[2] = ((inputs & ZONE3) == 0);
+      000125 90r00r23         [24]  733 	mov	dptr,#_SimpleCentralHeating_inputs_65536_17
+      000128 E0               [24]  734 	movx	a,@dptr
+      000129 FF               [12]  735 	mov	r7,a
+      00012A 53 07 04         [24]  736 	anl	ar7,#0x04
+      00012D 7E 00            [12]  737 	mov	r6,#0x00
+      00012F E4               [12]  738 	clr	a
+      000130 BF 00 04         [24]  739 	cjne	r7,#0x00,00318$
+      000133 BE 00 01         [24]  740 	cjne	r6,#0x00,00318$
+      000136 04               [12]  741 	inc	a
+      000137                        742 00318$:
+      000137 FF               [12]  743 	mov	r7,a
+      000138 90r00r30         [24]  744 	mov	dptr,#(_SimpleCentralHeating_zones_65536_17 + 0x0002)
+      00013B F0               [24]  745 	movx	@dptr,a
+                                    746 ;	SimpleCentralHeating.c:112: pGetKeyState(&keys);
+      00013C 12r01r41         [24]  747 	lcall	00320$
+      00013F 80 11            [24]  748 	sjmp	00321$
+      000141                        749 00320$:
+      000141 90r00r00         [24]  750 	mov	dptr,#_pGetKeyState
+      000144 E0               [24]  751 	movx	a,@dptr
+      000145 C0 E0            [24]  752 	push	acc
+      000147 A3               [24]  753 	inc	dptr
+      000148 E0               [24]  754 	movx	a,@dptr
+      000149 C0 E0            [24]  755 	push	acc
+      00014B 90r00r21         [24]  756 	mov	dptr,#_SimpleCentralHeating_keys_65536_17
+      00014E 75 F0 00         [24]  757 	mov	b,#0x00
+      000151 22               [24]  758 	ret
+      000152                        759 00321$:
+                                    760 ;	SimpleCentralHeating.c:114: switch (keys)
+      000152 90r00r21         [24]  761 	mov	dptr,#_SimpleCentralHeating_keys_65536_17
+      000155 E0               [24]  762 	movx	a,@dptr
+      000156 FE               [12]  763 	mov	r6,a
+      000157 A3               [24]  764 	inc	dptr
+      000158 E0               [24]  765 	movx	a,@dptr
+      000159 FF               [12]  766 	mov	r7,a
+      00015A BE 01 05         [24]  767 	cjne	r6,#0x01,00322$
+      00015D BF 00 02         [24]  768 	cjne	r7,#0x00,00322$
+      000160 80 10            [24]  769 	sjmp	00105$
+      000162                        770 00322$:
+      000162 BE 02 05         [24]  771 	cjne	r6,#0x02,00323$
+      000165 BF 00 02         [24]  772 	cjne	r7,#0x00,00323$
+      000168 80 10            [24]  773 	sjmp	00106$
+      00016A                        774 00323$:
+                                    775 ;	SimpleCentralHeating.c:116: case 1 :
+      00016A BE 03 1B         [24]  776 	cjne	r6,#0x03,00108$
+      00016D BF 00 18         [24]  777 	cjne	r7,#0x00,00108$
+      000170 80 10            [24]  778 	sjmp	00107$
+      000172                        779 00105$:
+                                    780 ;	SimpleCentralHeating.c:117: zones[0] = 1;
+      000172 90r00r2E         [24]  781 	mov	dptr,#_SimpleCentralHeating_zones_65536_17
+      000175 74 01            [12]  782 	mov	a,#0x01
+      000177 F0               [24]  783 	movx	@dptr,a
+                                    784 ;	SimpleCentralHeating.c:118: break;
+                                    785 ;	SimpleCentralHeating.c:120: case 2 :
+      000178 80 0E            [24]  786 	sjmp	00108$
+      00017A                        787 00106$:
+                                    788 ;	SimpleCentralHeating.c:121: zones[1] = 1;
+      00017A 90r00r2F         [24]  789 	mov	dptr,#(_SimpleCentralHeating_zones_65536_17 + 0x0001)
+      00017D 74 01            [12]  790 	mov	a,#0x01
+      00017F F0               [24]  791 	movx	@dptr,a
+                                    792 ;	SimpleCentralHeating.c:122: break;
+                                    793 ;	SimpleCentralHeating.c:124: case 3 :
+      000180 80 06            [24]  794 	sjmp	00108$
+      000182                        795 00107$:
+                                    796 ;	SimpleCentralHeating.c:125: zones[2] = 1;
+      000182 90r00r30         [24]  797 	mov	dptr,#(_SimpleCentralHeating_zones_65536_17 + 0x0002)
+      000185 74 01            [12]  798 	mov	a,#0x01
+      000187 F0               [24]  799 	movx	@dptr,a
+                                    800 ;	SimpleCentralHeating.c:127: }
+      000188                        801 00108$:
+                                    802 ;	SimpleCentralHeating.c:129: if (zones[0])
+      000188 90r00r2E         [24]  803 	mov	dptr,#_SimpleCentralHeating_zones_65536_17
+      00018B E0               [24]  804 	movx	a,@dptr
+      00018C 60 19            [24]  805 	jz	00110$
+                                    806 ;	SimpleCentralHeating.c:131: strcat(displayBuffer, "*");
+      00018E 90r00r00         [24]  807 	mov	dptr,#_strcat_PARM_2
+      000191 74r11            [12]  808 	mov	a,#___str_2
+      000193 F0               [24]  809 	movx	@dptr,a
+      000194 74s00            [12]  810 	mov	a,#(___str_2 >> 8)
+      000196 A3               [24]  811 	inc	dptr
+      000197 F0               [24]  812 	movx	@dptr,a
+      000198 74 80            [12]  813 	mov	a,#0x80
+      00019A A3               [24]  814 	inc	dptr
+      00019B F0               [24]  815 	movx	@dptr,a
+      00019C 90r00r00         [24]  816 	mov	dptr,#_displayBuffer
+      00019F 75 F0 00         [24]  817 	mov	b,#0x00
+      0001A2 12r00r00         [24]  818 	lcall	_strcat
+      0001A5 80 17            [24]  819 	sjmp	00111$
+      0001A7                        820 00110$:
+                                    821 ;	SimpleCentralHeating.c:135: strcat(displayBuffer, " ");
+      0001A7 90r00r00         [24]  822 	mov	dptr,#_strcat_PARM_2
+      0001AA 74r0F            [12]  823 	mov	a,#___str_1
+      0001AC F0               [24]  824 	movx	@dptr,a
+      0001AD 74s00            [12]  825 	mov	a,#(___str_1 >> 8)
+      0001AF A3               [24]  826 	inc	dptr
+      0001B0 F0               [24]  827 	movx	@dptr,a
+      0001B1 74 80            [12]  828 	mov	a,#0x80
+      0001B3 A3               [24]  829 	inc	dptr
+      0001B4 F0               [24]  830 	movx	@dptr,a
+      0001B5 90r00r00         [24]  831 	mov	dptr,#_displayBuffer
+      0001B8 75 F0 00         [24]  832 	mov	b,#0x00
+      0001BB 12r00r00         [24]  833 	lcall	_strcat
+      0001BE                        834 00111$:
+                                    835 ;	SimpleCentralHeating.c:138: if (zones[1])
+      0001BE 90r00r2F         [24]  836 	mov	dptr,#(_SimpleCentralHeating_zones_65536_17 + 0x0001)
+      0001C1 E0               [24]  837 	movx	a,@dptr
+      0001C2 60 19            [24]  838 	jz	00113$
+                                    839 ;	SimpleCentralHeating.c:140: strcat(displayBuffer, "*");
+      0001C4 90r00r00         [24]  840 	mov	dptr,#_strcat_PARM_2
+      0001C7 74r11            [12]  841 	mov	a,#___str_2
+      0001C9 F0               [24]  842 	movx	@dptr,a
+      0001CA 74s00            [12]  843 	mov	a,#(___str_2 >> 8)
+      0001CC A3               [24]  844 	inc	dptr
+      0001CD F0               [24]  845 	movx	@dptr,a
+      0001CE 74 80            [12]  846 	mov	a,#0x80
+      0001D0 A3               [24]  847 	inc	dptr
+      0001D1 F0               [24]  848 	movx	@dptr,a
+      0001D2 90r00r00         [24]  849 	mov	dptr,#_displayBuffer
+      0001D5 75 F0 00         [24]  850 	mov	b,#0x00
+      0001D8 12r00r00         [24]  851 	lcall	_strcat
+      0001DB 80 17            [24]  852 	sjmp	00114$
+      0001DD                        853 00113$:
+                                    854 ;	SimpleCentralHeating.c:144: strcat(displayBuffer, " ");
+      0001DD 90r00r00         [24]  855 	mov	dptr,#_strcat_PARM_2
+      0001E0 74r0F            [12]  856 	mov	a,#___str_1
+      0001E2 F0               [24]  857 	movx	@dptr,a
+      0001E3 74s00            [12]  858 	mov	a,#(___str_1 >> 8)
+      0001E5 A3               [24]  859 	inc	dptr
+      0001E6 F0               [24]  860 	movx	@dptr,a
+      0001E7 74 80            [12]  861 	mov	a,#0x80
+      0001E9 A3               [24]  862 	inc	dptr
+      0001EA F0               [24]  863 	movx	@dptr,a
+      0001EB 90r00r00         [24]  864 	mov	dptr,#_displayBuffer
+      0001EE 75 F0 00         [24]  865 	mov	b,#0x00
+      0001F1 12r00r00         [24]  866 	lcall	_strcat
+      0001F4                        867 00114$:
+                                    868 ;	SimpleCentralHeating.c:147: if (zones[2])
+      0001F4 90r00r30         [24]  869 	mov	dptr,#(_SimpleCentralHeating_zones_65536_17 + 0x0002)
+      0001F7 E0               [24]  870 	movx	a,@dptr
+      0001F8 60 19            [24]  871 	jz	00116$
+                                    872 ;	SimpleCentralHeating.c:149: strcat(displayBuffer, "*");
+      0001FA 90r00r00         [24]  873 	mov	dptr,#_strcat_PARM_2
+      0001FD 74r11            [12]  874 	mov	a,#___str_2
+      0001FF F0               [24]  875 	movx	@dptr,a
+      000200 74s00            [12]  876 	mov	a,#(___str_2 >> 8)
+      000202 A3               [24]  877 	inc	dptr
+      000203 F0               [24]  878 	movx	@dptr,a
+      000204 74 80            [12]  879 	mov	a,#0x80
+      000206 A3               [24]  880 	inc	dptr
+      000207 F0               [24]  881 	movx	@dptr,a
+      000208 90r00r00         [24]  882 	mov	dptr,#_displayBuffer
+      00020B 75 F0 00         [24]  883 	mov	b,#0x00
+      00020E 12r00r00         [24]  884 	lcall	_strcat
+      000211 80 17            [24]  885 	sjmp	00117$
+      000213                        886 00116$:
+                                    887 ;	SimpleCentralHeating.c:153: strcat(displayBuffer, " ");
+      000213 90r00r00         [24]  888 	mov	dptr,#_strcat_PARM_2
+      000216 74r0F            [12]  889 	mov	a,#___str_1
+      000218 F0               [24]  890 	movx	@dptr,a
+      000219 74s00            [12]  891 	mov	a,#(___str_1 >> 8)
+      00021B A3               [24]  892 	inc	dptr
+      00021C F0               [24]  893 	movx	@dptr,a
+      00021D 74 80            [12]  894 	mov	a,#0x80
+      00021F A3               [24]  895 	inc	dptr
+      000220 F0               [24]  896 	movx	@dptr,a
+      000221 90r00r00         [24]  897 	mov	dptr,#_displayBuffer
+      000224 75 F0 00         [24]  898 	mov	b,#0x00
+      000227 12r00r00         [24]  899 	lcall	_strcat
+      00022A                        900 00117$:
+                                    901 ;	SimpleCentralHeating.c:159: boilerOn = (zones[0] || zones[1] || zones[2]);
+      00022A 90r00r2E         [24]  902 	mov	dptr,#_SimpleCentralHeating_zones_65536_17
+      00022D E0               [24]  903 	movx	a,@dptr
+      00022E 70 0F            [24]  904 	jnz	00161$
+      000230 90r00r2F         [24]  905 	mov	dptr,#(_SimpleCentralHeating_zones_65536_17 + 0x0001)
+      000233 E0               [24]  906 	movx	a,@dptr
+      000234 70 09            [24]  907 	jnz	00161$
+      000236 90r00r30         [24]  908 	mov	dptr,#(_SimpleCentralHeating_zones_65536_17 + 0x0002)
+      000239 E0               [24]  909 	movx	a,@dptr
+      00023A 70 03            [24]  910 	jnz	00161$
+      00023C FF               [12]  911 	mov	r7,a
+      00023D 80 02            [24]  912 	sjmp	00162$
+      00023F                        913 00161$:
+      00023F 7F 01            [12]  914 	mov	r7,#0x01
+      000241                        915 00162$:
+      000241 90r00r31         [24]  916 	mov	dptr,#_SimpleCentralHeating_boilerOn_65536_17
+      000244 EF               [12]  917 	mov	a,r7
+      000245 F0               [24]  918 	movx	@dptr,a
+                                    919 ;	SimpleCentralHeating.c:163: pumpOn = (zones[0] || zones[1] || zones[2]);
+      000246 90r00r2E         [24]  920 	mov	dptr,#_SimpleCentralHeating_zones_65536_17
+      000249 E0               [24]  921 	movx	a,@dptr
+      00024A 70 0F            [24]  922 	jnz	00167$
+      00024C 90r00r2F         [24]  923 	mov	dptr,#(_SimpleCentralHeating_zones_65536_17 + 0x0001)
+      00024F E0               [24]  924 	movx	a,@dptr
+      000250 70 09            [24]  925 	jnz	00167$
+      000252 90r00r30         [24]  926 	mov	dptr,#(_SimpleCentralHeating_zones_65536_17 + 0x0002)
+      000255 E0               [24]  927 	movx	a,@dptr
+      000256 70 03            [24]  928 	jnz	00167$
+      000258 FF               [12]  929 	mov	r7,a
+      000259 80 02            [24]  930 	sjmp	00168$
+      00025B                        931 00167$:
+      00025B 7F 01            [12]  932 	mov	r7,#0x01
+      00025D                        933 00168$:
+      00025D 90r00r32         [24]  934 	mov	dptr,#_SimpleCentralHeating_pumpOn_65536_17
+      000260 EF               [12]  935 	mov	a,r7
+      000261 F0               [24]  936 	movx	@dptr,a
+                                    937 ;	SimpleCentralHeating.c:166: actuators[0] = zones[0];
+      000262 90r00r2E         [24]  938 	mov	dptr,#_SimpleCentralHeating_zones_65536_17
+      000265 E0               [24]  939 	movx	a,@dptr
+      000266 90r00r33         [24]  940 	mov	dptr,#_SimpleCentralHeating_actuators_65536_17
+      000269 F0               [24]  941 	movx	@dptr,a
+                                    942 ;	SimpleCentralHeating.c:167: actuators[1] = zones[1];
+      00026A 90r00r2F         [24]  943 	mov	dptr,#(_SimpleCentralHeating_zones_65536_17 + 0x0001)
+      00026D E0               [24]  944 	movx	a,@dptr
+      00026E 90r00r34         [24]  945 	mov	dptr,#(_SimpleCentralHeating_actuators_65536_17 + 0x0001)
+      000271 F0               [24]  946 	movx	@dptr,a
+                                    947 ;	SimpleCentralHeating.c:168: actuators[2] = zones[2];
+      000272 90r00r30         [24]  948 	mov	dptr,#(_SimpleCentralHeating_zones_65536_17 + 0x0002)
+      000275 E0               [24]  949 	movx	a,@dptr
+      000276 90r00r35         [24]  950 	mov	dptr,#(_SimpleCentralHeating_actuators_65536_17 + 0x0002)
+      000279 F0               [24]  951 	movx	@dptr,a
+                                    952 ;	SimpleCentralHeating.c:170: switch (keys)
+      00027A 90r00r21         [24]  953 	mov	dptr,#_SimpleCentralHeating_keys_65536_17
+      00027D E0               [24]  954 	movx	a,@dptr
+      00027E FE               [12]  955 	mov	r6,a
+      00027F A3               [24]  956 	inc	dptr
+      000280 E0               [24]  957 	movx	a,@dptr
+      000281 FF               [12]  958 	mov	r7,a
+      000282 BE 05 05         [24]  959 	cjne	r6,#0x05,00334$
+      000285 BF 00 02         [24]  960 	cjne	r7,#0x00,00334$
+      000288 80 20            [24]  961 	sjmp	00118$
+      00028A                        962 00334$:
+      00028A BE 06 05         [24]  963 	cjne	r6,#0x06,00335$
+      00028D BF 00 02         [24]  964 	cjne	r7,#0x00,00335$
+      000290 80 20            [24]  965 	sjmp	00119$
+      000292                        966 00335$:
+      000292 BE 09 05         [24]  967 	cjne	r6,#0x09,00336$
+      000295 BF 00 02         [24]  968 	cjne	r7,#0x00,00336$
+      000298 80 20            [24]  969 	sjmp	00120$
+      00029A                        970 00336$:
+      00029A BE 0A 05         [24]  971 	cjne	r6,#0x0a,00337$
+      00029D BF 00 02         [24]  972 	cjne	r7,#0x00,00337$
+      0002A0 80 20            [24]  973 	sjmp	00121$
+      0002A2                        974 00337$:
+                                    975 ;	SimpleCentralHeating.c:172: case 5 :
+      0002A2 BE 0B 2B         [24]  976 	cjne	r6,#0x0b,00123$
+      0002A5 BF 00 28         [24]  977 	cjne	r7,#0x00,00123$
+      0002A8 80 20            [24]  978 	sjmp	00122$
+      0002AA                        979 00118$:
+                                    980 ;	SimpleCentralHeating.c:173: boilerOn = 1;
+      0002AA 90r00r31         [24]  981 	mov	dptr,#_SimpleCentralHeating_boilerOn_65536_17
+      0002AD 74 01            [12]  982 	mov	a,#0x01
+      0002AF F0               [24]  983 	movx	@dptr,a
+                                    984 ;	SimpleCentralHeating.c:174: break;
+                                    985 ;	SimpleCentralHeating.c:176: case 6 :
+      0002B0 80 1E            [24]  986 	sjmp	00123$
+      0002B2                        987 00119$:
+                                    988 ;	SimpleCentralHeating.c:177: pumpOn = 1;
+      0002B2 90r00r32         [24]  989 	mov	dptr,#_SimpleCentralHeating_pumpOn_65536_17
+      0002B5 74 01            [12]  990 	mov	a,#0x01
+      0002B7 F0               [24]  991 	movx	@dptr,a
+                                    992 ;	SimpleCentralHeating.c:178: break;
+                                    993 ;	SimpleCentralHeating.c:180: case 9 :
+      0002B8 80 16            [24]  994 	sjmp	00123$
+      0002BA                        995 00120$:
+                                    996 ;	SimpleCentralHeating.c:181: actuators[0] = 1;
+      0002BA 90r00r33         [24]  997 	mov	dptr,#_SimpleCentralHeating_actuators_65536_17
+      0002BD 74 01            [12]  998 	mov	a,#0x01
+      0002BF F0               [24]  999 	movx	@dptr,a
+                                   1000 ;	SimpleCentralHeating.c:182: break;
+                                   1001 ;	SimpleCentralHeating.c:184: case 10 :
+      0002C0 80 0E            [24] 1002 	sjmp	00123$
+      0002C2                       1003 00121$:
+                                   1004 ;	SimpleCentralHeating.c:185: actuators[1] = 1;
+      0002C2 90r00r34         [24] 1005 	mov	dptr,#(_SimpleCentralHeating_actuators_65536_17 + 0x0001)
+      0002C5 74 01            [12] 1006 	mov	a,#0x01
+      0002C7 F0               [24] 1007 	movx	@dptr,a
+                                   1008 ;	SimpleCentralHeating.c:186: break;
+                                   1009 ;	SimpleCentralHeating.c:188: case 11 :
+      0002C8 80 06            [24] 1010 	sjmp	00123$
+      0002CA                       1011 00122$:
+                                   1012 ;	SimpleCentralHeating.c:189: actuators[2] = 1;
+      0002CA 90r00r35         [24] 1013 	mov	dptr,#(_SimpleCentralHeating_actuators_65536_17 + 0x0002)
+      0002CD 74 01            [12] 1014 	mov	a,#0x01
+      0002CF F0               [24] 1015 	movx	@dptr,a
+                                   1016 ;	SimpleCentralHeating.c:191: }
+      0002D0                       1017 00123$:
+                                   1018 ;	SimpleCentralHeating.c:193: strcat(displayBuffer, " ");
+      0002D0 90r00r00         [24] 1019 	mov	dptr,#_strcat_PARM_2
+      0002D3 74r0F            [12] 1020 	mov	a,#___str_1
+      0002D5 F0               [24] 1021 	movx	@dptr,a
+      0002D6 74s00            [12] 1022 	mov	a,#(___str_1 >> 8)
+      0002D8 A3               [24] 1023 	inc	dptr
+      0002D9 F0               [24] 1024 	movx	@dptr,a
+      0002DA 74 80            [12] 1025 	mov	a,#0x80
+      0002DC A3               [24] 1026 	inc	dptr
+      0002DD F0               [24] 1027 	movx	@dptr,a
+      0002DE 90r00r00         [24] 1028 	mov	dptr,#_displayBuffer
+      0002E1 75 F0 00         [24] 1029 	mov	b,#0x00
+      0002E4 12r00r00         [24] 1030 	lcall	_strcat
+                                   1031 ;	SimpleCentralHeating.c:195: if (boilerOn)
+      0002E7 90r00r31         [24] 1032 	mov	dptr,#_SimpleCentralHeating_boilerOn_65536_17
+      0002EA E0               [24] 1033 	movx	a,@dptr
+      0002EB 60 19            [24] 1034 	jz	00125$
+                                   1035 ;	SimpleCentralHeating.c:197: strcat(displayBuffer, "* ");
+      0002ED 90r00r00         [24] 1036 	mov	dptr,#_strcat_PARM_2
+      0002F0 74r13            [12] 1037 	mov	a,#___str_3
+      0002F2 F0               [24] 1038 	movx	@dptr,a
+      0002F3 74s00            [12] 1039 	mov	a,#(___str_3 >> 8)
+      0002F5 A3               [24] 1040 	inc	dptr
+      0002F6 F0               [24] 1041 	movx	@dptr,a
+      0002F7 74 80            [12] 1042 	mov	a,#0x80
+      0002F9 A3               [24] 1043 	inc	dptr
+      0002FA F0               [24] 1044 	movx	@dptr,a
+      0002FB 90r00r00         [24] 1045 	mov	dptr,#_displayBuffer
+      0002FE 75 F0 00         [24] 1046 	mov	b,#0x00
+      000301 12r00r00         [24] 1047 	lcall	_strcat
+      000304 80 17            [24] 1048 	sjmp	00126$
+      000306                       1049 00125$:
+                                   1050 ;	SimpleCentralHeating.c:201: strcat(displayBuffer, "  ");
+      000306 90r00r00         [24] 1051 	mov	dptr,#_strcat_PARM_2
+      000309 74r16            [12] 1052 	mov	a,#___str_4
+      00030B F0               [24] 1053 	movx	@dptr,a
+      00030C 74s00            [12] 1054 	mov	a,#(___str_4 >> 8)
+      00030E A3               [24] 1055 	inc	dptr
+      00030F F0               [24] 1056 	movx	@dptr,a
+      000310 74 80            [12] 1057 	mov	a,#0x80
+      000312 A3               [24] 1058 	inc	dptr
+      000313 F0               [24] 1059 	movx	@dptr,a
+      000314 90r00r00         [24] 1060 	mov	dptr,#_displayBuffer
+      000317 75 F0 00         [24] 1061 	mov	b,#0x00
+      00031A 12r00r00         [24] 1062 	lcall	_strcat
+      00031D                       1063 00126$:
+                                   1064 ;	SimpleCentralHeating.c:204: if (pumpOn)
+      00031D 90r00r32         [24] 1065 	mov	dptr,#_SimpleCentralHeating_pumpOn_65536_17
+      000320 E0               [24] 1066 	movx	a,@dptr
+      000321 60 19            [24] 1067 	jz	00128$
+                                   1068 ;	SimpleCentralHeating.c:206: strcat(displayBuffer, "* ");
+      000323 90r00r00         [24] 1069 	mov	dptr,#_strcat_PARM_2
+      000326 74r13            [12] 1070 	mov	a,#___str_3
+      000328 F0               [24] 1071 	movx	@dptr,a
+      000329 74s00            [12] 1072 	mov	a,#(___str_3 >> 8)
+      00032B A3               [24] 1073 	inc	dptr
+      00032C F0               [24] 1074 	movx	@dptr,a
+      00032D 74 80            [12] 1075 	mov	a,#0x80
+      00032F A3               [24] 1076 	inc	dptr
+      000330 F0               [24] 1077 	movx	@dptr,a
+      000331 90r00r00         [24] 1078 	mov	dptr,#_displayBuffer
+      000334 75 F0 00         [24] 1079 	mov	b,#0x00
+      000337 12r00r00         [24] 1080 	lcall	_strcat
+      00033A 80 17            [24] 1081 	sjmp	00129$
+      00033C                       1082 00128$:
+                                   1083 ;	SimpleCentralHeating.c:210: strcat(displayBuffer, "  ");
+      00033C 90r00r00         [24] 1084 	mov	dptr,#_strcat_PARM_2
+      00033F 74r16            [12] 1085 	mov	a,#___str_4
+      000341 F0               [24] 1086 	movx	@dptr,a
+      000342 74s00            [12] 1087 	mov	a,#(___str_4 >> 8)
+      000344 A3               [24] 1088 	inc	dptr
+      000345 F0               [24] 1089 	movx	@dptr,a
+      000346 74 80            [12] 1090 	mov	a,#0x80
+      000348 A3               [24] 1091 	inc	dptr
+      000349 F0               [24] 1092 	movx	@dptr,a
+      00034A 90r00r00         [24] 1093 	mov	dptr,#_displayBuffer
+      00034D 75 F0 00         [24] 1094 	mov	b,#0x00
+      000350 12r00r00         [24] 1095 	lcall	_strcat
+      000353                       1096 00129$:
+                                   1097 ;	SimpleCentralHeating.c:213: strcat(displayBuffer, " ");
+      000353 90r00r00         [24] 1098 	mov	dptr,#_strcat_PARM_2
+      000356 74r0F            [12] 1099 	mov	a,#___str_1
+      000358 F0               [24] 1100 	movx	@dptr,a
+      000359 74s00            [12] 1101 	mov	a,#(___str_1 >> 8)
+      00035B A3               [24] 1102 	inc	dptr
+      00035C F0               [24] 1103 	movx	@dptr,a
+      00035D 74 80            [12] 1104 	mov	a,#0x80
+      00035F A3               [24] 1105 	inc	dptr
+      000360 F0               [24] 1106 	movx	@dptr,a
+      000361 90r00r00         [24] 1107 	mov	dptr,#_displayBuffer
+      000364 75 F0 00         [24] 1108 	mov	b,#0x00
+      000367 12r00r00         [24] 1109 	lcall	_strcat
+                                   1110 ;	SimpleCentralHeating.c:215: if (actuators[0])
+      00036A 90r00r33         [24] 1111 	mov	dptr,#_SimpleCentralHeating_actuators_65536_17
+      00036D E0               [24] 1112 	movx	a,@dptr
+      00036E 60 19            [24] 1113 	jz	00131$
+                                   1114 ;	SimpleCentralHeating.c:217: strcat(displayBuffer, "*");
+      000370 90r00r00         [24] 1115 	mov	dptr,#_strcat_PARM_2
+      000373 74r11            [12] 1116 	mov	a,#___str_2
+      000375 F0               [24] 1117 	movx	@dptr,a
+      000376 74s00            [12] 1118 	mov	a,#(___str_2 >> 8)
+      000378 A3               [24] 1119 	inc	dptr
+      000379 F0               [24] 1120 	movx	@dptr,a
+      00037A 74 80            [12] 1121 	mov	a,#0x80
+      00037C A3               [24] 1122 	inc	dptr
+      00037D F0               [24] 1123 	movx	@dptr,a
+      00037E 90r00r00         [24] 1124 	mov	dptr,#_displayBuffer
+      000381 75 F0 00         [24] 1125 	mov	b,#0x00
+      000384 12r00r00         [24] 1126 	lcall	_strcat
+      000387 80 17            [24] 1127 	sjmp	00132$
+      000389                       1128 00131$:
+                                   1129 ;	SimpleCentralHeating.c:221: strcat(displayBuffer, " ");
+      000389 90r00r00         [24] 1130 	mov	dptr,#_strcat_PARM_2
+      00038C 74r0F            [12] 1131 	mov	a,#___str_1
+      00038E F0               [24] 1132 	movx	@dptr,a
+      00038F 74s00            [12] 1133 	mov	a,#(___str_1 >> 8)
+      000391 A3               [24] 1134 	inc	dptr
+      000392 F0               [24] 1135 	movx	@dptr,a
+      000393 74 80            [12] 1136 	mov	a,#0x80
+      000395 A3               [24] 1137 	inc	dptr
+      000396 F0               [24] 1138 	movx	@dptr,a
+      000397 90r00r00         [24] 1139 	mov	dptr,#_displayBuffer
+      00039A 75 F0 00         [24] 1140 	mov	b,#0x00
+      00039D 12r00r00         [24] 1141 	lcall	_strcat
+      0003A0                       1142 00132$:
+                                   1143 ;	SimpleCentralHeating.c:223: if (actuators[1])
+      0003A0 90r00r34         [24] 1144 	mov	dptr,#(_SimpleCentralHeating_actuators_65536_17 + 0x0001)
+      0003A3 E0               [24] 1145 	movx	a,@dptr
+      0003A4 60 19            [24] 1146 	jz	00134$
+                                   1147 ;	SimpleCentralHeating.c:225: strcat(displayBuffer, "*");
+      0003A6 90r00r00         [24] 1148 	mov	dptr,#_strcat_PARM_2
+      0003A9 74r11            [12] 1149 	mov	a,#___str_2
+      0003AB F0               [24] 1150 	movx	@dptr,a
+      0003AC 74s00            [12] 1151 	mov	a,#(___str_2 >> 8)
+      0003AE A3               [24] 1152 	inc	dptr
+      0003AF F0               [24] 1153 	movx	@dptr,a
+      0003B0 74 80            [12] 1154 	mov	a,#0x80
+      0003B2 A3               [24] 1155 	inc	dptr
+      0003B3 F0               [24] 1156 	movx	@dptr,a
+      0003B4 90r00r00         [24] 1157 	mov	dptr,#_displayBuffer
+      0003B7 75 F0 00         [24] 1158 	mov	b,#0x00
+      0003BA 12r00r00         [24] 1159 	lcall	_strcat
+      0003BD 80 17            [24] 1160 	sjmp	00135$
+      0003BF                       1161 00134$:
+                                   1162 ;	SimpleCentralHeating.c:229: strcat(displayBuffer, " ");
+      0003BF 90r00r00         [24] 1163 	mov	dptr,#_strcat_PARM_2
+      0003C2 74r0F            [12] 1164 	mov	a,#___str_1
+      0003C4 F0               [24] 1165 	movx	@dptr,a
+      0003C5 74s00            [12] 1166 	mov	a,#(___str_1 >> 8)
+      0003C7 A3               [24] 1167 	inc	dptr
+      0003C8 F0               [24] 1168 	movx	@dptr,a
+      0003C9 74 80            [12] 1169 	mov	a,#0x80
+      0003CB A3               [24] 1170 	inc	dptr
+      0003CC F0               [24] 1171 	movx	@dptr,a
+      0003CD 90r00r00         [24] 1172 	mov	dptr,#_displayBuffer
+      0003D0 75 F0 00         [24] 1173 	mov	b,#0x00
+      0003D3 12r00r00         [24] 1174 	lcall	_strcat
+      0003D6                       1175 00135$:
+                                   1176 ;	SimpleCentralHeating.c:231: if (actuators[2])
+      0003D6 90r00r35         [24] 1177 	mov	dptr,#(_SimpleCentralHeating_actuators_65536_17 + 0x0002)
+      0003D9 E0               [24] 1178 	movx	a,@dptr
+      0003DA 60 19            [24] 1179 	jz	00137$
+                                   1180 ;	SimpleCentralHeating.c:233: strcat(displayBuffer, "*");
+      0003DC 90r00r00         [24] 1181 	mov	dptr,#_strcat_PARM_2
+      0003DF 74r11            [12] 1182 	mov	a,#___str_2
+      0003E1 F0               [24] 1183 	movx	@dptr,a
+      0003E2 74s00            [12] 1184 	mov	a,#(___str_2 >> 8)
+      0003E4 A3               [24] 1185 	inc	dptr
+      0003E5 F0               [24] 1186 	movx	@dptr,a
+      0003E6 74 80            [12] 1187 	mov	a,#0x80
+      0003E8 A3               [24] 1188 	inc	dptr
+      0003E9 F0               [24] 1189 	movx	@dptr,a
+      0003EA 90r00r00         [24] 1190 	mov	dptr,#_displayBuffer
+      0003ED 75 F0 00         [24] 1191 	mov	b,#0x00
+      0003F0 12r00r00         [24] 1192 	lcall	_strcat
+      0003F3 80 17            [24] 1193 	sjmp	00138$
+      0003F5                       1194 00137$:
+                                   1195 ;	SimpleCentralHeating.c:237: strcat(displayBuffer, " ");
+      0003F5 90r00r00         [24] 1196 	mov	dptr,#_strcat_PARM_2
+      0003F8 74r0F            [12] 1197 	mov	a,#___str_1
+      0003FA F0               [24] 1198 	movx	@dptr,a
+      0003FB 74s00            [12] 1199 	mov	a,#(___str_1 >> 8)
+      0003FD A3               [24] 1200 	inc	dptr
+      0003FE F0               [24] 1201 	movx	@dptr,a
+      0003FF 74 80            [12] 1202 	mov	a,#0x80
+      000401 A3               [24] 1203 	inc	dptr
+      000402 F0               [24] 1204 	movx	@dptr,a
+      000403 90r00r00         [24] 1205 	mov	dptr,#_displayBuffer
+      000406 75 F0 00         [24] 1206 	mov	b,#0x00
+      000409 12r00r00         [24] 1207 	lcall	_strcat
+      00040C                       1208 00138$:
+                                   1209 ;	SimpleCentralHeating.c:242: pWriteDisplayBuffer(displayBuffer);
+      00040C 12r04r11         [24] 1210 	lcall	00344$
+      00040F 80 11            [24] 1211 	sjmp	00345$
+      000411                       1212 00344$:
+      000411 90r00r00         [24] 1213 	mov	dptr,#_pWriteDisplayBuffer
+      000414 E0               [24] 1214 	movx	a,@dptr
+      000415 C0 E0            [24] 1215 	push	acc
+      000417 A3               [24] 1216 	inc	dptr
+      000418 E0               [24] 1217 	movx	a,@dptr
+      000419 C0 E0            [24] 1218 	push	acc
+      00041B 90r00r00         [24] 1219 	mov	dptr,#_displayBuffer
+      00041E 75 F0 00         [24] 1220 	mov	b,#0x00
+      000421 22               [24] 1221 	ret
+      000422                       1222 00345$:
+                                   1223 ;	SimpleCentralHeating.c:245: outputs = 0;
+      000422 90r00r24         [24] 1224 	mov	dptr,#_SimpleCentralHeating_outputs_65536_17
+      000425 E4               [12] 1225 	clr	a
+      000426 F0               [24] 1226 	movx	@dptr,a
+                                   1227 ;	SimpleCentralHeating.c:246: if (actuators[0])
+      000427 90r00r33         [24] 1228 	mov	dptr,#_SimpleCentralHeating_actuators_65536_17
+      00042A E0               [24] 1229 	movx	a,@dptr
+      00042B 60 06            [24] 1230 	jz	00140$
+                                   1231 ;	SimpleCentralHeating.c:248: outputs |= ACTUATOR1;
+      00042D 90r00r24         [24] 1232 	mov	dptr,#_SimpleCentralHeating_outputs_65536_17
+      000430 74 01            [12] 1233 	mov	a,#0x01
+      000432 F0               [24] 1234 	movx	@dptr,a
+      000433                       1235 00140$:
+                                   1236 ;	SimpleCentralHeating.c:250: if (actuators[1])
+      000433 90r00r34         [24] 1237 	mov	dptr,#(_SimpleCentralHeating_actuators_65536_17 + 0x0001)
+      000436 E0               [24] 1238 	movx	a,@dptr
+      000437 60 08            [24] 1239 	jz	00142$
+                                   1240 ;	SimpleCentralHeating.c:252: outputs |= ACTUATOR2;
+      000439 90r00r24         [24] 1241 	mov	dptr,#_SimpleCentralHeating_outputs_65536_17
+      00043C E0               [24] 1242 	movx	a,@dptr
+      00043D 43 E0 02         [24] 1243 	orl	acc,#0x02
+      000440 F0               [24] 1244 	movx	@dptr,a
+      000441                       1245 00142$:
+                                   1246 ;	SimpleCentralHeating.c:254: if (actuators[2])
+      000441 90r00r35         [24] 1247 	mov	dptr,#(_SimpleCentralHeating_actuators_65536_17 + 0x0002)
+      000444 E0               [24] 1248 	movx	a,@dptr
+      000445 60 08            [24] 1249 	jz	00144$
+                                   1250 ;	SimpleCentralHeating.c:256: outputs |= ACTUATOR3;
+      000447 90r00r24         [24] 1251 	mov	dptr,#_SimpleCentralHeating_outputs_65536_17
+      00044A E0               [24] 1252 	movx	a,@dptr
+      00044B 43 E0 04         [24] 1253 	orl	acc,#0x04
+      00044E F0               [24] 1254 	movx	@dptr,a
+      00044F                       1255 00144$:
+                                   1256 ;	SimpleCentralHeating.c:258: if (pumpOn)
+      00044F 90r00r32         [24] 1257 	mov	dptr,#_SimpleCentralHeating_pumpOn_65536_17
+      000452 E0               [24] 1258 	movx	a,@dptr
+      000453 60 08            [24] 1259 	jz	00146$
+                                   1260 ;	SimpleCentralHeating.c:260: outputs |= PUMP;
+      000455 90r00r24         [24] 1261 	mov	dptr,#_SimpleCentralHeating_outputs_65536_17
+      000458 E0               [24] 1262 	movx	a,@dptr
+      000459 43 E0 10         [24] 1263 	orl	acc,#0x10
+      00045C F0               [24] 1264 	movx	@dptr,a
+      00045D                       1265 00146$:
+                                   1266 ;	SimpleCentralHeating.c:262: if (boilerOn)
+      00045D 90r00r31         [24] 1267 	mov	dptr,#_SimpleCentralHeating_boilerOn_65536_17
+      000460 E0               [24] 1268 	movx	a,@dptr
+      000461 60 08            [24] 1269 	jz	00148$
+                                   1270 ;	SimpleCentralHeating.c:264: outputs |= BOILER;
+      000463 90r00r24         [24] 1271 	mov	dptr,#_SimpleCentralHeating_outputs_65536_17
+      000466 E0               [24] 1272 	movx	a,@dptr
+      000467 43 E0 20         [24] 1273 	orl	acc,#0x20
+      00046A F0               [24] 1274 	movx	@dptr,a
+      00046B                       1275 00148$:
+                                   1276 ;	SimpleCentralHeating.c:267: pSetOutputPortValues(outputs);
+      00046B 90r00r24         [24] 1277 	mov	dptr,#_SimpleCentralHeating_outputs_65536_17
+      00046E E0               [24] 1278 	movx	a,@dptr
+      00046F FF               [12] 1279 	mov	r7,a
+      000470 12r04r75         [24] 1280 	lcall	00351$
+      000473 80 0D            [24] 1281 	sjmp	00352$
+      000475                       1282 00351$:
+      000475 90r00r00         [24] 1283 	mov	dptr,#_pSetOutputPortValues
+      000478 E0               [24] 1284 	movx	a,@dptr
+      000479 C0 E0            [24] 1285 	push	acc
+      00047B A3               [24] 1286 	inc	dptr
+      00047C E0               [24] 1287 	movx	a,@dptr
+      00047D C0 E0            [24] 1288 	push	acc
+      00047F 8F 82            [24] 1289 	mov	dpl,r7
+      000481 22               [24] 1290 	ret
+      000482                       1291 00352$:
+                                   1292 ;	SimpleCentralHeating.c:269: for (delay = 0; delay < 200000; ++delay)
+      000482 7C 40            [12] 1293 	mov	r4,#0x40
+      000484 7D 0D            [12] 1294 	mov	r5,#0x0d
+      000486 7E 03            [12] 1295 	mov	r6,#0x03
+      000488 7F 00            [12] 1296 	mov	r7,#0x00
+      00048A                       1297 00157$:
+      00048A 1C               [12] 1298 	dec	r4
+      00048B BC FF 09         [24] 1299 	cjne	r4,#0xff,00353$
+      00048E 1D               [12] 1300 	dec	r5
+      00048F BD FF 05         [24] 1301 	cjne	r5,#0xff,00353$
+      000492 1E               [12] 1302 	dec	r6
+      000493 BE FF 01         [24] 1303 	cjne	r6,#0xff,00353$
+      000496 1F               [12] 1304 	dec	r7
+      000497                       1305 00353$:
+      000497 EC               [12] 1306 	mov	a,r4
+      000498 4D               [12] 1307 	orl	a,r5
+      000499 4E               [12] 1308 	orl	a,r6
+      00049A 4F               [12] 1309 	orl	a,r7
+      00049B 70 ED            [24] 1310 	jnz	00157$
+                                   1311 ;	SimpleCentralHeating.c:275: ++i;
+                                   1312 ;	SimpleCentralHeating.c:281: }
+      00049D 02r00r69         [24] 1313 	ljmp	00151$
+                                   1314 	.area CSEG    (CODE)
+                                   1315 	.area CONST   (CODE)
+                                   1316 	.area CONST   (CODE)
+      000000                       1317 ___str_0:
+      000000 5A 31 32 33 20 42 20  1318 	.ascii "Z123 B P A123 "
+             50 20 41 31 32 33 20
+      00000E 00                    1319 	.db 0x00
+                                   1320 	.area CSEG    (CODE)
+                                   1321 	.area CONST   (CODE)
+      00000F                       1322 ___str_1:
+      00000F 20                    1323 	.ascii " "
+      000010 00                    1324 	.db 0x00
+                                   1325 	.area CSEG    (CODE)
+                                   1326 	.area CONST   (CODE)
+      000011                       1327 ___str_2:
+      000011 2A                    1328 	.ascii "*"
+      000012 00                    1329 	.db 0x00
+                                   1330 	.area CSEG    (CODE)
+                                   1331 	.area CONST   (CODE)
+      000013                       1332 ___str_3:
+      000013 2A 20                 1333 	.ascii "* "
+      000015 00                    1334 	.db 0x00
+                                   1335 	.area CSEG    (CODE)
+                                   1336 	.area CONST   (CODE)
+      000016                       1337 ___str_4:
+      000016 20 20                 1338 	.ascii "  "
+      000018 00                    1339 	.db 0x00
+                                   1340 	.area CSEG    (CODE)
+                                   1341 	.area XINIT   (CODE)
+                                   1342 	.area CABS    (ABS,CODE)
