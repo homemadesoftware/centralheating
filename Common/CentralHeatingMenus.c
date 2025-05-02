@@ -38,11 +38,11 @@ void BuildCentralHeatingMenuDefinitions()
    
 	AddMenuDefinition("Test Outputs", 0, MENUID_TESTOUTPUT);
        	AddMenuDefinition("Boiler", MENUID_TESTOUTPUT, MENUID_TEST_BOILER);
-        AddMenuDefinition("Pump",   MENUID_TESTOUTPUT, MENUID_TEST_PUMP);
         AddMenuDefinition("Zone 1", MENUID_TESTOUTPUT, MENUID_TEST_ZONE1);
         AddMenuDefinition("Zone 2", MENUID_TESTOUTPUT, MENUID_TEST_ZONE2);
         AddMenuDefinition("Zone 3", MENUID_TESTOUTPUT, MENUID_TEST_ZONE3);
 		AddMenuDefinition("Zone 4", MENUID_TESTOUTPUT, MENUID_TEST_ZONE4);
+        AddMenuDefinition("HW", MENUID_TESTOUTPUT, MENUID_TEST_HW);
         AddMenuDefinition("Reset",  MENUID_TESTOUTPUT, MENUID_TEST_RESET);
         AddMenuDefinition("Return", MENUID_TESTOUTPUT, MENU_END_SENTINEL);
 
