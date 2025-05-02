@@ -1,6 +1,6 @@
 DEL *.REL
 
-SET PATH=C:\Program Files\SDCC\bin;%PATH%
+where sdcc >nul 2>&1 || set "PATH=C:\Program Files\SDCC\bin;%PATH%"
 
 "C:\Program Files\SDCC\bin\sdcc.exe"      --verbose --compile-only --vc -V -DMC8051 --model-large -I../Common SimpleCentralHeating.c
 "C:\Program Files\SDCC\bin\sdcc.exe"      --verbose --compile-only --vc -V -DMC8051 --model-large -I../Common 89C51Board.c
