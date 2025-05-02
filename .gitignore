@@ -5,7 +5,6 @@
 /.vs
 /**/.vs/*
 /**/Debug
-/CentralHeatingCore
 /**/*.lst
 /**/*.rel
 /**/*.rst
@@ -16,5 +15,6 @@
 /**/*.ihx
 /**/*.lk
 /**/*.map
+/**/*.mem
 /**/*.user
 /**/DefaultOutput
