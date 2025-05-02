@@ -1,10 +1,10 @@
 ;--------------------------------------------------------
-; File Created by SDCC : free open source ANSI-C Compiler
-; Version 4.0.0 #11528 (MINGW64)
+; File Created by SDCC : free open source ISO C Compiler
+; Version 4.5.0 #15242 (MINGW64)
 ;--------------------------------------------------------
 	.module RTC1307
-	.optsdcc -mmcs51 --model-large
 	
+	.optsdcc -mmcs51 --model-large
 ;--------------------------------------------------------
 ; Public variables in this module
 ;--------------------------------------------------------
@@ -428,7 +428,7 @@ _P5_7	=	0x00ef
 ;--------------------------------------------------------
 	.area DSEG    (DATA)
 ;--------------------------------------------------------
-; overlayable items in internal ram 
+; overlayable items in internal ram
 ;--------------------------------------------------------
 ;--------------------------------------------------------
 ; indirectly addressable internal ram data
@@ -448,27 +448,27 @@ _P5_7	=	0x00ef
 ;--------------------------------------------------------
 	.area PSEG    (PAG,XDATA)
 ;--------------------------------------------------------
-; external ram data
+; uninitialized external ram data
 ;--------------------------------------------------------
 	.area XSEG    (XDATA)
-_EncodeAsBcd_value_65536_16:
+_EncodeAsBcd_value_10000_16:
 	.ds 1
-_DecodeBcd_value_65536_18:
+_DecodeBcd_value_10000_18:
 	.ds 1
-_Rtc_ReadClock_dateTime_65536_20:
+_Rtc_ReadClock_dateTime_10000_20:
 	.ds 3
-_Rtc_ReadClock_buffer_65536_21:
+_Rtc_ReadClock_buffer_10000_21:
 	.ds 9
-_Rtc_WriteClock_dateTime_65536_25:
+_Rtc_WriteClock_dateTime_10000_25:
 	.ds 3
-_Rtc_WriteClock_buffer_65536_26:
+_Rtc_WriteClock_buffer_10000_26:
 	.ds 9
 ;--------------------------------------------------------
 ; absolute external ram data
 ;--------------------------------------------------------
 	.area XABS    (ABS,XDATA)
 ;--------------------------------------------------------
-; external initialized ram data
+; initialized external ram data
 ;--------------------------------------------------------
 	.area XISEG   (XDATA)
 	.area HOME    (CODE)
@@ -500,8 +500,8 @@ _Rtc_WriteClock_buffer_65536_26:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'EncodeAsBcd'
 ;------------------------------------------------------------
-;value                     Allocated with name '_EncodeAsBcd_value_65536_16'
-;result                    Allocated with name '_EncodeAsBcd_result_65536_17'
+;value         Allocated with name '_EncodeAsBcd_value_10000_16'
+;result        Allocated with name '_EncodeAsBcd_result_10000_17'
 ;------------------------------------------------------------
 ;	RTC1307.c:9: unsigned char EncodeAsBcd(unsigned char value)
 ;	-----------------------------------------
@@ -517,55 +517,31 @@ _EncodeAsBcd:
 	ar1 = 0x01
 	ar0 = 0x00
 	mov	a,dpl
-	mov	dptr,#_EncodeAsBcd_value_65536_16
+	mov	dptr,#_EncodeAsBcd_value_10000_16
 	movx	@dptr,a
 ;	RTC1307.c:11: unsigned char result = ((value % 10) & 0xf);
 	movx	a,@dptr
 	mov	r7,a
-	mov	r6,#0x00
-	mov	dptr,#__modsint_PARM_2
-	mov	a,#0x0a
-	movx	@dptr,a
-	clr	a
-	inc	dptr
-	movx	@dptr,a
-	mov	dpl,r7
-	mov	dph,r6
-	push	ar7
-	push	ar6
-	lcall	__modsint
-	mov	r4,dpl
-	pop	ar6
-	pop	ar7
-	anl	ar4,#0x0f
-;	RTC1307.c:12: result |= ((value / 10) & 0xf) << 4;
-	mov	dptr,#__divsint_PARM_2
-	mov	a,#0x0a
-	movx	@dptr,a
-	clr	a
-	inc	dptr
-	movx	@dptr,a
-	mov	dpl,r7
-	mov	dph,r6
-	push	ar4
-	lcall	__divsint
-	mov	r6,dpl
-	pop	ar4
+	mov	b,#0x0a
+	div	ab
+	mov	r6,b
 	anl	ar6,#0x0f
-	mov	a,r6
+;	RTC1307.c:12: result |= ((value / 10) & 0xf) << 4;
+	mov	b,#0x0a
+	mov	a,r7
+	div	ab
+	anl	a,#0x0f
 	swap	a
 	anl	a,#0xf0
-	mov	r6,a
-	mov	a,r4
 	orl	ar6,a
 ;	RTC1307.c:13: return result;
-	mov	dpl,r6
+	mov	dpl, r6
 ;	RTC1307.c:14: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'DecodeBcd'
 ;------------------------------------------------------------
-;value                     Allocated with name '_DecodeBcd_value_65536_18'
+;value         Allocated with name '_DecodeBcd_value_10000_18'
 ;------------------------------------------------------------
 ;	RTC1307.c:16: unsigned char DecodeBcd(unsigned char value)
 ;	-----------------------------------------
@@ -573,7 +549,7 @@ _EncodeAsBcd:
 ;	-----------------------------------------
 _DecodeBcd:
 	mov	a,dpl
-	mov	dptr,#_DecodeBcd_value_65536_18
+	mov	dptr,#_DecodeBcd_value_10000_18
 	movx	@dptr,a
 ;	RTC1307.c:18: return (10 * ((value & 0xf0) >> 4)) + (value & 0xf);
 	movx	a,@dptr
@@ -581,7 +557,6 @@ _DecodeBcd:
 	mov	r5,a
 	anl	ar5,#0xf0
 	clr	a
-	swap	a
 	xch	a,r5
 	swap	a
 	anl	a,#0x0f
@@ -592,7 +567,7 @@ _DecodeBcd:
 	xrl	a,r5
 	xch	a,r5
 	jnb	acc.3,00103$
-	orl	a,#0xf0
+	orl	a,#0xfffffff0
 00103$:
 	mov	a,r5
 	mov	b,#0x0a
@@ -600,16 +575,16 @@ _DecodeBcd:
 	mov	r5,a
 	mov	a,#0x0f
 	anl	a,r7
-	add	a,r5
+	add	a, r5
 ;	RTC1307.c:19: }
 	mov	dpl,a
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'Rtc_ReadClock'
 ;------------------------------------------------------------
-;dateTime                  Allocated with name '_Rtc_ReadClock_dateTime_65536_20'
-;buffer                    Allocated with name '_Rtc_ReadClock_buffer_65536_21'
-;i                         Allocated with name '_Rtc_ReadClock_i_65536_21'
+;dateTime      Allocated with name '_Rtc_ReadClock_dateTime_10000_20'
+;buffer        Allocated with name '_Rtc_ReadClock_buffer_10000_21'
+;i             Allocated with name '_Rtc_ReadClock_i_10000_21'
 ;------------------------------------------------------------
 ;	RTC1307.c:21: unsigned char Rtc_ReadClock(DateTimeStruct *dateTime)
 ;	-----------------------------------------
@@ -619,7 +594,7 @@ _Rtc_ReadClock:
 	mov	r7,b
 	mov	r6,dph
 	mov	a,dpl
-	mov	dptr,#_Rtc_ReadClock_dateTime_65536_20
+	mov	dptr,#_Rtc_ReadClock_dateTime_10000_20
 	movx	@dptr,a
 	mov	a,r6
 	inc	dptr
@@ -628,35 +603,27 @@ _Rtc_ReadClock:
 	inc	dptr
 	movx	@dptr,a
 ;	RTC1307.c:25: for (i = 0; i < BUFFER_LEN; ++i)
-	mov	r6,#0x00
 	mov	r7,#0x00
 00104$:
 ;	RTC1307.c:27: buffer[i] = 0;
-	mov	a,r6
-	add	a,#_Rtc_ReadClock_buffer_65536_21
-	mov	dpl,a
 	mov	a,r7
-	addc	a,#(_Rtc_ReadClock_buffer_65536_21 >> 8)
+	add	a, #_Rtc_ReadClock_buffer_10000_21
+	mov	dpl,a
+	clr	a
+	addc	a, #(_Rtc_ReadClock_buffer_10000_21 >> 8)
 	mov	dph,a
 	clr	a
 	movx	@dptr,a
 ;	RTC1307.c:25: for (i = 0; i < BUFFER_LEN; ++i)
-	inc	r6
-	cjne	r6,#0x00,00121$
 	inc	r7
-00121$:
-	clr	c
-	mov	a,r6
-	subb	a,#0x09
-	mov	a,r7
-	xrl	a,#0x80
-	subb	a,#0x80
+	cjne	r7,#0x09,00127$
+00127$:
 	jc	00104$
 ;	RTC1307.c:31: I2C_SendData(DS1307ADDRESS, buffer, 1);
 	mov	dptr,#_I2C_SendData_PARM_2
-	mov	a,#_Rtc_ReadClock_buffer_65536_21
+	mov	a,#_Rtc_ReadClock_buffer_10000_21
 	movx	@dptr,a
-	mov	a,#(_Rtc_ReadClock_buffer_65536_21 >> 8)
+	mov	a,#(_Rtc_ReadClock_buffer_10000_21 >> 8)
 	inc	dptr
 	movx	@dptr,a
 	clr	a
@@ -668,13 +635,13 @@ _Rtc_ReadClock:
 	clr	a
 	inc	dptr
 	movx	@dptr,a
-	mov	dpl,#0x68
+	mov	dpl, #0x68
 	lcall	_I2C_SendData
 ;	RTC1307.c:33: if (!I2C_RecvData(DS1307ADDRESS, buffer, 7))
 	mov	dptr,#_I2C_RecvData_PARM_2
-	mov	a,#_Rtc_ReadClock_buffer_65536_21
+	mov	a,#_Rtc_ReadClock_buffer_10000_21
 	movx	@dptr,a
-	mov	a,#(_Rtc_ReadClock_buffer_65536_21 >> 8)
+	mov	a,#(_Rtc_ReadClock_buffer_10000_21 >> 8)
 	inc	dptr
 	movx	@dptr,a
 	clr	a
@@ -686,16 +653,16 @@ _Rtc_ReadClock:
 	clr	a
 	inc	dptr
 	movx	@dptr,a
-	mov	dpl,#0x68
+	mov	dpl, #0x68
 	lcall	_I2C_RecvData
-	mov	a,dpl
+	mov	a, dpl
 ;	RTC1307.c:35: return 0;
 	jnz	00103$
 	mov	dpl,a
 	ret
 00103$:
 ;	RTC1307.c:39: dateTime->seconds = DecodeBcd(buffer[0] & 0x7F);
-	mov	dptr,#_Rtc_ReadClock_dateTime_65536_20
+	mov	dptr,#_Rtc_ReadClock_dateTime_10000_20
 	movx	a,@dptr
 	mov	r5,a
 	inc	dptr
@@ -704,37 +671,14 @@ _Rtc_ReadClock:
 	inc	dptr
 	movx	a,@dptr
 	mov	r7,a
-	mov	dptr,#_Rtc_ReadClock_buffer_65536_21
-	movx	a,@dptr
-	mov	r4,a
-	anl	ar4,#0x7f
-	mov	dpl,r4
-	push	ar7
-	push	ar6
-	push	ar5
-	lcall	_DecodeBcd
-	mov	r4,dpl
-	pop	ar5
-	pop	ar6
-	pop	ar7
-	mov	dpl,r5
-	mov	dph,r6
-	mov	b,r7
-	mov	a,r4
-	lcall	__gptrput
-;	RTC1307.c:40: dateTime->minutes = DecodeBcd(buffer[1] & 0x7F);
-	mov	a,#0x01
-	add	a,r5
-	mov	r2,a
-	clr	a
-	addc	a,r6
-	mov	r3,a
+	mov	ar2,r5
+	mov	ar3,r6
 	mov	ar4,r7
-	mov	dptr,#(_Rtc_ReadClock_buffer_65536_21 + 0x0001)
+	mov	dptr,#_Rtc_ReadClock_buffer_10000_21
 	movx	a,@dptr
 	mov	r1,a
 	anl	ar1,#0x7f
-	mov	dpl,r1
+	mov	dpl, r1
 	push	ar7
 	push	ar6
 	push	ar5
@@ -742,7 +686,39 @@ _Rtc_ReadClock:
 	push	ar3
 	push	ar2
 	lcall	_DecodeBcd
-	mov	r1,dpl
+	mov	r1, dpl
+	pop	ar2
+	pop	ar3
+	pop	ar4
+	pop	ar5
+	pop	ar6
+	pop	ar7
+	mov	dpl,r2
+	mov	dph,r3
+	mov	b,r4
+	mov	a,r1
+	lcall	__gptrput
+;	RTC1307.c:40: dateTime->minutes = DecodeBcd(buffer[1] & 0x7F);
+	mov	a,#0x01
+	add	a, r5
+	mov	r2,a
+	clr	a
+	addc	a, r6
+	mov	r3,a
+	mov	ar4,r7
+	mov	dptr,#(_Rtc_ReadClock_buffer_10000_21 + 0x0001)
+	movx	a,@dptr
+	mov	r1,a
+	anl	ar1,#0x7f
+	mov	dpl, r1
+	push	ar7
+	push	ar6
+	push	ar5
+	push	ar4
+	push	ar3
+	push	ar2
+	lcall	_DecodeBcd
+	mov	r1, dpl
 	pop	ar2
 	pop	ar3
 	pop	ar4
@@ -756,17 +732,17 @@ _Rtc_ReadClock:
 	lcall	__gptrput
 ;	RTC1307.c:41: dateTime->hours = DecodeBcd(buffer[2] & 0x3F);
 	mov	a,#0x02
-	add	a,r5
+	add	a, r5
 	mov	r2,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	r3,a
 	mov	ar4,r7
-	mov	dptr,#(_Rtc_ReadClock_buffer_65536_21 + 0x0002)
+	mov	dptr,#(_Rtc_ReadClock_buffer_10000_21 + 0x0002)
 	movx	a,@dptr
 	mov	r1,a
 	anl	ar1,#0x3f
-	mov	dpl,r1
+	mov	dpl, r1
 	push	ar7
 	push	ar6
 	push	ar5
@@ -774,7 +750,7 @@ _Rtc_ReadClock:
 	push	ar3
 	push	ar2
 	lcall	_DecodeBcd
-	mov	r1,dpl
+	mov	r1, dpl
 	pop	ar2
 	pop	ar3
 	pop	ar4
@@ -788,17 +764,17 @@ _Rtc_ReadClock:
 	lcall	__gptrput
 ;	RTC1307.c:42: dateTime->dayOfWeek = DecodeBcd(buffer[3] & 0x7);
 	mov	a,#0x03
-	add	a,r5
+	add	a, r5
 	mov	r2,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	r3,a
 	mov	ar4,r7
-	mov	dptr,#(_Rtc_ReadClock_buffer_65536_21 + 0x0003)
+	mov	dptr,#(_Rtc_ReadClock_buffer_10000_21 + 0x0003)
 	movx	a,@dptr
 	mov	r1,a
 	anl	ar1,#0x07
-	mov	dpl,r1
+	mov	dpl, r1
 	push	ar7
 	push	ar6
 	push	ar5
@@ -806,7 +782,7 @@ _Rtc_ReadClock:
 	push	ar3
 	push	ar2
 	lcall	_DecodeBcd
-	mov	r1,dpl
+	mov	r1, dpl
 	pop	ar2
 	pop	ar3
 	pop	ar4
@@ -820,17 +796,17 @@ _Rtc_ReadClock:
 	lcall	__gptrput
 ;	RTC1307.c:43: dateTime->day = DecodeBcd(buffer[4] & 0x3F);
 	mov	a,#0x04
-	add	a,r5
+	add	a, r5
 	mov	r2,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	r3,a
 	mov	ar4,r7
-	mov	dptr,#(_Rtc_ReadClock_buffer_65536_21 + 0x0004)
+	mov	dptr,#(_Rtc_ReadClock_buffer_10000_21 + 0x0004)
 	movx	a,@dptr
 	mov	r1,a
 	anl	ar1,#0x3f
-	mov	dpl,r1
+	mov	dpl, r1
 	push	ar7
 	push	ar6
 	push	ar5
@@ -838,7 +814,7 @@ _Rtc_ReadClock:
 	push	ar3
 	push	ar2
 	lcall	_DecodeBcd
-	mov	r1,dpl
+	mov	r1, dpl
 	pop	ar2
 	pop	ar3
 	pop	ar4
@@ -852,17 +828,17 @@ _Rtc_ReadClock:
 	lcall	__gptrput
 ;	RTC1307.c:44: dateTime->month = DecodeBcd(buffer[5] & 0x1F);
 	mov	a,#0x05
-	add	a,r5
+	add	a, r5
 	mov	r2,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	r3,a
 	mov	ar4,r7
-	mov	dptr,#(_Rtc_ReadClock_buffer_65536_21 + 0x0005)
+	mov	dptr,#(_Rtc_ReadClock_buffer_10000_21 + 0x0005)
 	movx	a,@dptr
 	mov	r1,a
 	anl	ar1,#0x1f
-	mov	dpl,r1
+	mov	dpl, r1
 	push	ar7
 	push	ar6
 	push	ar5
@@ -870,7 +846,7 @@ _Rtc_ReadClock:
 	push	ar3
 	push	ar2
 	lcall	_DecodeBcd
-	mov	r1,dpl
+	mov	r1, dpl
 	pop	ar2
 	pop	ar3
 	pop	ar4
@@ -883,18 +859,18 @@ _Rtc_ReadClock:
 	lcall	__gptrput
 ;	RTC1307.c:45: dateTime->year = DecodeBcd(buffer[6]);
 	mov	a,#0x06
-	add	a,r5
+	add	a, r5
 	mov	r5,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	r6,a
-	mov	dptr,#(_Rtc_ReadClock_buffer_65536_21 + 0x0006)
+	mov	dptr,#(_Rtc_ReadClock_buffer_10000_21 + 0x0006)
 	movx	a,@dptr
 	mov	dpl,a
 	push	ar6
 	push	ar5
 	lcall	_DecodeBcd
-	mov	r4,dpl
+	mov	r4, dpl
 	pop	ar5
 	pop	ar6
 	pop	ar7
@@ -904,14 +880,14 @@ _Rtc_ReadClock:
 	mov	a,r4
 	lcall	__gptrput
 ;	RTC1307.c:47: return 1;
-	mov	dpl,#0x01
+	mov	dpl, #0x01
 ;	RTC1307.c:48: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'Rtc_WriteClock'
 ;------------------------------------------------------------
-;dateTime                  Allocated with name '_Rtc_WriteClock_dateTime_65536_25'
-;buffer                    Allocated with name '_Rtc_WriteClock_buffer_65536_26'
+;dateTime      Allocated with name '_Rtc_WriteClock_dateTime_10000_25'
+;buffer        Allocated with name '_Rtc_WriteClock_buffer_10000_26'
 ;------------------------------------------------------------
 ;	RTC1307.c:51: unsigned char Rtc_WriteClock(DateTimeStruct *dateTime)
 ;	-----------------------------------------
@@ -921,7 +897,7 @@ _Rtc_WriteClock:
 	mov	r7,b
 	mov	r6,dph
 	mov	a,dpl
-	mov	dptr,#_Rtc_WriteClock_dateTime_65536_25
+	mov	dptr,#_Rtc_WriteClock_dateTime_10000_25
 	movx	@dptr,a
 	mov	a,r6
 	inc	dptr
@@ -930,11 +906,11 @@ _Rtc_WriteClock:
 	inc	dptr
 	movx	@dptr,a
 ;	RTC1307.c:55: buffer[0] = 0;
-	mov	dptr,#_Rtc_WriteClock_buffer_65536_26
+	mov	dptr,#_Rtc_WriteClock_buffer_10000_26
 	clr	a
 	movx	@dptr,a
 ;	RTC1307.c:56: buffer[1] = EncodeAsBcd(dateTime->seconds) & 0x7F; // Also clear CH
-	mov	dptr,#_Rtc_WriteClock_dateTime_65536_25
+	mov	dptr,#_Rtc_WriteClock_dateTime_10000_25
 	movx	a,@dptr
 	mov	r5,a
 	inc	dptr
@@ -943,28 +919,31 @@ _Rtc_WriteClock:
 	inc	dptr
 	movx	a,@dptr
 	mov	r7,a
-	mov	dpl,r5
-	mov	dph,r6
-	mov	b,r7
+	mov	ar2,r5
+	mov	ar3,r6
+	mov	ar4,r7
+	mov	dpl,r2
+	mov	dph,r3
+	mov	b,r4
 	lcall	__gptrget
 	mov	dpl,a
 	push	ar7
 	push	ar6
 	push	ar5
 	lcall	_EncodeAsBcd
-	mov	a,dpl
+	mov	a, dpl
 	pop	ar5
 	pop	ar6
 	pop	ar7
 	anl	a,#0x7f
-	mov	dptr,#(_Rtc_WriteClock_buffer_65536_26 + 0x0001)
+	mov	dptr,#(_Rtc_WriteClock_buffer_10000_26 + 0x0001)
 	movx	@dptr,a
 ;	RTC1307.c:57: buffer[2] = EncodeAsBcd(dateTime->minutes) & 0x7F;
 	mov	a,#0x01
-	add	a,r5
+	add	a, r5
 	mov	r2,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	r3,a
 	mov	ar4,r7
 	mov	dpl,r2
@@ -976,19 +955,19 @@ _Rtc_WriteClock:
 	push	ar6
 	push	ar5
 	lcall	_EncodeAsBcd
-	mov	a,dpl
+	mov	a, dpl
 	pop	ar5
 	pop	ar6
 	pop	ar7
 	anl	a,#0x7f
-	mov	dptr,#(_Rtc_WriteClock_buffer_65536_26 + 0x0002)
+	mov	dptr,#(_Rtc_WriteClock_buffer_10000_26 + 0x0002)
 	movx	@dptr,a
 ;	RTC1307.c:58: buffer[3] = (EncodeAsBcd(dateTime->hours) & 0x7F) | 0x80; // 24 hour
 	mov	a,#0x02
-	add	a,r5
+	add	a, r5
 	mov	r2,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	r3,a
 	mov	ar4,r7
 	mov	dpl,r2
@@ -1000,20 +979,20 @@ _Rtc_WriteClock:
 	push	ar6
 	push	ar5
 	lcall	_EncodeAsBcd
-	mov	a,dpl
+	mov	a, dpl
 	pop	ar5
 	pop	ar6
 	pop	ar7
 	anl	a,#0x7f
 	orl	a,#0x80
-	mov	dptr,#(_Rtc_WriteClock_buffer_65536_26 + 0x0003)
+	mov	dptr,#(_Rtc_WriteClock_buffer_10000_26 + 0x0003)
 	movx	@dptr,a
 ;	RTC1307.c:59: buffer[4] = EncodeAsBcd(dateTime->dayOfWeek) & 0x7;
 	mov	a,#0x03
-	add	a,r5
+	add	a, r5
 	mov	r2,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	r3,a
 	mov	ar4,r7
 	mov	dpl,r2
@@ -1025,19 +1004,19 @@ _Rtc_WriteClock:
 	push	ar6
 	push	ar5
 	lcall	_EncodeAsBcd
-	mov	a,dpl
+	mov	a, dpl
 	pop	ar5
 	pop	ar6
 	pop	ar7
 	anl	a,#0x07
-	mov	dptr,#(_Rtc_WriteClock_buffer_65536_26 + 0x0004)
+	mov	dptr,#(_Rtc_WriteClock_buffer_10000_26 + 0x0004)
 	movx	@dptr,a
 ;	RTC1307.c:60: buffer[5] = EncodeAsBcd(dateTime->day) & 0x3F;
 	mov	a,#0x04
-	add	a,r5
+	add	a, r5
 	mov	r2,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	r3,a
 	mov	ar4,r7
 	mov	dpl,r2
@@ -1049,19 +1028,19 @@ _Rtc_WriteClock:
 	push	ar6
 	push	ar5
 	lcall	_EncodeAsBcd
-	mov	a,dpl
+	mov	a, dpl
 	pop	ar5
 	pop	ar6
 	pop	ar7
 	anl	a,#0x3f
-	mov	dptr,#(_Rtc_WriteClock_buffer_65536_26 + 0x0005)
+	mov	dptr,#(_Rtc_WriteClock_buffer_10000_26 + 0x0005)
 	movx	@dptr,a
 ;	RTC1307.c:61: buffer[6] = EncodeAsBcd(dateTime->month) & 0x1F;
 	mov	a,#0x05
-	add	a,r5
+	add	a, r5
 	mov	r2,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	r3,a
 	mov	ar4,r7
 	mov	dpl,r2
@@ -1073,19 +1052,19 @@ _Rtc_WriteClock:
 	push	ar6
 	push	ar5
 	lcall	_EncodeAsBcd
-	mov	a,dpl
+	mov	a, dpl
 	pop	ar5
 	pop	ar6
 	pop	ar7
 	anl	a,#0x1f
-	mov	dptr,#(_Rtc_WriteClock_buffer_65536_26 + 0x0006)
+	mov	dptr,#(_Rtc_WriteClock_buffer_10000_26 + 0x0006)
 	movx	@dptr,a
 ;	RTC1307.c:62: buffer[7] = EncodeAsBcd(dateTime->year);
 	mov	a,#0x06
-	add	a,r5
+	add	a, r5
 	mov	r5,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	r6,a
 	mov	dpl,r5
 	mov	dph,r6
@@ -1093,15 +1072,15 @@ _Rtc_WriteClock:
 	lcall	__gptrget
 	mov	dpl,a
 	lcall	_EncodeAsBcd
-	mov	r7,dpl
-	mov	dptr,#(_Rtc_WriteClock_buffer_65536_26 + 0x0007)
+	mov	r7, dpl
+	mov	dptr,#(_Rtc_WriteClock_buffer_10000_26 + 0x0007)
 	mov	a,r7
 	movx	@dptr,a
 ;	RTC1307.c:65: return I2C_SendData(DS1307ADDRESS, buffer, 8);
 	mov	dptr,#_I2C_SendData_PARM_2
-	mov	a,#_Rtc_WriteClock_buffer_65536_26
+	mov	a,#_Rtc_WriteClock_buffer_10000_26
 	movx	@dptr,a
-	mov	a,#(_Rtc_WriteClock_buffer_65536_26 >> 8)
+	mov	a,#(_Rtc_WriteClock_buffer_10000_26 >> 8)
 	inc	dptr
 	movx	@dptr,a
 	clr	a
@@ -1113,7 +1092,7 @@ _Rtc_WriteClock:
 	clr	a
 	inc	dptr
 	movx	@dptr,a
-	mov	dpl,#0x68
+	mov	dpl, #0x68
 ;	RTC1307.c:66: }
 	ljmp	_I2C_SendData
 ;------------------------------------------------------------

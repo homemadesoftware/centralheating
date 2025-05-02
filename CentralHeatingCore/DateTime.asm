@@ -1,10 +1,10 @@
 ;--------------------------------------------------------
-; File Created by SDCC : free open source ANSI-C Compiler
-; Version 4.0.0 #11528 (MINGW64)
+; File Created by SDCC : free open source ISO C Compiler
+; Version 4.5.0 #15242 (MINGW64)
 ;--------------------------------------------------------
 	.module DateTime
-	.optsdcc -mmcs51 --model-large
 	
+	.optsdcc -mmcs51 --model-large
 ;--------------------------------------------------------
 ; Public variables in this module
 ;--------------------------------------------------------
@@ -430,18 +430,6 @@ _P5_7	=	0x00ef
 ; internal ram data
 ;--------------------------------------------------------
 	.area DSEG    (DATA)
-_FormatTime_sloc0_1_0:
-	.ds 3
-_FormatTime_sloc1_1_0:
-	.ds 3
-_FormatTime_sloc2_1_0:
-	.ds 3
-_FormatDate_sloc0_1_0:
-	.ds 3
-_FormatDate_sloc1_1_0:
-	.ds 3
-_FormatDate_sloc2_1_0:
-	.ds 3
 _AddSecondsToDateTime_sloc0_1_0:
 	.ds 3
 _AddSecondsToDateTime_sloc1_1_0:
@@ -452,9 +440,25 @@ _AddSecondsToDateTime_sloc3_1_0:
 	.ds 3
 _AddSecondsToDateTime_sloc4_1_0:
 	.ds 3
+_AddSecondsToDateTime_sloc5_1_0:
+	.ds 3
 ;--------------------------------------------------------
-; overlayable items in internal ram 
+; overlayable items in internal ram
 ;--------------------------------------------------------
+	.area	OSEG    (OVR,DATA)
+_FormatTime_sloc0_1_0:
+	.ds 3
+_FormatTime_sloc1_1_0:
+	.ds 3
+_FormatTime_sloc2_1_0:
+	.ds 3
+	.area	OSEG    (OVR,DATA)
+_FormatDate_sloc0_1_0:
+	.ds 3
+_FormatDate_sloc1_1_0:
+	.ds 3
+_FormatDate_sloc2_1_0:
+	.ds 3
 	.area	OSEG    (OVR,DATA)
 _CompareDateTime_sloc0_1_0:
 	.ds 1
@@ -486,39 +490,39 @@ _CompareDateTime_sloc5_1_0:
 ;--------------------------------------------------------
 	.area PSEG    (PAG,XDATA)
 ;--------------------------------------------------------
-; external ram data
+; uninitialized external ram data
 ;--------------------------------------------------------
 	.area XSEG    (XDATA)
-_GetNumDaysInMonth_pdt_65536_17:
+_GetNumDaysInMonth_pdt_10000_17:
 	.ds 3
 _FormatTime_PARM_2:
 	.ds 3
 _FormatTime_PARM_3:
 	.ds 1
-_FormatTime_buffer_65536_22:
+_FormatTime_buffer_10000_22:
 	.ds 3
 _FormatDate_PARM_2:
 	.ds 3
-_FormatDate_buffer_65536_25:
+_FormatDate_buffer_10000_25:
 	.ds 3
 _AddSecondsToDateTime_PARM_2:
 	.ds 2
 _AddSecondsToDateTime_PARM_3:
 	.ds 3
-_AddSecondsToDateTime_pdt_65536_27:
+_AddSecondsToDateTime_pdt_10000_27:
 	.ds 3
-_AddSecondsToDateTime_secondsLeft_65536_28:
+_AddSecondsToDateTime_secondsLeft_10000_28:
 	.ds 2
 _CompareDateTime_PARM_2:
 	.ds 3
-_CompareDateTime_dt1_65536_35:
+_CompareDateTime_dt1_10000_35:
 	.ds 3
 ;--------------------------------------------------------
 ; absolute external ram data
 ;--------------------------------------------------------
 	.area XABS    (ABS,XDATA)
 ;--------------------------------------------------------
-; external initialized ram data
+; initialized external ram data
 ;--------------------------------------------------------
 	.area XISEG   (XDATA)
 	.area HOME    (CODE)
@@ -550,8 +554,8 @@ _CompareDateTime_dt1_65536_35:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'GetNumDaysInMonth'
 ;------------------------------------------------------------
-;pdt                       Allocated with name '_GetNumDaysInMonth_pdt_65536_17'
-;year                      Allocated with name '_GetNumDaysInMonth_year_65536_18'
+;pdt           Allocated with name '_GetNumDaysInMonth_pdt_10000_17'
+;year          Allocated with name '_GetNumDaysInMonth_year_10000_18'
 ;------------------------------------------------------------
 ;	../Common/DateTime.c:7: int GetNumDaysInMonth(DateTimeStruct* pdt)
 ;	-----------------------------------------
@@ -569,7 +573,7 @@ _GetNumDaysInMonth:
 	mov	r7,b
 	mov	r6,dph
 	mov	a,dpl
-	mov	dptr,#_GetNumDaysInMonth_pdt_65536_17
+	mov	dptr,#_GetNumDaysInMonth_pdt_10000_17
 	movx	@dptr,a
 	mov	a,r6
 	inc	dptr
@@ -578,7 +582,7 @@ _GetNumDaysInMonth:
 	inc	dptr
 	movx	@dptr,a
 ;	../Common/DateTime.c:9: int year = pdt->year + 2000;
-	mov	dptr,#_GetNumDaysInMonth_pdt_65536_17
+	mov	dptr,#_GetNumDaysInMonth_pdt_10000_17
 	movx	a,@dptr
 	mov	r5,a
 	inc	dptr
@@ -588,10 +592,10 @@ _GetNumDaysInMonth:
 	movx	a,@dptr
 	mov	r7,a
 	mov	a,#0x06
-	add	a,r5
+	add	a, r5
 	mov	r2,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	r3,a
 	mov	ar4,r7
 	mov	dpl,r2
@@ -601,17 +605,17 @@ _GetNumDaysInMonth:
 	mov	r2,a
 	mov	r4,#0x00
 	mov	a,#0xd0
-	add	a,r2
+	add	a, r2
 	mov	r3,a
 	mov	a,#0x07
-	addc	a,r4
+	addc	a, r4
 	mov	r4,a
 ;	../Common/DateTime.c:10: switch (pdt->month)
 	mov	a,#0x05
-	add	a,r5
+	add	a, r5
 	mov	r5,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	r6,a
 	mov	dpl,r5
 	mov	dph,r6
@@ -619,20 +623,20 @@ _GetNumDaysInMonth:
 	lcall	__gptrget
 	mov  r7,a
 	add	a,#0xff - 0x0c
-	jnc	00129$
+	jnc	00133$
 	ljmp	00118$
-00129$:
+00133$:
 	mov	a,r7
-	add	a,#(00130$-3-.)
+	add	a,#(00134$-3-.)
 	movc	a,@a+pc
 	mov	dpl,a
 	mov	a,r7
-	add	a,#(00131$-3-.)
+	add	a,#(00135$-3-.)
 	movc	a,@a+pc
 	mov	dph,a
 	clr	a
 	jmp	@a+dptr
-00130$:
+00134$:
 	.db	00118$
 	.db	00101$
 	.db	00102$
@@ -646,7 +650,7 @@ _GetNumDaysInMonth:
 	.db	00115$
 	.db	00116$
 	.db	00117$
-00131$:
+00135$:
 	.db	00118$>>8
 	.db	00101$>>8
 	.db	00102$>>8
@@ -674,13 +678,13 @@ _GetNumDaysInMonth:
 	clr	a
 	inc	dptr
 	movx	@dptr,a
-	mov	dpl,r3
-	mov	dph,r4
+	mov	dpl, r3
+	mov	dph, r4
 	push	ar4
 	push	ar3
 	lcall	__modsint
-	mov	a,dpl
-	mov	b,dph
+	mov	a, dpl
+	mov	b, dph
 	pop	ar3
 	pop	ar4
 	orl	a,b
@@ -691,13 +695,13 @@ _GetNumDaysInMonth:
 	clr	a
 	inc	dptr
 	movx	@dptr,a
-	mov	dpl,r3
-	mov	dph,r4
+	mov	dpl, r3
+	mov	dph, r4
 	push	ar4
 	push	ar3
 	lcall	__modsint
-	mov	a,dpl
-	mov	b,dph
+	mov	a, dpl
+	mov	b, dph
 	pop	ar3
 	pop	ar4
 	orl	a,b
@@ -709,11 +713,11 @@ _GetNumDaysInMonth:
 	mov	a,#0x01
 	inc	dptr
 	movx	@dptr,a
-	mov	dpl,r3
-	mov	dph,r4
+	mov	dpl, r3
+	mov	dph, r4
 	lcall	__modsint
-	mov	a,dpl
-	mov	b,dph
+	mov	a, dpl
+	mov	b, dph
 	orl	a,b
 	jnz	00104$
 00103$:
@@ -783,12 +787,12 @@ _GetNumDaysInMonth:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'FormatTime'
 ;------------------------------------------------------------
-;sloc0                     Allocated with name '_FormatTime_sloc0_1_0'
-;sloc1                     Allocated with name '_FormatTime_sloc1_1_0'
-;sloc2                     Allocated with name '_FormatTime_sloc2_1_0'
-;pdt                       Allocated with name '_FormatTime_PARM_2'
-;seconds                   Allocated with name '_FormatTime_PARM_3'
-;buffer                    Allocated with name '_FormatTime_buffer_65536_22'
+;pdt           Allocated with name '_FormatTime_PARM_2'
+;seconds       Allocated with name '_FormatTime_PARM_3'
+;buffer        Allocated with name '_FormatTime_buffer_10000_22'
+;sloc0         Allocated with name '_FormatTime_sloc0_1_0'
+;sloc1         Allocated with name '_FormatTime_sloc1_1_0'
+;sloc2         Allocated with name '_FormatTime_sloc2_1_0'
 ;------------------------------------------------------------
 ;	../Common/DateTime.c:48: void FormatTime(char *buffer, DateTimeStruct *pdt, unsigned char seconds)
 ;	-----------------------------------------
@@ -798,7 +802,7 @@ _FormatTime:
 	mov	r7,b
 	mov	r6,dph
 	mov	a,dpl
-	mov	dptr,#_FormatTime_buffer_65536_22
+	mov	dptr,#_FormatTime_buffer_10000_22
 	movx	@dptr,a
 	mov	a,r6
 	inc	dptr
@@ -807,7 +811,7 @@ _FormatTime:
 	inc	dptr
 	movx	@dptr,a
 ;	../Common/DateTime.c:50: buffer[0] = (pdt->hours / 10) + '0';
-	mov	dptr,#_FormatTime_buffer_65536_22
+	mov	dptr,#_FormatTime_buffer_10000_22
 	movx	a,@dptr
 	mov	r5,a
 	inc	dptr
@@ -826,88 +830,50 @@ _FormatTime:
 	movx	a,@dptr
 	mov	(_FormatTime_sloc0_1_0 + 2),a
 	mov	a,#0x02
-	add	a,_FormatTime_sloc0_1_0
+	add	a, _FormatTime_sloc0_1_0
 	mov	_FormatTime_sloc1_1_0,a
 	clr	a
-	addc	a,(_FormatTime_sloc0_1_0 + 1)
+	addc	a, (_FormatTime_sloc0_1_0 + 1)
 	mov	(_FormatTime_sloc1_1_0 + 1),a
 	mov	(_FormatTime_sloc1_1_0 + 2),(_FormatTime_sloc0_1_0 + 2)
 	mov	dpl,_FormatTime_sloc1_1_0
 	mov	dph,(_FormatTime_sloc1_1_0 + 1)
 	mov	b,(_FormatTime_sloc1_1_0 + 2)
 	lcall	__gptrget
-	mov	r3,a
-	mov	r2,#0x00
-	mov	dptr,#__divsint_PARM_2
-	mov	a,#0x0a
-	movx	@dptr,a
-	clr	a
-	inc	dptr
-	movx	@dptr,a
-	mov	dpl,r3
-	mov	dph,r2
-	push	ar7
-	push	ar6
-	push	ar5
-	lcall	__divsint
-	mov	r2,dpl
-	pop	ar5
-	pop	ar6
-	pop	ar7
-	mov	a,#0x30
-	add	a,r2
+	mov	b,#0x0a
+	div	ab
+	add	a,#0x30
 	mov	dpl,r5
 	mov	dph,r6
 	mov	b,r7
 	lcall	__gptrput
 ;	../Common/DateTime.c:51: buffer[1] = (pdt->hours % 10) + '0';
 	mov	a,#0x01
-	add	a,r5
+	add	a, r5
 	mov	r2,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	r3,a
 	mov	ar4,r7
 	mov	dpl,_FormatTime_sloc1_1_0
 	mov	dph,(_FormatTime_sloc1_1_0 + 1)
 	mov	b,(_FormatTime_sloc1_1_0 + 2)
 	lcall	__gptrget
-	mov	r0,a
-	mov	r1,#0x00
-	mov	dptr,#__modsint_PARM_2
-	mov	a,#0x0a
-	movx	@dptr,a
-	clr	a
-	inc	dptr
-	movx	@dptr,a
-	mov	dpl,r0
-	mov	dph,r1
-	push	ar7
-	push	ar6
-	push	ar5
-	push	ar4
-	push	ar3
-	push	ar2
-	lcall	__modsint
-	mov	r0,dpl
-	pop	ar2
-	pop	ar3
-	pop	ar4
-	pop	ar5
-	pop	ar6
-	pop	ar7
+	mov	b,#0x0a
+	div	ab
+	mov	r1,b
 	mov	a,#0x30
-	add	a,r0
+	add	a, r1
 	mov	dpl,r2
 	mov	dph,r3
 	mov	b,r4
 	lcall	__gptrput
 ;	../Common/DateTime.c:52: buffer[2] = ':';
 	mov	a,#0x02
-	add	a,r5
+	add	a, r5
 	mov	r2,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	r3,a
 	mov	ar4,r7
 	mov	dpl,r2
@@ -917,85 +883,47 @@ _FormatTime:
 	lcall	__gptrput
 ;	../Common/DateTime.c:53: buffer[3] = (pdt->minutes / 10) + '0';
 	mov	a,#0x03
-	add	a,r5
+	add	a, r5
 	mov	_FormatTime_sloc1_1_0,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	(_FormatTime_sloc1_1_0 + 1),a
 	mov	(_FormatTime_sloc1_1_0 + 2),r7
 	mov	a,#0x01
-	add	a,_FormatTime_sloc0_1_0
+	add	a, _FormatTime_sloc0_1_0
 	mov	_FormatTime_sloc2_1_0,a
 	clr	a
-	addc	a,(_FormatTime_sloc0_1_0 + 1)
+	addc	a, (_FormatTime_sloc0_1_0 + 1)
 	mov	(_FormatTime_sloc2_1_0 + 1),a
 	mov	(_FormatTime_sloc2_1_0 + 2),(_FormatTime_sloc0_1_0 + 2)
 	mov	dpl,_FormatTime_sloc2_1_0
 	mov	dph,(_FormatTime_sloc2_1_0 + 1)
 	mov	b,(_FormatTime_sloc2_1_0 + 2)
 	lcall	__gptrget
-	mov	r3,a
-	mov	r2,#0x00
-	mov	dptr,#__divsint_PARM_2
-	mov	a,#0x0a
-	movx	@dptr,a
-	clr	a
-	inc	dptr
-	movx	@dptr,a
-	mov	dpl,r3
-	mov	dph,r2
-	push	ar7
-	push	ar6
-	push	ar5
-	lcall	__divsint
-	mov	r2,dpl
-	pop	ar5
-	pop	ar6
-	pop	ar7
-	mov	a,#0x30
-	add	a,r2
+	mov	b,#0x0a
+	div	ab
+	add	a,#0x30
 	mov	dpl,_FormatTime_sloc1_1_0
 	mov	dph,(_FormatTime_sloc1_1_0 + 1)
 	mov	b,(_FormatTime_sloc1_1_0 + 2)
 	lcall	__gptrput
 ;	../Common/DateTime.c:54: buffer[4] = (pdt->minutes % 10) + '0';
 	mov	a,#0x04
-	add	a,r5
+	add	a, r5
 	mov	r2,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	r3,a
 	mov	ar4,r7
 	mov	dpl,_FormatTime_sloc2_1_0
 	mov	dph,(_FormatTime_sloc2_1_0 + 1)
 	mov	b,(_FormatTime_sloc2_1_0 + 2)
 	lcall	__gptrget
-	mov	r0,a
-	mov	r1,#0x00
-	mov	dptr,#__modsint_PARM_2
-	mov	a,#0x0a
-	movx	@dptr,a
-	clr	a
-	inc	dptr
-	movx	@dptr,a
-	mov	dpl,r0
-	mov	dph,r1
-	push	ar7
-	push	ar6
-	push	ar5
-	push	ar4
-	push	ar3
-	push	ar2
-	lcall	__modsint
-	mov	r0,dpl
-	pop	ar2
-	pop	ar3
-	pop	ar4
-	pop	ar5
-	pop	ar6
-	pop	ar7
+	mov	b,#0x0a
+	div	ab
+	mov	r1,b
 	mov	a,#0x30
-	add	a,r0
+	add	a, r1
 	mov	dpl,r2
 	mov	dph,r3
 	mov	b,r4
@@ -1006,10 +934,10 @@ _FormatTime:
 	jnz	00102$
 ;	../Common/DateTime.c:57: buffer[5] = 0;
 	mov	a,#0x05
-	add	a,r5
+	add	a, r5
 	mov	r2,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	r3,a
 	mov	ar4,r7
 	mov	dpl,r2
@@ -1021,10 +949,10 @@ _FormatTime:
 00102$:
 ;	../Common/DateTime.c:60: buffer[5] = ':';
 	mov	a,#0x05
-	add	a,r5
+	add	a, r5
 	mov	r2,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	r3,a
 	mov	ar4,r7
 	mov	dpl,r2
@@ -1034,94 +962,53 @@ _FormatTime:
 	lcall	__gptrput
 ;	../Common/DateTime.c:61: buffer[6] = (pdt->seconds / 10) + '0';
 	mov	a,#0x06
-	add	a,r5
-	mov	r2,a
+	add	a, r5
+	mov	_FormatTime_sloc2_1_0,a
 	clr	a
-	addc	a,r6
-	mov	r3,a
-	mov	ar4,r7
-	mov	dpl,_FormatTime_sloc0_1_0
-	mov	dph,(_FormatTime_sloc0_1_0 + 1)
-	mov	b,(_FormatTime_sloc0_1_0 + 2)
+	addc	a, r6
+	mov	(_FormatTime_sloc2_1_0 + 1),a
+	mov	(_FormatTime_sloc2_1_0 + 2),r7
+	mov	_FormatTime_sloc1_1_0,_FormatTime_sloc0_1_0
+	mov	(_FormatTime_sloc1_1_0 + 1),(_FormatTime_sloc0_1_0 + 1)
+	mov	(_FormatTime_sloc1_1_0 + 2),(_FormatTime_sloc0_1_0 + 2)
+	mov	dpl,_FormatTime_sloc1_1_0
+	mov	dph,(_FormatTime_sloc1_1_0 + 1)
+	mov	b,(_FormatTime_sloc1_1_0 + 2)
 	lcall	__gptrget
-	mov	r0,a
-	mov	r1,#0x00
-	mov	dptr,#__divsint_PARM_2
-	mov	a,#0x0a
-	movx	@dptr,a
-	clr	a
-	inc	dptr
-	movx	@dptr,a
-	mov	dpl,r0
-	mov	dph,r1
-	push	ar7
-	push	ar6
-	push	ar5
-	push	ar4
-	push	ar3
-	push	ar2
-	lcall	__divsint
-	mov	r0,dpl
-	pop	ar2
-	pop	ar3
-	pop	ar4
-	pop	ar5
-	pop	ar6
-	pop	ar7
-	mov	a,#0x30
-	add	a,r0
-	mov	dpl,r2
-	mov	dph,r3
-	mov	b,r4
+	mov	b,#0x0a
+	div	ab
+	add	a,#0x30
+	mov	dpl,_FormatTime_sloc2_1_0
+	mov	dph,(_FormatTime_sloc2_1_0 + 1)
+	mov	b,(_FormatTime_sloc2_1_0 + 2)
 	lcall	__gptrput
 ;	../Common/DateTime.c:62: buffer[7] = (pdt->seconds % 10) + '0';
 	mov	a,#0x07
-	add	a,r5
+	add	a, r5
 	mov	r2,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	r3,a
 	mov	ar4,r7
-	mov	dpl,_FormatTime_sloc0_1_0
-	mov	dph,(_FormatTime_sloc0_1_0 + 1)
-	mov	b,(_FormatTime_sloc0_1_0 + 2)
+	mov	dpl,_FormatTime_sloc1_1_0
+	mov	dph,(_FormatTime_sloc1_1_0 + 1)
+	mov	b,(_FormatTime_sloc1_1_0 + 2)
 	lcall	__gptrget
-	mov	r0,a
-	mov	r1,#0x00
-	mov	dptr,#__modsint_PARM_2
-	mov	a,#0x0a
-	movx	@dptr,a
-	clr	a
-	inc	dptr
-	movx	@dptr,a
-	mov	dpl,r0
-	mov	dph,r1
-	push	ar7
-	push	ar6
-	push	ar5
-	push	ar4
-	push	ar3
-	push	ar2
-	lcall	__modsint
-	mov	r0,dpl
-	pop	ar2
-	pop	ar3
-	pop	ar4
-	pop	ar5
-	pop	ar6
-	pop	ar7
+	mov	b,#0x0a
+	div	ab
+	mov	r1,b
 	mov	a,#0x30
-	add	a,r0
+	add	a, r1
 	mov	dpl,r2
 	mov	dph,r3
 	mov	b,r4
 	lcall	__gptrput
 ;	../Common/DateTime.c:63: buffer[8] = 0;
 	mov	a,#0x08
-	add	a,r5
+	add	a, r5
 	mov	r5,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	r6,a
 	mov	dpl,r5
 	mov	dph,r6
@@ -1132,11 +1019,11 @@ _FormatTime:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'FormatDate'
 ;------------------------------------------------------------
-;sloc0                     Allocated with name '_FormatDate_sloc0_1_0'
-;sloc1                     Allocated with name '_FormatDate_sloc1_1_0'
-;sloc2                     Allocated with name '_FormatDate_sloc2_1_0'
-;pdt                       Allocated with name '_FormatDate_PARM_2'
-;buffer                    Allocated with name '_FormatDate_buffer_65536_25'
+;pdt           Allocated with name '_FormatDate_PARM_2'
+;buffer        Allocated with name '_FormatDate_buffer_10000_25'
+;sloc0         Allocated with name '_FormatDate_sloc0_1_0'
+;sloc1         Allocated with name '_FormatDate_sloc1_1_0'
+;sloc2         Allocated with name '_FormatDate_sloc2_1_0'
 ;------------------------------------------------------------
 ;	../Common/DateTime.c:67: void FormatDate(char *buffer, DateTimeStruct *pdt)
 ;	-----------------------------------------
@@ -1146,7 +1033,7 @@ _FormatDate:
 	mov	r7,b
 	mov	r6,dph
 	mov	a,dpl
-	mov	dptr,#_FormatDate_buffer_65536_25
+	mov	dptr,#_FormatDate_buffer_10000_25
 	movx	@dptr,a
 	mov	a,r6
 	inc	dptr
@@ -1155,7 +1042,7 @@ _FormatDate:
 	inc	dptr
 	movx	@dptr,a
 ;	../Common/DateTime.c:69: buffer[0] = (pdt->day / 10) + '0';
-	mov	dptr,#_FormatDate_buffer_65536_25
+	mov	dptr,#_FormatDate_buffer_10000_25
 	movx	a,@dptr
 	mov	r5,a
 	inc	dptr
@@ -1174,88 +1061,50 @@ _FormatDate:
 	movx	a,@dptr
 	mov	(_FormatDate_sloc0_1_0 + 2),a
 	mov	a,#0x04
-	add	a,_FormatDate_sloc0_1_0
+	add	a, _FormatDate_sloc0_1_0
 	mov	_FormatDate_sloc1_1_0,a
 	clr	a
-	addc	a,(_FormatDate_sloc0_1_0 + 1)
+	addc	a, (_FormatDate_sloc0_1_0 + 1)
 	mov	(_FormatDate_sloc1_1_0 + 1),a
 	mov	(_FormatDate_sloc1_1_0 + 2),(_FormatDate_sloc0_1_0 + 2)
 	mov	dpl,_FormatDate_sloc1_1_0
 	mov	dph,(_FormatDate_sloc1_1_0 + 1)
 	mov	b,(_FormatDate_sloc1_1_0 + 2)
 	lcall	__gptrget
-	mov	r3,a
-	mov	r2,#0x00
-	mov	dptr,#__divsint_PARM_2
-	mov	a,#0x0a
-	movx	@dptr,a
-	clr	a
-	inc	dptr
-	movx	@dptr,a
-	mov	dpl,r3
-	mov	dph,r2
-	push	ar7
-	push	ar6
-	push	ar5
-	lcall	__divsint
-	mov	r2,dpl
-	pop	ar5
-	pop	ar6
-	pop	ar7
-	mov	a,#0x30
-	add	a,r2
+	mov	b,#0x0a
+	div	ab
+	add	a,#0x30
 	mov	dpl,r5
 	mov	dph,r6
 	mov	b,r7
 	lcall	__gptrput
 ;	../Common/DateTime.c:70: buffer[1] = (pdt->day % 10) + '0';
 	mov	a,#0x01
-	add	a,r5
+	add	a, r5
 	mov	r2,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	r3,a
 	mov	ar4,r7
 	mov	dpl,_FormatDate_sloc1_1_0
 	mov	dph,(_FormatDate_sloc1_1_0 + 1)
 	mov	b,(_FormatDate_sloc1_1_0 + 2)
 	lcall	__gptrget
-	mov	r0,a
-	mov	r1,#0x00
-	mov	dptr,#__modsint_PARM_2
-	mov	a,#0x0a
-	movx	@dptr,a
-	clr	a
-	inc	dptr
-	movx	@dptr,a
-	mov	dpl,r0
-	mov	dph,r1
-	push	ar7
-	push	ar6
-	push	ar5
-	push	ar4
-	push	ar3
-	push	ar2
-	lcall	__modsint
-	mov	r0,dpl
-	pop	ar2
-	pop	ar3
-	pop	ar4
-	pop	ar5
-	pop	ar6
-	pop	ar7
+	mov	b,#0x0a
+	div	ab
+	mov	r1,b
 	mov	a,#0x30
-	add	a,r0
+	add	a, r1
 	mov	dpl,r2
 	mov	dph,r3
 	mov	b,r4
 	lcall	__gptrput
 ;	../Common/DateTime.c:71: buffer[2] = '/';
 	mov	a,#0x02
-	add	a,r5
+	add	a, r5
 	mov	r2,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	r3,a
 	mov	ar4,r7
 	mov	dpl,r2
@@ -1265,95 +1114,57 @@ _FormatDate:
 	lcall	__gptrput
 ;	../Common/DateTime.c:72: buffer[3] = (pdt->month / 10) + '0';
 	mov	a,#0x03
-	add	a,r5
+	add	a, r5
 	mov	_FormatDate_sloc1_1_0,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	(_FormatDate_sloc1_1_0 + 1),a
 	mov	(_FormatDate_sloc1_1_0 + 2),r7
 	mov	a,#0x05
-	add	a,_FormatDate_sloc0_1_0
+	add	a, _FormatDate_sloc0_1_0
 	mov	_FormatDate_sloc2_1_0,a
 	clr	a
-	addc	a,(_FormatDate_sloc0_1_0 + 1)
+	addc	a, (_FormatDate_sloc0_1_0 + 1)
 	mov	(_FormatDate_sloc2_1_0 + 1),a
 	mov	(_FormatDate_sloc2_1_0 + 2),(_FormatDate_sloc0_1_0 + 2)
 	mov	dpl,_FormatDate_sloc2_1_0
 	mov	dph,(_FormatDate_sloc2_1_0 + 1)
 	mov	b,(_FormatDate_sloc2_1_0 + 2)
 	lcall	__gptrget
-	mov	r3,a
-	mov	r2,#0x00
-	mov	dptr,#__divsint_PARM_2
-	mov	a,#0x0a
-	movx	@dptr,a
-	clr	a
-	inc	dptr
-	movx	@dptr,a
-	mov	dpl,r3
-	mov	dph,r2
-	push	ar7
-	push	ar6
-	push	ar5
-	lcall	__divsint
-	mov	r2,dpl
-	pop	ar5
-	pop	ar6
-	pop	ar7
-	mov	a,#0x30
-	add	a,r2
+	mov	b,#0x0a
+	div	ab
+	add	a,#0x30
 	mov	dpl,_FormatDate_sloc1_1_0
 	mov	dph,(_FormatDate_sloc1_1_0 + 1)
 	mov	b,(_FormatDate_sloc1_1_0 + 2)
 	lcall	__gptrput
 ;	../Common/DateTime.c:73: buffer[4] = (pdt->month % 10) + '0';
 	mov	a,#0x04
-	add	a,r5
+	add	a, r5
 	mov	r2,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	r3,a
 	mov	ar4,r7
 	mov	dpl,_FormatDate_sloc2_1_0
 	mov	dph,(_FormatDate_sloc2_1_0 + 1)
 	mov	b,(_FormatDate_sloc2_1_0 + 2)
 	lcall	__gptrget
-	mov	r0,a
-	mov	r1,#0x00
-	mov	dptr,#__modsint_PARM_2
-	mov	a,#0x0a
-	movx	@dptr,a
-	clr	a
-	inc	dptr
-	movx	@dptr,a
-	mov	dpl,r0
-	mov	dph,r1
-	push	ar7
-	push	ar6
-	push	ar5
-	push	ar4
-	push	ar3
-	push	ar2
-	lcall	__modsint
-	mov	r0,dpl
-	pop	ar2
-	pop	ar3
-	pop	ar4
-	pop	ar5
-	pop	ar6
-	pop	ar7
+	mov	b,#0x0a
+	div	ab
+	mov	r1,b
 	mov	a,#0x30
-	add	a,r0
+	add	a, r1
 	mov	dpl,r2
 	mov	dph,r3
 	mov	b,r4
 	lcall	__gptrput
 ;	../Common/DateTime.c:74: buffer[5] = '/';
 	mov	a,#0x05
-	add	a,r5
+	add	a, r5
 	mov	r2,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	r3,a
 	mov	ar4,r7
 	mov	dpl,r2
@@ -1363,95 +1174,57 @@ _FormatDate:
 	lcall	__gptrput
 ;	../Common/DateTime.c:75: buffer[6] = (pdt->year / 10) + '0';
 	mov	a,#0x06
-	add	a,r5
+	add	a, r5
 	mov	_FormatDate_sloc2_1_0,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	(_FormatDate_sloc2_1_0 + 1),a
 	mov	(_FormatDate_sloc2_1_0 + 2),r7
 	mov	a,#0x06
-	add	a,_FormatDate_sloc0_1_0
+	add	a, _FormatDate_sloc0_1_0
 	mov	_FormatDate_sloc1_1_0,a
 	clr	a
-	addc	a,(_FormatDate_sloc0_1_0 + 1)
+	addc	a, (_FormatDate_sloc0_1_0 + 1)
 	mov	(_FormatDate_sloc1_1_0 + 1),a
 	mov	(_FormatDate_sloc1_1_0 + 2),(_FormatDate_sloc0_1_0 + 2)
 	mov	dpl,_FormatDate_sloc1_1_0
 	mov	dph,(_FormatDate_sloc1_1_0 + 1)
 	mov	b,(_FormatDate_sloc1_1_0 + 2)
 	lcall	__gptrget
-	mov	r3,a
-	mov	r2,#0x00
-	mov	dptr,#__divsint_PARM_2
-	mov	a,#0x0a
-	movx	@dptr,a
-	clr	a
-	inc	dptr
-	movx	@dptr,a
-	mov	dpl,r3
-	mov	dph,r2
-	push	ar7
-	push	ar6
-	push	ar5
-	lcall	__divsint
-	mov	r2,dpl
-	pop	ar5
-	pop	ar6
-	pop	ar7
-	mov	a,#0x30
-	add	a,r2
+	mov	b,#0x0a
+	div	ab
+	add	a,#0x30
 	mov	dpl,_FormatDate_sloc2_1_0
 	mov	dph,(_FormatDate_sloc2_1_0 + 1)
 	mov	b,(_FormatDate_sloc2_1_0 + 2)
 	lcall	__gptrput
 ;	../Common/DateTime.c:76: buffer[7] = (pdt->year % 10) + '0';
 	mov	a,#0x07
-	add	a,r5
+	add	a, r5
 	mov	r2,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	r3,a
 	mov	ar4,r7
 	mov	dpl,_FormatDate_sloc1_1_0
 	mov	dph,(_FormatDate_sloc1_1_0 + 1)
 	mov	b,(_FormatDate_sloc1_1_0 + 2)
 	lcall	__gptrget
-	mov	r0,a
-	mov	r1,#0x00
-	mov	dptr,#__modsint_PARM_2
-	mov	a,#0x0a
-	movx	@dptr,a
-	clr	a
-	inc	dptr
-	movx	@dptr,a
-	mov	dpl,r0
-	mov	dph,r1
-	push	ar7
-	push	ar6
-	push	ar5
-	push	ar4
-	push	ar3
-	push	ar2
-	lcall	__modsint
-	mov	r0,dpl
-	pop	ar2
-	pop	ar3
-	pop	ar4
-	pop	ar5
-	pop	ar6
-	pop	ar7
+	mov	b,#0x0a
+	div	ab
+	mov	r1,b
 	mov	a,#0x30
-	add	a,r0
+	add	a, r1
 	mov	dpl,r2
 	mov	dph,r3
 	mov	b,r4
 	lcall	__gptrput
 ;	../Common/DateTime.c:77: buffer[8] = 0;
 	mov	a,#0x08
-	add	a,r5
+	add	a, r5
 	mov	r5,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	r6,a
 	mov	dpl,r5
 	mov	dph,r6
@@ -1462,18 +1235,19 @@ _FormatDate:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'AddSecondsToDateTime'
 ;------------------------------------------------------------
-;sloc0                     Allocated with name '_AddSecondsToDateTime_sloc0_1_0'
-;sloc1                     Allocated with name '_AddSecondsToDateTime_sloc1_1_0'
-;sloc2                     Allocated with name '_AddSecondsToDateTime_sloc2_1_0'
-;sloc3                     Allocated with name '_AddSecondsToDateTime_sloc3_1_0'
-;sloc4                     Allocated with name '_AddSecondsToDateTime_sloc4_1_0'
-;seconds                   Allocated with name '_AddSecondsToDateTime_PARM_2'
-;result                    Allocated with name '_AddSecondsToDateTime_PARM_3'
-;pdt                       Allocated with name '_AddSecondsToDateTime_pdt_65536_27'
-;secondsLeft               Allocated with name '_AddSecondsToDateTime_secondsLeft_65536_28'
-;secondsAdded              Allocated with name '_AddSecondsToDateTime_secondsAdded_65536_28'
-;secondsToNextMinute       Allocated with name '_AddSecondsToDateTime_secondsToNextMinute_65536_28'
-;numDays                   Allocated with name '_AddSecondsToDateTime_numDays_65536_28'
+;sloc0         Allocated with name '_AddSecondsToDateTime_sloc0_1_0'
+;sloc1         Allocated with name '_AddSecondsToDateTime_sloc1_1_0'
+;sloc2         Allocated with name '_AddSecondsToDateTime_sloc2_1_0'
+;sloc3         Allocated with name '_AddSecondsToDateTime_sloc3_1_0'
+;sloc4         Allocated with name '_AddSecondsToDateTime_sloc4_1_0'
+;sloc5         Allocated with name '_AddSecondsToDateTime_sloc5_1_0'
+;seconds       Allocated with name '_AddSecondsToDateTime_PARM_2'
+;result        Allocated with name '_AddSecondsToDateTime_PARM_3'
+;pdt           Allocated with name '_AddSecondsToDateTime_pdt_10000_27'
+;secondsLeft   Allocated with name '_AddSecondsToDateTime_secondsLeft_10000_28'
+;secondsAdded  Allocated with name '_AddSecondsToDateTime_secondsAdded_10000_28'
+;secondsToNextMinute Allocated with name '_AddSecondsToDateTime_secondsToNextMinute_10000_28'
+;numDays       Allocated with name '_AddSecondsToDateTime_numDays_10000_28'
 ;------------------------------------------------------------
 ;	../Common/DateTime.c:81: void AddSecondsToDateTime(DateTimeStruct* pdt, int seconds, DateTimeStruct* result)
 ;	-----------------------------------------
@@ -1483,7 +1257,7 @@ _AddSecondsToDateTime:
 	mov	r7,b
 	mov	r6,dph
 	mov	a,dpl
-	mov	dptr,#_AddSecondsToDateTime_pdt_65536_27
+	mov	dptr,#_AddSecondsToDateTime_pdt_10000_27
 	movx	@dptr,a
 	mov	a,r6
 	inc	dptr
@@ -1494,21 +1268,21 @@ _AddSecondsToDateTime:
 ;	../Common/DateTime.c:86: result->day = pdt->day;
 	mov	dptr,#_AddSecondsToDateTime_PARM_3
 	movx	a,@dptr
-	mov	r5,a
+	mov	_AddSecondsToDateTime_sloc5_1_0,a
 	inc	dptr
 	movx	a,@dptr
-	mov	r6,a
+	mov	(_AddSecondsToDateTime_sloc5_1_0 + 1),a
 	inc	dptr
 	movx	a,@dptr
-	mov	r7,a
+	mov	(_AddSecondsToDateTime_sloc5_1_0 + 2),a
 	mov	a,#0x04
-	add	a,r5
+	add	a, _AddSecondsToDateTime_sloc5_1_0
 	mov	_AddSecondsToDateTime_sloc0_1_0,a
 	clr	a
-	addc	a,r6
+	addc	a, (_AddSecondsToDateTime_sloc5_1_0 + 1)
 	mov	(_AddSecondsToDateTime_sloc0_1_0 + 1),a
-	mov	(_AddSecondsToDateTime_sloc0_1_0 + 2),r7
-	mov	dptr,#_AddSecondsToDateTime_pdt_65536_27
+	mov	(_AddSecondsToDateTime_sloc0_1_0 + 2),(_AddSecondsToDateTime_sloc5_1_0 + 2)
+	mov	dptr,#_AddSecondsToDateTime_pdt_10000_27
 	movx	a,@dptr
 	mov	_AddSecondsToDateTime_sloc1_1_0,a
 	inc	dptr
@@ -1518,10 +1292,10 @@ _AddSecondsToDateTime:
 	movx	a,@dptr
 	mov	(_AddSecondsToDateTime_sloc1_1_0 + 2),a
 	mov	a,#0x04
-	add	a,_AddSecondsToDateTime_sloc1_1_0
+	add	a, _AddSecondsToDateTime_sloc1_1_0
 	mov	r2,a
 	clr	a
-	addc	a,(_AddSecondsToDateTime_sloc1_1_0 + 1)
+	addc	a, (_AddSecondsToDateTime_sloc1_1_0 + 1)
 	mov	r3,a
 	mov	r4,(_AddSecondsToDateTime_sloc1_1_0 + 2)
 	mov	dpl,r2
@@ -1534,17 +1308,17 @@ _AddSecondsToDateTime:
 	lcall	__gptrput
 ;	../Common/DateTime.c:87: result->dayOfWeek = pdt->dayOfWeek;
 	mov	a,#0x03
-	add	a,r5
+	add	a, _AddSecondsToDateTime_sloc5_1_0
 	mov	_AddSecondsToDateTime_sloc2_1_0,a
 	clr	a
-	addc	a,r6
+	addc	a, (_AddSecondsToDateTime_sloc5_1_0 + 1)
 	mov	(_AddSecondsToDateTime_sloc2_1_0 + 1),a
-	mov	(_AddSecondsToDateTime_sloc2_1_0 + 2),r7
+	mov	(_AddSecondsToDateTime_sloc2_1_0 + 2),(_AddSecondsToDateTime_sloc5_1_0 + 2)
 	mov	a,#0x03
-	add	a,_AddSecondsToDateTime_sloc1_1_0
+	add	a, _AddSecondsToDateTime_sloc1_1_0
 	mov	r0,a
 	clr	a
-	addc	a,(_AddSecondsToDateTime_sloc1_1_0 + 1)
+	addc	a, (_AddSecondsToDateTime_sloc1_1_0 + 1)
 	mov	r1,a
 	mov	r4,(_AddSecondsToDateTime_sloc1_1_0 + 2)
 	mov	dpl,r0
@@ -1557,17 +1331,17 @@ _AddSecondsToDateTime:
 	lcall	__gptrput
 ;	../Common/DateTime.c:88: result->hours = pdt->hours;
 	mov	a,#0x02
-	add	a,r5
+	add	a, _AddSecondsToDateTime_sloc5_1_0
 	mov	_AddSecondsToDateTime_sloc2_1_0,a
 	clr	a
-	addc	a,r6
+	addc	a, (_AddSecondsToDateTime_sloc5_1_0 + 1)
 	mov	(_AddSecondsToDateTime_sloc2_1_0 + 1),a
-	mov	(_AddSecondsToDateTime_sloc2_1_0 + 2),r7
+	mov	(_AddSecondsToDateTime_sloc2_1_0 + 2),(_AddSecondsToDateTime_sloc5_1_0 + 2)
 	mov	a,#0x02
-	add	a,_AddSecondsToDateTime_sloc1_1_0
+	add	a, _AddSecondsToDateTime_sloc1_1_0
 	mov	r0,a
 	clr	a
-	addc	a,(_AddSecondsToDateTime_sloc1_1_0 + 1)
+	addc	a, (_AddSecondsToDateTime_sloc1_1_0 + 1)
 	mov	r1,a
 	mov	r4,(_AddSecondsToDateTime_sloc1_1_0 + 2)
 	mov	dpl,r0
@@ -1580,17 +1354,17 @@ _AddSecondsToDateTime:
 	lcall	__gptrput
 ;	../Common/DateTime.c:89: result->minutes = pdt->minutes;
 	mov	a,#0x01
-	add	a,r5
+	add	a, _AddSecondsToDateTime_sloc5_1_0
 	mov	_AddSecondsToDateTime_sloc3_1_0,a
 	clr	a
-	addc	a,r6
+	addc	a, (_AddSecondsToDateTime_sloc5_1_0 + 1)
 	mov	(_AddSecondsToDateTime_sloc3_1_0 + 1),a
-	mov	(_AddSecondsToDateTime_sloc3_1_0 + 2),r7
+	mov	(_AddSecondsToDateTime_sloc3_1_0 + 2),(_AddSecondsToDateTime_sloc5_1_0 + 2)
 	mov	a,#0x01
-	add	a,_AddSecondsToDateTime_sloc1_1_0
+	add	a, _AddSecondsToDateTime_sloc1_1_0
 	mov	r0,a
 	clr	a
-	addc	a,(_AddSecondsToDateTime_sloc1_1_0 + 1)
+	addc	a, (_AddSecondsToDateTime_sloc1_1_0 + 1)
 	mov	r1,a
 	mov	r4,(_AddSecondsToDateTime_sloc1_1_0 + 2)
 	mov	dpl,r0
@@ -1603,17 +1377,17 @@ _AddSecondsToDateTime:
 	lcall	__gptrput
 ;	../Common/DateTime.c:90: result->month = pdt->month;
 	mov	a,#0x05
-	add	a,r5
+	add	a, _AddSecondsToDateTime_sloc5_1_0
 	mov	_AddSecondsToDateTime_sloc4_1_0,a
 	clr	a
-	addc	a,r6
+	addc	a, (_AddSecondsToDateTime_sloc5_1_0 + 1)
 	mov	(_AddSecondsToDateTime_sloc4_1_0 + 1),a
-	mov	(_AddSecondsToDateTime_sloc4_1_0 + 2),r7
+	mov	(_AddSecondsToDateTime_sloc4_1_0 + 2),(_AddSecondsToDateTime_sloc5_1_0 + 2)
 	mov	a,#0x05
-	add	a,_AddSecondsToDateTime_sloc1_1_0
+	add	a, _AddSecondsToDateTime_sloc1_1_0
 	mov	r0,a
 	clr	a
-	addc	a,(_AddSecondsToDateTime_sloc1_1_0 + 1)
+	addc	a, (_AddSecondsToDateTime_sloc1_1_0 + 1)
 	mov	r1,a
 	mov	r4,(_AddSecondsToDateTime_sloc1_1_0 + 2)
 	mov	dpl,r0
@@ -1625,34 +1399,39 @@ _AddSecondsToDateTime:
 	mov	b,(_AddSecondsToDateTime_sloc4_1_0 + 2)
 	lcall	__gptrput
 ;	../Common/DateTime.c:91: result->seconds = pdt->seconds;
-	mov	dpl,_AddSecondsToDateTime_sloc1_1_0
-	mov	dph,(_AddSecondsToDateTime_sloc1_1_0 + 1)
-	mov	b,(_AddSecondsToDateTime_sloc1_1_0 + 2)
-	lcall	__gptrget
-	mov	dpl,r5
-	mov	dph,r6
+	mov	r2,_AddSecondsToDateTime_sloc5_1_0
+	mov	r3,(_AddSecondsToDateTime_sloc5_1_0 + 1)
+	mov	r4,(_AddSecondsToDateTime_sloc5_1_0 + 2)
+	mov	r0,_AddSecondsToDateTime_sloc1_1_0
+	mov	r1,(_AddSecondsToDateTime_sloc1_1_0 + 1)
+	mov	r7,(_AddSecondsToDateTime_sloc1_1_0 + 2)
+	mov	dpl,r0
+	mov	dph,r1
 	mov	b,r7
+	lcall	__gptrget
+	mov	dpl,r2
+	mov	dph,r3
+	mov	b,r4
 	lcall	__gptrput
 ;	../Common/DateTime.c:92: result->year = pdt->year;
 	mov	a,#0x06
-	add	a,r5
+	add	a, _AddSecondsToDateTime_sloc5_1_0
 	mov	_AddSecondsToDateTime_sloc4_1_0,a
 	clr	a
-	addc	a,r6
+	addc	a, (_AddSecondsToDateTime_sloc5_1_0 + 1)
 	mov	(_AddSecondsToDateTime_sloc4_1_0 + 1),a
-	mov	(_AddSecondsToDateTime_sloc4_1_0 + 2),r7
+	mov	(_AddSecondsToDateTime_sloc4_1_0 + 2),(_AddSecondsToDateTime_sloc5_1_0 + 2)
 	mov	a,#0x06
-	add	a,_AddSecondsToDateTime_sloc1_1_0
+	add	a, _AddSecondsToDateTime_sloc1_1_0
 	mov	r0,a
 	clr	a
-	addc	a,(_AddSecondsToDateTime_sloc1_1_0 + 1)
+	addc	a, (_AddSecondsToDateTime_sloc1_1_0 + 1)
 	mov	r1,a
-	mov	r4,(_AddSecondsToDateTime_sloc1_1_0 + 2)
+	mov	r7,(_AddSecondsToDateTime_sloc1_1_0 + 2)
 	mov	dpl,r0
 	mov	dph,r1
-	mov	b,r4
+	mov	b,r7
 	lcall	__gptrget
-	mov	r0,a
 	mov	dpl,_AddSecondsToDateTime_sloc4_1_0
 	mov	dph,(_AddSecondsToDateTime_sloc4_1_0 + 1)
 	mov	b,(_AddSecondsToDateTime_sloc4_1_0 + 2)
@@ -1660,22 +1439,22 @@ _AddSecondsToDateTime:
 ;	../Common/DateTime.c:95: secondsLeft = seconds;
 	mov	dptr,#_AddSecondsToDateTime_PARM_2
 	movx	a,@dptr
-	mov	r3,a
+	mov	r6,a
 	inc	dptr
 	movx	a,@dptr
-	mov	r4,a
-	mov	dptr,#_AddSecondsToDateTime_secondsLeft_65536_28
-	mov	a,r3
+	mov	r7,a
+	mov	dptr,#_AddSecondsToDateTime_secondsLeft_10000_28
+	mov	a,r6
 	movx	@dptr,a
-	mov	a,r4
+	mov	a,r7
 	inc	dptr
 	movx	@dptr,a
 ;	../Common/DateTime.c:96: while (secondsLeft > 0)
-	mov	ar2,r5
-	mov	ar3,r6
-	mov	ar4,r7
+	mov	r5,_AddSecondsToDateTime_sloc5_1_0
+	mov	r6,(_AddSecondsToDateTime_sloc5_1_0 + 1)
+	mov	r7,(_AddSecondsToDateTime_sloc5_1_0 + 2)
 00111$:
-	mov	dptr,#_AddSecondsToDateTime_secondsLeft_65536_28
+	mov	dptr,#_AddSecondsToDateTime_secondsLeft_10000_28
 	movx	a,@dptr
 	mov	r0,a
 	inc	dptr
@@ -1688,25 +1467,25 @@ _AddSecondsToDateTime:
 	mov	b,r1
 	xrl	b,#0x80
 	subb	a,b
-	jc	00150$
+	jc	00166$
 	ret
-00150$:
+00166$:
 ;	../Common/DateTime.c:98: secondsToNextMinute = 60 - result->seconds;
-	push	ar2
-	push	ar3
-	push	ar4
-	mov	dpl,r5
-	mov	dph,r6
-	mov	b,r7
+	push	ar5
+	push	ar6
+	push	ar7
+	mov	dpl,r2
+	mov	dph,r3
+	mov	b,r4
 	lcall	__gptrget
-	mov	r4,a
-	mov	r3,#0x00
+	mov	r7,a
+	mov	r6,#0x00
 	mov	a,#0x3c
 	clr	c
-	subb	a,r4
+	subb	a,r7
 	mov	_AddSecondsToDateTime_sloc4_1_0,a
 	clr	a
-	subb	a,r3
+	subb	a,r6
 	mov	(_AddSecondsToDateTime_sloc4_1_0 + 1),a
 ;	../Common/DateTime.c:99: secondsAdded = secondsLeft < secondsToNextMinute ? secondsLeft : secondsToNextMinute;
 	clr	c
@@ -1717,68 +1496,66 @@ _AddSecondsToDateTime:
 	mov	b,(_AddSecondsToDateTime_sloc4_1_0 + 1)
 	xrl	b,#0x80
 	subb	a,b
-	pop	ar4
-	pop	ar3
-	pop	ar2
-	jnc	00116$
-	sjmp	00117$
-00116$:
+	pop	ar7
+	pop	ar6
+	pop	ar5
+	jc	00117$
 	mov	r0,_AddSecondsToDateTime_sloc4_1_0
 	mov	r1,(_AddSecondsToDateTime_sloc4_1_0 + 1)
 00117$:
 ;	../Common/DateTime.c:100: result->seconds += secondsAdded;
-	push	ar2
-	push	ar3
-	push	ar4
-	mov	dpl,r5
-	mov	dph,r6
-	mov	b,r7
+	push	ar5
+	push	ar6
+	push	ar7
+	mov	dpl,r2
+	mov	dph,r3
+	mov	b,r4
 	lcall	__gptrget
-	mov	r4,a
-	mov	ar3,r0
-	mov	a,r3
-	add	a,r4
-	mov	dpl,r5
-	mov	dph,r6
-	mov	b,r7
+	mov	r7,a
+	mov	ar6,r0
+	mov	a,r6
+	add	a, r7
+	mov	dpl,r2
+	mov	dph,r3
+	mov	b,r4
 	lcall	__gptrput
 ;	../Common/DateTime.c:101: secondsLeft -= secondsAdded;
-	mov	dptr,#_AddSecondsToDateTime_secondsLeft_65536_28
+	mov	dptr,#_AddSecondsToDateTime_secondsLeft_10000_28
 	movx	a,@dptr
-	mov	r3,a
+	mov	r6,a
 	inc	dptr
 	movx	a,@dptr
-	mov	r4,a
-	mov	dptr,#_AddSecondsToDateTime_secondsLeft_65536_28
-	mov	a,r3
+	mov	r7,a
+	mov	dptr,#_AddSecondsToDateTime_secondsLeft_10000_28
+	mov	a,r6
 	clr	c
 	subb	a,r0
 	movx	@dptr,a
-	mov	a,r4
+	mov	a,r7
 	subb	a,r1
 	inc	dptr
 	movx	@dptr,a
 ;	../Common/DateTime.c:104: if (result->seconds == 60)
-	mov	dpl,r5
-	mov	dph,r6
-	mov	b,r7
+	mov	dpl,r2
+	mov	dph,r3
+	mov	b,r4
 	lcall	__gptrget
-	mov	r4,a
-	cjne	r4,#0x3c,00152$
-	sjmp	00153$
-00152$:
-	pop	ar4
-	pop	ar3
-	pop	ar2
+	mov	r7,a
+	cjne	r7,#0x3c,00168$
+	sjmp	00169$
+00168$:
+	pop	ar7
+	pop	ar6
+	pop	ar5
 	ljmp	00111$
-00153$:
-	pop	ar4
-	pop	ar3
-	pop	ar2
+00169$:
+	pop	ar7
+	pop	ar6
+	pop	ar5
 ;	../Common/DateTime.c:106: result->seconds = 0;
-	mov	dpl,r5
-	mov	dph,r6
-	mov	b,r7
+	mov	dpl,r2
+	mov	dph,r3
+	mov	b,r4
 	clr	a
 	lcall	__gptrput
 ;	../Common/DateTime.c:107: result->minutes++;
@@ -1794,11 +1571,11 @@ _AddSecondsToDateTime:
 	mov	a,r1
 	lcall	__gptrput
 ;	../Common/DateTime.c:108: if (result->minutes == 60)
-	cjne	r1,#0x3c,00154$
-	sjmp	00155$
-00154$:
+	cjne	r1,#0x3c,00170$
+	sjmp	00171$
+00170$:
 	ljmp	00111$
-00155$:
+00171$:
 ;	../Common/DateTime.c:110: result->minutes = 0;
 	mov	dpl,_AddSecondsToDateTime_sloc3_1_0
 	mov	dph,(_AddSecondsToDateTime_sloc3_1_0 + 1)
@@ -1818,12 +1595,15 @@ _AddSecondsToDateTime:
 	mov	a,r1
 	lcall	__gptrput
 ;	../Common/DateTime.c:112: if (result->hours == 24)
-	cjne	r1,#0x18,00156$
-	sjmp	00157$
-00156$:
+	cjne	r1,#0x18,00172$
+	sjmp	00173$
+00172$:
 	ljmp	00111$
-00157$:
+00173$:
 ;	../Common/DateTime.c:114: result->hours = 0;
+	push	ar2
+	push	ar3
+	push	ar4
 	mov	dpl,_AddSecondsToDateTime_sloc2_1_0
 	mov	dph,(_AddSecondsToDateTime_sloc2_1_0 + 1)
 	mov	b,(_AddSecondsToDateTime_sloc2_1_0 + 2)
@@ -1842,9 +1622,9 @@ _AddSecondsToDateTime:
 	mov	a,r1
 	lcall	__gptrput
 ;	../Common/DateTime.c:116: numDays = GetNumDaysInMonth(result);
-	mov	dpl,r5
-	mov	dph,r6
-	mov	b,r7
+	mov	dpl, _AddSecondsToDateTime_sloc5_1_0
+	mov	dph, (_AddSecondsToDateTime_sloc5_1_0 + 1)
+	mov	b, (_AddSecondsToDateTime_sloc5_1_0 + 2)
 	push	ar7
 	push	ar6
 	push	ar5
@@ -1852,8 +1632,8 @@ _AddSecondsToDateTime:
 	push	ar3
 	push	ar2
 	lcall	_GetNumDaysInMonth
-	mov	r0,dpl
-	mov	r1,dph
+	mov	r0, dpl
+	mov	r1, dph
 	pop	ar2
 	pop	ar3
 	pop	ar4
@@ -1862,15 +1642,12 @@ _AddSecondsToDateTime:
 	pop	ar7
 ;	../Common/DateTime.c:117: if (result->day > numDays)
 	mov	a,#0x04
-	add	a,r2
+	add	a, r5
 	mov	_AddSecondsToDateTime_sloc4_1_0,a
 	clr	a
-	addc	a,r3
+	addc	a, r6
 	mov	(_AddSecondsToDateTime_sloc4_1_0 + 1),a
-	mov	(_AddSecondsToDateTime_sloc4_1_0 + 2),r4
-	push	ar2
-	push	ar3
-	push	ar4
+	mov	(_AddSecondsToDateTime_sloc4_1_0 + 2),r7
 	mov	dpl,_AddSecondsToDateTime_sloc4_1_0
 	mov	dph,(_AddSecondsToDateTime_sloc4_1_0 + 1)
 	mov	b,(_AddSecondsToDateTime_sloc4_1_0 + 2)
@@ -1888,9 +1665,9 @@ _AddSecondsToDateTime:
 	pop	ar4
 	pop	ar3
 	pop	ar2
-	jc	00158$
+	jc	00174$
 	ljmp	00111$
-00158$:
+00174$:
 ;	../Common/DateTime.c:119: result->day = 1;
 	mov	dpl,_AddSecondsToDateTime_sloc4_1_0
 	mov	dph,(_AddSecondsToDateTime_sloc4_1_0 + 1)
@@ -1899,12 +1676,12 @@ _AddSecondsToDateTime:
 	lcall	__gptrput
 ;	../Common/DateTime.c:120: result->month++;
 	mov	a,#0x05
-	add	a,r2
+	add	a, r5
 	mov	_AddSecondsToDateTime_sloc4_1_0,a
 	clr	a
-	addc	a,r3
+	addc	a, r6
 	mov	(_AddSecondsToDateTime_sloc4_1_0 + 1),a
-	mov	(_AddSecondsToDateTime_sloc4_1_0 + 2),r4
+	mov	(_AddSecondsToDateTime_sloc4_1_0 + 2),r7
 	mov	dpl,_AddSecondsToDateTime_sloc4_1_0
 	mov	dph,(_AddSecondsToDateTime_sloc4_1_0 + 1)
 	mov	b,(_AddSecondsToDateTime_sloc4_1_0 + 2)
@@ -1917,15 +1694,15 @@ _AddSecondsToDateTime:
 	mov	a,r1
 	lcall	__gptrput
 ;	../Common/DateTime.c:121: if (result->month == 12)
-	cjne	r1,#0x0c,00159$
-	sjmp	00160$
-00159$:
+	cjne	r1,#0x0c,00175$
+	sjmp	00176$
+00175$:
 	ljmp	00111$
-00160$:
+00176$:
 ;	../Common/DateTime.c:123: result->month = 1;
-	push	ar5
-	push	ar6
-	push	ar7
+	push	ar2
+	push	ar3
+	push	ar4
 	mov	dpl,_AddSecondsToDateTime_sloc4_1_0
 	mov	dph,(_AddSecondsToDateTime_sloc4_1_0 + 1)
 	mov	b,(_AddSecondsToDateTime_sloc4_1_0 + 2)
@@ -1933,39 +1710,39 @@ _AddSecondsToDateTime:
 	lcall	__gptrput
 ;	../Common/DateTime.c:124: result->year++;
 	mov	a,#0x06
-	add	a,r2
+	add	a, r5
 	mov	r0,a
 	clr	a
-	addc	a,r3
+	addc	a, r6
 	mov	r1,a
-	mov	ar7,r4
+	mov	ar4,r7
 	mov	dpl,r0
 	mov	dph,r1
-	mov	b,r7
+	mov	b,r4
 	lcall	__gptrget
-	mov	r6,a
-	inc	r6
+	mov	r3,a
+	inc	r3
 	mov	dpl,r0
 	mov	dph,r1
-	mov	b,r7
-	mov	a,r6
+	mov	b,r4
+	mov	a,r3
 	lcall	__gptrput
-	pop	ar7
-	pop	ar6
-	pop	ar5
+	pop	ar4
+	pop	ar3
+	pop	ar2
 ;	../Common/DateTime.c:131: }
 	ljmp	00111$
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'CompareDateTime'
 ;------------------------------------------------------------
-;dt2                       Allocated with name '_CompareDateTime_PARM_2'
-;dt1                       Allocated with name '_CompareDateTime_dt1_65536_35'
-;sloc0                     Allocated with name '_CompareDateTime_sloc0_1_0'
-;sloc1                     Allocated with name '_CompareDateTime_sloc1_1_0'
-;sloc2                     Allocated with name '_CompareDateTime_sloc2_1_0'
-;sloc3                     Allocated with name '_CompareDateTime_sloc3_1_0'
-;sloc4                     Allocated with name '_CompareDateTime_sloc4_1_0'
-;sloc5                     Allocated with name '_CompareDateTime_sloc5_1_0'
+;dt2           Allocated with name '_CompareDateTime_PARM_2'
+;dt1           Allocated with name '_CompareDateTime_dt1_10000_35'
+;sloc0         Allocated with name '_CompareDateTime_sloc0_1_0'
+;sloc1         Allocated with name '_CompareDateTime_sloc1_1_0'
+;sloc2         Allocated with name '_CompareDateTime_sloc2_1_0'
+;sloc3         Allocated with name '_CompareDateTime_sloc3_1_0'
+;sloc4         Allocated with name '_CompareDateTime_sloc4_1_0'
+;sloc5         Allocated with name '_CompareDateTime_sloc5_1_0'
 ;------------------------------------------------------------
 ;	../Common/DateTime.c:134: int CompareDateTime(DateTimeStruct* dt1, DateTimeStruct* dt2)
 ;	-----------------------------------------
@@ -1975,7 +1752,7 @@ _CompareDateTime:
 	mov	r7,b
 	mov	r6,dph
 	mov	a,dpl
-	mov	dptr,#_CompareDateTime_dt1_65536_35
+	mov	dptr,#_CompareDateTime_dt1_10000_35
 	movx	@dptr,a
 	mov	a,r6
 	inc	dptr
@@ -1984,7 +1761,7 @@ _CompareDateTime:
 	inc	dptr
 	movx	@dptr,a
 ;	../Common/DateTime.c:136: if (dt1->year == dt2->year)
-	mov	dptr,#_CompareDateTime_dt1_65536_35
+	mov	dptr,#_CompareDateTime_dt1_10000_35
 	movx	a,@dptr
 	mov	_CompareDateTime_sloc2_1_0,a
 	inc	dptr
@@ -1994,10 +1771,10 @@ _CompareDateTime:
 	movx	a,@dptr
 	mov	(_CompareDateTime_sloc2_1_0 + 2),a
 	mov	a,#0x06
-	add	a,_CompareDateTime_sloc2_1_0
+	add	a, _CompareDateTime_sloc2_1_0
 	mov	r2,a
 	clr	a
-	addc	a,(_CompareDateTime_sloc2_1_0 + 1)
+	addc	a, (_CompareDateTime_sloc2_1_0 + 1)
 	mov	r3,a
 	mov	r4,(_CompareDateTime_sloc2_1_0 + 2)
 	mov	dpl,r2
@@ -2015,10 +1792,10 @@ _CompareDateTime:
 	movx	a,@dptr
 	mov	(_CompareDateTime_sloc1_1_0 + 2),a
 	mov	a,#0x06
-	add	a,_CompareDateTime_sloc1_1_0
+	add	a, _CompareDateTime_sloc1_1_0
 	mov	r0,a
 	clr	a
-	addc	a,(_CompareDateTime_sloc1_1_0 + 1)
+	addc	a, (_CompareDateTime_sloc1_1_0 + 1)
 	mov	r3,a
 	mov	r4,(_CompareDateTime_sloc1_1_0 + 2)
 	mov	dpl,r0
@@ -2026,17 +1803,17 @@ _CompareDateTime:
 	mov	b,r4
 	lcall	__gptrget
 	mov	r4,a
-	cjne	a,_CompareDateTime_sloc0_1_0,00145$
-	sjmp	00146$
-00145$:
+	cjne	a,_CompareDateTime_sloc0_1_0,00157$
+	sjmp	00158$
+00157$:
 	ljmp	00117$
-00146$:
+00158$:
 ;	../Common/DateTime.c:138: if (dt1->month == dt2->month)
 	mov	a,#0x05
-	add	a,_CompareDateTime_sloc2_1_0
+	add	a, _CompareDateTime_sloc2_1_0
 	mov	r1,a
 	clr	a
-	addc	a,(_CompareDateTime_sloc2_1_0 + 1)
+	addc	a, (_CompareDateTime_sloc2_1_0 + 1)
 	mov	r2,a
 	mov	r3,(_CompareDateTime_sloc2_1_0 + 2)
 	mov	dpl,r1
@@ -2045,10 +1822,10 @@ _CompareDateTime:
 	lcall	__gptrget
 	mov	r3,a
 	mov	a,#0x05
-	add	a,_CompareDateTime_sloc1_1_0
+	add	a, _CompareDateTime_sloc1_1_0
 	mov	r0,a
 	clr	a
-	addc	a,(_CompareDateTime_sloc1_1_0 + 1)
+	addc	a, (_CompareDateTime_sloc1_1_0 + 1)
 	mov	r1,a
 	mov	r2,(_CompareDateTime_sloc1_1_0 + 2)
 	mov	dpl,r0
@@ -2057,17 +1834,17 @@ _CompareDateTime:
 	lcall	__gptrget
 	mov	r2,a
 	mov	a,r3
-	cjne	a,ar2,00147$
-	sjmp	00148$
-00147$:
+	cjne	a,ar2,00159$
+	sjmp	00160$
+00159$:
 	ljmp	00114$
-00148$:
+00160$:
 ;	../Common/DateTime.c:140: if (dt1->day == dt2->day)
 	mov	a,#0x04
-	add	a,_CompareDateTime_sloc2_1_0
+	add	a, _CompareDateTime_sloc2_1_0
 	mov	r0,a
 	clr	a
-	addc	a,(_CompareDateTime_sloc2_1_0 + 1)
+	addc	a, (_CompareDateTime_sloc2_1_0 + 1)
 	mov	r1,a
 	mov	r7,(_CompareDateTime_sloc2_1_0 + 2)
 	mov	dpl,r0
@@ -2076,10 +1853,10 @@ _CompareDateTime:
 	lcall	__gptrget
 	mov	r7,a
 	mov	a,#0x04
-	add	a,_CompareDateTime_sloc1_1_0
+	add	a, _CompareDateTime_sloc1_1_0
 	mov	r1,a
 	clr	a
-	addc	a,(_CompareDateTime_sloc1_1_0 + 1)
+	addc	a, (_CompareDateTime_sloc1_1_0 + 1)
 	mov	r5,a
 	mov	r6,(_CompareDateTime_sloc1_1_0 + 2)
 	mov	dpl,r1
@@ -2088,17 +1865,17 @@ _CompareDateTime:
 	lcall	__gptrget
 	mov	r6,a
 	mov	a,r7
-	cjne	a,ar6,00149$
-	sjmp	00150$
-00149$:
+	cjne	a,ar6,00161$
+	sjmp	00162$
+00161$:
 	ljmp	00111$
-00150$:
+00162$:
 ;	../Common/DateTime.c:142: if (dt1->hours == dt2->hours)
 	mov	a,#0x02
-	add	a,_CompareDateTime_sloc2_1_0
+	add	a, _CompareDateTime_sloc2_1_0
 	mov	r0,a
 	clr	a
-	addc	a,(_CompareDateTime_sloc2_1_0 + 1)
+	addc	a, (_CompareDateTime_sloc2_1_0 + 1)
 	mov	r1,a
 	mov	r5,(_CompareDateTime_sloc2_1_0 + 2)
 	mov	dpl,r0
@@ -2107,10 +1884,10 @@ _CompareDateTime:
 	lcall	__gptrget
 	mov	_CompareDateTime_sloc3_1_0,a
 	mov	a,#0x02
-	add	a,_CompareDateTime_sloc1_1_0
+	add	a, _CompareDateTime_sloc1_1_0
 	mov	r0,a
 	clr	a
-	addc	a,(_CompareDateTime_sloc1_1_0 + 1)
+	addc	a, (_CompareDateTime_sloc1_1_0 + 1)
 	mov	r1,a
 	mov	r5,(_CompareDateTime_sloc1_1_0 + 2)
 	mov	dpl,r0
@@ -2118,17 +1895,17 @@ _CompareDateTime:
 	mov	b,r5
 	lcall	__gptrget
 	mov	r5,a
-	cjne	a,_CompareDateTime_sloc3_1_0,00151$
-	sjmp	00152$
-00151$:
+	cjne	a,_CompareDateTime_sloc3_1_0,00163$
+	sjmp	00164$
+00163$:
 	ljmp	00108$
-00152$:
+00164$:
 ;	../Common/DateTime.c:144: if (dt1->minutes == dt2->minutes)
 	mov	a,#0x01
-	add	a,_CompareDateTime_sloc2_1_0
+	add	a, _CompareDateTime_sloc2_1_0
 	mov	_CompareDateTime_sloc4_1_0,a
 	clr	a
-	addc	a,(_CompareDateTime_sloc2_1_0 + 1)
+	addc	a, (_CompareDateTime_sloc2_1_0 + 1)
 	mov	(_CompareDateTime_sloc4_1_0 + 1),a
 	mov	(_CompareDateTime_sloc4_1_0 + 2),(_CompareDateTime_sloc2_1_0 + 2)
 	mov	dpl,_CompareDateTime_sloc4_1_0
@@ -2137,10 +1914,10 @@ _CompareDateTime:
 	lcall	__gptrget
 	mov	_CompareDateTime_sloc4_1_0,a
 	mov	a,#0x01
-	add	a,_CompareDateTime_sloc1_1_0
+	add	a, _CompareDateTime_sloc1_1_0
 	mov	_CompareDateTime_sloc5_1_0,a
 	clr	a
-	addc	a,(_CompareDateTime_sloc1_1_0 + 1)
+	addc	a, (_CompareDateTime_sloc1_1_0 + 1)
 	mov	(_CompareDateTime_sloc5_1_0 + 1),a
 	mov	(_CompareDateTime_sloc5_1_0 + 2),(_CompareDateTime_sloc1_1_0 + 2)
 	mov	dpl,_CompareDateTime_sloc5_1_0
@@ -2150,36 +1927,40 @@ _CompareDateTime:
 	mov	_CompareDateTime_sloc5_1_0,a
 	cjne	a,_CompareDateTime_sloc4_1_0,00105$
 ;	../Common/DateTime.c:146: if (dt1->seconds == dt2->seconds)
+	mov	_CompareDateTime_sloc5_1_0,_CompareDateTime_sloc2_1_0
+	mov	(_CompareDateTime_sloc5_1_0 + 1),(_CompareDateTime_sloc2_1_0 + 1)
+	mov	(_CompareDateTime_sloc5_1_0 + 2),(_CompareDateTime_sloc2_1_0 + 2)
+	mov	dpl,_CompareDateTime_sloc5_1_0
+	mov	dph,(_CompareDateTime_sloc5_1_0 + 1)
+	mov	b,(_CompareDateTime_sloc5_1_0 + 2)
+	lcall	__gptrget
+	mov	_CompareDateTime_sloc5_1_0,a
+	mov	_CompareDateTime_sloc2_1_0,_CompareDateTime_sloc1_1_0
+	mov	(_CompareDateTime_sloc2_1_0 + 1),(_CompareDateTime_sloc1_1_0 + 1)
+	mov	(_CompareDateTime_sloc2_1_0 + 2),(_CompareDateTime_sloc1_1_0 + 2)
 	mov	dpl,_CompareDateTime_sloc2_1_0
 	mov	dph,(_CompareDateTime_sloc2_1_0 + 1)
 	mov	b,(_CompareDateTime_sloc2_1_0 + 2)
 	lcall	__gptrget
-	mov	r0,a
-	mov	dpl,_CompareDateTime_sloc1_1_0
-	mov	dph,(_CompareDateTime_sloc1_1_0 + 1)
-	mov	b,(_CompareDateTime_sloc1_1_0 + 2)
-	lcall	__gptrget
-	mov	_CompareDateTime_sloc5_1_0,a
-	mov	a,r0
+	mov	_CompareDateTime_sloc2_1_0,a
 	cjne	a,_CompareDateTime_sloc5_1_0,00102$
 ;	../Common/DateTime.c:148: return 0;
 	mov	dptr,#0x0000
 	ret
 00102$:
 ;	../Common/DateTime.c:152: return dt1->seconds - dt2->seconds;
-	mov	_CompareDateTime_sloc2_1_0,r0
 	clr	a
+	mov	(_CompareDateTime_sloc5_1_0 + 1),a
 	mov	(_CompareDateTime_sloc2_1_0 + 1),a
-	mov	(_CompareDateTime_sloc5_1_0 + 1),a
-	mov	a,_CompareDateTime_sloc2_1_0
+	mov	a,_CompareDateTime_sloc5_1_0
 	clr	c
-	subb	a,_CompareDateTime_sloc5_1_0
+	subb	a,_CompareDateTime_sloc2_1_0
 	mov	_CompareDateTime_sloc5_1_0,a
-	mov	a,(_CompareDateTime_sloc2_1_0 + 1)
-	subb	a,(_CompareDateTime_sloc5_1_0 + 1)
+	mov	a,(_CompareDateTime_sloc5_1_0 + 1)
+	subb	a,(_CompareDateTime_sloc2_1_0 + 1)
 	mov	(_CompareDateTime_sloc5_1_0 + 1),a
-	mov	dpl,_CompareDateTime_sloc5_1_0
-	mov	dph,(_CompareDateTime_sloc5_1_0 + 1)
+	mov	dpl, _CompareDateTime_sloc5_1_0
+	mov	dph, (_CompareDateTime_sloc5_1_0 + 1)
 	ret
 00105$:
 ;	../Common/DateTime.c:157: return dt1->minutes - dt2->minutes;
@@ -2193,8 +1974,8 @@ _CompareDateTime:
 	mov	a,(_CompareDateTime_sloc4_1_0 + 1)
 	subb	a,r1
 	mov	r1,a
-	mov	dpl,r0
-	mov	dph,r1
+	mov	dpl, r0
+	mov	dph, r1
 	ret
 00108$:
 ;	../Common/DateTime.c:162: return dt1->hours - dt2->hours;
@@ -2209,8 +1990,8 @@ _CompareDateTime:
 	mov	a,(_CompareDateTime_sloc5_1_0 + 1)
 	subb	a,r5
 	mov	r5,a
-	mov	dpl,r1
-	mov	dph,r5
+	mov	dpl, r1
+	mov	dph, r5
 	ret
 00111$:
 ;	../Common/DateTime.c:167: return dt1->day - dt2->day;
@@ -2224,8 +2005,8 @@ _CompareDateTime:
 	mov	a,r5
 	subb	a,r6
 	mov	r5,a
-	mov	dpl,r7
-	mov	dph,r5
+	mov	dpl, r7
+	mov	dph, r5
 	ret
 00114$:
 ;	../Common/DateTime.c:172: return dt1->month - dt2->month;
@@ -2239,8 +2020,8 @@ _CompareDateTime:
 	mov	a,r7
 	subb	a,r6
 	mov	r7,a
-	mov	dpl,r3
-	mov	dph,r7
+	mov	dpl, r3
+	mov	dph, r7
 	ret
 00117$:
 ;	../Common/DateTime.c:177: return dt1->year - dt2->year;

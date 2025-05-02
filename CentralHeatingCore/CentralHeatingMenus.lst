@@ -1,10 +1,10 @@
                                       1 ;--------------------------------------------------------
-                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
-                                      3 ; Version 4.0.0 #11528 (MINGW64)
+                                      2 ; File Created by SDCC : free open source ISO C Compiler
+                                      3 ; Version 4.5.0 #15242 (MINGW64)
                                       4 ;--------------------------------------------------------
                                       5 	.module CentralHeatingMenus
-                                      6 	.optsdcc -mmcs51 --model-large
-                                      7 	
+                                      6 	
+                                      7 	.optsdcc -mmcs51 --model-large
                                       8 ;--------------------------------------------------------
                                       9 ; Public variables in this module
                                      10 ;--------------------------------------------------------
@@ -423,7 +423,7 @@
                                     423 ;--------------------------------------------------------
                                     424 	.area DSEG    (DATA)
                                     425 ;--------------------------------------------------------
-                                    426 ; overlayable items in internal ram 
+                                    426 ; overlayable items in internal ram
                                     427 ;--------------------------------------------------------
                                     428 ;--------------------------------------------------------
                                     429 ; indirectly addressable internal ram data
@@ -443,7 +443,7 @@
                                     443 ;--------------------------------------------------------
                                     444 	.area PSEG    (PAG,XDATA)
                                     445 ;--------------------------------------------------------
-                                    446 ; external ram data
+                                    446 ; uninitialized external ram data
                                     447 ;--------------------------------------------------------
                                     448 	.area XSEG    (XDATA)
                                     449 ;--------------------------------------------------------
@@ -451,7 +451,7 @@
                                     451 ;--------------------------------------------------------
                                     452 	.area XABS    (ABS,XDATA)
                                     453 ;--------------------------------------------------------
-                                    454 ; external initialized ram data
+                                    454 ; initialized external ram data
                                     455 ;--------------------------------------------------------
                                     456 	.area XISEG   (XDATA)
                                     457 	.area HOME    (CODE)
@@ -511,7 +511,7 @@
       000011 A3               [24]  511 	inc	dptr
       000012 F0               [24]  512 	movx	@dptr,a
       000013 90r00r00         [24]  513 	mov	dptr,#___str_0
-      000016 75 F0 80         [24]  514 	mov	b,#0x80
+      000016 75 F0 80         [24]  514 	mov	b, #0x80
       000019 12r00r00         [24]  515 	lcall	_AddMenuDefinition
                                     516 ;	../Common/CentralHeatingMenus.c:15: AddMenuDefinition("1 Hour",             MENUID_HOTWATER, MENUID_HOTWATER1HR);
       00001C 90r00r00         [24]  517 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -527,7 +527,7 @@
       00002C A3               [24]  527 	inc	dptr
       00002D F0               [24]  528 	movx	@dptr,a
       00002E 90r00r0A         [24]  529 	mov	dptr,#___str_1
-      000031 75 F0 80         [24]  530 	mov	b,#0x80
+      000031 75 F0 80         [24]  530 	mov	b, #0x80
       000034 12r00r00         [24]  531 	lcall	_AddMenuDefinition
                                     532 ;	../Common/CentralHeatingMenus.c:16: AddMenuDefinition("Reset",              MENUID_HOTWATER, MENUID_HOTWATERRST);
       000037 90r00r00         [24]  533 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -543,7 +543,7 @@
       000047 A3               [24]  543 	inc	dptr
       000048 F0               [24]  544 	movx	@dptr,a
       000049 90r00r11         [24]  545 	mov	dptr,#___str_2
-      00004C 75 F0 80         [24]  546 	mov	b,#0x80
+      00004C 75 F0 80         [24]  546 	mov	b, #0x80
       00004F 12r00r00         [24]  547 	lcall	_AddMenuDefinition
                                     548 ;	../Common/CentralHeatingMenus.c:17: AddMenuDefinition("Return",             MENUID_HOTWATER, MENU_END_SENTINEL);
       000052 90r00r00         [24]  549 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -559,7 +559,7 @@
       000061 A3               [24]  559 	inc	dptr
       000062 F0               [24]  560 	movx	@dptr,a
       000063 90r00r17         [24]  561 	mov	dptr,#___str_3
-      000066 75 F0 80         [24]  562 	mov	b,#0x80
+      000066 75 F0 80         [24]  562 	mov	b, #0x80
       000069 12r00r00         [24]  563 	lcall	_AddMenuDefinition
                                     564 ;	../Common/CentralHeatingMenus.c:19: AddMenuDefinition("Set Clock", 0, MENUID_SETRTC);
       00006C 90r00r00         [24]  565 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -574,7 +574,7 @@
       00007A A3               [24]  574 	inc	dptr
       00007B F0               [24]  575 	movx	@dptr,a
       00007C 90r00r1E         [24]  576 	mov	dptr,#___str_4
-      00007F 75 F0 80         [24]  577 	mov	b,#0x80
+      00007F 75 F0 80         [24]  577 	mov	b, #0x80
       000082 12r00r00         [24]  578 	lcall	_AddMenuDefinition
                                     579 ;	../Common/CentralHeatingMenus.c:20: AddMenuDefinition("Set Date",            MENUID_SETRTC, MENUID_SETDATE);
       000085 90r00r00         [24]  580 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -590,7 +590,7 @@
       000095 A3               [24]  590 	inc	dptr
       000096 F0               [24]  591 	movx	@dptr,a
       000097 90r00r28         [24]  592 	mov	dptr,#___str_5
-      00009A 75 F0 80         [24]  593 	mov	b,#0x80
+      00009A 75 F0 80         [24]  593 	mov	b, #0x80
       00009D 12r00r00         [24]  594 	lcall	_AddMenuDefinition
                                     595 ;	../Common/CentralHeatingMenus.c:21: AddMenuDefinition("Day+",                MENUID_SETDATE, MENUID_ADDDAY);
       0000A0 90r00r00         [24]  596 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -606,7 +606,7 @@
       0000B0 A3               [24]  606 	inc	dptr
       0000B1 F0               [24]  607 	movx	@dptr,a
       0000B2 90r00r31         [24]  608 	mov	dptr,#___str_6
-      0000B5 75 F0 80         [24]  609 	mov	b,#0x80
+      0000B5 75 F0 80         [24]  609 	mov	b, #0x80
       0000B8 12r00r00         [24]  610 	lcall	_AddMenuDefinition
                                     611 ;	../Common/CentralHeatingMenus.c:22: AddMenuDefinition("Day-",                MENUID_SETDATE, MENUID_SUBDAY);
       0000BB 90r00r00         [24]  612 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -622,7 +622,7 @@
       0000CB A3               [24]  622 	inc	dptr
       0000CC F0               [24]  623 	movx	@dptr,a
       0000CD 90r00r36         [24]  624 	mov	dptr,#___str_7
-      0000D0 75 F0 80         [24]  625 	mov	b,#0x80
+      0000D0 75 F0 80         [24]  625 	mov	b, #0x80
       0000D3 12r00r00         [24]  626 	lcall	_AddMenuDefinition
                                     627 ;	../Common/CentralHeatingMenus.c:23: AddMenuDefinition("Month+",              MENUID_SETDATE, MENUID_ADDMONTH);
       0000D6 90r00r00         [24]  628 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -638,7 +638,7 @@
       0000E6 A3               [24]  638 	inc	dptr
       0000E7 F0               [24]  639 	movx	@dptr,a
       0000E8 90r00r3B         [24]  640 	mov	dptr,#___str_8
-      0000EB 75 F0 80         [24]  641 	mov	b,#0x80
+      0000EB 75 F0 80         [24]  641 	mov	b, #0x80
       0000EE 12r00r00         [24]  642 	lcall	_AddMenuDefinition
                                     643 ;	../Common/CentralHeatingMenus.c:24: AddMenuDefinition("Month-",              MENUID_SETDATE, MENUID_SUBMONTH);
       0000F1 90r00r00         [24]  644 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -654,7 +654,7 @@
       000101 A3               [24]  654 	inc	dptr
       000102 F0               [24]  655 	movx	@dptr,a
       000103 90r00r42         [24]  656 	mov	dptr,#___str_9
-      000106 75 F0 80         [24]  657 	mov	b,#0x80
+      000106 75 F0 80         [24]  657 	mov	b, #0x80
       000109 12r00r00         [24]  658 	lcall	_AddMenuDefinition
                                     659 ;	../Common/CentralHeatingMenus.c:25: AddMenuDefinition("Year+",               MENUID_SETDATE, MENUID_ADDYEAR);
       00010C 90r00r00         [24]  660 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -670,7 +670,7 @@
       00011C A3               [24]  670 	inc	dptr
       00011D F0               [24]  671 	movx	@dptr,a
       00011E 90r00r49         [24]  672 	mov	dptr,#___str_10
-      000121 75 F0 80         [24]  673 	mov	b,#0x80
+      000121 75 F0 80         [24]  673 	mov	b, #0x80
       000124 12r00r00         [24]  674 	lcall	_AddMenuDefinition
                                     675 ;	../Common/CentralHeatingMenus.c:26: AddMenuDefinition("Year-",               MENUID_SETDATE, MENUID_SUBYEAR);
       000127 90r00r00         [24]  676 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -686,7 +686,7 @@
       000137 A3               [24]  686 	inc	dptr
       000138 F0               [24]  687 	movx	@dptr,a
       000139 90r00r4F         [24]  688 	mov	dptr,#___str_11
-      00013C 75 F0 80         [24]  689 	mov	b,#0x80
+      00013C 75 F0 80         [24]  689 	mov	b, #0x80
       00013F 12r00r00         [24]  690 	lcall	_AddMenuDefinition
                                     691 ;	../Common/CentralHeatingMenus.c:27: AddMenuDefinition("Return",              MENUID_SETDATE, MENU_END_SENTINEL);
       000142 90r00r00         [24]  692 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -702,7 +702,7 @@
       000151 A3               [24]  702 	inc	dptr
       000152 F0               [24]  703 	movx	@dptr,a
       000153 90r00r17         [24]  704 	mov	dptr,#___str_3
-      000156 75 F0 80         [24]  705 	mov	b,#0x80
+      000156 75 F0 80         [24]  705 	mov	b, #0x80
       000159 12r00r00         [24]  706 	lcall	_AddMenuDefinition
                                     707 ;	../Common/CentralHeatingMenus.c:29: AddMenuDefinition("Set Time",            MENUID_SETRTC, MENUID_SETTIME);
       00015C 90r00r00         [24]  708 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -718,7 +718,7 @@
       00016C A3               [24]  718 	inc	dptr
       00016D F0               [24]  719 	movx	@dptr,a
       00016E 90r00r55         [24]  720 	mov	dptr,#___str_12
-      000171 75 F0 80         [24]  721 	mov	b,#0x80
+      000171 75 F0 80         [24]  721 	mov	b, #0x80
       000174 12r00r00         [24]  722 	lcall	_AddMenuDefinition
                                     723 ;	../Common/CentralHeatingMenus.c:30: AddMenuDefinition("Minute+",             MENUID_SETTIME, MENUID_ADDMINUTE);
       000177 90r00r00         [24]  724 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -734,7 +734,7 @@
       000187 A3               [24]  734 	inc	dptr
       000188 F0               [24]  735 	movx	@dptr,a
       000189 90r00r5E         [24]  736 	mov	dptr,#___str_13
-      00018C 75 F0 80         [24]  737 	mov	b,#0x80
+      00018C 75 F0 80         [24]  737 	mov	b, #0x80
       00018F 12r00r00         [24]  738 	lcall	_AddMenuDefinition
                                     739 ;	../Common/CentralHeatingMenus.c:31: AddMenuDefinition("Minute-",             MENUID_SETTIME, MENUID_SUBMINUTE);
       000192 90r00r00         [24]  740 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -750,7 +750,7 @@
       0001A2 A3               [24]  750 	inc	dptr
       0001A3 F0               [24]  751 	movx	@dptr,a
       0001A4 90r00r66         [24]  752 	mov	dptr,#___str_14
-      0001A7 75 F0 80         [24]  753 	mov	b,#0x80
+      0001A7 75 F0 80         [24]  753 	mov	b, #0x80
       0001AA 12r00r00         [24]  754 	lcall	_AddMenuDefinition
                                     755 ;	../Common/CentralHeatingMenus.c:32: AddMenuDefinition("Hour+",               MENUID_SETTIME, MENUID_ADDHOUR);
       0001AD 90r00r00         [24]  756 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -766,7 +766,7 @@
       0001BD A3               [24]  766 	inc	dptr
       0001BE F0               [24]  767 	movx	@dptr,a
       0001BF 90r00r6E         [24]  768 	mov	dptr,#___str_15
-      0001C2 75 F0 80         [24]  769 	mov	b,#0x80
+      0001C2 75 F0 80         [24]  769 	mov	b, #0x80
       0001C5 12r00r00         [24]  770 	lcall	_AddMenuDefinition
                                     771 ;	../Common/CentralHeatingMenus.c:33: AddMenuDefinition("Hour-",               MENUID_SETTIME, MENUID_SUBHOUR);
       0001C8 90r00r00         [24]  772 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -782,7 +782,7 @@
       0001D8 A3               [24]  782 	inc	dptr
       0001D9 F0               [24]  783 	movx	@dptr,a
       0001DA 90r00r74         [24]  784 	mov	dptr,#___str_16
-      0001DD 75 F0 80         [24]  785 	mov	b,#0x80
+      0001DD 75 F0 80         [24]  785 	mov	b, #0x80
       0001E0 12r00r00         [24]  786 	lcall	_AddMenuDefinition
                                     787 ;	../Common/CentralHeatingMenus.c:34: AddMenuDefinition("Reset Seconds",       MENUID_SETTIME, MENUID_RESETSEC);
       0001E3 90r00r00         [24]  788 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -798,7 +798,7 @@
       0001F3 A3               [24]  798 	inc	dptr
       0001F4 F0               [24]  799 	movx	@dptr,a
       0001F5 90r00r7A         [24]  800 	mov	dptr,#___str_17
-      0001F8 75 F0 80         [24]  801 	mov	b,#0x80
+      0001F8 75 F0 80         [24]  801 	mov	b, #0x80
       0001FB 12r00r00         [24]  802 	lcall	_AddMenuDefinition
                                     803 ;	../Common/CentralHeatingMenus.c:35: AddMenuDefinition("Return",              MENUID_SETTIME, MENU_END_SENTINEL);
       0001FE 90r00r00         [24]  804 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -814,7 +814,7 @@
       00020D A3               [24]  814 	inc	dptr
       00020E F0               [24]  815 	movx	@dptr,a
       00020F 90r00r17         [24]  816 	mov	dptr,#___str_3
-      000212 75 F0 80         [24]  817 	mov	b,#0x80
+      000212 75 F0 80         [24]  817 	mov	b, #0x80
       000215 12r00r00         [24]  818 	lcall	_AddMenuDefinition
                                     819 ;	../Common/CentralHeatingMenus.c:36: AddMenuDefinition("Return",              MENUID_SETRTC, MENU_END_SENTINEL);
       000218 90r00r00         [24]  820 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -830,7 +830,7 @@
       000227 A3               [24]  830 	inc	dptr
       000228 F0               [24]  831 	movx	@dptr,a
       000229 90r00r17         [24]  832 	mov	dptr,#___str_3
-      00022C 75 F0 80         [24]  833 	mov	b,#0x80
+      00022C 75 F0 80         [24]  833 	mov	b, #0x80
       00022F 12r00r00         [24]  834 	lcall	_AddMenuDefinition
                                     835 ;	../Common/CentralHeatingMenus.c:39: AddMenuDefinition("Test Outputs", 0, MENUID_TESTOUTPUT);
       000232 90r00r00         [24]  836 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -845,7 +845,7 @@
       000240 A3               [24]  845 	inc	dptr
       000241 F0               [24]  846 	movx	@dptr,a
       000242 90r00r88         [24]  847 	mov	dptr,#___str_18
-      000245 75 F0 80         [24]  848 	mov	b,#0x80
+      000245 75 F0 80         [24]  848 	mov	b, #0x80
       000248 12r00r00         [24]  849 	lcall	_AddMenuDefinition
                                     850 ;	../Common/CentralHeatingMenus.c:40: AddMenuDefinition("Boiler", MENUID_TESTOUTPUT, MENUID_TEST_BOILER);
       00024B 90r00r00         [24]  851 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -861,7 +861,7 @@
       00025B A3               [24]  861 	inc	dptr
       00025C F0               [24]  862 	movx	@dptr,a
       00025D 90r00r95         [24]  863 	mov	dptr,#___str_19
-      000260 75 F0 80         [24]  864 	mov	b,#0x80
+      000260 75 F0 80         [24]  864 	mov	b, #0x80
       000263 12r00r00         [24]  865 	lcall	_AddMenuDefinition
                                     866 ;	../Common/CentralHeatingMenus.c:41: AddMenuDefinition("Pump",   MENUID_TESTOUTPUT, MENUID_TEST_PUMP);
       000266 90r00r00         [24]  867 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -877,7 +877,7 @@
       000276 A3               [24]  877 	inc	dptr
       000277 F0               [24]  878 	movx	@dptr,a
       000278 90r00r9C         [24]  879 	mov	dptr,#___str_20
-      00027B 75 F0 80         [24]  880 	mov	b,#0x80
+      00027B 75 F0 80         [24]  880 	mov	b, #0x80
       00027E 12r00r00         [24]  881 	lcall	_AddMenuDefinition
                                     882 ;	../Common/CentralHeatingMenus.c:42: AddMenuDefinition("Zone 1", MENUID_TESTOUTPUT, MENUID_TEST_ZONE1);
       000281 90r00r00         [24]  883 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -893,7 +893,7 @@
       000291 A3               [24]  893 	inc	dptr
       000292 F0               [24]  894 	movx	@dptr,a
       000293 90r00rA1         [24]  895 	mov	dptr,#___str_21
-      000296 75 F0 80         [24]  896 	mov	b,#0x80
+      000296 75 F0 80         [24]  896 	mov	b, #0x80
       000299 12r00r00         [24]  897 	lcall	_AddMenuDefinition
                                     898 ;	../Common/CentralHeatingMenus.c:43: AddMenuDefinition("Zone 2", MENUID_TESTOUTPUT, MENUID_TEST_ZONE2);
       00029C 90r00r00         [24]  899 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -909,7 +909,7 @@
       0002AC A3               [24]  909 	inc	dptr
       0002AD F0               [24]  910 	movx	@dptr,a
       0002AE 90r00rA8         [24]  911 	mov	dptr,#___str_22
-      0002B1 75 F0 80         [24]  912 	mov	b,#0x80
+      0002B1 75 F0 80         [24]  912 	mov	b, #0x80
       0002B4 12r00r00         [24]  913 	lcall	_AddMenuDefinition
                                     914 ;	../Common/CentralHeatingMenus.c:44: AddMenuDefinition("Zone 3", MENUID_TESTOUTPUT, MENUID_TEST_ZONE3);
       0002B7 90r00r00         [24]  915 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -925,7 +925,7 @@
       0002C7 A3               [24]  925 	inc	dptr
       0002C8 F0               [24]  926 	movx	@dptr,a
       0002C9 90r00rAF         [24]  927 	mov	dptr,#___str_23
-      0002CC 75 F0 80         [24]  928 	mov	b,#0x80
+      0002CC 75 F0 80         [24]  928 	mov	b, #0x80
       0002CF 12r00r00         [24]  929 	lcall	_AddMenuDefinition
                                     930 ;	../Common/CentralHeatingMenus.c:45: AddMenuDefinition("Zone 4", MENUID_TESTOUTPUT, MENUID_TEST_ZONE4);
       0002D2 90r00r00         [24]  931 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -941,7 +941,7 @@
       0002E2 A3               [24]  941 	inc	dptr
       0002E3 F0               [24]  942 	movx	@dptr,a
       0002E4 90r00rB6         [24]  943 	mov	dptr,#___str_24
-      0002E7 75 F0 80         [24]  944 	mov	b,#0x80
+      0002E7 75 F0 80         [24]  944 	mov	b, #0x80
       0002EA 12r00r00         [24]  945 	lcall	_AddMenuDefinition
                                     946 ;	../Common/CentralHeatingMenus.c:46: AddMenuDefinition("Reset",  MENUID_TESTOUTPUT, MENUID_TEST_RESET);
       0002ED 90r00r00         [24]  947 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -957,7 +957,7 @@
       0002FD A3               [24]  957 	inc	dptr
       0002FE F0               [24]  958 	movx	@dptr,a
       0002FF 90r00r11         [24]  959 	mov	dptr,#___str_2
-      000302 75 F0 80         [24]  960 	mov	b,#0x80
+      000302 75 F0 80         [24]  960 	mov	b, #0x80
       000305 12r00r00         [24]  961 	lcall	_AddMenuDefinition
                                     962 ;	../Common/CentralHeatingMenus.c:47: AddMenuDefinition("Return", MENUID_TESTOUTPUT, MENU_END_SENTINEL);
       000308 90r00r00         [24]  963 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -973,7 +973,7 @@
       000317 A3               [24]  973 	inc	dptr
       000318 F0               [24]  974 	movx	@dptr,a
       000319 90r00r17         [24]  975 	mov	dptr,#___str_3
-      00031C 75 F0 80         [24]  976 	mov	b,#0x80
+      00031C 75 F0 80         [24]  976 	mov	b, #0x80
                                     977 ;	../Common/CentralHeatingMenus.c:49: }
       00031F 02r00r00         [24]  978 	ljmp	_AddMenuDefinition
                                     979 	.area CSEG    (CODE)

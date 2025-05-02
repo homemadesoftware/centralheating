@@ -1,10 +1,10 @@
 ;--------------------------------------------------------
-; File Created by SDCC : free open source ANSI-C Compiler
-; Version 4.0.0 #11528 (MINGW64)
+; File Created by SDCC : free open source ISO C Compiler
+; Version 4.5.0 #15242 (MINGW64)
 ;--------------------------------------------------------
 	.module SimpleCentralHeating
-	.optsdcc -mmcs51 --model-large
 	
+	.optsdcc -mmcs51 --model-large
 ;--------------------------------------------------------
 ; Public variables in this module
 ;--------------------------------------------------------
@@ -423,7 +423,7 @@ _P5_7	=	0x00ef
 ;--------------------------------------------------------
 	.area DSEG    (DATA)
 ;--------------------------------------------------------
-; overlayable items in internal ram 
+; overlayable items in internal ram
 ;--------------------------------------------------------
 ;--------------------------------------------------------
 ; indirectly addressable internal ram data
@@ -438,42 +438,44 @@ _P5_7	=	0x00ef
 ; bit data
 ;--------------------------------------------------------
 	.area BSEG    (BIT)
+_SimpleCentralHeating_sloc0_1_0:
+	.ds 1
 ;--------------------------------------------------------
 ; paged external ram data
 ;--------------------------------------------------------
 	.area PSEG    (PAG,XDATA)
 ;--------------------------------------------------------
-; external ram data
+; uninitialized external ram data
 ;--------------------------------------------------------
 	.area XSEG    (XDATA)
 _displayBuffer::
 	.ds 33
-_SimpleCentralHeating_keys_65536_17:
+_SimpleCentralHeating_keys_10000_17:
 	.ds 2
-_SimpleCentralHeating_inputs_65536_17:
+_SimpleCentralHeating_inputs_10000_17:
 	.ds 1
-_SimpleCentralHeating_outputs_65536_17:
+_SimpleCentralHeating_outputs_10000_17:
 	.ds 1
-_SimpleCentralHeating_animatedChars_65536_17:
+_SimpleCentralHeating_animatedChars_10000_17:
 	.ds 4
-_SimpleCentralHeating_animatedBuffer_65536_17:
+_SimpleCentralHeating_animatedBuffer_10000_17:
 	.ds 3
-_SimpleCentralHeating_animatedCounter_65536_17:
+_SimpleCentralHeating_animatedCounter_10000_17:
 	.ds 2
-_SimpleCentralHeating_zones_65536_17:
+_SimpleCentralHeating_zones_10000_17:
 	.ds 3
-_SimpleCentralHeating_boilerOn_65536_17:
+_SimpleCentralHeating_boilerOn_10000_17:
 	.ds 1
-_SimpleCentralHeating_pumpOn_65536_17:
+_SimpleCentralHeating_pumpOn_10000_17:
 	.ds 1
-_SimpleCentralHeating_actuators_65536_17:
+_SimpleCentralHeating_actuators_10000_17:
 	.ds 3
 ;--------------------------------------------------------
 ; absolute external ram data
 ;--------------------------------------------------------
 	.area XABS    (ABS,XDATA)
 ;--------------------------------------------------------
-; external initialized ram data
+; initialized external ram data
 ;--------------------------------------------------------
 	.area XISEG   (XDATA)
 	.area HOME    (CODE)
@@ -505,18 +507,18 @@ _SimpleCentralHeating_actuators_65536_17:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'SimpleCentralHeating'
 ;------------------------------------------------------------
-;i                         Allocated with name '_SimpleCentralHeating_i_65536_17'
-;keys                      Allocated with name '_SimpleCentralHeating_keys_65536_17'
-;inputs                    Allocated with name '_SimpleCentralHeating_inputs_65536_17'
-;outputs                   Allocated with name '_SimpleCentralHeating_outputs_65536_17'
-;animatedChars             Allocated with name '_SimpleCentralHeating_animatedChars_65536_17'
-;animatedBuffer            Allocated with name '_SimpleCentralHeating_animatedBuffer_65536_17'
-;animatedCounter           Allocated with name '_SimpleCentralHeating_animatedCounter_65536_17'
-;zones                     Allocated with name '_SimpleCentralHeating_zones_65536_17'
-;boilerOn                  Allocated with name '_SimpleCentralHeating_boilerOn_65536_17'
-;pumpOn                    Allocated with name '_SimpleCentralHeating_pumpOn_65536_17'
-;actuators                 Allocated with name '_SimpleCentralHeating_actuators_65536_17'
-;delay                     Allocated with name '_SimpleCentralHeating_delay_65536_17'
+;i             Allocated with name '_SimpleCentralHeating_i_10000_17'
+;keys          Allocated with name '_SimpleCentralHeating_keys_10000_17'
+;inputs        Allocated with name '_SimpleCentralHeating_inputs_10000_17'
+;outputs       Allocated with name '_SimpleCentralHeating_outputs_10000_17'
+;animatedChars Allocated with name '_SimpleCentralHeating_animatedChars_10000_17'
+;animatedBuffer Allocated with name '_SimpleCentralHeating_animatedBuffer_10000_17'
+;animatedCounter Allocated with name '_SimpleCentralHeating_animatedCounter_10000_17'
+;zones         Allocated with name '_SimpleCentralHeating_zones_10000_17'
+;boilerOn      Allocated with name '_SimpleCentralHeating_boilerOn_10000_17'
+;pumpOn        Allocated with name '_SimpleCentralHeating_pumpOn_10000_17'
+;actuators     Allocated with name '_SimpleCentralHeating_actuators_10000_17'
+;delay         Allocated with name '_SimpleCentralHeating_delay_10000_17'
 ;------------------------------------------------------------
 ;	SimpleCentralHeating.c:35: void SimpleCentralHeating()
 ;	-----------------------------------------
@@ -532,65 +534,57 @@ _SimpleCentralHeating:
 	ar1 = 0x01
 	ar0 = 0x00
 ;	SimpleCentralHeating.c:52: animatedChars[0] = '-';
-	mov	dptr,#_SimpleCentralHeating_animatedChars_65536_17
+	mov	dptr,#_SimpleCentralHeating_animatedChars_10000_17
 	mov	a,#0x2d
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:53: animatedChars[1] = '/';
-	mov	dptr,#(_SimpleCentralHeating_animatedChars_65536_17 + 0x0001)
+	mov	dptr,#(_SimpleCentralHeating_animatedChars_10000_17 + 0x0001)
 	mov	a,#0x2f
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:54: animatedChars[2] = '|';
-	mov	dptr,#(_SimpleCentralHeating_animatedChars_65536_17 + 0x0002)
+	mov	dptr,#(_SimpleCentralHeating_animatedChars_10000_17 + 0x0002)
 	mov	a,#0x7c
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:55: animatedChars[3] = '\\';
-	mov	dptr,#(_SimpleCentralHeating_animatedChars_65536_17 + 0x0003)
+	mov	dptr,#(_SimpleCentralHeating_animatedChars_10000_17 + 0x0003)
 	mov	a,#0x5c
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:58: animatedBuffer[0] = '.';
-	mov	dptr,#_SimpleCentralHeating_animatedBuffer_65536_17
+	mov	dptr,#_SimpleCentralHeating_animatedBuffer_10000_17
 	rr	a
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:59: animatedBuffer[1] = '.';
-	mov	dptr,#(_SimpleCentralHeating_animatedBuffer_65536_17 + 0x0001)
+	mov	dptr,#(_SimpleCentralHeating_animatedBuffer_10000_17 + 0x0001)
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:60: animatedBuffer[2] = 0;
-	mov	dptr,#(_SimpleCentralHeating_animatedBuffer_65536_17 + 0x0002)
+	mov	dptr,#(_SimpleCentralHeating_animatedBuffer_10000_17 + 0x0002)
 	clr	a
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:71: for (i = 0; i < DISPLAY_BUFFER_SIZE; ++i)
-	mov	r6,#0x00
-	mov	r7,#0x00
+	mov	r7,a
 00153$:
 ;	SimpleCentralHeating.c:73: displayBuffer[i] = '.';
-	mov	a,r6
-	add	a,#_displayBuffer
-	mov	dpl,a
 	mov	a,r7
-	addc	a,#(_displayBuffer >> 8)
+	add	a, #_displayBuffer
+	mov	dpl,a
+	clr	a
+	addc	a, #(_displayBuffer >> 8)
 	mov	dph,a
 	mov	a,#0x2e
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:71: for (i = 0; i < DISPLAY_BUFFER_SIZE; ++i)
-	inc	r6
-	cjne	r6,#0x00,00306$
 	inc	r7
-00306$:
-	clr	c
-	mov	a,r6
-	subb	a,#0x20
-	mov	a,r7
-	xrl	a,#0x80
-	subb	a,#0x80
+	cjne	r7,#0x20,00372$
+00372$:
 	jc	00153$
 ;	SimpleCentralHeating.c:75: displayBuffer[DISPLAY_BUFFER_SIZE] = 0;
 	mov	dptr,#(_displayBuffer + 0x0020)
 	clr	a
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:77: pWriteDisplayBuffer(displayBuffer);
-	lcall	00308$
-	sjmp	00309$
-00308$:
+	lcall	00374$
+	sjmp	00375$
+00374$:
 	mov	dptr,#_pWriteDisplayBuffer
 	movx	a,@dptr
 	push	acc
@@ -598,11 +592,11 @@ _SimpleCentralHeating:
 	movx	a,@dptr
 	push	acc
 	mov	dptr,#_displayBuffer
-	mov	b,#0x00
+	mov	b, #0x00
 	ret
-00309$:
+00375$:
 ;	SimpleCentralHeating.c:80: animatedCounter = 0;
-	mov	dptr,#_SimpleCentralHeating_animatedCounter_65536_17
+	mov	dptr,#_SimpleCentralHeating_animatedCounter_10000_17
 	clr	a
 	movx	@dptr,a
 	inc	dptr
@@ -614,26 +608,26 @@ _SimpleCentralHeating:
 	clr	a
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:86: animatedBuffer[0] = animatedChars[animatedCounter];
-	mov	dptr,#_SimpleCentralHeating_animatedCounter_65536_17
+	mov	dptr,#_SimpleCentralHeating_animatedCounter_10000_17
 	movx	a,@dptr
 	mov	r6,a
 	inc	dptr
 	movx	a,@dptr
 	mov	r7,a
 	mov	a,r6
-	add	a,#_SimpleCentralHeating_animatedChars_65536_17
+	add	a, #_SimpleCentralHeating_animatedChars_10000_17
 	mov	dpl,a
 	mov	a,r7
-	addc	a,#(_SimpleCentralHeating_animatedChars_65536_17 >> 8)
+	addc	a, #(_SimpleCentralHeating_animatedChars_10000_17 >> 8)
 	mov	dph,a
 	movx	a,@dptr
-	mov	dptr,#_SimpleCentralHeating_animatedBuffer_65536_17
+	mov	dptr,#_SimpleCentralHeating_animatedBuffer_10000_17
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:88: if (animatedCounter == 3)
 	cjne	r6,#0x03,00103$
 	cjne	r7,#0x00,00103$
 ;	SimpleCentralHeating.c:90: animatedCounter = 0;
-	mov	dptr,#_SimpleCentralHeating_animatedCounter_65536_17
+	mov	dptr,#_SimpleCentralHeating_animatedCounter_10000_17
 	clr	a
 	movx	@dptr,a
 	inc	dptr
@@ -641,12 +635,12 @@ _SimpleCentralHeating:
 	sjmp	00104$
 00103$:
 ;	SimpleCentralHeating.c:94: ++animatedCounter;
-	mov	dptr,#_SimpleCentralHeating_animatedCounter_65536_17
+	mov	dptr,#_SimpleCentralHeating_animatedCounter_10000_17
 	mov	a,#0x01
-	add	a,r6
+	add	a, r6
 	movx	@dptr,a
 	clr	a
-	addc	a,r7
+	addc	a, r7
 	inc	dptr
 	movx	@dptr,a
 00104$:
@@ -661,20 +655,20 @@ _SimpleCentralHeating:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_displayBuffer
-	mov	b,#0x00
+	mov	b, #0x00
 	lcall	_strcat
 ;	SimpleCentralHeating.c:99: strcat(displayBuffer, animatedBuffer);
 	mov	dptr,#_strcat_PARM_2
-	mov	a,#_SimpleCentralHeating_animatedBuffer_65536_17
+	mov	a,#_SimpleCentralHeating_animatedBuffer_10000_17
 	movx	@dptr,a
-	mov	a,#(_SimpleCentralHeating_animatedBuffer_65536_17 >> 8)
+	mov	a,#(_SimpleCentralHeating_animatedBuffer_10000_17 >> 8)
 	inc	dptr
 	movx	@dptr,a
 	clr	a
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_displayBuffer
-	mov	b,#0x00
+	mov	b,a
 	lcall	_strcat
 ;	SimpleCentralHeating.c:102: strcat(displayBuffer, " ");
 	mov	dptr,#_strcat_PARM_2
@@ -687,98 +681,91 @@ _SimpleCentralHeating:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_displayBuffer
-	mov	b,#0x00
+	mov	b, #0x00
 	lcall	_strcat
 ;	SimpleCentralHeating.c:105: pGetInputPortValues(&inputs);
-	lcall	00312$
-	sjmp	00313$
-00312$:
+	lcall	00378$
+	sjmp	00379$
+00378$:
 	mov	dptr,#_pGetInputPortValues
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_SimpleCentralHeating_inputs_65536_17
-	mov	b,#0x00
+	mov	dptr,#_SimpleCentralHeating_inputs_10000_17
+	mov	b, #0x00
 	ret
-00313$:
+00379$:
 ;	SimpleCentralHeating.c:106: zones[0] = ((inputs & ZONE1) == 0);
-	mov	dptr,#_SimpleCentralHeating_inputs_65536_17
+	mov	dptr,#_SimpleCentralHeating_inputs_10000_17
 	movx	a,@dptr
 	mov	r7,a
 	anl	ar7,#0x10
-	mov	r6,#0x00
 	clr	a
-	cjne	r7,#0x00,00314$
-	cjne	r6,#0x00,00314$
+	cjne	r7,#0x00,00380$
 	inc	a
-00314$:
-	mov	dptr,#_SimpleCentralHeating_zones_65536_17
+00380$:
+	mov	dptr,#_SimpleCentralHeating_zones_10000_17
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:107: zones[1] = ((inputs & ZONE2) == 0);
-	mov	dptr,#_SimpleCentralHeating_inputs_65536_17
+	mov	dptr,#_SimpleCentralHeating_inputs_10000_17
 	movx	a,@dptr
 	mov	r7,a
 	anl	ar7,#0x20
-	mov	r6,#0x00
 	clr	a
-	cjne	r7,#0x00,00316$
-	cjne	r6,#0x00,00316$
+	cjne	r7,#0x00,00382$
 	inc	a
-00316$:
-	mov	dptr,#(_SimpleCentralHeating_zones_65536_17 + 0x0001)
+00382$:
+	mov	dptr,#(_SimpleCentralHeating_zones_10000_17 + 0x0001)
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:108: zones[2] = ((inputs & ZONE3) == 0);
-	mov	dptr,#_SimpleCentralHeating_inputs_65536_17
+	mov	dptr,#_SimpleCentralHeating_inputs_10000_17
 	movx	a,@dptr
 	mov	r7,a
 	anl	ar7,#0x04
-	mov	r6,#0x00
 	clr	a
-	cjne	r7,#0x00,00318$
-	cjne	r6,#0x00,00318$
+	cjne	r7,#0x00,00384$
 	inc	a
-00318$:
-	mov	r7,a
-	mov	dptr,#(_SimpleCentralHeating_zones_65536_17 + 0x0002)
+00384$:
+	mov	dptr,#(_SimpleCentralHeating_zones_10000_17 + 0x0002)
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:112: pGetKeyState(&keys);
-	lcall	00320$
-	sjmp	00321$
-00320$:
+	lcall	00386$
+	sjmp	00387$
+00386$:
 	mov	dptr,#_pGetKeyState
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_SimpleCentralHeating_keys_65536_17
-	mov	b,#0x00
+	mov	dptr,#_SimpleCentralHeating_keys_10000_17
+	mov	b, #0x00
 	ret
-00321$:
+00387$:
 ;	SimpleCentralHeating.c:114: switch (keys)
-	mov	dptr,#_SimpleCentralHeating_keys_65536_17
+	mov	dptr,#_SimpleCentralHeating_keys_10000_17
 	movx	a,@dptr
 	mov	r6,a
 	inc	dptr
 	movx	a,@dptr
 	mov	r7,a
-	cjne	r6,#0x01,00322$
-	cjne	r7,#0x00,00322$
+	cjne	r6,#0x01,00388$
+	cjne	r7,#0x00,00388$
 	sjmp	00105$
-00322$:
-	cjne	r6,#0x02,00323$
-	cjne	r7,#0x00,00323$
+00388$:
+	cjne	r6,#0x02,00389$
+	cjne	r7,#0x00,00389$
 	sjmp	00106$
-00323$:
+00389$:
 ;	SimpleCentralHeating.c:116: case 1 :
 	cjne	r6,#0x03,00108$
 	cjne	r7,#0x00,00108$
 	sjmp	00107$
 00105$:
 ;	SimpleCentralHeating.c:117: zones[0] = 1;
-	mov	dptr,#_SimpleCentralHeating_zones_65536_17
+	mov	dptr,#_SimpleCentralHeating_zones_10000_17
 	mov	a,#0x01
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:118: break;
@@ -786,7 +773,7 @@ _SimpleCentralHeating:
 	sjmp	00108$
 00106$:
 ;	SimpleCentralHeating.c:121: zones[1] = 1;
-	mov	dptr,#(_SimpleCentralHeating_zones_65536_17 + 0x0001)
+	mov	dptr,#(_SimpleCentralHeating_zones_10000_17 + 0x0001)
 	mov	a,#0x01
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:122: break;
@@ -794,13 +781,13 @@ _SimpleCentralHeating:
 	sjmp	00108$
 00107$:
 ;	SimpleCentralHeating.c:125: zones[2] = 1;
-	mov	dptr,#(_SimpleCentralHeating_zones_65536_17 + 0x0002)
+	mov	dptr,#(_SimpleCentralHeating_zones_10000_17 + 0x0002)
 	mov	a,#0x01
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:127: }
 00108$:
 ;	SimpleCentralHeating.c:129: if (zones[0])
-	mov	dptr,#_SimpleCentralHeating_zones_65536_17
+	mov	dptr,#_SimpleCentralHeating_zones_10000_17
 	movx	a,@dptr
 	jz	00110$
 ;	SimpleCentralHeating.c:131: strcat(displayBuffer, "*");
@@ -814,7 +801,7 @@ _SimpleCentralHeating:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_displayBuffer
-	mov	b,#0x00
+	mov	b, #0x00
 	lcall	_strcat
 	sjmp	00111$
 00110$:
@@ -829,11 +816,11 @@ _SimpleCentralHeating:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_displayBuffer
-	mov	b,#0x00
+	mov	b, #0x00
 	lcall	_strcat
 00111$:
 ;	SimpleCentralHeating.c:138: if (zones[1])
-	mov	dptr,#(_SimpleCentralHeating_zones_65536_17 + 0x0001)
+	mov	dptr,#(_SimpleCentralHeating_zones_10000_17 + 0x0001)
 	movx	a,@dptr
 	jz	00113$
 ;	SimpleCentralHeating.c:140: strcat(displayBuffer, "*");
@@ -847,7 +834,7 @@ _SimpleCentralHeating:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_displayBuffer
-	mov	b,#0x00
+	mov	b, #0x00
 	lcall	_strcat
 	sjmp	00114$
 00113$:
@@ -862,11 +849,11 @@ _SimpleCentralHeating:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_displayBuffer
-	mov	b,#0x00
+	mov	b, #0x00
 	lcall	_strcat
 00114$:
 ;	SimpleCentralHeating.c:147: if (zones[2])
-	mov	dptr,#(_SimpleCentralHeating_zones_65536_17 + 0x0002)
+	mov	dptr,#(_SimpleCentralHeating_zones_10000_17 + 0x0002)
 	movx	a,@dptr
 	jz	00116$
 ;	SimpleCentralHeating.c:149: strcat(displayBuffer, "*");
@@ -880,7 +867,7 @@ _SimpleCentralHeating:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_displayBuffer
-	mov	b,#0x00
+	mov	b, #0x00
 	lcall	_strcat
 	sjmp	00117$
 00116$:
@@ -895,90 +882,98 @@ _SimpleCentralHeating:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_displayBuffer
-	mov	b,#0x00
+	mov	b, #0x00
 	lcall	_strcat
 00117$:
 ;	SimpleCentralHeating.c:159: boilerOn = (zones[0] || zones[1] || zones[2]);
-	mov	dptr,#_SimpleCentralHeating_zones_65536_17
+	mov	dptr,#_SimpleCentralHeating_zones_10000_17
 	movx	a,@dptr
 	jnz	00161$
-	mov	dptr,#(_SimpleCentralHeating_zones_65536_17 + 0x0001)
+	mov	dptr,#(_SimpleCentralHeating_zones_10000_17 + 0x0001)
 	movx	a,@dptr
 	jnz	00161$
-	mov	dptr,#(_SimpleCentralHeating_zones_65536_17 + 0x0002)
+	mov	dptr,#(_SimpleCentralHeating_zones_10000_17 + 0x0002)
 	movx	a,@dptr
 	jnz	00161$
-	mov	r7,a
+;	assignBit
+	clr	_SimpleCentralHeating_sloc0_1_0
 	sjmp	00162$
 00161$:
-	mov	r7,#0x01
+;	assignBit
+	setb	_SimpleCentralHeating_sloc0_1_0
 00162$:
-	mov	dptr,#_SimpleCentralHeating_boilerOn_65536_17
-	mov	a,r7
+	mov	dptr,#_SimpleCentralHeating_boilerOn_10000_17
+	mov	c,_SimpleCentralHeating_sloc0_1_0
+	clr	a
+	rlc	a
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:163: pumpOn = (zones[0] || zones[1] || zones[2]);
-	mov	dptr,#_SimpleCentralHeating_zones_65536_17
+	mov	dptr,#_SimpleCentralHeating_zones_10000_17
 	movx	a,@dptr
 	jnz	00167$
-	mov	dptr,#(_SimpleCentralHeating_zones_65536_17 + 0x0001)
+	mov	dptr,#(_SimpleCentralHeating_zones_10000_17 + 0x0001)
 	movx	a,@dptr
 	jnz	00167$
-	mov	dptr,#(_SimpleCentralHeating_zones_65536_17 + 0x0002)
+	mov	dptr,#(_SimpleCentralHeating_zones_10000_17 + 0x0002)
 	movx	a,@dptr
 	jnz	00167$
-	mov	r7,a
+;	assignBit
+	clr	_SimpleCentralHeating_sloc0_1_0
 	sjmp	00168$
 00167$:
-	mov	r7,#0x01
+;	assignBit
+	setb	_SimpleCentralHeating_sloc0_1_0
 00168$:
-	mov	dptr,#_SimpleCentralHeating_pumpOn_65536_17
-	mov	a,r7
+	mov	dptr,#_SimpleCentralHeating_pumpOn_10000_17
+	mov	c,_SimpleCentralHeating_sloc0_1_0
+	clr	a
+	rlc	a
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:166: actuators[0] = zones[0];
-	mov	dptr,#_SimpleCentralHeating_zones_65536_17
+	mov	dptr,#_SimpleCentralHeating_zones_10000_17
 	movx	a,@dptr
-	mov	dptr,#_SimpleCentralHeating_actuators_65536_17
+	mov	dptr,#_SimpleCentralHeating_actuators_10000_17
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:167: actuators[1] = zones[1];
-	mov	dptr,#(_SimpleCentralHeating_zones_65536_17 + 0x0001)
+	mov	dptr,#(_SimpleCentralHeating_zones_10000_17 + 0x0001)
 	movx	a,@dptr
-	mov	dptr,#(_SimpleCentralHeating_actuators_65536_17 + 0x0001)
+	mov	dptr,#(_SimpleCentralHeating_actuators_10000_17 + 0x0001)
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:168: actuators[2] = zones[2];
-	mov	dptr,#(_SimpleCentralHeating_zones_65536_17 + 0x0002)
+	mov	dptr,#(_SimpleCentralHeating_zones_10000_17 + 0x0002)
 	movx	a,@dptr
-	mov	dptr,#(_SimpleCentralHeating_actuators_65536_17 + 0x0002)
+	mov	dptr,#(_SimpleCentralHeating_actuators_10000_17 + 0x0002)
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:170: switch (keys)
-	mov	dptr,#_SimpleCentralHeating_keys_65536_17
+	mov	dptr,#_SimpleCentralHeating_keys_10000_17
 	movx	a,@dptr
 	mov	r6,a
 	inc	dptr
 	movx	a,@dptr
 	mov	r7,a
-	cjne	r6,#0x05,00334$
-	cjne	r7,#0x00,00334$
+	cjne	r6,#0x05,00400$
+	cjne	r7,#0x00,00400$
 	sjmp	00118$
-00334$:
-	cjne	r6,#0x06,00335$
-	cjne	r7,#0x00,00335$
+00400$:
+	cjne	r6,#0x06,00401$
+	cjne	r7,#0x00,00401$
 	sjmp	00119$
-00335$:
-	cjne	r6,#0x09,00336$
-	cjne	r7,#0x00,00336$
+00401$:
+	cjne	r6,#0x09,00402$
+	cjne	r7,#0x00,00402$
 	sjmp	00120$
-00336$:
-	cjne	r6,#0x0a,00337$
-	cjne	r7,#0x00,00337$
+00402$:
+	cjne	r6,#0x0a,00403$
+	cjne	r7,#0x00,00403$
 	sjmp	00121$
-00337$:
+00403$:
 ;	SimpleCentralHeating.c:172: case 5 :
 	cjne	r6,#0x0b,00123$
 	cjne	r7,#0x00,00123$
 	sjmp	00122$
 00118$:
 ;	SimpleCentralHeating.c:173: boilerOn = 1;
-	mov	dptr,#_SimpleCentralHeating_boilerOn_65536_17
+	mov	dptr,#_SimpleCentralHeating_boilerOn_10000_17
 	mov	a,#0x01
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:174: break;
@@ -986,7 +981,7 @@ _SimpleCentralHeating:
 	sjmp	00123$
 00119$:
 ;	SimpleCentralHeating.c:177: pumpOn = 1;
-	mov	dptr,#_SimpleCentralHeating_pumpOn_65536_17
+	mov	dptr,#_SimpleCentralHeating_pumpOn_10000_17
 	mov	a,#0x01
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:178: break;
@@ -994,7 +989,7 @@ _SimpleCentralHeating:
 	sjmp	00123$
 00120$:
 ;	SimpleCentralHeating.c:181: actuators[0] = 1;
-	mov	dptr,#_SimpleCentralHeating_actuators_65536_17
+	mov	dptr,#_SimpleCentralHeating_actuators_10000_17
 	mov	a,#0x01
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:182: break;
@@ -1002,7 +997,7 @@ _SimpleCentralHeating:
 	sjmp	00123$
 00121$:
 ;	SimpleCentralHeating.c:185: actuators[1] = 1;
-	mov	dptr,#(_SimpleCentralHeating_actuators_65536_17 + 0x0001)
+	mov	dptr,#(_SimpleCentralHeating_actuators_10000_17 + 0x0001)
 	mov	a,#0x01
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:186: break;
@@ -1010,7 +1005,7 @@ _SimpleCentralHeating:
 	sjmp	00123$
 00122$:
 ;	SimpleCentralHeating.c:189: actuators[2] = 1;
-	mov	dptr,#(_SimpleCentralHeating_actuators_65536_17 + 0x0002)
+	mov	dptr,#(_SimpleCentralHeating_actuators_10000_17 + 0x0002)
 	mov	a,#0x01
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:191: }
@@ -1026,10 +1021,10 @@ _SimpleCentralHeating:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_displayBuffer
-	mov	b,#0x00
+	mov	b, #0x00
 	lcall	_strcat
 ;	SimpleCentralHeating.c:195: if (boilerOn)
-	mov	dptr,#_SimpleCentralHeating_boilerOn_65536_17
+	mov	dptr,#_SimpleCentralHeating_boilerOn_10000_17
 	movx	a,@dptr
 	jz	00125$
 ;	SimpleCentralHeating.c:197: strcat(displayBuffer, "* ");
@@ -1043,7 +1038,7 @@ _SimpleCentralHeating:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_displayBuffer
-	mov	b,#0x00
+	mov	b, #0x00
 	lcall	_strcat
 	sjmp	00126$
 00125$:
@@ -1058,11 +1053,11 @@ _SimpleCentralHeating:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_displayBuffer
-	mov	b,#0x00
+	mov	b, #0x00
 	lcall	_strcat
 00126$:
 ;	SimpleCentralHeating.c:204: if (pumpOn)
-	mov	dptr,#_SimpleCentralHeating_pumpOn_65536_17
+	mov	dptr,#_SimpleCentralHeating_pumpOn_10000_17
 	movx	a,@dptr
 	jz	00128$
 ;	SimpleCentralHeating.c:206: strcat(displayBuffer, "* ");
@@ -1076,7 +1071,7 @@ _SimpleCentralHeating:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_displayBuffer
-	mov	b,#0x00
+	mov	b, #0x00
 	lcall	_strcat
 	sjmp	00129$
 00128$:
@@ -1091,7 +1086,7 @@ _SimpleCentralHeating:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_displayBuffer
-	mov	b,#0x00
+	mov	b, #0x00
 	lcall	_strcat
 00129$:
 ;	SimpleCentralHeating.c:213: strcat(displayBuffer, " ");
@@ -1105,10 +1100,10 @@ _SimpleCentralHeating:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_displayBuffer
-	mov	b,#0x00
+	mov	b, #0x00
 	lcall	_strcat
 ;	SimpleCentralHeating.c:215: if (actuators[0])
-	mov	dptr,#_SimpleCentralHeating_actuators_65536_17
+	mov	dptr,#_SimpleCentralHeating_actuators_10000_17
 	movx	a,@dptr
 	jz	00131$
 ;	SimpleCentralHeating.c:217: strcat(displayBuffer, "*");
@@ -1122,7 +1117,7 @@ _SimpleCentralHeating:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_displayBuffer
-	mov	b,#0x00
+	mov	b, #0x00
 	lcall	_strcat
 	sjmp	00132$
 00131$:
@@ -1137,11 +1132,11 @@ _SimpleCentralHeating:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_displayBuffer
-	mov	b,#0x00
+	mov	b, #0x00
 	lcall	_strcat
 00132$:
 ;	SimpleCentralHeating.c:223: if (actuators[1])
-	mov	dptr,#(_SimpleCentralHeating_actuators_65536_17 + 0x0001)
+	mov	dptr,#(_SimpleCentralHeating_actuators_10000_17 + 0x0001)
 	movx	a,@dptr
 	jz	00134$
 ;	SimpleCentralHeating.c:225: strcat(displayBuffer, "*");
@@ -1155,7 +1150,7 @@ _SimpleCentralHeating:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_displayBuffer
-	mov	b,#0x00
+	mov	b, #0x00
 	lcall	_strcat
 	sjmp	00135$
 00134$:
@@ -1170,11 +1165,11 @@ _SimpleCentralHeating:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_displayBuffer
-	mov	b,#0x00
+	mov	b, #0x00
 	lcall	_strcat
 00135$:
 ;	SimpleCentralHeating.c:231: if (actuators[2])
-	mov	dptr,#(_SimpleCentralHeating_actuators_65536_17 + 0x0002)
+	mov	dptr,#(_SimpleCentralHeating_actuators_10000_17 + 0x0002)
 	movx	a,@dptr
 	jz	00137$
 ;	SimpleCentralHeating.c:233: strcat(displayBuffer, "*");
@@ -1188,7 +1183,7 @@ _SimpleCentralHeating:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_displayBuffer
-	mov	b,#0x00
+	mov	b, #0x00
 	lcall	_strcat
 	sjmp	00138$
 00137$:
@@ -1203,13 +1198,13 @@ _SimpleCentralHeating:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_displayBuffer
-	mov	b,#0x00
+	mov	b, #0x00
 	lcall	_strcat
 00138$:
 ;	SimpleCentralHeating.c:242: pWriteDisplayBuffer(displayBuffer);
-	lcall	00344$
-	sjmp	00345$
-00344$:
+	lcall	00410$
+	sjmp	00411$
+00410$:
 	mov	dptr,#_pWriteDisplayBuffer
 	movx	a,@dptr
 	push	acc
@@ -1217,78 +1212,78 @@ _SimpleCentralHeating:
 	movx	a,@dptr
 	push	acc
 	mov	dptr,#_displayBuffer
-	mov	b,#0x00
+	mov	b, #0x00
 	ret
-00345$:
+00411$:
 ;	SimpleCentralHeating.c:245: outputs = 0;
-	mov	dptr,#_SimpleCentralHeating_outputs_65536_17
+	mov	dptr,#_SimpleCentralHeating_outputs_10000_17
 	clr	a
 	movx	@dptr,a
 ;	SimpleCentralHeating.c:246: if (actuators[0])
-	mov	dptr,#_SimpleCentralHeating_actuators_65536_17
+	mov	dptr,#_SimpleCentralHeating_actuators_10000_17
 	movx	a,@dptr
 	jz	00140$
 ;	SimpleCentralHeating.c:248: outputs |= ACTUATOR1;
-	mov	dptr,#_SimpleCentralHeating_outputs_65536_17
+	mov	dptr,#_SimpleCentralHeating_outputs_10000_17
 	mov	a,#0x01
 	movx	@dptr,a
 00140$:
 ;	SimpleCentralHeating.c:250: if (actuators[1])
-	mov	dptr,#(_SimpleCentralHeating_actuators_65536_17 + 0x0001)
+	mov	dptr,#(_SimpleCentralHeating_actuators_10000_17 + 0x0001)
 	movx	a,@dptr
 	jz	00142$
 ;	SimpleCentralHeating.c:252: outputs |= ACTUATOR2;
-	mov	dptr,#_SimpleCentralHeating_outputs_65536_17
+	mov	dptr,#_SimpleCentralHeating_outputs_10000_17
 	movx	a,@dptr
 	orl	acc,#0x02
 	movx	@dptr,a
 00142$:
 ;	SimpleCentralHeating.c:254: if (actuators[2])
-	mov	dptr,#(_SimpleCentralHeating_actuators_65536_17 + 0x0002)
+	mov	dptr,#(_SimpleCentralHeating_actuators_10000_17 + 0x0002)
 	movx	a,@dptr
 	jz	00144$
 ;	SimpleCentralHeating.c:256: outputs |= ACTUATOR3;
-	mov	dptr,#_SimpleCentralHeating_outputs_65536_17
+	mov	dptr,#_SimpleCentralHeating_outputs_10000_17
 	movx	a,@dptr
 	orl	acc,#0x04
 	movx	@dptr,a
 00144$:
 ;	SimpleCentralHeating.c:258: if (pumpOn)
-	mov	dptr,#_SimpleCentralHeating_pumpOn_65536_17
+	mov	dptr,#_SimpleCentralHeating_pumpOn_10000_17
 	movx	a,@dptr
 	jz	00146$
 ;	SimpleCentralHeating.c:260: outputs |= PUMP;
-	mov	dptr,#_SimpleCentralHeating_outputs_65536_17
+	mov	dptr,#_SimpleCentralHeating_outputs_10000_17
 	movx	a,@dptr
 	orl	acc,#0x10
 	movx	@dptr,a
 00146$:
 ;	SimpleCentralHeating.c:262: if (boilerOn)
-	mov	dptr,#_SimpleCentralHeating_boilerOn_65536_17
+	mov	dptr,#_SimpleCentralHeating_boilerOn_10000_17
 	movx	a,@dptr
 	jz	00148$
 ;	SimpleCentralHeating.c:264: outputs |= BOILER;
-	mov	dptr,#_SimpleCentralHeating_outputs_65536_17
+	mov	dptr,#_SimpleCentralHeating_outputs_10000_17
 	movx	a,@dptr
 	orl	acc,#0x20
 	movx	@dptr,a
 00148$:
 ;	SimpleCentralHeating.c:267: pSetOutputPortValues(outputs);
-	mov	dptr,#_SimpleCentralHeating_outputs_65536_17
+	mov	dptr,#_SimpleCentralHeating_outputs_10000_17
 	movx	a,@dptr
 	mov	r7,a
-	lcall	00351$
-	sjmp	00352$
-00351$:
+	lcall	00417$
+	sjmp	00418$
+00417$:
 	mov	dptr,#_pSetOutputPortValues
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dpl,r7
+	mov	dpl, r7
 	ret
-00352$:
+00418$:
 ;	SimpleCentralHeating.c:269: for (delay = 0; delay < 200000; ++delay)
 	mov	r4,#0x40
 	mov	r5,#0x0d
@@ -1296,13 +1291,13 @@ _SimpleCentralHeating:
 	mov	r7,#0x00
 00157$:
 	dec	r4
-	cjne	r4,#0xff,00353$
+	cjne	r4,#0xff,00419$
 	dec	r5
-	cjne	r5,#0xff,00353$
+	cjne	r5,#0xff,00419$
 	dec	r6
-	cjne	r6,#0xff,00353$
+	cjne	r6,#0xff,00419$
 	dec	r7
-00353$:
+00419$:
 	mov	a,r4
 	orl	a,r5
 	orl	a,r6

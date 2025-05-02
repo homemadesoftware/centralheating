@@ -1,10 +1,10 @@
 ;--------------------------------------------------------
-; File Created by SDCC : free open source ANSI-C Compiler
-; Version 4.0.0 #11528 (MINGW64)
+; File Created by SDCC : free open source ISO C Compiler
+; Version 4.5.0 #15242 (MINGW64)
 ;--------------------------------------------------------
 	.module CentralHeatingMenus
-	.optsdcc -mmcs51 --model-large
 	
+	.optsdcc -mmcs51 --model-large
 ;--------------------------------------------------------
 ; Public variables in this module
 ;--------------------------------------------------------
@@ -423,7 +423,7 @@ _P5_7	=	0x00ef
 ;--------------------------------------------------------
 	.area DSEG    (DATA)
 ;--------------------------------------------------------
-; overlayable items in internal ram 
+; overlayable items in internal ram
 ;--------------------------------------------------------
 ;--------------------------------------------------------
 ; indirectly addressable internal ram data
@@ -443,7 +443,7 @@ _P5_7	=	0x00ef
 ;--------------------------------------------------------
 	.area PSEG    (PAG,XDATA)
 ;--------------------------------------------------------
-; external ram data
+; uninitialized external ram data
 ;--------------------------------------------------------
 	.area XSEG    (XDATA)
 ;--------------------------------------------------------
@@ -451,7 +451,7 @@ _P5_7	=	0x00ef
 ;--------------------------------------------------------
 	.area XABS    (ABS,XDATA)
 ;--------------------------------------------------------
-; external initialized ram data
+; initialized external ram data
 ;--------------------------------------------------------
 	.area XISEG   (XDATA)
 	.area HOME    (CODE)
@@ -511,7 +511,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_0
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:15: AddMenuDefinition("1 Hour",             MENUID_HOTWATER, MENUID_HOTWATER1HR);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -527,7 +527,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_1
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:16: AddMenuDefinition("Reset",              MENUID_HOTWATER, MENUID_HOTWATERRST);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -543,7 +543,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_2
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:17: AddMenuDefinition("Return",             MENUID_HOTWATER, MENU_END_SENTINEL);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -559,7 +559,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_3
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:19: AddMenuDefinition("Set Clock", 0, MENUID_SETRTC);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -574,7 +574,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_4
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:20: AddMenuDefinition("Set Date",            MENUID_SETRTC, MENUID_SETDATE);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -590,7 +590,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_5
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:21: AddMenuDefinition("Day+",                MENUID_SETDATE, MENUID_ADDDAY);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -606,7 +606,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_6
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:22: AddMenuDefinition("Day-",                MENUID_SETDATE, MENUID_SUBDAY);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -622,7 +622,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_7
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:23: AddMenuDefinition("Month+",              MENUID_SETDATE, MENUID_ADDMONTH);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -638,7 +638,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_8
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:24: AddMenuDefinition("Month-",              MENUID_SETDATE, MENUID_SUBMONTH);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -654,7 +654,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_9
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:25: AddMenuDefinition("Year+",               MENUID_SETDATE, MENUID_ADDYEAR);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -670,7 +670,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_10
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:26: AddMenuDefinition("Year-",               MENUID_SETDATE, MENUID_SUBYEAR);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -686,7 +686,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_11
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:27: AddMenuDefinition("Return",              MENUID_SETDATE, MENU_END_SENTINEL);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -702,7 +702,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_3
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:29: AddMenuDefinition("Set Time",            MENUID_SETRTC, MENUID_SETTIME);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -718,7 +718,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_12
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:30: AddMenuDefinition("Minute+",             MENUID_SETTIME, MENUID_ADDMINUTE);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -734,7 +734,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_13
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:31: AddMenuDefinition("Minute-",             MENUID_SETTIME, MENUID_SUBMINUTE);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -750,7 +750,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_14
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:32: AddMenuDefinition("Hour+",               MENUID_SETTIME, MENUID_ADDHOUR);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -766,7 +766,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_15
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:33: AddMenuDefinition("Hour-",               MENUID_SETTIME, MENUID_SUBHOUR);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -782,7 +782,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_16
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:34: AddMenuDefinition("Reset Seconds",       MENUID_SETTIME, MENUID_RESETSEC);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -798,7 +798,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_17
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:35: AddMenuDefinition("Return",              MENUID_SETTIME, MENU_END_SENTINEL);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -814,7 +814,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_3
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:36: AddMenuDefinition("Return",              MENUID_SETRTC, MENU_END_SENTINEL);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -830,7 +830,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_3
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:39: AddMenuDefinition("Test Outputs", 0, MENUID_TESTOUTPUT);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -845,7 +845,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_18
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:40: AddMenuDefinition("Boiler", MENUID_TESTOUTPUT, MENUID_TEST_BOILER);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -861,7 +861,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_19
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:41: AddMenuDefinition("Pump",   MENUID_TESTOUTPUT, MENUID_TEST_PUMP);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -877,7 +877,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_20
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:42: AddMenuDefinition("Zone 1", MENUID_TESTOUTPUT, MENUID_TEST_ZONE1);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -893,7 +893,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_21
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:43: AddMenuDefinition("Zone 2", MENUID_TESTOUTPUT, MENUID_TEST_ZONE2);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -909,7 +909,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_22
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:44: AddMenuDefinition("Zone 3", MENUID_TESTOUTPUT, MENUID_TEST_ZONE3);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -925,7 +925,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_23
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:45: AddMenuDefinition("Zone 4", MENUID_TESTOUTPUT, MENUID_TEST_ZONE4);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -941,7 +941,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_24
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:46: AddMenuDefinition("Reset",  MENUID_TESTOUTPUT, MENUID_TEST_RESET);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -957,7 +957,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_2
-	mov	b,#0x80
+	mov	b, #0x80
 	lcall	_AddMenuDefinition
 ;	../Common/CentralHeatingMenus.c:47: AddMenuDefinition("Return", MENUID_TESTOUTPUT, MENU_END_SENTINEL);
 	mov	dptr,#_AddMenuDefinition_PARM_2
@@ -973,7 +973,7 @@ _BuildCentralHeatingMenuDefinitions:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#___str_3
-	mov	b,#0x80
+	mov	b, #0x80
 ;	../Common/CentralHeatingMenus.c:49: }
 	ljmp	_AddMenuDefinition
 	.area CSEG    (CODE)

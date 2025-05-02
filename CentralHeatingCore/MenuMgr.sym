@@ -1,4 +1,4 @@
-ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051), page 1.
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051)               Page 1
 Hexadecimal [24-Bits]
 
 Symbol Table
@@ -58,7 +58,7 @@ Symbol Table
     IE.4                                                        =  0000AC L
     IE.5                                                        =  0000AD L
     IE.7                                                        =  0000AF L
-ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051), page 2.
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051)               Page 2
 Hexadecimal [24-Bits]
 
 Symbol Table
@@ -118,7 +118,7 @@ Symbol Table
     PS                                                          =  0000BC L
     PSW                                                         =  0000D0 L
     PSW.0                                                       =  0000D0 L
-ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051), page 3.
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051)               Page 3
 Hexadecimal [24-Bits]
 
 Symbol Table
@@ -178,7 +178,7 @@ Symbol Table
     TCON.5                                                      =  00008D L
     TCON.6                                                      =  00008E L
     TCON.7                                                      =  00008F L
-ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051), page 4.
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051)               Page 4
 Hexadecimal [24-Bits]
 
 Symbol Table
@@ -205,7 +205,7 @@ Symbol Table
  16 _AddMenuDefinition                                             00008C GR
   A _AddMenuDefinition_PARM_2                                      0000D0 GR
   A _AddMenuDefinition_PARM_3                                      0000D2 GR
-  A _AddMenuDefinition_text_65536_61                               0000D4 R
+  A _AddMenuDefinition_text_10000_68                               0000D4 R
     _B                                                          =  0000F0 G
     _BDRCON                                                     =  00009B G
     _BRL                                                        =  00009A G
@@ -238,7 +238,7 @@ Symbol Table
     _CL                                                         =  0000E9 G
     _CMOD                                                       =  0000D9 G
     _CP_RL2                                                     =  0000C8 G
-ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051), page 5.
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051)               Page 5
 Hexadecimal [24-Bits]
 
 Symbol Table
@@ -261,22 +261,20 @@ Symbol Table
     _EXF2                                                       =  0000CE G
     _F0                                                         =  0000D5 G
     _F1                                                         =  0000D1 G
- 16 _GetMenuItemExtent                                             0004C9 GR
+ 16 _GetMenuItemExtent                                             0004BE GR
   A _GetMenuItemExtent_PARM_2                                      0000E2 GR
   A _GetMenuItemExtent_PARM_3                                      0000E5 GR
-  A _GetMenuItemExtent_currentPos_65536_86                         0000EA R
-  A _GetMenuItemExtent_menuItem_65536_85                           0000E8 R
-  5 _GetMenuItemExtent_sloc0_1_0                                   00000D R
-  5 _GetMenuItemExtent_sloc1_1_0                                   00000F R
-  5 _GetMenuItemExtent_sloc2_1_0                                   000011 R
-  5 _GetMenuItemExtent_sloc3_1_0                                   000013 R
-  5 _GetMenuItemExtent_sloc4_1_0                                   000015 R
-  5 _GetMenuItemExtent_sloc5_1_0                                   000017 R
- 16 _GoBackUp                                                      000A0D GR
- 16 _GoLeft                                                        000971 GR
- 16 _GoRight                                                       0008C9 GR
-  5 _GoRight_sloc0_1_0                                             00001E R
- 16 _GoSubMenu                                                     0007F9 GR
+  A _GetMenuItemExtent_currentPos_10000_93                         0000EA R
+  A _GetMenuItemExtent_menuItem_10000_92                           0000E8 R
+  5 _GetMenuItemExtent_sloc0_1_0                                   00000C R
+  5 _GetMenuItemExtent_sloc1_1_0                                   00000E R
+  5 _GetMenuItemExtent_sloc2_1_0                                   000010 R
+  5 _GetMenuItemExtent_sloc3_1_0                                   000012 R
+  5 _GetMenuItemExtent_sloc4_1_0                                   000014 R
+ 16 _GoBackUp                                                      0009D5 GR
+ 16 _GoLeft                                                        000947 GR
+ 16 _GoRight                                                       0008AE GR
+ 16 _GoSubMenu                                                     0007E4 GR
     _HandleMenuCommand                                             ****** GX
     _HandleMenuCommand_PARM_2                                      ****** GX
     _IE                                                         =  0000A8 G
@@ -293,24 +291,24 @@ Symbol Table
     _IPL1                                                       =  0000B2 G
     _IT0                                                        =  000088 G
     _IT1                                                        =  00008A G
- 16 _InitialiseMenuController                                      000183 GR
+ 16 _InitialiseMenuController                                      00017A GR
  16 _InitialiseMenuDefinitions                                     000000 GR
- 16 _IsGoBack                                                      0007D0 GR
- 16 _IsParentMenu                                                  000757 GR
-  5 _IsParentMenu_sloc0_1_0                                        00001C R
-ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051), page 6.
+ 16 _IsGoBack                                                      0007BB GR
+ 16 _IsParentMenu                                                  000749 GR
+  5 _IsParentMenu_sloc0_1_0                                        000019 R
+    _KBE                                                        =  00009D G
+    _KBF                                                        =  00009E G
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051)               Page 6
 Hexadecimal [24-Bits]
 
 Symbol Table
 
-    _KBE                                                        =  00009D G
-    _KBF                                                        =  00009E G
     _KBLS                                                       =  00009C G
   A _MenuController                                                0000CA GR
   A _MenuDefinitionCounter                                         0000C8 GR
   A _MenuDefinitions                                               000000 GR
- 16 _MenuNavigation                                                0001C0 GR
-  A _MenuNavigation_navType_65536_65                               0000D7 R
+ 16 _MenuNavigation                                                0001B7 GR
+  A _MenuNavigation_navType_10000_72                               0000D7 R
     _OV                                                         =  0000D2 G
     _P                                                          =  0000D0 G
     _P0                                                         =  000080 G
@@ -358,13 +356,13 @@ Symbol Table
     _P4_5                                                       =  0000C5 G
     _P4_6                                                       =  0000C6 G
     _P4_7                                                       =  0000C7 G
-ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051), page 7.
+    _P5                                                         =  0000E8 G
+    _P5_0                                                       =  0000E8 G
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051)               Page 7
 Hexadecimal [24-Bits]
 
 Symbol Table
 
-    _P5                                                         =  0000E8 G
-    _P5_0                                                       =  0000E8 G
     _P5_1                                                       =  0000E9 G
     _P5_2                                                       =  0000EA G
     _P5_3                                                       =  0000EB G
@@ -397,34 +395,34 @@ Symbol Table
     _RS0                                                        =  0000D3 G
     _RS1                                                        =  0000D4 G
     _RXD                                                        =  0000B0 G
- 16 _RenderActiveMenu                                              000228 GR
+ 16 _RenderActiveMenu                                              00021F GR
   A _RenderActiveMenu_PARM_2                                       0000D8 GR
   A _RenderActiveMenu_PARM_3                                       0000DA GR
-  A _RenderActiveMenu_ch_65536_72                                  0000DF R
-  A _RenderActiveMenu_currentPos_65536_72                          0000E0 R
-  A _RenderActiveMenu_pDisplay_65536_71                            0000DC R
+  A _RenderActiveMenu_ch_10000_79                                  0000DF R
+  A _RenderActiveMenu_currentPos_10000_79                          0000E0 R
+  A _RenderActiveMenu_pDisplay_10000_78                            0000DC R
   5 _RenderActiveMenu_sloc0_1_0                                    000000 R
   5 _RenderActiveMenu_sloc1_1_0                                    000002 R
   5 _RenderActiveMenu_sloc2_1_0                                    000004 R
   5 _RenderActiveMenu_sloc3_1_0                                    000006 R
   5 _RenderActiveMenu_sloc4_1_0                                    000008 R
-  5 _RenderActiveMenu_sloc5_1_0                                    00000A R
- 16 _RenderMenuOnBuffer                                            000671 GR
+  5 _RenderActiveMenu_sloc5_1_0                                    00000B R
+ 16 _RenderMenuOnBuffer                                            000665 GR
   A _RenderMenuOnBuffer_PARM_2                                     0000EC GR
-  A _RenderMenuOnBuffer_endPos_131072_96                           0000F3 R
-  A _RenderMenuOnBuffer_pBuffer_65536_94                           0000EE R
-  5 _RenderMenuOnBuffer_sloc0_1_0                                  00001A R
-  A _RenderMenuOnBuffer_startPos_131072_96                         0000F1 R
+  A _RenderMenuOnBuffer_endPos_20000_103                           0000F3 R
+  A _RenderMenuOnBuffer_pBuffer_10000_101                          0000EE R
+  5 _RenderMenuOnBuffer_sloc0_1_0                                  000017 R
+  A _RenderMenuOnBuffer_startPos_20000_103                         0000F1 R
     _SADDR                                                      =  0000A9 G
     _SADEN                                                      =  0000B9 G
     _SBUF                                                       =  000099 G
-ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051), page 8.
+    _SCON                                                       =  000098 G
+    _SM0                                                        =  00009F G
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051)               Page 8
 Hexadecimal [24-Bits]
 
 Symbol Table
 
-    _SCON                                                       =  000098 G
-    _SM0                                                        =  00009F G
     _SM1                                                        =  00009E G
     _SM2                                                        =  00009D G
     _SP                                                         =  000081 G
@@ -478,13 +476,13 @@ Symbol Table
     a.3                                                         =  0000E3 L
     a.4                                                         =  0000E4 L
     a.5                                                         =  0000E5 L
-ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051), page 9.
+    a.6                                                         =  0000E6 L
+    a.7                                                         =  0000E7 L
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051)               Page 9
 Hexadecimal [24-Bits]
 
 Symbol Table
 
-    a.6                                                         =  0000E6 L
-    a.7                                                         =  0000E7 L
     ac                                                          =  0000D6 L
     acc                                                         =  0000E0 L
     acc.0                                                       =  0000E0 L
@@ -538,13 +536,13 @@ Symbol Table
     ie0                                                         =  000089 L
     ie1                                                         =  00008B L
     int0                                                        =  0000B2 L
-ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051), page 10.
+    int1                                                        =  0000B3 L
+    ip                                                          =  0000B8 L
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051)              Page 10
 Hexadecimal [24-Bits]
 
 Symbol Table
 
-    int1                                                        =  0000B3 L
-    ip                                                          =  0000B8 L
     ip.0                                                        =  0000B8 L
     ip.1                                                        =  0000B9 L
     ip.2                                                        =  0000BA L
@@ -598,13 +596,13 @@ Symbol Table
     psw.1                                                       =  0000D1 L
     psw.2                                                       =  0000D2 L
     psw.3                                                       =  0000D3 L
-ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051), page 11.
+    psw.4                                                       =  0000D4 L
+    psw.5                                                       =  0000D5 L
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051)              Page 11
 Hexadecimal [24-Bits]
 
 Symbol Table
 
-    psw.4                                                       =  0000D4 L
-    psw.5                                                       =  0000D5 L
     psw.6                                                       =  0000D6 L
     psw.7                                                       =  0000D7 L
     pt0                                                         =  0000B9 L
@@ -658,13 +656,13 @@ Symbol Table
     tf0                                                         =  00008D L
     tf1                                                         =  00008F L
     tf2                                                         =  0000CF L
-ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051), page 12.
+    th0                                                         =  00008C L
+    th1                                                         =  00008D L
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051)              Page 12
 Hexadecimal [24-Bits]
 
 Symbol Table
 
-    th0                                                         =  00008C L
-    th1                                                         =  00008D L
     th2                                                         =  0000CD L
     ti                                                          =  000099 L
     tl0                                                         =  00008A L
@@ -676,8 +674,7 @@ Symbol Table
     tr2                                                         =  0000CA L
     txd                                                         =  0000B1 L
 
-
-ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051), page 13.
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051)              Page 13
 Hexadecimal [24-Bits]
 
 Area Table
@@ -687,7 +684,7 @@ Area Table
    2 RSEG0                                      size      0   flags    8
    3 RSEG1                                      size      0   flags    8
    4 REG_BANK_0                                 size      8   flags    4
-   5 DSEG                                       size     20   flags    0
+   5 DSEG                                       size     1B   flags    0
    6 ISEG                                       size      0   flags    0
    7 IABS                                       size      0   flags    8
    8 BSEG                                       size      0   flags   80
@@ -704,7 +701,7 @@ Area Table
   13 GSINIT5                                    size      0   flags   20
   14 GSINIT                                     size      0   flags   20
   15 GSFINAL                                    size      0   flags   20
-  16 CSEG                                       size    A85   flags   20
+  16 CSEG                                       size    A4D   flags   20
   17 CONST                                      size     10   flags   20
   18 XINIT                                      size      0   flags   20
   19 CABS                                       size      0   flags   28

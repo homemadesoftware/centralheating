@@ -1,10 +1,10 @@
                                       1 ;--------------------------------------------------------
-                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
-                                      3 ; Version 4.0.0 #11528 (MINGW64)
+                                      2 ; File Created by SDCC : free open source ISO C Compiler
+                                      3 ; Version 4.5.0 #15242 (MINGW64)
                                       4 ;--------------------------------------------------------
                                       5 	.module 89C51Board
-                                      6 	.optsdcc -mmcs51 --model-large
-                                      7 	
+                                      6 	
+                                      7 	.optsdcc -mmcs51 --model-large
                                       8 ;--------------------------------------------------------
                                       9 ; Public variables in this module
                                      10 ;--------------------------------------------------------
@@ -448,12 +448,12 @@
                                     448 ;--------------------------------------------------------
                                     449 	.area DSEG    (DATA)
                                     450 ;--------------------------------------------------------
-                                    451 ; overlayable items in internal ram 
+                                    451 ; overlayable items in internal ram
                                     452 ;--------------------------------------------------------
                                     453 ;--------------------------------------------------------
-                                    454 ; Stack segment in internal ram 
+                                    454 ; Stack segment in internal ram
                                     455 ;--------------------------------------------------------
-                                    456 	.area	SSEG
+                                    456 	.area SSEG
       000000                        457 __start__stack:
       000000                        458 	.ds	1
                                     459 
@@ -475,7 +475,7 @@
                                     475 ;--------------------------------------------------------
                                     476 	.area PSEG    (PAG,XDATA)
                                     477 ;--------------------------------------------------------
-                                    478 ; external ram data
+                                    478 ; uninitialized external ram data
                                     479 ;--------------------------------------------------------
                                     480 	.area XSEG    (XDATA)
       000000                        481 _pRegisterForTimer::
@@ -503,7 +503,7 @@
                                     503 ;--------------------------------------------------------
                                     504 	.area XABS    (ABS,XDATA)
                                     505 ;--------------------------------------------------------
-                                    506 ; external initialized ram data
+                                    506 ; initialized external ram data
                                     507 ;--------------------------------------------------------
                                     508 	.area XISEG   (XDATA)
                                     509 	.area HOME    (CODE)
@@ -517,1201 +517,1142 @@
                                     517 	.area GSFINAL (CODE)
                                     518 	.area CSEG    (CODE)
                                     519 ;--------------------------------------------------------
-                                    520 ; interrupt vector 
+                                    520 ; interrupt vector
                                     521 ;--------------------------------------------------------
                                     522 	.area HOME    (CODE)
       000000                        523 __interrupt_vect:
       000000 02r00r00         [24]  524 	ljmp	__sdcc_gsinit_startup
-                                    525 ;--------------------------------------------------------
-                                    526 ; global & static initialisations
-                                    527 ;--------------------------------------------------------
-                                    528 	.area HOME    (CODE)
-                                    529 	.area GSINIT  (CODE)
-                                    530 	.area GSFINAL (CODE)
-                                    531 	.area GSINIT  (CODE)
-                                    532 	.globl __sdcc_gsinit_startup
-                                    533 	.globl __sdcc_program_startup
-                                    534 	.globl __start__stack
-                                    535 	.globl __mcs51_genXINIT
-                                    536 	.globl __mcs51_genXRAMCLEAR
-                                    537 	.globl __mcs51_genRAMCLEAR
-                                    538 	.area GSFINAL (CODE)
-      000000 02r00r03         [24]  539 	ljmp	__sdcc_program_startup
-                                    540 ;--------------------------------------------------------
-                                    541 ; Home
-                                    542 ;--------------------------------------------------------
-                                    543 	.area HOME    (CODE)
-                                    544 	.area HOME    (CODE)
-      000003                        545 __sdcc_program_startup:
-      000003 02r00r00         [24]  546 	ljmp	_main
-                                    547 ;	return from main will return to caller
-                                    548 ;--------------------------------------------------------
-                                    549 ; code
-                                    550 ;--------------------------------------------------------
-                                    551 	.area CSEG    (CODE)
-                                    552 ;------------------------------------------------------------
-                                    553 ;Allocation info for local variables in function 'main'
-                                    554 ;------------------------------------------------------------
-                                    555 ;	89C51Board.c:60: void main(void)
-                                    556 ;	-----------------------------------------
-                                    557 ;	 function main
-                                    558 ;	-----------------------------------------
-      000000                        559 _main:
-                           000007   560 	ar7 = 0x07
-                           000006   561 	ar6 = 0x06
-                           000005   562 	ar5 = 0x05
-                           000004   563 	ar4 = 0x04
-                           000003   564 	ar3 = 0x03
-                           000002   565 	ar2 = 0x02
-                           000001   566 	ar1 = 0x01
-                           000000   567 	ar0 = 0x00
-                                    568 ;	89C51Board.c:62: CKCON0 = 0x01;						// Initial X2 Mode (BUS Clock = 58.9824 MHz) 
-      000000 75 8F 01         [24]  569 	mov	_CKCON0,#0x01
-                                    570 ;	89C51Board.c:66: Hardware_InitialiseHardware();
-      000003 12r01rD7         [24]  571 	lcall	_Hardware_InitialiseHardware
-                                    572 ;	89C51Board.c:74: UserProgram();
-      000006 12r00r00         [24]  573 	lcall	_UserProgram
-                                    574 ;	89C51Board.c:76: Hardware_ScheduleUserCalls();
-                                    575 ;	89C51Board.c:78: }   
-      000009 02r00r0C         [24]  576 	ljmp	_Hardware_ScheduleUserCalls
-                                    577 ;------------------------------------------------------------
-                                    578 ;Allocation info for local variables in function 'Hardware_ScheduleUserCalls'
-                                    579 ;------------------------------------------------------------
-                                    580 ;timerCounter              Allocated to stack - _bp +8
-                                    581 ;c                         Allocated to stack - _bp +4
-                                    582 ;pTimer                    Allocated to stack - _bp +10
-                                    583 ;sloc0                     Allocated to stack - _bp +1
-                                    584 ;------------------------------------------------------------
-                                    585 ;	89C51Board.c:81: void Hardware_ScheduleUserCalls() REENTRANT
-                                    586 ;	-----------------------------------------
-                                    587 ;	 function Hardware_ScheduleUserCalls
-                                    588 ;	-----------------------------------------
-      00000C                        589 _Hardware_ScheduleUserCalls:
-      00000C C0*00            [24]  590 	push	_bp
-      00000E E5 81            [12]  591 	mov	a,sp
-      000010 F5*00            [12]  592 	mov	_bp,a
-      000012 24 0C            [12]  593 	add	a,#0x0c
-      000014 F5 81            [12]  594 	mov	sp,a
-                                    595 ;	89C51Board.c:88: for (timerCounter = 0; timerCounter < MAX_TIMERS; ++timerCounter)
-      000016                        596 00121$:
-      000016 E5*00            [12]  597 	mov	a,_bp
-      000018 24 08            [12]  598 	add	a,#0x08
-      00001A F8               [12]  599 	mov	r0,a
-      00001B E4               [12]  600 	clr	a
-      00001C F6               [12]  601 	mov	@r0,a
-      00001D 08               [12]  602 	inc	r0
-      00001E F6               [12]  603 	mov	@r0,a
-      00001F 7C 00            [12]  604 	mov	r4,#0x00
-      000021 7D 00            [12]  605 	mov	r5,#0x00
-      000023                        606 00111$:
-                                    607 ;	89C51Board.c:90: TimerSetup *pTimer = timers + timerCounter;
-      000023 EC               [12]  608 	mov	a,r4
-      000024 24r12            [12]  609 	add	a,#_timers
-      000026 FA               [12]  610 	mov	r2,a
-      000027 ED               [12]  611 	mov	a,r5
-      000028 34s00            [12]  612 	addc	a,#(_timers >> 8)
-      00002A FB               [12]  613 	mov	r3,a
-      00002B E5*00            [12]  614 	mov	a,_bp
-      00002D 24 0A            [12]  615 	add	a,#0x0a
-      00002F F8               [12]  616 	mov	r0,a
-      000030 A6 02            [24]  617 	mov	@r0,ar2
-      000032 08               [12]  618 	inc	r0
-      000033 A6 03            [24]  619 	mov	@r0,ar3
-      000035 08               [12]  620 	inc	r0
-      000036 76 00            [12]  621 	mov	@r0,#0x00
-                                    622 ;	89C51Board.c:91: if (pTimer->cookie != 0 && pTimer->periodMilliseconds <= pTimer->ticksSoFar && pTimer->enabled)
-      000038 E5*00            [12]  623 	mov	a,_bp
-      00003A 24 0A            [12]  624 	add	a,#0x0a
-      00003C F8               [12]  625 	mov	r0,a
-      00003D 86 82            [24]  626 	mov	dpl,@r0
-      00003F 08               [12]  627 	inc	r0
-      000040 86 83            [24]  628 	mov	dph,@r0
-      000042 08               [12]  629 	inc	r0
-      000043 86 F0            [24]  630 	mov	b,@r0
-      000045 12r00r00         [24]  631 	lcall	__gptrget
-      000048 FE               [12]  632 	mov	r6,a
-      000049 A3               [24]  633 	inc	dptr
-      00004A 12r00r00         [24]  634 	lcall	__gptrget
-      00004D FF               [12]  635 	mov	r7,a
-      00004E 4E               [12]  636 	orl	a,r6
-      00004F 70 03            [24]  637 	jnz	00151$
-      000051 02r01r31         [24]  638 	ljmp	00102$
-      000054                        639 00151$:
-      000054 E5*00            [12]  640 	mov	a,_bp
-      000056 24 0A            [12]  641 	add	a,#0x0a
-      000058 F8               [12]  642 	mov	r0,a
-      000059 74 02            [12]  643 	mov	a,#0x02
-      00005B 26               [12]  644 	add	a,@r0
-      00005C FB               [12]  645 	mov	r3,a
-      00005D E4               [12]  646 	clr	a
-      00005E 08               [12]  647 	inc	r0
-      00005F 36               [12]  648 	addc	a,@r0
-      000060 FE               [12]  649 	mov	r6,a
-      000061 08               [12]  650 	inc	r0
-      000062 86 07            [24]  651 	mov	ar7,@r0
-      000064 8B 82            [24]  652 	mov	dpl,r3
-      000066 8E 83            [24]  653 	mov	dph,r6
-      000068 8F F0            [24]  654 	mov	b,r7
-      00006A 12r00r00         [24]  655 	lcall	__gptrget
-      00006D FB               [12]  656 	mov	r3,a
-      00006E A3               [24]  657 	inc	dptr
-      00006F 12r00r00         [24]  658 	lcall	__gptrget
-      000072 FE               [12]  659 	mov	r6,a
-      000073 E5*00            [12]  660 	mov	a,_bp
-      000075 24 0A            [12]  661 	add	a,#0x0a
-      000077 F8               [12]  662 	mov	r0,a
-      000078 A9*00            [24]  663 	mov	r1,_bp
-      00007A 09               [12]  664 	inc	r1
-      00007B 74 04            [12]  665 	mov	a,#0x04
-      00007D 26               [12]  666 	add	a,@r0
-      00007E F7               [12]  667 	mov	@r1,a
-      00007F E4               [12]  668 	clr	a
-      000080 08               [12]  669 	inc	r0
-      000081 36               [12]  670 	addc	a,@r0
-      000082 09               [12]  671 	inc	r1
-      000083 F7               [12]  672 	mov	@r1,a
-      000084 08               [12]  673 	inc	r0
-      000085 09               [12]  674 	inc	r1
-      000086 E6               [12]  675 	mov	a,@r0
-      000087 F7               [12]  676 	mov	@r1,a
-      000088 A8*00            [24]  677 	mov	r0,_bp
-      00008A 08               [12]  678 	inc	r0
-      00008B 86 82            [24]  679 	mov	dpl,@r0
-      00008D 08               [12]  680 	inc	r0
-      00008E 86 83            [24]  681 	mov	dph,@r0
-      000090 08               [12]  682 	inc	r0
-      000091 86 F0            [24]  683 	mov	b,@r0
-      000093 12r00r00         [24]  684 	lcall	__gptrget
-      000096 FA               [12]  685 	mov	r2,a
-      000097 A3               [24]  686 	inc	dptr
-      000098 12r00r00         [24]  687 	lcall	__gptrget
-      00009B FF               [12]  688 	mov	r7,a
-      00009C C3               [12]  689 	clr	c
-      00009D EA               [12]  690 	mov	a,r2
-      00009E 9B               [12]  691 	subb	a,r3
-      00009F EF               [12]  692 	mov	a,r7
-      0000A0 64 80            [12]  693 	xrl	a,#0x80
-      0000A2 8E F0            [24]  694 	mov	b,r6
-      0000A4 63 F0 80         [24]  695 	xrl	b,#0x80
-      0000A7 95 F0            [12]  696 	subb	a,b
-      0000A9 50 03            [24]  697 	jnc	00152$
-      0000AB 02r01r31         [24]  698 	ljmp	00102$
-      0000AE                        699 00152$:
-      0000AE E5*00            [12]  700 	mov	a,_bp
-      0000B0 24 0A            [12]  701 	add	a,#0x0a
-      0000B2 F8               [12]  702 	mov	r0,a
-      0000B3 74 06            [12]  703 	mov	a,#0x06
-      0000B5 26               [12]  704 	add	a,@r0
-      0000B6 FB               [12]  705 	mov	r3,a
-      0000B7 E4               [12]  706 	clr	a
-      0000B8 08               [12]  707 	inc	r0
-      0000B9 36               [12]  708 	addc	a,@r0
-      0000BA FE               [12]  709 	mov	r6,a
-      0000BB 08               [12]  710 	inc	r0
-      0000BC 86 07            [24]  711 	mov	ar7,@r0
-      0000BE 8B 82            [24]  712 	mov	dpl,r3
-      0000C0 8E 83            [24]  713 	mov	dph,r6
-      0000C2 8F F0            [24]  714 	mov	b,r7
-      0000C4 12r00r00         [24]  715 	lcall	__gptrget
-      0000C7 60 68            [24]  716 	jz	00102$
-                                    717 ;	89C51Board.c:94: pTimer->ticksSoFar = 0;
-      0000C9 A8*00            [24]  718 	mov	r0,_bp
-      0000CB 08               [12]  719 	inc	r0
-      0000CC 86 82            [24]  720 	mov	dpl,@r0
-      0000CE 08               [12]  721 	inc	r0
-      0000CF 86 83            [24]  722 	mov	dph,@r0
-      0000D1 08               [12]  723 	inc	r0
-      0000D2 86 F0            [24]  724 	mov	b,@r0
-      0000D4 E4               [12]  725 	clr	a
-      0000D5 12r00r00         [24]  726 	lcall	__gptrput
-      0000D8 A3               [24]  727 	inc	dptr
-      0000D9 12r00r00         [24]  728 	lcall	__gptrput
-                                    729 ;	89C51Board.c:95: pTimer->callback(pTimer->cookie);
-      0000DC E5*00            [12]  730 	mov	a,_bp
-      0000DE 24 0A            [12]  731 	add	a,#0x0a
-      0000E0 F8               [12]  732 	mov	r0,a
-      0000E1 74 07            [12]  733 	mov	a,#0x07
-      0000E3 26               [12]  734 	add	a,@r0
-      0000E4 FB               [12]  735 	mov	r3,a
-      0000E5 E4               [12]  736 	clr	a
-      0000E6 08               [12]  737 	inc	r0
-      0000E7 36               [12]  738 	addc	a,@r0
-      0000E8 FE               [12]  739 	mov	r6,a
-      0000E9 08               [12]  740 	inc	r0
-      0000EA 86 07            [24]  741 	mov	ar7,@r0
-      0000EC 8B 82            [24]  742 	mov	dpl,r3
-      0000EE 8E 83            [24]  743 	mov	dph,r6
-      0000F0 8F F0            [24]  744 	mov	b,r7
-      0000F2 12r00r00         [24]  745 	lcall	__gptrget
-      0000F5 FB               [12]  746 	mov	r3,a
-      0000F6 A3               [24]  747 	inc	dptr
-      0000F7 12r00r00         [24]  748 	lcall	__gptrget
-      0000FA FE               [12]  749 	mov	r6,a
-      0000FB E5*00            [12]  750 	mov	a,_bp
-      0000FD 24 0A            [12]  751 	add	a,#0x0a
-      0000FF F8               [12]  752 	mov	r0,a
-      000100 86 82            [24]  753 	mov	dpl,@r0
-      000102 08               [12]  754 	inc	r0
-      000103 86 83            [24]  755 	mov	dph,@r0
-      000105 08               [12]  756 	inc	r0
-      000106 86 F0            [24]  757 	mov	b,@r0
-      000108 12r00r00         [24]  758 	lcall	__gptrget
-      00010B FA               [12]  759 	mov	r2,a
-      00010C A3               [24]  760 	inc	dptr
-      00010D 12r00r00         [24]  761 	lcall	__gptrget
-      000110 FF               [12]  762 	mov	r7,a
-      000111 C0 06            [24]  763 	push	ar6
-      000113 C0 05            [24]  764 	push	ar5
-      000115 C0 04            [24]  765 	push	ar4
-      000117 C0 03            [24]  766 	push	ar3
-      000119 12r01r1E         [24]  767 	lcall	00154$
-      00011C 80 09            [24]  768 	sjmp	00155$
-      00011E                        769 00154$:
-      00011E C0 03            [24]  770 	push	ar3
-      000120 C0 06            [24]  771 	push	ar6
-      000122 8A 82            [24]  772 	mov	dpl,r2
-      000124 8F 83            [24]  773 	mov	dph,r7
-      000126 22               [24]  774 	ret
-      000127                        775 00155$:
-      000127 D0 03            [24]  776 	pop	ar3
-      000129 D0 04            [24]  777 	pop	ar4
-      00012B D0 05            [24]  778 	pop	ar5
-      00012D D0 06            [24]  779 	pop	ar6
-      00012F 80 3B            [24]  780 	sjmp	00112$
-      000131                        781 00102$:
-                                    782 ;	89C51Board.c:99: pTimer->ticksSoFar++;
-      000131 C0 04            [24]  783 	push	ar4
-      000133 C0 05            [24]  784 	push	ar5
-      000135 E5*00            [12]  785 	mov	a,_bp
-      000137 24 0A            [12]  786 	add	a,#0x0a
-      000139 F8               [12]  787 	mov	r0,a
-      00013A 74 04            [12]  788 	mov	a,#0x04
-      00013C 26               [12]  789 	add	a,@r0
-      00013D FB               [12]  790 	mov	r3,a
-      00013E E4               [12]  791 	clr	a
-      00013F 08               [12]  792 	inc	r0
-      000140 36               [12]  793 	addc	a,@r0
-      000141 FE               [12]  794 	mov	r6,a
-      000142 08               [12]  795 	inc	r0
-      000143 86 07            [24]  796 	mov	ar7,@r0
-      000145 8B 82            [24]  797 	mov	dpl,r3
-      000147 8E 83            [24]  798 	mov	dph,r6
-      000149 8F F0            [24]  799 	mov	b,r7
-      00014B 12r00r00         [24]  800 	lcall	__gptrget
-      00014E FA               [12]  801 	mov	r2,a
-      00014F A3               [24]  802 	inc	dptr
-      000150 12r00r00         [24]  803 	lcall	__gptrget
-      000153 FD               [12]  804 	mov	r5,a
-      000154 0A               [12]  805 	inc	r2
-      000155 BA 00 01         [24]  806 	cjne	r2,#0x00,00156$
-      000158 0D               [12]  807 	inc	r5
-      000159                        808 00156$:
-      000159 8B 82            [24]  809 	mov	dpl,r3
-      00015B 8E 83            [24]  810 	mov	dph,r6
-      00015D 8F F0            [24]  811 	mov	b,r7
-      00015F EA               [12]  812 	mov	a,r2
-      000160 12r00r00         [24]  813 	lcall	__gptrput
-      000163 A3               [24]  814 	inc	dptr
-      000164 ED               [12]  815 	mov	a,r5
-      000165 12r00r00         [24]  816 	lcall	__gptrput
-                                    817 ;	89C51Board.c:104: for (c = 0; c < 100; ++c)
-      000168 D0 05            [24]  818 	pop	ar5
-      00016A D0 04            [24]  819 	pop	ar4
-                                    820 ;	89C51Board.c:99: pTimer->ticksSoFar++;
-      00016C                        821 00112$:
-                                    822 ;	89C51Board.c:88: for (timerCounter = 0; timerCounter < MAX_TIMERS; ++timerCounter)
-      00016C 74 09            [12]  823 	mov	a,#0x09
-      00016E 2C               [12]  824 	add	a,r4
-      00016F FC               [12]  825 	mov	r4,a
-      000170 E4               [12]  826 	clr	a
-      000171 3D               [12]  827 	addc	a,r5
-      000172 FD               [12]  828 	mov	r5,a
-      000173 E5*00            [12]  829 	mov	a,_bp
-      000175 24 08            [12]  830 	add	a,#0x08
-      000177 F8               [12]  831 	mov	r0,a
-      000178 06               [12]  832 	inc	@r0
-      000179 B6 00 02         [24]  833 	cjne	@r0,#0x00,00157$
-      00017C 08               [12]  834 	inc	r0
-      00017D 06               [12]  835 	inc	@r0
-      00017E                        836 00157$:
-      00017E E5*00            [12]  837 	mov	a,_bp
-      000180 24 08            [12]  838 	add	a,#0x08
-      000182 F8               [12]  839 	mov	r0,a
-      000183 C3               [12]  840 	clr	c
-      000184 E6               [12]  841 	mov	a,@r0
-      000185 94 0A            [12]  842 	subb	a,#0x0a
-      000187 08               [12]  843 	inc	r0
-      000188 E6               [12]  844 	mov	a,@r0
-      000189 64 80            [12]  845 	xrl	a,#0x80
-      00018B 94 80            [12]  846 	subb	a,#0x80
-      00018D 50 03            [24]  847 	jnc	00158$
-      00018F 02r00r23         [24]  848 	ljmp	00111$
-      000192                        849 00158$:
-                                    850 ;	89C51Board.c:104: for (c = 0; c < 100; ++c)
-      000192 E5*00            [12]  851 	mov	a,_bp
-      000194 24 04            [12]  852 	add	a,#0x04
-      000196 F8               [12]  853 	mov	r0,a
-      000197 76 64            [12]  854 	mov	@r0,#0x64
-      000199 E4               [12]  855 	clr	a
-      00019A 08               [12]  856 	inc	r0
-      00019B F6               [12]  857 	mov	@r0,a
-      00019C 08               [12]  858 	inc	r0
-      00019D F6               [12]  859 	mov	@r0,a
-      00019E 08               [12]  860 	inc	r0
-      00019F F6               [12]  861 	mov	@r0,a
-      0001A0                        862 00115$:
-      0001A0 E5*00            [12]  863 	mov	a,_bp
-      0001A2 24 04            [12]  864 	add	a,#0x04
-      0001A4 F8               [12]  865 	mov	r0,a
-      0001A5 E6               [12]  866 	mov	a,@r0
-      0001A6 24 FF            [12]  867 	add	a,#0xff
-      0001A8 FA               [12]  868 	mov	r2,a
-      0001A9 08               [12]  869 	inc	r0
-      0001AA E6               [12]  870 	mov	a,@r0
-      0001AB 34 FF            [12]  871 	addc	a,#0xff
-      0001AD FB               [12]  872 	mov	r3,a
-      0001AE 08               [12]  873 	inc	r0
-      0001AF E6               [12]  874 	mov	a,@r0
-      0001B0 34 FF            [12]  875 	addc	a,#0xff
-      0001B2 FE               [12]  876 	mov	r6,a
-      0001B3 08               [12]  877 	inc	r0
-      0001B4 E6               [12]  878 	mov	a,@r0
-      0001B5 34 FF            [12]  879 	addc	a,#0xff
-      0001B7 FF               [12]  880 	mov	r7,a
-      0001B8 E5*00            [12]  881 	mov	a,_bp
-      0001BA 24 04            [12]  882 	add	a,#0x04
-      0001BC F8               [12]  883 	mov	r0,a
-      0001BD A6 02            [24]  884 	mov	@r0,ar2
-      0001BF 08               [12]  885 	inc	r0
-      0001C0 A6 03            [24]  886 	mov	@r0,ar3
-      0001C2 08               [12]  887 	inc	r0
-      0001C3 A6 06            [24]  888 	mov	@r0,ar6
-      0001C5 08               [12]  889 	inc	r0
-      0001C6 A6 07            [24]  890 	mov	@r0,ar7
-      0001C8 EA               [12]  891 	mov	a,r2
-      0001C9 4B               [12]  892 	orl	a,r3
-      0001CA 4E               [12]  893 	orl	a,r6
-      0001CB 4F               [12]  894 	orl	a,r7
-      0001CC 70 D2            [24]  895 	jnz	00115$
-      0001CE 02r00r16         [24]  896 	ljmp	00121$
-                                    897 ;	89C51Board.c:109: }
-      0001D1 85*00 81         [24]  898 	mov	sp,_bp
-      0001D4 D0*00            [24]  899 	pop	_bp
-      0001D6 22               [24]  900 	ret
-                                    901 ;------------------------------------------------------------
-                                    902 ;Allocation info for local variables in function 'Hardware_InitialiseHardware'
-                                    903 ;------------------------------------------------------------
-                                    904 ;i                         Allocated to registers r6 r7 
-                                    905 ;------------------------------------------------------------
-                                    906 ;	89C51Board.c:112: void Hardware_InitialiseHardware() REENTRANT
-                                    907 ;	-----------------------------------------
-                                    908 ;	 function Hardware_InitialiseHardware
-                                    909 ;	-----------------------------------------
-      0001D7                        910 _Hardware_InitialiseHardware:
-                                    911 ;	89C51Board.c:116: for (i = 0; i < MAX_TIMERS; ++i)
-      0001D7 7E 00            [12]  912 	mov	r6,#0x00
-      0001D9 7F 00            [12]  913 	mov	r7,#0x00
-      0001DB 7C 00            [12]  914 	mov	r4,#0x00
-      0001DD 7D 00            [12]  915 	mov	r5,#0x00
-      0001DF                        916 00102$:
-                                    917 ;	89C51Board.c:118: timers[i].cookie = 0;
-      0001DF EC               [12]  918 	mov	a,r4
-      0001E0 24r12            [12]  919 	add	a,#_timers
-      0001E2 F5 82            [12]  920 	mov	dpl,a
-      0001E4 ED               [12]  921 	mov	a,r5
-      0001E5 34s00            [12]  922 	addc	a,#(_timers >> 8)
-      0001E7 F5 83            [12]  923 	mov	dph,a
-      0001E9 E4               [12]  924 	clr	a
-      0001EA F0               [24]  925 	movx	@dptr,a
-      0001EB A3               [24]  926 	inc	dptr
-      0001EC F0               [24]  927 	movx	@dptr,a
-                                    928 ;	89C51Board.c:116: for (i = 0; i < MAX_TIMERS; ++i)
-      0001ED 74 09            [12]  929 	mov	a,#0x09
-      0001EF 2C               [12]  930 	add	a,r4
-      0001F0 FC               [12]  931 	mov	r4,a
-      0001F1 E4               [12]  932 	clr	a
-      0001F2 3D               [12]  933 	addc	a,r5
-      0001F3 FD               [12]  934 	mov	r5,a
-      0001F4 0E               [12]  935 	inc	r6
-      0001F5 BE 00 01         [24]  936 	cjne	r6,#0x00,00115$
-      0001F8 0F               [12]  937 	inc	r7
-      0001F9                        938 00115$:
-      0001F9 C3               [12]  939 	clr	c
-      0001FA EE               [12]  940 	mov	a,r6
-      0001FB 94 0A            [12]  941 	subb	a,#0x0a
-      0001FD EF               [12]  942 	mov	a,r7
-      0001FE 64 80            [12]  943 	xrl	a,#0x80
-      000200 94 80            [12]  944 	subb	a,#0x80
-      000202 40 DB            [24]  945 	jc	00102$
-                                    946 ;	89C51Board.c:122: pRegisterForTimer = Hardware_RegisterForTimer;
-      000204 7Er76            [12]  947 	mov	r6,#_Hardware_RegisterForTimer
-      000206 7Fs02            [12]  948 	mov	r7,#(_Hardware_RegisterForTimer >> 8)
-      000208 90r00r00         [24]  949 	mov	dptr,#_pRegisterForTimer
-      00020B EE               [12]  950 	mov	a,r6
-      00020C F0               [24]  951 	movx	@dptr,a
-      00020D EF               [12]  952 	mov	a,r7
-      00020E A3               [24]  953 	inc	dptr
-      00020F F0               [24]  954 	movx	@dptr,a
-                                    955 ;	89C51Board.c:123: pEnableTimer = Hardware_EnableTimer;
-      000210 7Er6E            [12]  956 	mov	r6,#_Hardware_EnableTimer
-      000212 7Fs03            [12]  957 	mov	r7,#(_Hardware_EnableTimer >> 8)
-      000214 90r00r02         [24]  958 	mov	dptr,#_pEnableTimer
-      000217 EE               [12]  959 	mov	a,r6
-      000218 F0               [24]  960 	movx	@dptr,a
-      000219 EF               [12]  961 	mov	a,r7
-      00021A A3               [24]  962 	inc	dptr
-      00021B F0               [24]  963 	movx	@dptr,a
-                                    964 ;	89C51Board.c:124: pGetRtc = Hardware_GetRtc;
-      00021C 7Er1B            [12]  965 	mov	r6,#_Hardware_GetRtc
-      00021E 7Fs04            [12]  966 	mov	r7,#(_Hardware_GetRtc >> 8)
-      000220 90r00r04         [24]  967 	mov	dptr,#_pGetRtc
-      000223 EE               [12]  968 	mov	a,r6
-      000224 F0               [24]  969 	movx	@dptr,a
-      000225 EF               [12]  970 	mov	a,r7
-      000226 A3               [24]  971 	inc	dptr
-      000227 F0               [24]  972 	movx	@dptr,a
-                                    973 ;	89C51Board.c:125: pSetRtc = Hardware_SetRtc;
-      000228 7Er18            [12]  974 	mov	r6,#_Hardware_SetRtc
-      00022A 7Fs04            [12]  975 	mov	r7,#(_Hardware_SetRtc >> 8)
-      00022C 90r00r06         [24]  976 	mov	dptr,#_pSetRtc
-      00022F EE               [12]  977 	mov	a,r6
-      000230 F0               [24]  978 	movx	@dptr,a
-      000231 EF               [12]  979 	mov	a,r7
-      000232 A3               [24]  980 	inc	dptr
-      000233 F0               [24]  981 	movx	@dptr,a
-                                    982 ;	89C51Board.c:126: pWriteDisplayBuffer = Hardware_WriteDisplayBuffer;
-      000234 7Er15            [12]  983 	mov	r6,#_Hardware_WriteDisplayBuffer
-      000236 7Fs04            [12]  984 	mov	r7,#(_Hardware_WriteDisplayBuffer >> 8)
-      000238 90r00r08         [24]  985 	mov	dptr,#_pWriteDisplayBuffer
-      00023B EE               [12]  986 	mov	a,r6
-      00023C F0               [24]  987 	movx	@dptr,a
-      00023D EF               [12]  988 	mov	a,r7
-      00023E A3               [24]  989 	inc	dptr
-      00023F F0               [24]  990 	movx	@dptr,a
-                                    991 ;	89C51Board.c:127: pGetKeyState = Hardware_GetKeyState;
-      000240 7Er1E            [12]  992 	mov	r6,#_Hardware_GetKeyState
-      000242 7Fs04            [12]  993 	mov	r7,#(_Hardware_GetKeyState >> 8)
-      000244 90r00r0A         [24]  994 	mov	dptr,#_pGetKeyState
-      000247 EE               [12]  995 	mov	a,r6
-      000248 F0               [24]  996 	movx	@dptr,a
-      000249 EF               [12]  997 	mov	a,r7
-      00024A A3               [24]  998 	inc	dptr
-      00024B F0               [24]  999 	movx	@dptr,a
-                                   1000 ;	89C51Board.c:128: pGetInputPortValues = Hardware_GetInputPortValues;
-      00024C 7ErE1            [12] 1001 	mov	r6,#_Hardware_GetInputPortValues
-      00024E 7Fs04            [12] 1002 	mov	r7,#(_Hardware_GetInputPortValues >> 8)
-      000250 90r00r0C         [24] 1003 	mov	dptr,#_pGetInputPortValues
-      000253 EE               [12] 1004 	mov	a,r6
-      000254 F0               [24] 1005 	movx	@dptr,a
-      000255 EF               [12] 1006 	mov	a,r7
-      000256 A3               [24] 1007 	inc	dptr
-      000257 F0               [24] 1008 	movx	@dptr,a
-                                   1009 ;	89C51Board.c:129: pSetOutputPortValues = Hardware_SetOutputPortValues;
-      000258 7Er11            [12] 1010 	mov	r6,#_Hardware_SetOutputPortValues
-      00025A 7Fs05            [12] 1011 	mov	r7,#(_Hardware_SetOutputPortValues >> 8)
-      00025C 90r00r0E         [24] 1012 	mov	dptr,#_pSetOutputPortValues
-      00025F EE               [12] 1013 	mov	a,r6
-      000260 F0               [24] 1014 	movx	@dptr,a
-      000261 EF               [12] 1015 	mov	a,r7
-      000262 A3               [24] 1016 	inc	dptr
-      000263 F0               [24] 1017 	movx	@dptr,a
-                                   1018 ;	89C51Board.c:130: pCrashDump = Hardware_CrashDump;
-      000264 7Er15            [12] 1019 	mov	r6,#_Hardware_CrashDump
-      000266 7Fs05            [12] 1020 	mov	r7,#(_Hardware_CrashDump >> 8)
-      000268 90r00r10         [24] 1021 	mov	dptr,#_pCrashDump
-      00026B EE               [12] 1022 	mov	a,r6
-      00026C F0               [24] 1023 	movx	@dptr,a
-      00026D EF               [12] 1024 	mov	a,r7
-      00026E A3               [24] 1025 	inc	dptr
-      00026F F0               [24] 1026 	movx	@dptr,a
-                                   1027 ;	89C51Board.c:134: InitialiseLcd();
-      000270 12r00r00         [24] 1028 	lcall	_InitialiseLcd
-                                   1029 ;	89C51Board.c:135: Rtc_Initialise();
-                                   1030 ;	89C51Board.c:137: }
-      000273 02r00r00         [24] 1031 	ljmp	_Rtc_Initialise
-                                   1032 ;------------------------------------------------------------
-                                   1033 ;Allocation info for local variables in function 'Hardware_RegisterForTimer'
-                                   1034 ;------------------------------------------------------------
-                                   1035 ;milliSeconds              Allocated to stack - _bp -4
-                                   1036 ;callback                  Allocated to stack - _bp -6
-                                   1037 ;cookie                    Allocated to stack - _bp +1
-                                   1038 ;i                         Allocated to registers r4 r5 
-                                   1039 ;sloc0                     Allocated to stack - _bp +5
-                                   1040 ;sloc1                     Allocated to stack - _bp +3
-                                   1041 ;------------------------------------------------------------
-                                   1042 ;	89C51Board.c:140: void Hardware_RegisterForTimer(int cookie, int milliSeconds, CallbackDelegate callback) REENTRANT
-                                   1043 ;	-----------------------------------------
-                                   1044 ;	 function Hardware_RegisterForTimer
-                                   1045 ;	-----------------------------------------
-      000276                       1046 _Hardware_RegisterForTimer:
-      000276 C0*00            [24] 1047 	push	_bp
-      000278 85 81*00         [24] 1048 	mov	_bp,sp
-      00027B C0 82            [24] 1049 	push	dpl
-      00027D C0 83            [24] 1050 	push	dph
-      00027F 05 81            [12] 1051 	inc	sp
-      000281 05 81            [12] 1052 	inc	sp
-                                   1053 ;	89C51Board.c:144: for (i = 0; i < MAX_TIMERS; ++i)
-      000283 7C 00            [12] 1054 	mov	r4,#0x00
-      000285 7D 00            [12] 1055 	mov	r5,#0x00
-      000287 7A 00            [12] 1056 	mov	r2,#0x00
-      000289 7B 00            [12] 1057 	mov	r3,#0x00
-      00028B 7F 00            [12] 1058 	mov	r7,#0x00
-      00028D 7E 00            [12] 1059 	mov	r6,#0x00
-      00028F                       1060 00105$:
-                                   1061 ;	89C51Board.c:146: if (timers[i].cookie == 0 || timers[i].cookie == cookie)
-      00028F EF               [12] 1062 	mov	a,r7
-      000290 24r12            [12] 1063 	add	a,#_timers
-      000292 F5 82            [12] 1064 	mov	dpl,a
-      000294 EE               [12] 1065 	mov	a,r6
-      000295 34s00            [12] 1066 	addc	a,#(_timers >> 8)
-      000297 F5 83            [12] 1067 	mov	dph,a
-      000299 E5*00            [12] 1068 	mov	a,_bp
-      00029B 24 03            [12] 1069 	add	a,#0x03
-      00029D F8               [12] 1070 	mov	r0,a
-      00029E E0               [24] 1071 	movx	a,@dptr
-      00029F F6               [12] 1072 	mov	@r0,a
-      0002A0 A3               [24] 1073 	inc	dptr
-      0002A1 E0               [24] 1074 	movx	a,@dptr
-      0002A2 08               [12] 1075 	inc	r0
-      0002A3 F6               [12] 1076 	mov	@r0,a
-      0002A4 E5*00            [12] 1077 	mov	a,_bp
-      0002A6 24 03            [12] 1078 	add	a,#0x03
-      0002A8 F8               [12] 1079 	mov	r0,a
-      0002A9 E6               [12] 1080 	mov	a,@r0
-      0002AA 08               [12] 1081 	inc	r0
-      0002AB 46               [12] 1082 	orl	a,@r0
-      0002AC 60 1A            [24] 1083 	jz	00101$
-      0002AE E5*00            [12] 1084 	mov	a,_bp
-      0002B0 24 03            [12] 1085 	add	a,#0x03
-      0002B2 F8               [12] 1086 	mov	r0,a
-      0002B3 A9*00            [24] 1087 	mov	r1,_bp
-      0002B5 09               [12] 1088 	inc	r1
-      0002B6 86 F0            [24] 1089 	mov	b,@r0
-      0002B8 E7               [12] 1090 	mov	a,@r1
-      0002B9 B5 F0 0A         [24] 1091 	cjne	a,b,00122$
-      0002BC 08               [12] 1092 	inc	r0
-      0002BD 86 F0            [24] 1093 	mov	b,@r0
-      0002BF 09               [12] 1094 	inc	r1
-      0002C0 E7               [12] 1095 	mov	a,@r1
-      0002C1 B5 F0 02         [24] 1096 	cjne	a,b,00122$
-      0002C4 80 02            [24] 1097 	sjmp	00123$
-      0002C6                       1098 00122$:
-      0002C6 80 6C            [24] 1099 	sjmp	00106$
-      0002C8                       1100 00123$:
-      0002C8                       1101 00101$:
-                                   1102 ;	89C51Board.c:148: timers[i].cookie = cookie;
-      0002C8 90r00r00         [24] 1103 	mov	dptr,#__mulint_PARM_2
-      0002CB EC               [12] 1104 	mov	a,r4
-      0002CC F0               [24] 1105 	movx	@dptr,a
-      0002CD ED               [12] 1106 	mov	a,r5
-      0002CE A3               [24] 1107 	inc	dptr
-      0002CF F0               [24] 1108 	movx	@dptr,a
-      0002D0 90 00 09         [24] 1109 	mov	dptr,#0x0009
-      0002D3 12r00r00         [24] 1110 	lcall	__mulint
-      0002D6 AE 82            [24] 1111 	mov	r6,dpl
-      0002D8 AF 83            [24] 1112 	mov	r7,dph
-      0002DA EE               [12] 1113 	mov	a,r6
-      0002DB 24r12            [12] 1114 	add	a,#_timers
-      0002DD F5 82            [12] 1115 	mov	dpl,a
-      0002DF EF               [12] 1116 	mov	a,r7
-      0002E0 34s00            [12] 1117 	addc	a,#(_timers >> 8)
-      0002E2 F5 83            [12] 1118 	mov	dph,a
-      0002E4 A8*00            [24] 1119 	mov	r0,_bp
-      0002E6 08               [12] 1120 	inc	r0
-      0002E7 E6               [12] 1121 	mov	a,@r0
-      0002E8 F0               [24] 1122 	movx	@dptr,a
-      0002E9 08               [12] 1123 	inc	r0
-      0002EA E6               [12] 1124 	mov	a,@r0
-      0002EB A3               [24] 1125 	inc	dptr
-      0002EC F0               [24] 1126 	movx	@dptr,a
-                                   1127 ;	89C51Board.c:149: timers[i].periodMilliseconds = milliSeconds;
-      0002ED EE               [12] 1128 	mov	a,r6
-      0002EE 24r12            [12] 1129 	add	a,#_timers
-      0002F0 FE               [12] 1130 	mov	r6,a
-      0002F1 EF               [12] 1131 	mov	a,r7
-      0002F2 34s00            [12] 1132 	addc	a,#(_timers >> 8)
-      0002F4 FF               [12] 1133 	mov	r7,a
-      0002F5 8E 82            [24] 1134 	mov	dpl,r6
-      0002F7 8F 83            [24] 1135 	mov	dph,r7
-      0002F9 A3               [24] 1136 	inc	dptr
-      0002FA A3               [24] 1137 	inc	dptr
-      0002FB E5*00            [12] 1138 	mov	a,_bp
-      0002FD 24 FC            [12] 1139 	add	a,#0xfc
-      0002FF F8               [12] 1140 	mov	r0,a
-      000300 E6               [12] 1141 	mov	a,@r0
-      000301 F0               [24] 1142 	movx	@dptr,a
-      000302 08               [12] 1143 	inc	r0
-      000303 E6               [12] 1144 	mov	a,@r0
-      000304 A3               [24] 1145 	inc	dptr
-      000305 F0               [24] 1146 	movx	@dptr,a
-                                   1147 ;	89C51Board.c:150: timers[i].ticksSoFar = 0;
-      000306 8E 82            [24] 1148 	mov	dpl,r6
-      000308 8F 83            [24] 1149 	mov	dph,r7
-      00030A A3               [24] 1150 	inc	dptr
-      00030B A3               [24] 1151 	inc	dptr
-      00030C A3               [24] 1152 	inc	dptr
-      00030D A3               [24] 1153 	inc	dptr
-      00030E E4               [12] 1154 	clr	a
-      00030F F0               [24] 1155 	movx	@dptr,a
-      000310 A3               [24] 1156 	inc	dptr
-      000311 F0               [24] 1157 	movx	@dptr,a
-                                   1158 ;	89C51Board.c:151: timers[i].enabled = 1;
-      000312 74 06            [12] 1159 	mov	a,#0x06
-      000314 2E               [12] 1160 	add	a,r6
-      000315 F5 82            [12] 1161 	mov	dpl,a
-      000317 E4               [12] 1162 	clr	a
-      000318 3F               [12] 1163 	addc	a,r7
-      000319 F5 83            [12] 1164 	mov	dph,a
-      00031B 74 01            [12] 1165 	mov	a,#0x01
-      00031D F0               [24] 1166 	movx	@dptr,a
-                                   1167 ;	89C51Board.c:152: timers[i].callback = callback;
-      00031E 74 07            [12] 1168 	mov	a,#0x07
-      000320 2E               [12] 1169 	add	a,r6
-      000321 F5 82            [12] 1170 	mov	dpl,a
-      000323 E4               [12] 1171 	clr	a
-      000324 3F               [12] 1172 	addc	a,r7
-      000325 F5 83            [12] 1173 	mov	dph,a
-      000327 E5*00            [12] 1174 	mov	a,_bp
-      000329 24 FA            [12] 1175 	add	a,#0xfa
-      00032B F8               [12] 1176 	mov	r0,a
-      00032C E6               [12] 1177 	mov	a,@r0
-      00032D F0               [24] 1178 	movx	@dptr,a
-      00032E 08               [12] 1179 	inc	r0
-      00032F E6               [12] 1180 	mov	a,@r0
-      000330 A3               [24] 1181 	inc	dptr
-      000331 F0               [24] 1182 	movx	@dptr,a
-                                   1183 ;	89C51Board.c:153: return;
-      000332 80 34            [24] 1184 	sjmp	00107$
-      000334                       1185 00106$:
-                                   1186 ;	89C51Board.c:144: for (i = 0; i < MAX_TIMERS; ++i)
-      000334 74 09            [12] 1187 	mov	a,#0x09
-      000336 2F               [12] 1188 	add	a,r7
-      000337 FF               [12] 1189 	mov	r7,a
-      000338 E4               [12] 1190 	clr	a
-      000339 3E               [12] 1191 	addc	a,r6
-      00033A FE               [12] 1192 	mov	r6,a
-      00033B 0A               [12] 1193 	inc	r2
-      00033C BA 00 01         [24] 1194 	cjne	r2,#0x00,00124$
-      00033F 0B               [12] 1195 	inc	r3
-      000340                       1196 00124$:
-      000340 8A 04            [24] 1197 	mov	ar4,r2
-      000342 8B 05            [24] 1198 	mov	ar5,r3
-      000344 C3               [12] 1199 	clr	c
-      000345 EA               [12] 1200 	mov	a,r2
-      000346 94 0A            [12] 1201 	subb	a,#0x0a
-      000348 EB               [12] 1202 	mov	a,r3
-      000349 64 80            [12] 1203 	xrl	a,#0x80
-      00034B 94 80            [12] 1204 	subb	a,#0x80
-      00034D 50 03            [24] 1205 	jnc	00125$
-      00034F 02r02r8F         [24] 1206 	ljmp	00105$
-      000352                       1207 00125$:
-                                   1208 ;	89C51Board.c:157: pCrashDump("OutOfTimers");
-      000352 12r03r57         [24] 1209 	lcall	00126$
-      000355 80 11            [24] 1210 	sjmp	00127$
-      000357                       1211 00126$:
-      000357 90r00r10         [24] 1212 	mov	dptr,#_pCrashDump
-      00035A E0               [24] 1213 	movx	a,@dptr
-      00035B C0 E0            [24] 1214 	push	acc
-      00035D A3               [24] 1215 	inc	dptr
-      00035E E0               [24] 1216 	movx	a,@dptr
-      00035F C0 E0            [24] 1217 	push	acc
-      000361 90r00r00         [24] 1218 	mov	dptr,#___str_0
-      000364 75 F0 80         [24] 1219 	mov	b,#0x80
-      000367 22               [24] 1220 	ret
-      000368                       1221 00127$:
-      000368                       1222 00107$:
-                                   1223 ;	89C51Board.c:159: }
-      000368 85*00 81         [24] 1224 	mov	sp,_bp
-      00036B D0*00            [24] 1225 	pop	_bp
-      00036D 22               [24] 1226 	ret
-                                   1227 ;------------------------------------------------------------
-                                   1228 ;Allocation info for local variables in function 'Hardware_EnableTimer'
-                                   1229 ;------------------------------------------------------------
-                                   1230 ;enabled                   Allocated to stack - _bp -4
-                                   1231 ;cookie                    Allocated to registers r6 r7 
-                                   1232 ;i                         Allocated to registers r4 r5 
-                                   1233 ;sloc0                     Allocated to stack - _bp +3
-                                   1234 ;sloc1                     Allocated to stack - _bp +1
-                                   1235 ;sloc2                     Allocated to stack - _bp +9
-                                   1236 ;------------------------------------------------------------
-                                   1237 ;	89C51Board.c:162: void Hardware_EnableTimer(int cookie, int enabled) REENTRANT
-                                   1238 ;	-----------------------------------------
-                                   1239 ;	 function Hardware_EnableTimer
-                                   1240 ;	-----------------------------------------
-      00036E                       1241 _Hardware_EnableTimer:
-      00036E C0*00            [24] 1242 	push	_bp
-      000370 E5 81            [12] 1243 	mov	a,sp
-      000372 F5*00            [12] 1244 	mov	_bp,a
-      000374 24 04            [12] 1245 	add	a,#0x04
-      000376 F5 81            [12] 1246 	mov	sp,a
-      000378 AE 82            [24] 1247 	mov	r6,dpl
-      00037A AF 83            [24] 1248 	mov	r7,dph
-                                   1249 ;	89C51Board.c:165: for (i = 0; i < MAX_TIMERS; ++i)
-      00037C E4               [12] 1250 	clr	a
-      00037D FC               [12] 1251 	mov	r4,a
-      00037E FD               [12] 1252 	mov	r5,a
-      00037F FA               [12] 1253 	mov	r2,a
-      000380 FB               [12] 1254 	mov	r3,a
-      000381 E5*00            [12] 1255 	mov	a,_bp
-      000383 24 03            [12] 1256 	add	a,#0x03
-      000385 F8               [12] 1257 	mov	r0,a
-      000386 E4               [12] 1258 	clr	a
-      000387 F6               [12] 1259 	mov	@r0,a
-      000388 08               [12] 1260 	inc	r0
-      000389 F6               [12] 1261 	mov	@r0,a
-      00038A                       1262 00105$:
-                                   1263 ;	89C51Board.c:167: if (timers[i].cookie == 0 || timers[i].cookie == cookie)
-      00038A E5*00            [12] 1264 	mov	a,_bp
-      00038C 24 03            [12] 1265 	add	a,#0x03
-      00038E F8               [12] 1266 	mov	r0,a
-      00038F E6               [12] 1267 	mov	a,@r0
-      000390 24r12            [12] 1268 	add	a,#_timers
-      000392 F5 82            [12] 1269 	mov	dpl,a
-      000394 08               [12] 1270 	inc	r0
-      000395 E6               [12] 1271 	mov	a,@r0
-      000396 34s00            [12] 1272 	addc	a,#(_timers >> 8)
-      000398 F5 83            [12] 1273 	mov	dph,a
-      00039A A8*00            [24] 1274 	mov	r0,_bp
-      00039C 08               [12] 1275 	inc	r0
-      00039D E0               [24] 1276 	movx	a,@dptr
-      00039E F6               [12] 1277 	mov	@r0,a
-      00039F A3               [24] 1278 	inc	dptr
-      0003A0 E0               [24] 1279 	movx	a,@dptr
-      0003A1 08               [12] 1280 	inc	r0
-      0003A2 F6               [12] 1281 	mov	@r0,a
-      0003A3 A8*00            [24] 1282 	mov	r0,_bp
-      0003A5 08               [12] 1283 	inc	r0
-      0003A6 E6               [12] 1284 	mov	a,@r0
-      0003A7 08               [12] 1285 	inc	r0
-      0003A8 46               [12] 1286 	orl	a,@r0
-      0003A9 60 10            [24] 1287 	jz	00101$
-      0003AB A8*00            [24] 1288 	mov	r0,_bp
-      0003AD 08               [12] 1289 	inc	r0
-      0003AE E6               [12] 1290 	mov	a,@r0
-      0003AF B5 06 07         [24] 1291 	cjne	a,ar6,00118$
-      0003B2 08               [12] 1292 	inc	r0
-      0003B3 E6               [12] 1293 	mov	a,@r0
-      0003B4 B5 07 02         [24] 1294 	cjne	a,ar7,00118$
-      0003B7 80 02            [24] 1295 	sjmp	00119$
-      0003B9                       1296 00118$:
-      0003B9 80 30            [24] 1297 	sjmp	00106$
-      0003BB                       1298 00119$:
-      0003BB                       1299 00101$:
-                                   1300 ;	89C51Board.c:169: timers[i].enabled = enabled;
-      0003BB 90r00r00         [24] 1301 	mov	dptr,#__mulint_PARM_2
-      0003BE EC               [12] 1302 	mov	a,r4
-      0003BF F0               [24] 1303 	movx	@dptr,a
-      0003C0 ED               [12] 1304 	mov	a,r5
-      0003C1 A3               [24] 1305 	inc	dptr
-      0003C2 F0               [24] 1306 	movx	@dptr,a
-      0003C3 90 00 09         [24] 1307 	mov	dptr,#0x0009
-      0003C6 12r00r00         [24] 1308 	lcall	__mulint
-      0003C9 AF 82            [24] 1309 	mov	r7,dpl
-      0003CB AE 83            [24] 1310 	mov	r6,dph
-      0003CD EF               [12] 1311 	mov	a,r7
-      0003CE 24r12            [12] 1312 	add	a,#_timers
-      0003D0 FF               [12] 1313 	mov	r7,a
-      0003D1 EE               [12] 1314 	mov	a,r6
-      0003D2 34s00            [12] 1315 	addc	a,#(_timers >> 8)
-      0003D4 FE               [12] 1316 	mov	r6,a
-      0003D5 74 06            [12] 1317 	mov	a,#0x06
-      0003D7 2F               [12] 1318 	add	a,r7
-      0003D8 FF               [12] 1319 	mov	r7,a
-      0003D9 E4               [12] 1320 	clr	a
-      0003DA 3E               [12] 1321 	addc	a,r6
-      0003DB FE               [12] 1322 	mov	r6,a
-      0003DC E5*00            [12] 1323 	mov	a,_bp
-      0003DE 24 FC            [12] 1324 	add	a,#0xfc
-      0003E0 F8               [12] 1325 	mov	r0,a
-      0003E1 86 05            [24] 1326 	mov	ar5,@r0
-      0003E3 8F 82            [24] 1327 	mov	dpl,r7
-      0003E5 8E 83            [24] 1328 	mov	dph,r6
-      0003E7 ED               [12] 1329 	mov	a,r5
-      0003E8 F0               [24] 1330 	movx	@dptr,a
-                                   1331 ;	89C51Board.c:170: return;
-      0003E9 80 24            [24] 1332 	sjmp	00107$
-      0003EB                       1333 00106$:
-                                   1334 ;	89C51Board.c:165: for (i = 0; i < MAX_TIMERS; ++i)
-      0003EB E5*00            [12] 1335 	mov	a,_bp
-      0003ED 24 03            [12] 1336 	add	a,#0x03
-      0003EF F8               [12] 1337 	mov	r0,a
-      0003F0 74 09            [12] 1338 	mov	a,#0x09
-      0003F2 26               [12] 1339 	add	a,@r0
-      0003F3 F6               [12] 1340 	mov	@r0,a
-      0003F4 E4               [12] 1341 	clr	a
-      0003F5 08               [12] 1342 	inc	r0
-      0003F6 36               [12] 1343 	addc	a,@r0
-      0003F7 F6               [12] 1344 	mov	@r0,a
-      0003F8 0A               [12] 1345 	inc	r2
-      0003F9 BA 00 01         [24] 1346 	cjne	r2,#0x00,00120$
-      0003FC 0B               [12] 1347 	inc	r3
-      0003FD                       1348 00120$:
-      0003FD 8A 04            [24] 1349 	mov	ar4,r2
-      0003FF 8B 05            [24] 1350 	mov	ar5,r3
-      000401 C3               [12] 1351 	clr	c
-      000402 EA               [12] 1352 	mov	a,r2
-      000403 94 0A            [12] 1353 	subb	a,#0x0a
-      000405 EB               [12] 1354 	mov	a,r3
-      000406 64 80            [12] 1355 	xrl	a,#0x80
-      000408 94 80            [12] 1356 	subb	a,#0x80
-      00040A 50 03            [24] 1357 	jnc	00121$
-      00040C 02r03r8A         [24] 1358 	ljmp	00105$
-      00040F                       1359 00121$:
-      00040F                       1360 00107$:
-                                   1361 ;	89C51Board.c:173: }
-      00040F 85*00 81         [24] 1362 	mov	sp,_bp
-      000412 D0*00            [24] 1363 	pop	_bp
-      000414 22               [24] 1364 	ret
-                                   1365 ;------------------------------------------------------------
-                                   1366 ;Allocation info for local variables in function 'Hardware_WriteDisplayBuffer'
-                                   1367 ;------------------------------------------------------------
-                                   1368 ;buffer                    Allocated to registers r5 r6 r7 
-                                   1369 ;------------------------------------------------------------
-                                   1370 ;	89C51Board.c:176: void Hardware_WriteDisplayBuffer(unsigned char* buffer) REENTRANT
-                                   1371 ;	-----------------------------------------
-                                   1372 ;	 function Hardware_WriteDisplayBuffer
-                                   1373 ;	-----------------------------------------
-      000415                       1374 _Hardware_WriteDisplayBuffer:
-                                   1375 ;	89C51Board.c:178: DirectWriteToDisplay(buffer);
-                                   1376 ;	89C51Board.c:179: }
-      000415 02r00r00         [24] 1377 	ljmp	_DirectWriteToDisplay
-                                   1378 ;------------------------------------------------------------
-                                   1379 ;Allocation info for local variables in function 'Hardware_SetRtc'
-                                   1380 ;------------------------------------------------------------
-                                   1381 ;dts                       Allocated to registers r5 r6 r7 
-                                   1382 ;------------------------------------------------------------
-                                   1383 ;	89C51Board.c:181: void Hardware_SetRtc(DateTimeStruct* dts) REENTRANT
-                                   1384 ;	-----------------------------------------
-                                   1385 ;	 function Hardware_SetRtc
-                                   1386 ;	-----------------------------------------
-      000418                       1387 _Hardware_SetRtc:
-                                   1388 ;	89C51Board.c:183: Rtc_WriteClock(dts);
-                                   1389 ;	89C51Board.c:184: }
-      000418 02r00r00         [24] 1390 	ljmp	_Rtc_WriteClock
-                                   1391 ;------------------------------------------------------------
-                                   1392 ;Allocation info for local variables in function 'Hardware_GetRtc'
-                                   1393 ;------------------------------------------------------------
-                                   1394 ;dts                       Allocated to registers r5 r6 r7 
-                                   1395 ;------------------------------------------------------------
-                                   1396 ;	89C51Board.c:186: void Hardware_GetRtc(DateTimeStruct* dts) REENTRANT
-                                   1397 ;	-----------------------------------------
-                                   1398 ;	 function Hardware_GetRtc
-                                   1399 ;	-----------------------------------------
-      00041B                       1400 _Hardware_GetRtc:
-                                   1401 ;	89C51Board.c:188: Rtc_ReadClock(dts);
-                                   1402 ;	89C51Board.c:189: }
-      00041B 02r00r00         [24] 1403 	ljmp	_Rtc_ReadClock
-                                   1404 ;------------------------------------------------------------
-                                   1405 ;Allocation info for local variables in function 'Hardware_GetKeyState'
-                                   1406 ;------------------------------------------------------------
-                                   1407 ;keys                      Allocated to stack - _bp +1
-                                   1408 ;rowCount                  Allocated to registers r4 
-                                   1409 ;colCount                  Allocated to stack - _bp +4
-                                   1410 ;portValue                 Allocated to registers 
-                                   1411 ;sloc0                     Allocated to stack - _bp +4
-                                   1412 ;------------------------------------------------------------
-                                   1413 ;	89C51Board.c:191: void Hardware_GetKeyState(int *keys) REENTRANT
-                                   1414 ;	-----------------------------------------
-                                   1415 ;	 function Hardware_GetKeyState
-                                   1416 ;	-----------------------------------------
-      00041E                       1417 _Hardware_GetKeyState:
-      00041E C0*00            [24] 1418 	push	_bp
-      000420 85 81*00         [24] 1419 	mov	_bp,sp
-      000423 C0 82            [24] 1420 	push	dpl
-      000425 C0 83            [24] 1421 	push	dph
-      000427 C0 F0            [24] 1422 	push	b
-      000429 05 81            [12] 1423 	inc	sp
-                                   1424 ;	89C51Board.c:195: *keys = 0;
-      00042B A8*00            [24] 1425 	mov	r0,_bp
-      00042D 08               [12] 1426 	inc	r0
-      00042E 86 82            [24] 1427 	mov	dpl,@r0
-      000430 08               [12] 1428 	inc	r0
-      000431 86 83            [24] 1429 	mov	dph,@r0
-      000433 08               [12] 1430 	inc	r0
-      000434 86 F0            [24] 1431 	mov	b,@r0
-      000436 E4               [12] 1432 	clr	a
-      000437 12r00r00         [24] 1433 	lcall	__gptrput
-      00043A A3               [24] 1434 	inc	dptr
-      00043B 12r00r00         [24] 1435 	lcall	__gptrput
-                                   1436 ;	89C51Board.c:197: for (rowCount = 0; rowCount < 4; ++rowCount)
-      00043E 7C 00            [12] 1437 	mov	r4,#0x00
-      000440 7B 00            [12] 1438 	mov	r3,#0x00
-      000442                       1439 00107$:
-                                   1440 ;	89C51Board.c:199: P1 = ~(0x80 >> rowCount) | 0xf;
-      000442 C0 04            [24] 1441 	push	ar4
-      000444 8B F0            [24] 1442 	mov	b,r3
-      000446 05 F0            [12] 1443 	inc	b
-      000448 7A 80            [12] 1444 	mov	r2,#0x80
-      00044A E4               [12] 1445 	clr	a
-      00044B FC               [12] 1446 	mov	r4,a
-      00044C 33               [12] 1447 	rlc	a
-      00044D 92 D2            [24] 1448 	mov	ov,c
-      00044F 80 08            [24] 1449 	sjmp	00128$
-      000451                       1450 00127$:
-      000451 A2 D2            [12] 1451 	mov	c,ov
-      000453 EC               [12] 1452 	mov	a,r4
-      000454 13               [12] 1453 	rrc	a
-      000455 FC               [12] 1454 	mov	r4,a
-      000456 EA               [12] 1455 	mov	a,r2
-      000457 13               [12] 1456 	rrc	a
-      000458 FA               [12] 1457 	mov	r2,a
-      000459                       1458 00128$:
-      000459 D5 F0 F5         [24] 1459 	djnz	b,00127$
-      00045C EA               [12] 1460 	mov	a,r2
-      00045D F4               [12] 1461 	cpl	a
-      00045E FA               [12] 1462 	mov	r2,a
-      00045F 74 0F            [12] 1463 	mov	a,#0x0f
-      000461 4A               [12] 1464 	orl	a,r2
-      000462 F5 90            [12] 1465 	mov	_P1,a
-                                   1466 ;	89C51Board.c:200: for (colCount = 0; colCount < 4; ++colCount)
-      000464 E5*00            [12] 1467 	mov	a,_bp
-      000466 24 04            [12] 1468 	add	a,#0x04
-      000468 F8               [12] 1469 	mov	r0,a
-      000469 76 00            [12] 1470 	mov	@r0,#0x00
-      00046B 7F 00            [12] 1471 	mov	r7,#0x00
-                                   1472 ;	89C51Board.c:197: for (rowCount = 0; rowCount < 4; ++rowCount)
-      00046D D0 04            [24] 1473 	pop	ar4
-                                   1474 ;	89C51Board.c:200: for (colCount = 0; colCount < 4; ++colCount)
-      00046F                       1475 00105$:
-                                   1476 ;	89C51Board.c:202: portValue = ~P1 & (0x01 << colCount);
-      00046F C0 04            [24] 1477 	push	ar4
-      000471 E5 90            [12] 1478 	mov	a,_P1
-      000473 F4               [12] 1479 	cpl	a
-      000474 FA               [12] 1480 	mov	r2,a
-      000475 8F 04            [24] 1481 	mov	ar4,r7
-      000477 8C F0            [24] 1482 	mov	b,r4
-      000479 05 F0            [12] 1483 	inc	b
-      00047B 74 01            [12] 1484 	mov	a,#0x01
-      00047D 80 02            [24] 1485 	sjmp	00131$
-      00047F                       1486 00129$:
-      00047F 25 E0            [12] 1487 	add	a,acc
-      000481                       1488 00131$:
-      000481 D5 F0 FB         [24] 1489 	djnz	b,00129$
-      000484 5A               [12] 1490 	anl	a,r2
-                                   1491 ;	89C51Board.c:203: if (portValue)
-      000485 D0 04            [24] 1492 	pop	ar4
-      000487 60 3A            [24] 1493 	jz	00106$
-                                   1494 ;	89C51Board.c:205: *keys = rowCount * 4 + colCount + 1;
-      000489 8C 02            [24] 1495 	mov	ar2,r4
-      00048B 7F 00            [12] 1496 	mov	r7,#0x00
-      00048D EA               [12] 1497 	mov	a,r2
-      00048E 2A               [12] 1498 	add	a,r2
-      00048F FA               [12] 1499 	mov	r2,a
-      000490 EF               [12] 1500 	mov	a,r7
-      000491 33               [12] 1501 	rlc	a
-      000492 FF               [12] 1502 	mov	r7,a
-      000493 EA               [12] 1503 	mov	a,r2
-      000494 2A               [12] 1504 	add	a,r2
-      000495 FA               [12] 1505 	mov	r2,a
-      000496 EF               [12] 1506 	mov	a,r7
-      000497 33               [12] 1507 	rlc	a
-      000498 FF               [12] 1508 	mov	r7,a
-      000499 E5*00            [12] 1509 	mov	a,_bp
-      00049B 24 04            [12] 1510 	add	a,#0x04
-      00049D F8               [12] 1511 	mov	r0,a
-      00049E 86 05            [24] 1512 	mov	ar5,@r0
-      0004A0 7E 00            [12] 1513 	mov	r6,#0x00
-      0004A2 ED               [12] 1514 	mov	a,r5
-      0004A3 2A               [12] 1515 	add	a,r2
-      0004A4 FA               [12] 1516 	mov	r2,a
-      0004A5 EE               [12] 1517 	mov	a,r6
-      0004A6 3F               [12] 1518 	addc	a,r7
-      0004A7 FF               [12] 1519 	mov	r7,a
-      0004A8 0A               [12] 1520 	inc	r2
-      0004A9 BA 00 01         [24] 1521 	cjne	r2,#0x00,00133$
-      0004AC 0F               [12] 1522 	inc	r7
-      0004AD                       1523 00133$:
-      0004AD A8*00            [24] 1524 	mov	r0,_bp
-      0004AF 08               [12] 1525 	inc	r0
-      0004B0 86 82            [24] 1526 	mov	dpl,@r0
-      0004B2 08               [12] 1527 	inc	r0
-      0004B3 86 83            [24] 1528 	mov	dph,@r0
-      0004B5 08               [12] 1529 	inc	r0
-      0004B6 86 F0            [24] 1530 	mov	b,@r0
-      0004B8 EA               [12] 1531 	mov	a,r2
-      0004B9 12r00r00         [24] 1532 	lcall	__gptrput
-      0004BC A3               [24] 1533 	inc	dptr
-      0004BD EF               [12] 1534 	mov	a,r7
-      0004BE 12r00r00         [24] 1535 	lcall	__gptrput
-                                   1536 ;	89C51Board.c:206: return;
-      0004C1 80 18            [24] 1537 	sjmp	00109$
-      0004C3                       1538 00106$:
-                                   1539 ;	89C51Board.c:200: for (colCount = 0; colCount < 4; ++colCount)
-      0004C3 0F               [12] 1540 	inc	r7
-      0004C4 E5*00            [12] 1541 	mov	a,_bp
-      0004C6 24 04            [12] 1542 	add	a,#0x04
-      0004C8 F8               [12] 1543 	mov	r0,a
-      0004C9 A6 07            [24] 1544 	mov	@r0,ar7
-      0004CB BF 04 00         [24] 1545 	cjne	r7,#0x04,00134$
-      0004CE                       1546 00134$:
-      0004CE 40 9F            [24] 1547 	jc	00105$
-                                   1548 ;	89C51Board.c:197: for (rowCount = 0; rowCount < 4; ++rowCount)
-      0004D0 0B               [12] 1549 	inc	r3
-      0004D1 8B 04            [24] 1550 	mov	ar4,r3
-      0004D3 BB 04 00         [24] 1551 	cjne	r3,#0x04,00136$
-      0004D6                       1552 00136$:
-      0004D6 50 03            [24] 1553 	jnc	00137$
-      0004D8 02r04r42         [24] 1554 	ljmp	00107$
-      0004DB                       1555 00137$:
-      0004DB                       1556 00109$:
-                                   1557 ;	89C51Board.c:211: }
-      0004DB 85*00 81         [24] 1558 	mov	sp,_bp
-      0004DE D0*00            [24] 1559 	pop	_bp
-      0004E0 22               [24] 1560 	ret
-                                   1561 ;------------------------------------------------------------
-                                   1562 ;Allocation info for local variables in function 'Hardware_GetInputPortValues'
-                                   1563 ;------------------------------------------------------------
-                                   1564 ;pValue                    Allocated to registers r5 r6 r7 
-                                   1565 ;------------------------------------------------------------
-                                   1566 ;	89C51Board.c:214: void Hardware_GetInputPortValues(unsigned char *pValue) REENTRANT
-                                   1567 ;	-----------------------------------------
-                                   1568 ;	 function Hardware_GetInputPortValues
-                                   1569 ;	-----------------------------------------
-      0004E1                       1570 _Hardware_GetInputPortValues:
-      0004E1 AD 82            [24] 1571 	mov	r5,dpl
-      0004E3 AE 83            [24] 1572 	mov	r6,dph
-      0004E5 AF F0            [24] 1573 	mov	r7,b
-                                   1574 ;	89C51Board.c:216: P3 = 0xfC;
-      0004E7 75 B0 FC         [24] 1575 	mov	_P3,#0xfc
-                                   1576 ;	89C51Board.c:217: *pValue = P3 & 0x3C;
-      0004EA AC B0            [24] 1577 	mov	r4,_P3
-      0004EC 53 04 3C         [24] 1578 	anl	ar4,#0x3c
-      0004EF 8D 82            [24] 1579 	mov	dpl,r5
-      0004F1 8E 83            [24] 1580 	mov	dph,r6
-      0004F3 8F F0            [24] 1581 	mov	b,r7
-                                   1582 ;	89C51Board.c:218: *pValue = ~ (*pValue); // This hardware has logic 1 as pulled down
-      0004F5 EC               [12] 1583 	mov	a,r4
-      0004F6 12r00r00         [24] 1584 	lcall	__gptrput
-      0004F9 F4               [12] 1585 	cpl	a
-      0004FA FC               [12] 1586 	mov	r4,a
-      0004FB 8D 82            [24] 1587 	mov	dpl,r5
-      0004FD 8E 83            [24] 1588 	mov	dph,r6
-      0004FF 8F F0            [24] 1589 	mov	b,r7
-      000501 12r00r00         [24] 1590 	lcall	__gptrput
-                                   1591 ;	89C51Board.c:219: *pValue &= ~ (0x40); // Do not use zone5
-      000504 53 04 BF         [24] 1592 	anl	ar4,#0xbf
-      000507 8D 82            [24] 1593 	mov	dpl,r5
-      000509 8E 83            [24] 1594 	mov	dph,r6
-      00050B 8F F0            [24] 1595 	mov	b,r7
-      00050D EC               [12] 1596 	mov	a,r4
-                                   1597 ;	89C51Board.c:221: }
-      00050E 02r00r00         [24] 1598 	ljmp	__gptrput
-                                   1599 ;------------------------------------------------------------
-                                   1600 ;Allocation info for local variables in function 'Hardware_SetOutputPortValues'
-                                   1601 ;------------------------------------------------------------
-                                   1602 ;value                     Allocated to registers 
-                                   1603 ;------------------------------------------------------------
-                                   1604 ;	89C51Board.c:223: void Hardware_SetOutputPortValues(unsigned char value) REENTRANT
-                                   1605 ;	-----------------------------------------
-                                   1606 ;	 function Hardware_SetOutputPortValues
-                                   1607 ;	-----------------------------------------
-      000511                       1608 _Hardware_SetOutputPortValues:
-      000511 85 82 A0         [24] 1609 	mov	_P2,dpl
-                                   1610 ;	89C51Board.c:225: P2 = value;	
-                                   1611 ;	89C51Board.c:226: }
-      000514 22               [24] 1612 	ret
-                                   1613 ;------------------------------------------------------------
-                                   1614 ;Allocation info for local variables in function 'Hardware_CrashDump'
-                                   1615 ;------------------------------------------------------------
-                                   1616 ;message                   Allocated to registers 
-                                   1617 ;buffer                    Allocated to stack - _bp +3
-                                   1618 ;i                         Allocated to registers r2 r3 
-                                   1619 ;sloc0                     Allocated to stack - _bp +1
-                                   1620 ;sloc1                     Allocated to stack - _bp +2
-                                   1621 ;------------------------------------------------------------
-                                   1622 ;	89C51Board.c:228: void Hardware_CrashDump(unsigned char* message) REENTRANT
-                                   1623 ;	-----------------------------------------
-                                   1624 ;	 function Hardware_CrashDump
-                                   1625 ;	-----------------------------------------
-      000515                       1626 _Hardware_CrashDump:
-      000515 C0*00            [24] 1627 	push	_bp
-      000517 E5 81            [12] 1628 	mov	a,sp
-      000519 F5*00            [12] 1629 	mov	_bp,a
-      00051B 24 23            [12] 1630 	add	a,#0x23
-      00051D F5 81            [12] 1631 	mov	sp,a
-      00051F AD 82            [24] 1632 	mov	r5,dpl
-      000521 AE 83            [24] 1633 	mov	r6,dph
-      000523 AF F0            [24] 1634 	mov	r7,b
-                                   1635 ;	89C51Board.c:232: for (i = 0; i < SCREEN_BUFFER_SIZE; ++i)
-      000525 E5*00            [12] 1636 	mov	a,_bp
-      000527 24 03            [12] 1637 	add	a,#0x03
-      000529 FC               [12] 1638 	mov	r4,a
-      00052A A8*00            [24] 1639 	mov	r0,_bp
-      00052C 08               [12] 1640 	inc	r0
-      00052D A6 04            [24] 1641 	mov	@r0,ar4
-      00052F 7A 00            [12] 1642 	mov	r2,#0x00
-      000531 7B 00            [12] 1643 	mov	r3,#0x00
-      000533                       1644 00108$:
-                                   1645 ;	89C51Board.c:234: if (*message != 0)
-      000533 8D 82            [24] 1646 	mov	dpl,r5
-      000535 8E 83            [24] 1647 	mov	dph,r6
-      000537 8F F0            [24] 1648 	mov	b,r7
-      000539 A8*00            [24] 1649 	mov	r0,_bp
-      00053B 08               [12] 1650 	inc	r0
-      00053C 08               [12] 1651 	inc	r0
-      00053D 12r00r00         [24] 1652 	lcall	__gptrget
-      000540 F6               [12] 1653 	mov	@r0,a
-      000541 A8*00            [24] 1654 	mov	r0,_bp
-      000543 08               [12] 1655 	inc	r0
-      000544 08               [12] 1656 	inc	r0
-      000545 E6               [12] 1657 	mov	a,@r0
-      000546 60 13            [24] 1658 	jz	00102$
-                                   1659 ;	89C51Board.c:236: buffer[i] = *message;
-      000548 A8*00            [24] 1660 	mov	r0,_bp
-      00054A 08               [12] 1661 	inc	r0
-      00054B EA               [12] 1662 	mov	a,r2
-      00054C 26               [12] 1663 	add	a,@r0
-      00054D F8               [12] 1664 	mov	r0,a
-      00054E A9*00            [24] 1665 	mov	r1,_bp
-      000550 09               [12] 1666 	inc	r1
-      000551 09               [12] 1667 	inc	r1
-      000552 E7               [12] 1668 	mov	a,@r1
-      000553 F6               [12] 1669 	mov	@r0,a
-                                   1670 ;	89C51Board.c:237: ++message;
-      000554 0D               [12] 1671 	inc	r5
-      000555 BD 00 08         [24] 1672 	cjne	r5,#0x00,00109$
-      000558 0E               [12] 1673 	inc	r6
-      000559 80 05            [24] 1674 	sjmp	00109$
-      00055B                       1675 00102$:
-                                   1676 ;	89C51Board.c:241: buffer[i] = ' ';
-      00055B EA               [12] 1677 	mov	a,r2
-      00055C 2C               [12] 1678 	add	a,r4
-      00055D F8               [12] 1679 	mov	r0,a
-      00055E 76 20            [12] 1680 	mov	@r0,#0x20
-      000560                       1681 00109$:
-                                   1682 ;	89C51Board.c:232: for (i = 0; i < SCREEN_BUFFER_SIZE; ++i)
-      000560 0A               [12] 1683 	inc	r2
-      000561 BA 00 01         [24] 1684 	cjne	r2,#0x00,00131$
-      000564 0B               [12] 1685 	inc	r3
-      000565                       1686 00131$:
-      000565 C3               [12] 1687 	clr	c
-      000566 EA               [12] 1688 	mov	a,r2
-      000567 94 20            [12] 1689 	subb	a,#0x20
-      000569 EB               [12] 1690 	mov	a,r3
-      00056A 64 80            [12] 1691 	xrl	a,#0x80
-      00056C 94 80            [12] 1692 	subb	a,#0x80
-      00056E 40 C3            [24] 1693 	jc	00108$
-                                   1694 ;	89C51Board.c:246: DirectWriteToDisplay(buffer);
-      000570 7F 00            [12] 1695 	mov	r7,#0x00
-      000572 7E 40            [12] 1696 	mov	r6,#0x40
-      000574 8C 82            [24] 1697 	mov	dpl,r4
-      000576 8F 83            [24] 1698 	mov	dph,r7
-      000578 8E F0            [24] 1699 	mov	b,r6
-      00057A 12r00r00         [24] 1700 	lcall	_DirectWriteToDisplay
-                                   1701 ;	89C51Board.c:247: while (1);
-      00057D                       1702 00106$:
-      00057D 80 FE            [24] 1703 	sjmp	00106$
-                                   1704 ;	89C51Board.c:249: }
-      00057F 85*00 81         [24] 1705 	mov	sp,_bp
-      000582 D0*00            [24] 1706 	pop	_bp
-      000584 22               [24] 1707 	ret
-                                   1708 	.area CSEG    (CODE)
-                                   1709 	.area CONST   (CODE)
-                                   1710 	.area CONST   (CODE)
-      000000                       1711 ___str_0:
-      000000 4F 75 74 4F 66 54 69  1712 	.ascii "OutOfTimers"
+                                    525 ; restartable atomic support routines
+      000003                        526 	.ds	5
+      000008                        527 sdcc_atomic_exchange_rollback_start::
+      000008 00               [12]  528 	nop
+      000009 00               [12]  529 	nop
+      00000A                        530 sdcc_atomic_exchange_pdata_impl:
+      00000A E2               [24]  531 	movx	a, @r0
+      00000B FB               [12]  532 	mov	r3, a
+      00000C EA               [12]  533 	mov	a, r2
+      00000D F2               [24]  534 	movx	@r0, a
+      00000E 80 2C            [24]  535 	sjmp	sdcc_atomic_exchange_exit
+      000010 00               [12]  536 	nop
+      000011 00               [12]  537 	nop
+      000012                        538 sdcc_atomic_exchange_xdata_impl:
+      000012 E0               [24]  539 	movx	a, @dptr
+      000013 FB               [12]  540 	mov	r3, a
+      000014 EA               [12]  541 	mov	a, r2
+      000015 F0               [24]  542 	movx	@dptr, a
+      000016 80 24            [24]  543 	sjmp	sdcc_atomic_exchange_exit
+      000018                        544 sdcc_atomic_compare_exchange_idata_impl:
+      000018 E6               [12]  545 	mov	a, @r0
+      000019 B5 02 02         [24]  546 	cjne	a, ar2, .+#5
+      00001C EB               [12]  547 	mov	a, r3
+      00001D F6               [12]  548 	mov	@r0, a
+      00001E 22               [24]  549 	ret
+      00001F 00               [12]  550 	nop
+      000020                        551 sdcc_atomic_compare_exchange_pdata_impl:
+      000020 E2               [24]  552 	movx	a, @r0
+      000021 B5 02 02         [24]  553 	cjne	a, ar2, .+#5
+      000024 EB               [12]  554 	mov	a, r3
+      000025 F2               [24]  555 	movx	@r0, a
+      000026 22               [24]  556 	ret
+      000027 00               [12]  557 	nop
+      000028                        558 sdcc_atomic_compare_exchange_xdata_impl:
+      000028 E0               [24]  559 	movx	a, @dptr
+      000029 B5 02 02         [24]  560 	cjne	a, ar2, .+#5
+      00002C EB               [12]  561 	mov	a, r3
+      00002D F0               [24]  562 	movx	@dptr, a
+      00002E 22               [24]  563 	ret
+      00002F                        564 sdcc_atomic_exchange_rollback_end::
+                                    565 
+      00002F                        566 sdcc_atomic_exchange_gptr_impl::
+      00002F 30 F6 E0         [24]  567 	jnb	b.6, sdcc_atomic_exchange_xdata_impl
+      000032 A8 82            [24]  568 	mov	r0, dpl
+      000034 20 F5 D3         [24]  569 	jb	b.5, sdcc_atomic_exchange_pdata_impl
+      000037                        570 sdcc_atomic_exchange_idata_impl:
+      000037 EA               [12]  571 	mov	a, r2
+      000038 C6               [12]  572 	xch	a, @r0
+      000039 F5 82            [12]  573 	mov	dpl, a
+      00003B 22               [24]  574 	ret
+      00003C                        575 sdcc_atomic_exchange_exit:
+      00003C 8B 82            [24]  576 	mov	dpl, r3
+      00003E 22               [24]  577 	ret
+      00003F                        578 sdcc_atomic_compare_exchange_gptr_impl::
+      00003F 30 F6 E6         [24]  579 	jnb	b.6, sdcc_atomic_compare_exchange_xdata_impl
+      000042 A8 82            [24]  580 	mov	r0, dpl
+      000044 20 F5 D9         [24]  581 	jb	b.5, sdcc_atomic_compare_exchange_pdata_impl
+      000047 80 CF            [24]  582 	sjmp	sdcc_atomic_compare_exchange_idata_impl
+                                    583 ;--------------------------------------------------------
+                                    584 ; global & static initialisations
+                                    585 ;--------------------------------------------------------
+                                    586 	.area HOME    (CODE)
+                                    587 	.area GSINIT  (CODE)
+                                    588 	.area GSFINAL (CODE)
+                                    589 	.area GSINIT  (CODE)
+                                    590 	.globl __sdcc_gsinit_startup
+                                    591 	.globl __sdcc_program_startup
+                                    592 	.globl __start__stack
+                                    593 	.globl __mcs51_genXINIT
+                                    594 	.globl __mcs51_genXRAMCLEAR
+                                    595 	.globl __mcs51_genRAMCLEAR
+                                    596 	.area GSFINAL (CODE)
+      000000 02r00r49         [24]  597 	ljmp	__sdcc_program_startup
+                                    598 ;--------------------------------------------------------
+                                    599 ; Home
+                                    600 ;--------------------------------------------------------
+                                    601 	.area HOME    (CODE)
+                                    602 	.area HOME    (CODE)
+      000049                        603 __sdcc_program_startup:
+      000049 02r00r00         [24]  604 	ljmp	_main
+                                    605 ;	return from main will return to caller
+                                    606 ;--------------------------------------------------------
+                                    607 ; code
+                                    608 ;--------------------------------------------------------
+                                    609 	.area CSEG    (CODE)
+                                    610 ;------------------------------------------------------------
+                                    611 ;Allocation info for local variables in function 'main'
+                                    612 ;------------------------------------------------------------
+                                    613 ;	89C51Board.c:60: void main(void)
+                                    614 ;	-----------------------------------------
+                                    615 ;	 function main
+                                    616 ;	-----------------------------------------
+      000000                        617 _main:
+                           000007   618 	ar7 = 0x07
+                           000006   619 	ar6 = 0x06
+                           000005   620 	ar5 = 0x05
+                           000004   621 	ar4 = 0x04
+                           000003   622 	ar3 = 0x03
+                           000002   623 	ar2 = 0x02
+                           000001   624 	ar1 = 0x01
+                           000000   625 	ar0 = 0x00
+                                    626 ;	89C51Board.c:62: CKCON0 = 0x01;						// Initial X2 Mode (BUS Clock = 58.9824 MHz) 
+      000000 75 8F 01         [24]  627 	mov	_CKCON0,#0x01
+                                    628 ;	89C51Board.c:66: Hardware_InitialiseHardware();
+      000003 12r01r43         [24]  629 	lcall	_Hardware_InitialiseHardware
+                                    630 ;	89C51Board.c:74: UserProgram();
+      000006 12r00r00         [24]  631 	lcall	_UserProgram
+                                    632 ;	89C51Board.c:76: Hardware_ScheduleUserCalls();
+                                    633 ;	89C51Board.c:78: }   
+      000009 02r00r0C         [24]  634 	ljmp	_Hardware_ScheduleUserCalls
+                                    635 ;------------------------------------------------------------
+                                    636 ;Allocation info for local variables in function 'Hardware_ScheduleUserCalls'
+                                    637 ;------------------------------------------------------------
+                                    638 ;timerCounter  Allocated to stack - _bp +5 +2 
+                                    639 ;c             Allocated to registers r4 r5 r6 r7 
+                                    640 ;pTimer        Allocated to registers r3 r4 
+                                    641 ;sloc0         Allocated to stack - _bp +1 +2 
+                                    642 ;sloc1         Allocated to stack - _bp +3 +2 
+                                    643 ;------------------------------------------------------------
+                                    644 ;	89C51Board.c:81: void Hardware_ScheduleUserCalls() REENTRANT
+                                    645 ;	-----------------------------------------
+                                    646 ;	 function Hardware_ScheduleUserCalls
+                                    647 ;	-----------------------------------------
+      00000C                        648 _Hardware_ScheduleUserCalls:
+      00000C C0*00            [24]  649 	push	_bp
+      00000E E5 81            [12]  650 	mov	a,sp
+      000010 F5*00            [12]  651 	mov	_bp,a
+      000012 24 06            [12]  652 	add	a,#0x06
+      000014 F5 81            [12]  653 	mov	sp,a
+                                    654 ;	89C51Board.c:88: for (timerCounter = 0; timerCounter < MAX_TIMERS; ++timerCounter)
+      000016                        655 00121$:
+      000016 E5*00            [12]  656 	mov	a,_bp
+      000018 24 05            [12]  657 	add	a,#0x05
+      00001A F8               [12]  658 	mov	r0,a
+      00001B 76 00            [12]  659 	mov	@r0,#0x00
+      00001D 7D 00            [12]  660 	mov	r5,#0x00
+      00001F 7E 00            [12]  661 	mov	r6,#0x00
+      000021                        662 00111$:
+                                    663 ;	89C51Board.c:90: TimerSetup *pTimer = timers + timerCounter;
+      000021 ED               [12]  664 	mov	a,r5
+      000022 24r12            [12]  665 	add	a, #_timers
+      000024 FB               [12]  666 	mov	r3,a
+      000025 EE               [12]  667 	mov	a,r6
+      000026 34s00            [12]  668 	addc	a, #(_timers >> 8)
+      000028 FC               [12]  669 	mov	r4,a
+                                    670 ;	89C51Board.c:91: if (pTimer->cookie != 0 && pTimer->periodMilliseconds <= pTimer->ticksSoFar && pTimer->enabled)
+      000029 A8*00            [24]  671 	mov	r0,_bp
+      00002B 08               [12]  672 	inc	r0
+      00002C A6 03            [24]  673 	mov	@r0,ar3
+      00002E 08               [12]  674 	inc	r0
+      00002F A6 04            [24]  675 	mov	@r0,ar4
+      000031 A8*00            [24]  676 	mov	r0,_bp
+      000033 08               [12]  677 	inc	r0
+      000034 86 82            [24]  678 	mov	dpl,@r0
+      000036 08               [12]  679 	inc	r0
+      000037 86 83            [24]  680 	mov	dph,@r0
+      000039 E0               [24]  681 	movx	a,@dptr
+      00003A FA               [12]  682 	mov	r2,a
+      00003B A3               [24]  683 	inc	dptr
+      00003C E0               [24]  684 	movx	a,@dptr
+      00003D 4A               [12]  685 	orl	a,r2
+      00003E 70 03            [24]  686 	jnz	00168$
+      000040 02r00rE0         [24]  687 	ljmp	00102$
+      000043                        688 00168$:
+      000043 C0 05            [24]  689 	push	ar5
+      000045 C0 06            [24]  690 	push	ar6
+      000047 8B 82            [24]  691 	mov	dpl,r3
+      000049 8C 83            [24]  692 	mov	dph,r4
+      00004B A3               [24]  693 	inc	dptr
+      00004C A3               [24]  694 	inc	dptr
+      00004D E0               [24]  695 	movx	a,@dptr
+      00004E FA               [12]  696 	mov	r2,a
+      00004F A3               [24]  697 	inc	dptr
+      000050 E0               [24]  698 	movx	a,@dptr
+      000051 FF               [12]  699 	mov	r7,a
+      000052 E5*00            [12]  700 	mov	a,_bp
+      000054 24 03            [12]  701 	add	a,#0x03
+      000056 F8               [12]  702 	mov	r0,a
+      000057 74 04            [12]  703 	mov	a,#0x04
+      000059 2B               [12]  704 	add	a, r3
+      00005A F6               [12]  705 	mov	@r0,a
+      00005B E4               [12]  706 	clr	a
+      00005C 3C               [12]  707 	addc	a, r4
+      00005D 08               [12]  708 	inc	r0
+      00005E F6               [12]  709 	mov	@r0,a
+      00005F E5*00            [12]  710 	mov	a,_bp
+      000061 24 03            [12]  711 	add	a,#0x03
+      000063 F8               [12]  712 	mov	r0,a
+      000064 86 82            [24]  713 	mov	dpl,@r0
+      000066 08               [12]  714 	inc	r0
+      000067 86 83            [24]  715 	mov	dph,@r0
+      000069 E0               [24]  716 	movx	a,@dptr
+      00006A FD               [12]  717 	mov	r5,a
+      00006B A3               [24]  718 	inc	dptr
+      00006C E0               [24]  719 	movx	a,@dptr
+      00006D FE               [12]  720 	mov	r6,a
+      00006E C3               [12]  721 	clr	c
+      00006F ED               [12]  722 	mov	a,r5
+      000070 9A               [12]  723 	subb	a,r2
+      000071 EE               [12]  724 	mov	a,r6
+      000072 64 80            [12]  725 	xrl	a,#0x80
+      000074 8F F0            [24]  726 	mov	b,r7
+      000076 63 F0 80         [24]  727 	xrl	b,#0x80
+      000079 95 F0            [12]  728 	subb	a,b
+      00007B D0 06            [24]  729 	pop	ar6
+      00007D D0 05            [24]  730 	pop	ar5
+      00007F 40 5F            [24]  731 	jc	00102$
+      000081 74 06            [12]  732 	mov	a,#0x06
+      000083 2B               [12]  733 	add	a, r3
+      000084 FA               [12]  734 	mov	r2,a
+      000085 E4               [12]  735 	clr	a
+      000086 3C               [12]  736 	addc	a, r4
+      000087 FF               [12]  737 	mov	r7,a
+      000088 8A 82            [24]  738 	mov	dpl,r2
+      00008A 8F 83            [24]  739 	mov	dph,r7
+      00008C E0               [24]  740 	movx	a,@dptr
+      00008D 60 51            [24]  741 	jz	00102$
+                                    742 ;	89C51Board.c:94: pTimer->ticksSoFar = 0;
+      00008F C0 05            [24]  743 	push	ar5
+      000091 C0 06            [24]  744 	push	ar6
+      000093 E5*00            [12]  745 	mov	a,_bp
+      000095 24 03            [12]  746 	add	a,#0x03
+      000097 F8               [12]  747 	mov	r0,a
+      000098 86 82            [24]  748 	mov	dpl,@r0
+      00009A 08               [12]  749 	inc	r0
+      00009B 86 83            [24]  750 	mov	dph,@r0
+      00009D E4               [12]  751 	clr	a
+      00009E F0               [24]  752 	movx	@dptr,a
+      00009F A3               [24]  753 	inc	dptr
+      0000A0 F0               [24]  754 	movx	@dptr,a
+                                    755 ;	89C51Board.c:95: pTimer->callback(pTimer->cookie);
+      0000A1 74 07            [12]  756 	mov	a,#0x07
+      0000A3 2B               [12]  757 	add	a, r3
+      0000A4 F5 82            [12]  758 	mov	dpl,a
+      0000A6 E4               [12]  759 	clr	a
+      0000A7 3C               [12]  760 	addc	a, r4
+      0000A8 F5 83            [12]  761 	mov	dph,a
+      0000AA E0               [24]  762 	movx	a,@dptr
+      0000AB FA               [12]  763 	mov	r2,a
+      0000AC A3               [24]  764 	inc	dptr
+      0000AD E0               [24]  765 	movx	a,@dptr
+      0000AE FF               [12]  766 	mov	r7,a
+      0000AF A8*00            [24]  767 	mov	r0,_bp
+      0000B1 08               [12]  768 	inc	r0
+      0000B2 86 82            [24]  769 	mov	dpl,@r0
+      0000B4 08               [12]  770 	inc	r0
+      0000B5 86 83            [24]  771 	mov	dph,@r0
+      0000B7 E0               [24]  772 	movx	a,@dptr
+      0000B8 FD               [12]  773 	mov	r5,a
+      0000B9 A3               [24]  774 	inc	dptr
+      0000BA E0               [24]  775 	movx	a,@dptr
+      0000BB FE               [12]  776 	mov	r6,a
+      0000BC C0 07            [24]  777 	push	ar7
+      0000BE C0 06            [24]  778 	push	ar6
+      0000C0 C0 05            [24]  779 	push	ar5
+      0000C2 C0 02            [24]  780 	push	ar2
+      0000C4 12r00rC9         [24]  781 	lcall	00171$
+      0000C7 80 09            [24]  782 	sjmp	00172$
+      0000C9                        783 00171$:
+      0000C9 C0 02            [24]  784 	push	ar2
+      0000CB C0 07            [24]  785 	push	ar7
+      0000CD 8D 82            [24]  786 	mov	dpl, r5
+      0000CF 8E 83            [24]  787 	mov	dph, r6
+      0000D1 22               [24]  788 	ret
+      0000D2                        789 00172$:
+      0000D2 D0 02            [24]  790 	pop	ar2
+      0000D4 D0 05            [24]  791 	pop	ar5
+      0000D6 D0 06            [24]  792 	pop	ar6
+      0000D8 D0 07            [24]  793 	pop	ar7
+      0000DA D0 06            [24]  794 	pop	ar6
+      0000DC D0 05            [24]  795 	pop	ar5
+      0000DE 80 1E            [24]  796 	sjmp	00112$
+      0000E0                        797 00102$:
+                                    798 ;	89C51Board.c:99: pTimer->ticksSoFar++;
+      0000E0 74 04            [12]  799 	mov	a,#0x04
+      0000E2 2B               [12]  800 	add	a, r3
+      0000E3 FB               [12]  801 	mov	r3,a
+      0000E4 E4               [12]  802 	clr	a
+      0000E5 3C               [12]  803 	addc	a, r4
+      0000E6 FC               [12]  804 	mov	r4,a
+      0000E7 8B 82            [24]  805 	mov	dpl,r3
+      0000E9 8C 83            [24]  806 	mov	dph,r4
+      0000EB E0               [24]  807 	movx	a,@dptr
+      0000EC FA               [12]  808 	mov	r2,a
+      0000ED A3               [24]  809 	inc	dptr
+      0000EE E0               [24]  810 	movx	a,@dptr
+      0000EF FF               [12]  811 	mov	r7,a
+      0000F0 0A               [12]  812 	inc	r2
+      0000F1 BA 00 01         [24]  813 	cjne	r2,#0x00,00173$
+      0000F4 0F               [12]  814 	inc	r7
+      0000F5                        815 00173$:
+      0000F5 8B 82            [24]  816 	mov	dpl,r3
+      0000F7 8C 83            [24]  817 	mov	dph,r4
+      0000F9 EA               [12]  818 	mov	a,r2
+      0000FA F0               [24]  819 	movx	@dptr,a
+      0000FB EF               [12]  820 	mov	a,r7
+      0000FC A3               [24]  821 	inc	dptr
+      0000FD F0               [24]  822 	movx	@dptr,a
+      0000FE                        823 00112$:
+                                    824 ;	89C51Board.c:88: for (timerCounter = 0; timerCounter < MAX_TIMERS; ++timerCounter)
+      0000FE 74 09            [12]  825 	mov	a,#0x09
+      000100 2D               [12]  826 	add	a, r5
+      000101 FD               [12]  827 	mov	r5,a
+      000102 E4               [12]  828 	clr	a
+      000103 3E               [12]  829 	addc	a, r6
+      000104 FE               [12]  830 	mov	r6,a
+      000105 E5*00            [12]  831 	mov	a,_bp
+      000107 24 05            [12]  832 	add	a,#0x05
+      000109 F8               [12]  833 	mov	r0,a
+      00010A E5*00            [12]  834 	mov	a,_bp
+      00010C 24 05            [12]  835 	add	a,#0x05
+      00010E F9               [12]  836 	mov	r1,a
+      00010F E6               [12]  837 	mov	a,@r0
+      000110 04               [12]  838 	inc	a
+      000111 F7               [12]  839 	mov	@r1,a
+      000112 E5*00            [12]  840 	mov	a,_bp
+      000114 24 05            [12]  841 	add	a,#0x05
+      000116 F8               [12]  842 	mov	r0,a
+      000117 B6 0A 00         [24]  843 	cjne	@r0,#0x0a,00174$
+      00011A                        844 00174$:
+      00011A 50 03            [24]  845 	jnc	00175$
+      00011C 02r00r21         [24]  846 	ljmp	00111$
+      00011F                        847 00175$:
+                                    848 ;	89C51Board.c:104: for (c = 0; c < 100; ++c)
+      00011F 7C 64            [12]  849 	mov	r4,#0x64
+      000121 7D 00            [12]  850 	mov	r5,#0x00
+      000123 7E 00            [12]  851 	mov	r6,#0x00
+      000125 7F 00            [12]  852 	mov	r7,#0x00
+      000127                        853 00115$:
+      000127 1C               [12]  854 	dec	r4
+      000128 BC FF 09         [24]  855 	cjne	r4,#0xff,00176$
+      00012B 1D               [12]  856 	dec	r5
+      00012C BD FF 05         [24]  857 	cjne	r5,#0xff,00176$
+      00012F 1E               [12]  858 	dec	r6
+      000130 BE FF 01         [24]  859 	cjne	r6,#0xff,00176$
+      000133 1F               [12]  860 	dec	r7
+      000134                        861 00176$:
+      000134 EC               [12]  862 	mov	a,r4
+      000135 4D               [12]  863 	orl	a,r5
+      000136 4E               [12]  864 	orl	a,r6
+      000137 4F               [12]  865 	orl	a,r7
+      000138 70 ED            [24]  866 	jnz	00115$
+      00013A 02r00r16         [24]  867 	ljmp	00121$
+                                    868 ;	89C51Board.c:109: }
+      00013D 85*00 81         [24]  869 	mov	sp,_bp
+      000140 D0*00            [24]  870 	pop	_bp
+      000142 22               [24]  871 	ret
+                                    872 ;------------------------------------------------------------
+                                    873 ;Allocation info for local variables in function 'Hardware_InitialiseHardware'
+                                    874 ;------------------------------------------------------------
+                                    875 ;i             Allocated to registers r7 
+                                    876 ;------------------------------------------------------------
+                                    877 ;	89C51Board.c:112: void Hardware_InitialiseHardware() REENTRANT
+                                    878 ;	-----------------------------------------
+                                    879 ;	 function Hardware_InitialiseHardware
+                                    880 ;	-----------------------------------------
+      000143                        881 _Hardware_InitialiseHardware:
+                                    882 ;	89C51Board.c:116: for (i = 0; i < MAX_TIMERS; ++i)
+      000143 7F 00            [12]  883 	mov	r7,#0x00
+      000145 7D 00            [12]  884 	mov	r5,#0x00
+      000147 7E 00            [12]  885 	mov	r6,#0x00
+      000149                        886 00102$:
+                                    887 ;	89C51Board.c:118: timers[i].cookie = 0;
+      000149 ED               [12]  888 	mov	a,r5
+      00014A 24r12            [12]  889 	add	a, #_timers
+      00014C F5 82            [12]  890 	mov	dpl,a
+      00014E EE               [12]  891 	mov	a,r6
+      00014F 34s00            [12]  892 	addc	a, #(_timers >> 8)
+      000151 F5 83            [12]  893 	mov	dph,a
+      000153 E4               [12]  894 	clr	a
+      000154 F0               [24]  895 	movx	@dptr,a
+      000155 A3               [24]  896 	inc	dptr
+      000156 F0               [24]  897 	movx	@dptr,a
+                                    898 ;	89C51Board.c:116: for (i = 0; i < MAX_TIMERS; ++i)
+      000157 74 09            [12]  899 	mov	a,#0x09
+      000159 2D               [12]  900 	add	a, r5
+      00015A FD               [12]  901 	mov	r5,a
+      00015B E4               [12]  902 	clr	a
+      00015C 3E               [12]  903 	addc	a, r6
+      00015D FE               [12]  904 	mov	r6,a
+      00015E 0F               [12]  905 	inc	r7
+      00015F BF 0A 00         [24]  906 	cjne	r7,#0x0a,00119$
+      000162                        907 00119$:
+      000162 40 E5            [24]  908 	jc	00102$
+                                    909 ;	89C51Board.c:122: pRegisterForTimer = Hardware_RegisterForTimer;
+      000164 7ErD6            [12]  910 	mov	r6,#_Hardware_RegisterForTimer
+      000166 7Fs01            [12]  911 	mov	r7,#(_Hardware_RegisterForTimer >> 8)
+      000168 90r00r00         [24]  912 	mov	dptr,#_pRegisterForTimer
+      00016B EE               [12]  913 	mov	a,r6
+      00016C F0               [24]  914 	movx	@dptr,a
+      00016D EF               [12]  915 	mov	a,r7
+      00016E A3               [24]  916 	inc	dptr
+      00016F F0               [24]  917 	movx	@dptr,a
+                                    918 ;	89C51Board.c:123: pEnableTimer = Hardware_EnableTimer;
+      000170 7ErC8            [12]  919 	mov	r6,#_Hardware_EnableTimer
+      000172 7Fs02            [12]  920 	mov	r7,#(_Hardware_EnableTimer >> 8)
+      000174 90r00r02         [24]  921 	mov	dptr,#_pEnableTimer
+      000177 EE               [12]  922 	mov	a,r6
+      000178 F0               [24]  923 	movx	@dptr,a
+      000179 EF               [12]  924 	mov	a,r7
+      00017A A3               [24]  925 	inc	dptr
+      00017B F0               [24]  926 	movx	@dptr,a
+                                    927 ;	89C51Board.c:124: pGetRtc = Hardware_GetRtc;
+      00017C 7Er78            [12]  928 	mov	r6,#_Hardware_GetRtc
+      00017E 7Fs03            [12]  929 	mov	r7,#(_Hardware_GetRtc >> 8)
+      000180 90r00r04         [24]  930 	mov	dptr,#_pGetRtc
+      000183 EE               [12]  931 	mov	a,r6
+      000184 F0               [24]  932 	movx	@dptr,a
+      000185 EF               [12]  933 	mov	a,r7
+      000186 A3               [24]  934 	inc	dptr
+      000187 F0               [24]  935 	movx	@dptr,a
+                                    936 ;	89C51Board.c:125: pSetRtc = Hardware_SetRtc;
+      000188 7Er75            [12]  937 	mov	r6,#_Hardware_SetRtc
+      00018A 7Fs03            [12]  938 	mov	r7,#(_Hardware_SetRtc >> 8)
+      00018C 90r00r06         [24]  939 	mov	dptr,#_pSetRtc
+      00018F EE               [12]  940 	mov	a,r6
+      000190 F0               [24]  941 	movx	@dptr,a
+      000191 EF               [12]  942 	mov	a,r7
+      000192 A3               [24]  943 	inc	dptr
+      000193 F0               [24]  944 	movx	@dptr,a
+                                    945 ;	89C51Board.c:126: pWriteDisplayBuffer = Hardware_WriteDisplayBuffer;
+      000194 7Er72            [12]  946 	mov	r6,#_Hardware_WriteDisplayBuffer
+      000196 7Fs03            [12]  947 	mov	r7,#(_Hardware_WriteDisplayBuffer >> 8)
+      000198 90r00r08         [24]  948 	mov	dptr,#_pWriteDisplayBuffer
+      00019B EE               [12]  949 	mov	a,r6
+      00019C F0               [24]  950 	movx	@dptr,a
+      00019D EF               [12]  951 	mov	a,r7
+      00019E A3               [24]  952 	inc	dptr
+      00019F F0               [24]  953 	movx	@dptr,a
+                                    954 ;	89C51Board.c:127: pGetKeyState = Hardware_GetKeyState;
+      0001A0 7Er7B            [12]  955 	mov	r6,#_Hardware_GetKeyState
+      0001A2 7Fs03            [12]  956 	mov	r7,#(_Hardware_GetKeyState >> 8)
+      0001A4 90r00r0A         [24]  957 	mov	dptr,#_pGetKeyState
+      0001A7 EE               [12]  958 	mov	a,r6
+      0001A8 F0               [24]  959 	movx	@dptr,a
+      0001A9 EF               [12]  960 	mov	a,r7
+      0001AA A3               [24]  961 	inc	dptr
+      0001AB F0               [24]  962 	movx	@dptr,a
+                                    963 ;	89C51Board.c:128: pGetInputPortValues = Hardware_GetInputPortValues;
+      0001AC 7Er3A            [12]  964 	mov	r6,#_Hardware_GetInputPortValues
+      0001AE 7Fs04            [12]  965 	mov	r7,#(_Hardware_GetInputPortValues >> 8)
+      0001B0 90r00r0C         [24]  966 	mov	dptr,#_pGetInputPortValues
+      0001B3 EE               [12]  967 	mov	a,r6
+      0001B4 F0               [24]  968 	movx	@dptr,a
+      0001B5 EF               [12]  969 	mov	a,r7
+      0001B6 A3               [24]  970 	inc	dptr
+      0001B7 F0               [24]  971 	movx	@dptr,a
+                                    972 ;	89C51Board.c:129: pSetOutputPortValues = Hardware_SetOutputPortValues;
+      0001B8 7Er6A            [12]  973 	mov	r6,#_Hardware_SetOutputPortValues
+      0001BA 7Fs04            [12]  974 	mov	r7,#(_Hardware_SetOutputPortValues >> 8)
+      0001BC 90r00r0E         [24]  975 	mov	dptr,#_pSetOutputPortValues
+      0001BF EE               [12]  976 	mov	a,r6
+      0001C0 F0               [24]  977 	movx	@dptr,a
+      0001C1 EF               [12]  978 	mov	a,r7
+      0001C2 A3               [24]  979 	inc	dptr
+      0001C3 F0               [24]  980 	movx	@dptr,a
+                                    981 ;	89C51Board.c:130: pCrashDump = Hardware_CrashDump;
+      0001C4 7Er6E            [12]  982 	mov	r6,#_Hardware_CrashDump
+      0001C6 7Fs04            [12]  983 	mov	r7,#(_Hardware_CrashDump >> 8)
+      0001C8 90r00r10         [24]  984 	mov	dptr,#_pCrashDump
+      0001CB EE               [12]  985 	mov	a,r6
+      0001CC F0               [24]  986 	movx	@dptr,a
+      0001CD EF               [12]  987 	mov	a,r7
+      0001CE A3               [24]  988 	inc	dptr
+      0001CF F0               [24]  989 	movx	@dptr,a
+                                    990 ;	89C51Board.c:134: InitialiseLcd();
+      0001D0 12r00r00         [24]  991 	lcall	_InitialiseLcd
+                                    992 ;	89C51Board.c:135: Rtc_Initialise();
+                                    993 ;	89C51Board.c:137: }
+      0001D3 02r00r00         [24]  994 	ljmp	_Rtc_Initialise
+                                    995 ;------------------------------------------------------------
+                                    996 ;Allocation info for local variables in function 'Hardware_RegisterForTimer'
+                                    997 ;------------------------------------------------------------
+                                    998 ;milliSeconds  Allocated to stack - _bp -4 +2 
+                                    999 ;callback      Allocated to stack - _bp -6 +2 
+                                   1000 ;cookie        Allocated to stack - _bp +1 +2 
+                                   1001 ;i             Allocated to registers r4 r5 
+                                   1002 ;sloc0         Allocated to stack - _bp +5 +2 
+                                   1003 ;sloc1         Allocated to stack - _bp +3 +2 
+                                   1004 ;------------------------------------------------------------
+                                   1005 ;	89C51Board.c:140: void Hardware_RegisterForTimer(int cookie, int milliSeconds, CallbackDelegate callback) REENTRANT
+                                   1006 ;	-----------------------------------------
+                                   1007 ;	 function Hardware_RegisterForTimer
+                                   1008 ;	-----------------------------------------
+      0001D6                       1009 _Hardware_RegisterForTimer:
+      0001D6 C0*00            [24] 1010 	push	_bp
+      0001D8 85 81*00         [24] 1011 	mov	_bp,sp
+      0001DB C0 82            [24] 1012 	push	dpl
+      0001DD C0 83            [24] 1013 	push	dph
+      0001DF 05 81            [12] 1014 	inc	sp
+      0001E1 05 81            [12] 1015 	inc	sp
+                                   1016 ;	89C51Board.c:144: for (i = 0; i < MAX_TIMERS; ++i)
+      0001E3 7C 00            [12] 1017 	mov	r4,#0x00
+      0001E5 7D 00            [12] 1018 	mov	r5,#0x00
+      0001E7 7A 00            [12] 1019 	mov	r2,#0x00
+      0001E9 7B 00            [12] 1020 	mov	r3,#0x00
+      0001EB 7F 00            [12] 1021 	mov	r7,#0x00
+      0001ED 7E 00            [12] 1022 	mov	r6,#0x00
+      0001EF                       1023 00105$:
+                                   1024 ;	89C51Board.c:146: if (timers[i].cookie == 0 || timers[i].cookie == cookie)
+      0001EF EF               [12] 1025 	mov	a,r7
+      0001F0 24r12            [12] 1026 	add	a, #_timers
+      0001F2 F5 82            [12] 1027 	mov	dpl,a
+      0001F4 EE               [12] 1028 	mov	a,r6
+      0001F5 34s00            [12] 1029 	addc	a, #(_timers >> 8)
+      0001F7 F5 83            [12] 1030 	mov	dph,a
+      0001F9 E5*00            [12] 1031 	mov	a,_bp
+      0001FB 24 03            [12] 1032 	add	a,#0x03
+      0001FD F8               [12] 1033 	mov	r0,a
+      0001FE E0               [24] 1034 	movx	a,@dptr
+      0001FF F6               [12] 1035 	mov	@r0,a
+      000200 A3               [24] 1036 	inc	dptr
+      000201 E0               [24] 1037 	movx	a,@dptr
+      000202 08               [12] 1038 	inc	r0
+      000203 F6               [12] 1039 	mov	@r0,a
+      000204 E5*00            [12] 1040 	mov	a,_bp
+      000206 24 03            [12] 1041 	add	a,#0x03
+      000208 F8               [12] 1042 	mov	r0,a
+      000209 E6               [12] 1043 	mov	a,@r0
+      00020A 08               [12] 1044 	inc	r0
+      00020B 46               [12] 1045 	orl	a,@r0
+      00020C 60 1A            [24] 1046 	jz	00101$
+      00020E E5*00            [12] 1047 	mov	a,_bp
+      000210 24 03            [12] 1048 	add	a,#0x03
+      000212 F8               [12] 1049 	mov	r0,a
+      000213 A9*00            [24] 1050 	mov	r1,_bp
+      000215 09               [12] 1051 	inc	r1
+      000216 86 F0            [24] 1052 	mov	b,@r0
+      000218 E7               [12] 1053 	mov	a,@r1
+      000219 B5 F0 0A         [24] 1054 	cjne	a,b,00128$
+      00021C 08               [12] 1055 	inc	r0
+      00021D 86 F0            [24] 1056 	mov	b,@r0
+      00021F 09               [12] 1057 	inc	r1
+      000220 E7               [12] 1058 	mov	a,@r1
+      000221 B5 F0 02         [24] 1059 	cjne	a,b,00128$
+      000224 80 02            [24] 1060 	sjmp	00129$
+      000226                       1061 00128$:
+      000226 80 66            [24] 1062 	sjmp	00106$
+      000228                       1063 00129$:
+      000228                       1064 00101$:
+                                   1065 ;	89C51Board.c:148: timers[i].cookie = cookie;
+      000228 90r00r00         [24] 1066 	mov	dptr,#__mulint_PARM_2
+      00022B EC               [12] 1067 	mov	a,r4
+      00022C F0               [24] 1068 	movx	@dptr,a
+      00022D ED               [12] 1069 	mov	a,r5
+      00022E A3               [24] 1070 	inc	dptr
+      00022F F0               [24] 1071 	movx	@dptr,a
+      000230 90 00 09         [24] 1072 	mov	dptr,#0x0009
+      000233 12r00r00         [24] 1073 	lcall	__mulint
+      000236 AE 82            [24] 1074 	mov	r6, dpl
+      000238 AF 83            [24] 1075 	mov	r7, dph
+      00023A EE               [12] 1076 	mov	a,r6
+      00023B 24r12            [12] 1077 	add	a, #_timers
+      00023D FE               [12] 1078 	mov	r6,a
+      00023E EF               [12] 1079 	mov	a,r7
+      00023F 34s00            [12] 1080 	addc	a, #(_timers >> 8)
+      000241 FF               [12] 1081 	mov	r7,a
+      000242 8E 82            [24] 1082 	mov	dpl,r6
+      000244 8F 83            [24] 1083 	mov	dph,r7
+      000246 A8*00            [24] 1084 	mov	r0,_bp
+      000248 08               [12] 1085 	inc	r0
+      000249 E6               [12] 1086 	mov	a,@r0
+      00024A F0               [24] 1087 	movx	@dptr,a
+      00024B 08               [12] 1088 	inc	r0
+      00024C E6               [12] 1089 	mov	a,@r0
+      00024D A3               [24] 1090 	inc	dptr
+      00024E F0               [24] 1091 	movx	@dptr,a
+                                   1092 ;	89C51Board.c:149: timers[i].periodMilliseconds = milliSeconds;
+      00024F 8E 82            [24] 1093 	mov	dpl,r6
+      000251 8F 83            [24] 1094 	mov	dph,r7
+      000253 A3               [24] 1095 	inc	dptr
+      000254 A3               [24] 1096 	inc	dptr
+      000255 E5*00            [12] 1097 	mov	a,_bp
+      000257 24 FC            [12] 1098 	add	a,#0xfc
+      000259 F8               [12] 1099 	mov	r0,a
+      00025A E6               [12] 1100 	mov	a,@r0
+      00025B F0               [24] 1101 	movx	@dptr,a
+      00025C 08               [12] 1102 	inc	r0
+      00025D E6               [12] 1103 	mov	a,@r0
+      00025E A3               [24] 1104 	inc	dptr
+      00025F F0               [24] 1105 	movx	@dptr,a
+                                   1106 ;	89C51Board.c:150: timers[i].ticksSoFar = 0;
+      000260 8E 82            [24] 1107 	mov	dpl,r6
+      000262 8F 83            [24] 1108 	mov	dph,r7
+      000264 A3               [24] 1109 	inc	dptr
+      000265 A3               [24] 1110 	inc	dptr
+      000266 A3               [24] 1111 	inc	dptr
+      000267 A3               [24] 1112 	inc	dptr
+      000268 E4               [12] 1113 	clr	a
+      000269 F0               [24] 1114 	movx	@dptr,a
+      00026A A3               [24] 1115 	inc	dptr
+      00026B F0               [24] 1116 	movx	@dptr,a
+                                   1117 ;	89C51Board.c:151: timers[i].enabled = 1;
+      00026C 74 06            [12] 1118 	mov	a,#0x06
+      00026E 2E               [12] 1119 	add	a, r6
+      00026F F5 82            [12] 1120 	mov	dpl,a
+      000271 E4               [12] 1121 	clr	a
+      000272 3F               [12] 1122 	addc	a, r7
+      000273 F5 83            [12] 1123 	mov	dph,a
+      000275 74 01            [12] 1124 	mov	a,#0x01
+      000277 F0               [24] 1125 	movx	@dptr,a
+                                   1126 ;	89C51Board.c:152: timers[i].callback = callback;
+      000278 74 07            [12] 1127 	mov	a,#0x07
+      00027A 2E               [12] 1128 	add	a, r6
+      00027B F5 82            [12] 1129 	mov	dpl,a
+      00027D E4               [12] 1130 	clr	a
+      00027E 3F               [12] 1131 	addc	a, r7
+      00027F F5 83            [12] 1132 	mov	dph,a
+      000281 E5*00            [12] 1133 	mov	a,_bp
+      000283 24 FA            [12] 1134 	add	a,#0xfa
+      000285 F8               [12] 1135 	mov	r0,a
+      000286 E6               [12] 1136 	mov	a,@r0
+      000287 F0               [24] 1137 	movx	@dptr,a
+      000288 08               [12] 1138 	inc	r0
+      000289 E6               [12] 1139 	mov	a,@r0
+      00028A A3               [24] 1140 	inc	dptr
+      00028B F0               [24] 1141 	movx	@dptr,a
+                                   1142 ;	89C51Board.c:153: return;
+      00028C 80 34            [24] 1143 	sjmp	00107$
+      00028E                       1144 00106$:
+                                   1145 ;	89C51Board.c:144: for (i = 0; i < MAX_TIMERS; ++i)
+      00028E 74 09            [12] 1146 	mov	a,#0x09
+      000290 2F               [12] 1147 	add	a, r7
+      000291 FF               [12] 1148 	mov	r7,a
+      000292 E4               [12] 1149 	clr	a
+      000293 3E               [12] 1150 	addc	a, r6
+      000294 FE               [12] 1151 	mov	r6,a
+      000295 0A               [12] 1152 	inc	r2
+      000296 BA 00 01         [24] 1153 	cjne	r2,#0x00,00130$
+      000299 0B               [12] 1154 	inc	r3
+      00029A                       1155 00130$:
+      00029A 8A 04            [24] 1156 	mov	ar4,r2
+      00029C 8B 05            [24] 1157 	mov	ar5,r3
+      00029E C3               [12] 1158 	clr	c
+      00029F EA               [12] 1159 	mov	a,r2
+      0002A0 94 0A            [12] 1160 	subb	a,#0x0a
+      0002A2 EB               [12] 1161 	mov	a,r3
+      0002A3 64 80            [12] 1162 	xrl	a,#0x80
+      0002A5 94 80            [12] 1163 	subb	a,#0x80
+      0002A7 50 03            [24] 1164 	jnc	00131$
+      0002A9 02r01rEF         [24] 1165 	ljmp	00105$
+      0002AC                       1166 00131$:
+                                   1167 ;	89C51Board.c:157: pCrashDump("OutOfTimers");
+      0002AC 12r02rB1         [24] 1168 	lcall	00132$
+      0002AF 80 11            [24] 1169 	sjmp	00133$
+      0002B1                       1170 00132$:
+      0002B1 90r00r10         [24] 1171 	mov	dptr,#_pCrashDump
+      0002B4 E0               [24] 1172 	movx	a,@dptr
+      0002B5 C0 E0            [24] 1173 	push	acc
+      0002B7 A3               [24] 1174 	inc	dptr
+      0002B8 E0               [24] 1175 	movx	a,@dptr
+      0002B9 C0 E0            [24] 1176 	push	acc
+      0002BB 90r00r00         [24] 1177 	mov	dptr,#___str_0
+      0002BE 75 F0 80         [24] 1178 	mov	b, #0x80
+      0002C1 22               [24] 1179 	ret
+      0002C2                       1180 00133$:
+      0002C2                       1181 00107$:
+                                   1182 ;	89C51Board.c:159: }
+      0002C2 85*00 81         [24] 1183 	mov	sp,_bp
+      0002C5 D0*00            [24] 1184 	pop	_bp
+      0002C7 22               [24] 1185 	ret
+                                   1186 ;------------------------------------------------------------
+                                   1187 ;Allocation info for local variables in function 'Hardware_EnableTimer'
+                                   1188 ;------------------------------------------------------------
+                                   1189 ;enabled       Allocated to stack - _bp -4 +2 
+                                   1190 ;cookie        Allocated to registers r6 r7 
+                                   1191 ;i             Allocated to registers r4 r5 
+                                   1192 ;sloc0         Allocated to stack - _bp +1 +2 
+                                   1193 ;sloc1         Allocated to stack - _bp +3 +2 
+                                   1194 ;sloc2         Allocated to stack - _bp +9 +1 
+                                   1195 ;------------------------------------------------------------
+                                   1196 ;	89C51Board.c:162: void Hardware_EnableTimer(int cookie, int enabled) REENTRANT
+                                   1197 ;	-----------------------------------------
+                                   1198 ;	 function Hardware_EnableTimer
+                                   1199 ;	-----------------------------------------
+      0002C8                       1200 _Hardware_EnableTimer:
+      0002C8 C0*00            [24] 1201 	push	_bp
+      0002CA E5 81            [12] 1202 	mov	a,sp
+      0002CC F5*00            [12] 1203 	mov	_bp,a
+      0002CE 24 04            [12] 1204 	add	a,#0x04
+      0002D0 F5 81            [12] 1205 	mov	sp,a
+      0002D2 AE 82            [24] 1206 	mov	r6, dpl
+      0002D4 AF 83            [24] 1207 	mov	r7, dph
+                                   1208 ;	89C51Board.c:165: for (i = 0; i < MAX_TIMERS; ++i)
+      0002D6 7C 00            [12] 1209 	mov	r4,#0x00
+      0002D8 7D 00            [12] 1210 	mov	r5,#0x00
+      0002DA 7A 00            [12] 1211 	mov	r2,#0x00
+      0002DC 7B 00            [12] 1212 	mov	r3,#0x00
+      0002DE A8*00            [24] 1213 	mov	r0,_bp
+      0002E0 08               [12] 1214 	inc	r0
+      0002E1 E4               [12] 1215 	clr	a
+      0002E2 F6               [12] 1216 	mov	@r0,a
+      0002E3 08               [12] 1217 	inc	r0
+      0002E4 F6               [12] 1218 	mov	@r0,a
+      0002E5                       1219 00105$:
+                                   1220 ;	89C51Board.c:167: if (timers[i].cookie == 0 || timers[i].cookie == cookie)
+      0002E5 A8*00            [24] 1221 	mov	r0,_bp
+      0002E7 08               [12] 1222 	inc	r0
+      0002E8 E6               [12] 1223 	mov	a,@r0
+      0002E9 24r12            [12] 1224 	add	a, #_timers
+      0002EB F5 82            [12] 1225 	mov	dpl,a
+      0002ED 08               [12] 1226 	inc	r0
+      0002EE E6               [12] 1227 	mov	a,@r0
+      0002EF 34s00            [12] 1228 	addc	a, #(_timers >> 8)
+      0002F1 F5 83            [12] 1229 	mov	dph,a
+      0002F3 E5*00            [12] 1230 	mov	a,_bp
+      0002F5 24 03            [12] 1231 	add	a,#0x03
+      0002F7 F8               [12] 1232 	mov	r0,a
+      0002F8 E0               [24] 1233 	movx	a,@dptr
+      0002F9 F6               [12] 1234 	mov	@r0,a
+      0002FA A3               [24] 1235 	inc	dptr
+      0002FB E0               [24] 1236 	movx	a,@dptr
+      0002FC 08               [12] 1237 	inc	r0
+      0002FD F6               [12] 1238 	mov	@r0,a
+      0002FE E5*00            [12] 1239 	mov	a,_bp
+      000300 24 03            [12] 1240 	add	a,#0x03
+      000302 F8               [12] 1241 	mov	r0,a
+      000303 E6               [12] 1242 	mov	a,@r0
+      000304 08               [12] 1243 	inc	r0
+      000305 46               [12] 1244 	orl	a,@r0
+      000306 60 12            [24] 1245 	jz	00101$
+      000308 E5*00            [12] 1246 	mov	a,_bp
+      00030A 24 03            [12] 1247 	add	a,#0x03
+      00030C F8               [12] 1248 	mov	r0,a
+      00030D E6               [12] 1249 	mov	a,@r0
+      00030E B5 06 07         [24] 1250 	cjne	a,ar6,00122$
+      000311 08               [12] 1251 	inc	r0
+      000312 E6               [12] 1252 	mov	a,@r0
+      000313 B5 07 02         [24] 1253 	cjne	a,ar7,00122$
+      000316 80 02            [24] 1254 	sjmp	00123$
+      000318                       1255 00122$:
+      000318 80 30            [24] 1256 	sjmp	00106$
+      00031A                       1257 00123$:
+      00031A                       1258 00101$:
+                                   1259 ;	89C51Board.c:169: timers[i].enabled = enabled;
+      00031A 90r00r00         [24] 1260 	mov	dptr,#__mulint_PARM_2
+      00031D EC               [12] 1261 	mov	a,r4
+      00031E F0               [24] 1262 	movx	@dptr,a
+      00031F ED               [12] 1263 	mov	a,r5
+      000320 A3               [24] 1264 	inc	dptr
+      000321 F0               [24] 1265 	movx	@dptr,a
+      000322 90 00 09         [24] 1266 	mov	dptr,#0x0009
+      000325 12r00r00         [24] 1267 	lcall	__mulint
+      000328 AF 82            [24] 1268 	mov	r7, dpl
+      00032A AE 83            [24] 1269 	mov	r6, dph
+      00032C EF               [12] 1270 	mov	a,r7
+      00032D 24r12            [12] 1271 	add	a, #_timers
+      00032F FF               [12] 1272 	mov	r7,a
+      000330 EE               [12] 1273 	mov	a,r6
+      000331 34s00            [12] 1274 	addc	a, #(_timers >> 8)
+      000333 FE               [12] 1275 	mov	r6,a
+      000334 74 06            [12] 1276 	mov	a,#0x06
+      000336 2F               [12] 1277 	add	a, r7
+      000337 FF               [12] 1278 	mov	r7,a
+      000338 E4               [12] 1279 	clr	a
+      000339 3E               [12] 1280 	addc	a, r6
+      00033A FE               [12] 1281 	mov	r6,a
+      00033B E5*00            [12] 1282 	mov	a,_bp
+      00033D 24 FC            [12] 1283 	add	a,#0xfc
+      00033F F8               [12] 1284 	mov	r0,a
+      000340 86 05            [24] 1285 	mov	ar5,@r0
+      000342 8F 82            [24] 1286 	mov	dpl,r7
+      000344 8E 83            [24] 1287 	mov	dph,r6
+      000346 ED               [12] 1288 	mov	a,r5
+      000347 F0               [24] 1289 	movx	@dptr,a
+                                   1290 ;	89C51Board.c:170: return;
+      000348 80 22            [24] 1291 	sjmp	00107$
+      00034A                       1292 00106$:
+                                   1293 ;	89C51Board.c:165: for (i = 0; i < MAX_TIMERS; ++i)
+      00034A A8*00            [24] 1294 	mov	r0,_bp
+      00034C 08               [12] 1295 	inc	r0
+      00034D 74 09            [12] 1296 	mov	a,#0x09
+      00034F 26               [12] 1297 	add	a, @r0
+      000350 F6               [12] 1298 	mov	@r0,a
+      000351 E4               [12] 1299 	clr	a
+      000352 08               [12] 1300 	inc	r0
+      000353 36               [12] 1301 	addc	a, @r0
+      000354 F6               [12] 1302 	mov	@r0,a
+      000355 0A               [12] 1303 	inc	r2
+      000356 BA 00 01         [24] 1304 	cjne	r2,#0x00,00124$
+      000359 0B               [12] 1305 	inc	r3
+      00035A                       1306 00124$:
+      00035A 8A 04            [24] 1307 	mov	ar4,r2
+      00035C 8B 05            [24] 1308 	mov	ar5,r3
+      00035E C3               [12] 1309 	clr	c
+      00035F EA               [12] 1310 	mov	a,r2
+      000360 94 0A            [12] 1311 	subb	a,#0x0a
+      000362 EB               [12] 1312 	mov	a,r3
+      000363 64 80            [12] 1313 	xrl	a,#0x80
+      000365 94 80            [12] 1314 	subb	a,#0x80
+      000367 50 03            [24] 1315 	jnc	00125$
+      000369 02r02rE5         [24] 1316 	ljmp	00105$
+      00036C                       1317 00125$:
+      00036C                       1318 00107$:
+                                   1319 ;	89C51Board.c:173: }
+      00036C 85*00 81         [24] 1320 	mov	sp,_bp
+      00036F D0*00            [24] 1321 	pop	_bp
+      000371 22               [24] 1322 	ret
+                                   1323 ;------------------------------------------------------------
+                                   1324 ;Allocation info for local variables in function 'Hardware_WriteDisplayBuffer'
+                                   1325 ;------------------------------------------------------------
+                                   1326 ;buffer        Allocated to registers r5 r6 r7 
+                                   1327 ;------------------------------------------------------------
+                                   1328 ;	89C51Board.c:176: void Hardware_WriteDisplayBuffer(unsigned char* buffer) REENTRANT
+                                   1329 ;	-----------------------------------------
+                                   1330 ;	 function Hardware_WriteDisplayBuffer
+                                   1331 ;	-----------------------------------------
+      000372                       1332 _Hardware_WriteDisplayBuffer:
+                                   1333 ;	89C51Board.c:178: DirectWriteToDisplay(buffer);
+                                   1334 ;	89C51Board.c:179: }
+      000372 02r00r00         [24] 1335 	ljmp	_DirectWriteToDisplay
+                                   1336 ;------------------------------------------------------------
+                                   1337 ;Allocation info for local variables in function 'Hardware_SetRtc'
+                                   1338 ;------------------------------------------------------------
+                                   1339 ;dts           Allocated to registers r5 r6 r7 
+                                   1340 ;------------------------------------------------------------
+                                   1341 ;	89C51Board.c:181: void Hardware_SetRtc(DateTimeStruct* dts) REENTRANT
+                                   1342 ;	-----------------------------------------
+                                   1343 ;	 function Hardware_SetRtc
+                                   1344 ;	-----------------------------------------
+      000375                       1345 _Hardware_SetRtc:
+                                   1346 ;	89C51Board.c:183: Rtc_WriteClock(dts);
+                                   1347 ;	89C51Board.c:184: }
+      000375 02r00r00         [24] 1348 	ljmp	_Rtc_WriteClock
+                                   1349 ;------------------------------------------------------------
+                                   1350 ;Allocation info for local variables in function 'Hardware_GetRtc'
+                                   1351 ;------------------------------------------------------------
+                                   1352 ;dts           Allocated to registers r5 r6 r7 
+                                   1353 ;------------------------------------------------------------
+                                   1354 ;	89C51Board.c:186: void Hardware_GetRtc(DateTimeStruct* dts) REENTRANT
+                                   1355 ;	-----------------------------------------
+                                   1356 ;	 function Hardware_GetRtc
+                                   1357 ;	-----------------------------------------
+      000378                       1358 _Hardware_GetRtc:
+                                   1359 ;	89C51Board.c:188: Rtc_ReadClock(dts);
+                                   1360 ;	89C51Board.c:189: }
+      000378 02r00r00         [24] 1361 	ljmp	_Rtc_ReadClock
+                                   1362 ;------------------------------------------------------------
+                                   1363 ;Allocation info for local variables in function 'Hardware_GetKeyState'
+                                   1364 ;------------------------------------------------------------
+                                   1365 ;keys          Allocated to stack - _bp +1 +3 
+                                   1366 ;rowCount      Allocated to registers r4 
+                                   1367 ;colCount      Allocated to stack - _bp +4 +1 
+                                   1368 ;portValue     Allocated to registers 
+                                   1369 ;sloc0         Allocated to stack - _bp +4 +1 
+                                   1370 ;------------------------------------------------------------
+                                   1371 ;	89C51Board.c:191: void Hardware_GetKeyState(int *keys) REENTRANT
+                                   1372 ;	-----------------------------------------
+                                   1373 ;	 function Hardware_GetKeyState
+                                   1374 ;	-----------------------------------------
+      00037B                       1375 _Hardware_GetKeyState:
+      00037B C0*00            [24] 1376 	push	_bp
+      00037D 85 81*00         [24] 1377 	mov	_bp,sp
+      000380 C0 82            [24] 1378 	push	dpl
+      000382 C0 83            [24] 1379 	push	dph
+      000384 C0 F0            [24] 1380 	push	b
+      000386 05 81            [12] 1381 	inc	sp
+                                   1382 ;	89C51Board.c:195: *keys = 0;
+      000388 A8*00            [24] 1383 	mov	r0,_bp
+      00038A 08               [12] 1384 	inc	r0
+      00038B 86 82            [24] 1385 	mov	dpl,@r0
+      00038D 08               [12] 1386 	inc	r0
+      00038E 86 83            [24] 1387 	mov	dph,@r0
+      000390 08               [12] 1388 	inc	r0
+      000391 86 F0            [24] 1389 	mov	b,@r0
+      000393 E4               [12] 1390 	clr	a
+      000394 12r00r00         [24] 1391 	lcall	__gptrput
+      000397 A3               [24] 1392 	inc	dptr
+      000398 12r00r00         [24] 1393 	lcall	__gptrput
+                                   1394 ;	89C51Board.c:197: for (rowCount = 0; rowCount < 4; ++rowCount)
+      00039B FC               [12] 1395 	mov	r4,a
+      00039C FB               [12] 1396 	mov	r3,a
+      00039D                       1397 00107$:
+                                   1398 ;	89C51Board.c:199: P1 = ~(0x80 >> rowCount) | 0xf;
+      00039D C0 04            [24] 1399 	push	ar4
+      00039F 8B F0            [24] 1400 	mov	b,r3
+      0003A1 05 F0            [12] 1401 	inc	b
+      0003A3 7A 80            [12] 1402 	mov	r2,#0x80
+      0003A5 E4               [12] 1403 	clr	a
+      0003A6 FC               [12] 1404 	mov	r4,a
+      0003A7 33               [12] 1405 	rlc	a
+      0003A8 92 D2            [24] 1406 	mov	ov,c
+      0003AA 80 08            [24] 1407 	sjmp	00136$
+      0003AC                       1408 00135$:
+      0003AC A2 D2            [12] 1409 	mov	c,ov
+      0003AE EC               [12] 1410 	mov	a,r4
+      0003AF 13               [12] 1411 	rrc	a
+      0003B0 FC               [12] 1412 	mov	r4,a
+      0003B1 EA               [12] 1413 	mov	a,r2
+      0003B2 13               [12] 1414 	rrc	a
+      0003B3 FA               [12] 1415 	mov	r2,a
+      0003B4                       1416 00136$:
+      0003B4 D5 F0 F5         [24] 1417 	djnz	b,00135$
+      0003B7 EA               [12] 1418 	mov	a,r2
+      0003B8 F4               [12] 1419 	cpl	a
+      0003B9 FA               [12] 1420 	mov	r2,a
+      0003BA 74 0F            [12] 1421 	mov	a,#0x0f
+      0003BC 4A               [12] 1422 	orl	a,r2
+      0003BD F5 90            [12] 1423 	mov	_P1,a
+                                   1424 ;	89C51Board.c:200: for (colCount = 0; colCount < 4; ++colCount)
+      0003BF E5*00            [12] 1425 	mov	a,_bp
+      0003C1 24 04            [12] 1426 	add	a,#0x04
+      0003C3 F8               [12] 1427 	mov	r0,a
+      0003C4 76 00            [12] 1428 	mov	@r0,#0x00
+      0003C6 7F 00            [12] 1429 	mov	r7,#0x00
+                                   1430 ;	89C51Board.c:197: for (rowCount = 0; rowCount < 4; ++rowCount)
+      0003C8 D0 04            [24] 1431 	pop	ar4
+                                   1432 ;	89C51Board.c:200: for (colCount = 0; colCount < 4; ++colCount)
+      0003CA                       1433 00105$:
+                                   1434 ;	89C51Board.c:202: portValue = ~P1 & (0x01 << colCount);
+      0003CA C0 04            [24] 1435 	push	ar4
+      0003CC E5 90            [12] 1436 	mov	a,_P1
+      0003CE F4               [12] 1437 	cpl	a
+      0003CF FA               [12] 1438 	mov	r2,a
+      0003D0 8F F0            [24] 1439 	mov	b,r7
+      0003D2 05 F0            [12] 1440 	inc	b
+      0003D4 74 01            [12] 1441 	mov	a,#0x01
+      0003D6 80 02            [24] 1442 	sjmp	00138$
+      0003D8                       1443 00137$:
+      0003D8 25 E0            [12] 1444 	add	a,acc
+      0003DA                       1445 00138$:
+      0003DA D5 F0 FB         [24] 1446 	djnz	b,00137$
+      0003DD 5A               [12] 1447 	anl	a,r2
+                                   1448 ;	89C51Board.c:203: if (portValue)
+      0003DE D0 04            [24] 1449 	pop	ar4
+      0003E0 60 3A            [24] 1450 	jz	00106$
+                                   1451 ;	89C51Board.c:205: *keys = rowCount * 4 + colCount + 1;
+      0003E2 8C 02            [24] 1452 	mov	ar2,r4
+      0003E4 7F 00            [12] 1453 	mov	r7,#0x00
+      0003E6 EA               [12] 1454 	mov	a,r2
+      0003E7 2A               [12] 1455 	add	a,r2
+      0003E8 FA               [12] 1456 	mov	r2,a
+      0003E9 EF               [12] 1457 	mov	a,r7
+      0003EA 33               [12] 1458 	rlc	a
+      0003EB FF               [12] 1459 	mov	r7,a
+      0003EC EA               [12] 1460 	mov	a,r2
+      0003ED 2A               [12] 1461 	add	a,r2
+      0003EE FA               [12] 1462 	mov	r2,a
+      0003EF EF               [12] 1463 	mov	a,r7
+      0003F0 33               [12] 1464 	rlc	a
+      0003F1 FF               [12] 1465 	mov	r7,a
+      0003F2 E5*00            [12] 1466 	mov	a,_bp
+      0003F4 24 04            [12] 1467 	add	a,#0x04
+      0003F6 F8               [12] 1468 	mov	r0,a
+      0003F7 86 05            [24] 1469 	mov	ar5,@r0
+      0003F9 7E 00            [12] 1470 	mov	r6,#0x00
+      0003FB ED               [12] 1471 	mov	a,r5
+      0003FC 2A               [12] 1472 	add	a, r2
+      0003FD FA               [12] 1473 	mov	r2,a
+      0003FE EE               [12] 1474 	mov	a,r6
+      0003FF 3F               [12] 1475 	addc	a, r7
+      000400 FF               [12] 1476 	mov	r7,a
+      000401 0A               [12] 1477 	inc	r2
+      000402 BA 00 01         [24] 1478 	cjne	r2,#0x00,00140$
+      000405 0F               [12] 1479 	inc	r7
+      000406                       1480 00140$:
+      000406 A8*00            [24] 1481 	mov	r0,_bp
+      000408 08               [12] 1482 	inc	r0
+      000409 86 82            [24] 1483 	mov	dpl,@r0
+      00040B 08               [12] 1484 	inc	r0
+      00040C 86 83            [24] 1485 	mov	dph,@r0
+      00040E 08               [12] 1486 	inc	r0
+      00040F 86 F0            [24] 1487 	mov	b,@r0
+      000411 EA               [12] 1488 	mov	a,r2
+      000412 12r00r00         [24] 1489 	lcall	__gptrput
+      000415 A3               [24] 1490 	inc	dptr
+      000416 EF               [12] 1491 	mov	a,r7
+      000417 12r00r00         [24] 1492 	lcall	__gptrput
+                                   1493 ;	89C51Board.c:206: return;
+      00041A 80 18            [24] 1494 	sjmp	00109$
+      00041C                       1495 00106$:
+                                   1496 ;	89C51Board.c:200: for (colCount = 0; colCount < 4; ++colCount)
+      00041C 0F               [12] 1497 	inc	r7
+      00041D E5*00            [12] 1498 	mov	a,_bp
+      00041F 24 04            [12] 1499 	add	a,#0x04
+      000421 F8               [12] 1500 	mov	r0,a
+      000422 A6 07            [24] 1501 	mov	@r0,ar7
+      000424 BF 04 00         [24] 1502 	cjne	r7,#0x04,00141$
+      000427                       1503 00141$:
+      000427 40 A1            [24] 1504 	jc	00105$
+                                   1505 ;	89C51Board.c:197: for (rowCount = 0; rowCount < 4; ++rowCount)
+      000429 0B               [12] 1506 	inc	r3
+      00042A 8B 04            [24] 1507 	mov	ar4,r3
+      00042C BB 04 00         [24] 1508 	cjne	r3,#0x04,00143$
+      00042F                       1509 00143$:
+      00042F 50 03            [24] 1510 	jnc	00144$
+      000431 02r03r9D         [24] 1511 	ljmp	00107$
+      000434                       1512 00144$:
+      000434                       1513 00109$:
+                                   1514 ;	89C51Board.c:211: }
+      000434 85*00 81         [24] 1515 	mov	sp,_bp
+      000437 D0*00            [24] 1516 	pop	_bp
+      000439 22               [24] 1517 	ret
+                                   1518 ;------------------------------------------------------------
+                                   1519 ;Allocation info for local variables in function 'Hardware_GetInputPortValues'
+                                   1520 ;------------------------------------------------------------
+                                   1521 ;pValue        Allocated to registers r5 r6 r7 
+                                   1522 ;------------------------------------------------------------
+                                   1523 ;	89C51Board.c:214: void Hardware_GetInputPortValues(unsigned char *pValue) REENTRANT
+                                   1524 ;	-----------------------------------------
+                                   1525 ;	 function Hardware_GetInputPortValues
+                                   1526 ;	-----------------------------------------
+      00043A                       1527 _Hardware_GetInputPortValues:
+      00043A AD 82            [24] 1528 	mov	r5, dpl
+      00043C AE 83            [24] 1529 	mov	r6, dph
+      00043E AF F0            [24] 1530 	mov	r7, b
+                                   1531 ;	89C51Board.c:216: P3 = 0xfC;
+      000440 75 B0 FC         [24] 1532 	mov	_P3,#0xfc
+                                   1533 ;	89C51Board.c:217: *pValue = P3 & 0x3C;
+      000443 AC B0            [24] 1534 	mov	r4,_P3
+      000445 53 04 3C         [24] 1535 	anl	ar4,#0x3c
+      000448 8D 82            [24] 1536 	mov	dpl,r5
+      00044A 8E 83            [24] 1537 	mov	dph,r6
+      00044C 8F F0            [24] 1538 	mov	b,r7
+                                   1539 ;	89C51Board.c:218: *pValue = ~ (*pValue); // This hardware has logic 1 as pulled down
+      00044E EC               [12] 1540 	mov	a,r4
+      00044F 12r00r00         [24] 1541 	lcall	__gptrput
+      000452 F4               [12] 1542 	cpl	a
+      000453 FC               [12] 1543 	mov	r4,a
+      000454 8D 82            [24] 1544 	mov	dpl,r5
+      000456 8E 83            [24] 1545 	mov	dph,r6
+      000458 8F F0            [24] 1546 	mov	b,r7
+      00045A 12r00r00         [24] 1547 	lcall	__gptrput
+                                   1548 ;	89C51Board.c:219: *pValue &= ~ (0x40); // Do not use zone5
+      00045D 53 04 BF         [24] 1549 	anl	ar4,#0xbf
+      000460 8D 82            [24] 1550 	mov	dpl,r5
+      000462 8E 83            [24] 1551 	mov	dph,r6
+      000464 8F F0            [24] 1552 	mov	b,r7
+      000466 EC               [12] 1553 	mov	a,r4
+                                   1554 ;	89C51Board.c:221: }
+      000467 02r00r00         [24] 1555 	ljmp	__gptrput
+                                   1556 ;------------------------------------------------------------
+                                   1557 ;Allocation info for local variables in function 'Hardware_SetOutputPortValues'
+                                   1558 ;------------------------------------------------------------
+                                   1559 ;value         Allocated to registers 
+                                   1560 ;------------------------------------------------------------
+                                   1561 ;	89C51Board.c:223: void Hardware_SetOutputPortValues(unsigned char value) REENTRANT
+                                   1562 ;	-----------------------------------------
+                                   1563 ;	 function Hardware_SetOutputPortValues
+                                   1564 ;	-----------------------------------------
+      00046A                       1565 _Hardware_SetOutputPortValues:
+      00046A 85 82 A0         [24] 1566 	mov	_P2,dpl
+                                   1567 ;	89C51Board.c:225: P2 = value;	
+                                   1568 ;	89C51Board.c:226: }
+      00046D 22               [24] 1569 	ret
+                                   1570 ;------------------------------------------------------------
+                                   1571 ;Allocation info for local variables in function 'Hardware_CrashDump'
+                                   1572 ;------------------------------------------------------------
+                                   1573 ;message       Allocated to registers 
+                                   1574 ;buffer        Allocated to stack - _bp +2 +33 
+                                   1575 ;i             Allocated to registers r2 
+                                   1576 ;sloc0         Allocated to stack - _bp +1 +1 
+                                   1577 ;------------------------------------------------------------
+                                   1578 ;	89C51Board.c:228: void Hardware_CrashDump(unsigned char* message) REENTRANT
+                                   1579 ;	-----------------------------------------
+                                   1580 ;	 function Hardware_CrashDump
+                                   1581 ;	-----------------------------------------
+      00046E                       1582 _Hardware_CrashDump:
+      00046E C0*00            [24] 1583 	push	_bp
+      000470 E5 81            [12] 1584 	mov	a,sp
+      000472 F5*00            [12] 1585 	mov	_bp,a
+      000474 24 22            [12] 1586 	add	a,#0x22
+      000476 F5 81            [12] 1587 	mov	sp,a
+      000478 AD 82            [24] 1588 	mov	r5, dpl
+      00047A AE 83            [24] 1589 	mov	r6, dph
+      00047C AF F0            [24] 1590 	mov	r7, b
+                                   1591 ;	89C51Board.c:232: for (i = 0; i < SCREEN_BUFFER_SIZE; ++i)
+      00047E E5*00            [12] 1592 	mov	a,_bp
+      000480 24 02            [12] 1593 	add	a,#0x02
+      000482 FC               [12] 1594 	mov	r4,a
+      000483 FB               [12] 1595 	mov	r3,a
+      000484 7A 00            [12] 1596 	mov	r2,#0x00
+      000486                       1597 00108$:
+                                   1598 ;	89C51Board.c:234: if (*message != 0)
+      000486 8D 82            [24] 1599 	mov	dpl,r5
+      000488 8E 83            [24] 1600 	mov	dph,r6
+      00048A 8F F0            [24] 1601 	mov	b,r7
+      00048C A8*00            [24] 1602 	mov	r0,_bp
+      00048E 08               [12] 1603 	inc	r0
+      00048F 12r00r00         [24] 1604 	lcall	__gptrget
+      000492 F6               [12] 1605 	mov	@r0,a
+      000493 A8*00            [24] 1606 	mov	r0,_bp
+      000495 08               [12] 1607 	inc	r0
+      000496 E6               [12] 1608 	mov	a,@r0
+      000497 60 0F            [24] 1609 	jz	00102$
+                                   1610 ;	89C51Board.c:236: buffer[i] = *message;
+      000499 EA               [12] 1611 	mov	a,r2
+      00049A 2B               [12] 1612 	add	a, r3
+      00049B F8               [12] 1613 	mov	r0,a
+      00049C A9*00            [24] 1614 	mov	r1,_bp
+      00049E 09               [12] 1615 	inc	r1
+      00049F E7               [12] 1616 	mov	a,@r1
+      0004A0 F6               [12] 1617 	mov	@r0,a
+                                   1618 ;	89C51Board.c:237: ++message;
+      0004A1 0D               [12] 1619 	inc	r5
+      0004A2 BD 00 08         [24] 1620 	cjne	r5,#0x00,00109$
+      0004A5 0E               [12] 1621 	inc	r6
+      0004A6 80 05            [24] 1622 	sjmp	00109$
+      0004A8                       1623 00102$:
+                                   1624 ;	89C51Board.c:241: buffer[i] = ' ';
+      0004A8 EA               [12] 1625 	mov	a,r2
+      0004A9 2C               [12] 1626 	add	a, r4
+      0004AA F8               [12] 1627 	mov	r0,a
+      0004AB 76 20            [12] 1628 	mov	@r0,#0x20
+      0004AD                       1629 00109$:
+                                   1630 ;	89C51Board.c:232: for (i = 0; i < SCREEN_BUFFER_SIZE; ++i)
+      0004AD 0A               [12] 1631 	inc	r2
+      0004AE BA 20 00         [24] 1632 	cjne	r2,#0x20,00139$
+      0004B1                       1633 00139$:
+      0004B1 40 D3            [24] 1634 	jc	00108$
+                                   1635 ;	89C51Board.c:246: DirectWriteToDisplay(buffer);
+      0004B3 7F 00            [12] 1636 	mov	r7,#0x00
+      0004B5 7E 40            [12] 1637 	mov	r6,#0x40
+      0004B7 8C 82            [24] 1638 	mov	dpl, r4
+      0004B9 8F 83            [24] 1639 	mov	dph, r7
+      0004BB 8E F0            [24] 1640 	mov	b, r6
+      0004BD 12r00r00         [24] 1641 	lcall	_DirectWriteToDisplay
+                                   1642 ;	89C51Board.c:247: while (1);
+      0004C0                       1643 00106$:
+      0004C0 80 FE            [24] 1644 	sjmp	00106$
+                                   1645 ;	89C51Board.c:249: }
+      0004C2 85*00 81         [24] 1646 	mov	sp,_bp
+      0004C5 D0*00            [24] 1647 	pop	_bp
+      0004C7 22               [24] 1648 	ret
+                                   1649 	.area CSEG    (CODE)
+                                   1650 	.area CONST   (CODE)
+                                   1651 	.area CONST   (CODE)
+      000000                       1652 ___str_0:
+      000000 4F 75 74 4F 66 54 69  1653 	.ascii "OutOfTimers"
              6D 65 72 73
-      00000B 00                    1713 	.db 0x00
-                                   1714 	.area CSEG    (CODE)
-                                   1715 	.area XINIT   (CODE)
-                                   1716 	.area CABS    (ABS,CODE)
+      00000B 00                    1654 	.db 0x00
+                                   1655 	.area CSEG    (CODE)
+                                   1656 	.area XINIT   (CODE)
+                                   1657 	.area CABS    (ABS,CODE)

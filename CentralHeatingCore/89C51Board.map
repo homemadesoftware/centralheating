@@ -1,4 +1,4 @@
-ASxxxx Linker V03.00 + NoICE + sdld,  page 1.
+ASxxxx Linker V03.00/V05.40 + sdld,  page 1.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
@@ -8,8 +8,6 @@ CABS                                00000000    00000000 =           0. bytes (A
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
 C:   00000000  l_BIT_BANK                      
-C:   00000000  l_BSEG                          
-C:   00000000  l_BSEG_BYTES                    
 C:   00000000  l_CABS                          
 C:   00000000  l_GSINIT                        
 C:   00000000  l_GSINIT1                       
@@ -38,26 +36,28 @@ C:   00000000  s_RSEG
 C:   00000000  s_RSEG0                         
 C:   00000000  s_RSEG1                         
 C:   00000000  s_XABS                          
+C:   00000001  l_BSEG                          
+C:   00000001  l_BSEG_BYTES                    
 C:   00000001  s_PSEG                          
 C:   00000001  s_XSEG                          
 C:   00000003  l_GSFINAL                       
 C:   00000003  l_GSINIT0                       
-C:   00000006  l_HOME                          
-C:   00000006  s_GSINIT0                       
 C:   00000008  l_REG_BANK_0                    
 C:   00000008  s_REG_BANK_1                    
-C:   00000009  s_GSINIT1                       
-C:   00000009  s_GSINIT2                       
 C:   0000000A  l_GSINIT2                       
 C:   0000000E  l_OSEG                          
 C:   00000010  s_REG_BANK_2                    
-C:   00000013  s_GSINIT3                       
 C:   00000018  s_BIT_BANK                      
 C:   00000018  s_REG_BANK_3                    
 C:   00000020  s_BSEG_BYTES                    
 C:   00000020  s__CODE                         
 C:   00000022  l_GSINIT3                       
-ASxxxx Linker V03.00 + NoICE + sdld,  page 2.
+C:   0000002A  l_GSINIT4                       
+C:   00000036  l_SSEG                          
+C:   0000003C  s_OSEG                          
+C:   0000004A  s_SSEG                          
+C:   0000004C  l_HOME                          
+ASxxxx Linker V03.00/V05.40 + sdld,  page 2.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
@@ -66,25 +66,25 @@ CABS                                00000000    00000000 =           0. bytes (A
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   00000024  l_SSEG                          
-C:   0000002A  l_GSINIT4                       
-C:   00000035  s_GSINIT4                       
-C:   0000004E  s_OSEG                          
-C:   0000005C  s_SSEG                          
-C:   0000005F  s_GSFINAL                       
-C:   0000005F  s_GSINIT                        
-C:   0000005F  s_GSINIT5                       
-C:   00000062  s_CSEG                          
-C:   00000080  l_DSEG                          
+C:   0000004C  s_GSINIT0                       
+C:   0000004F  s_GSINIT1                       
+C:   0000004F  s_GSINIT2                       
+C:   00000059  s_GSINIT3                       
+C:   0000007B  s_GSINIT4                       
+C:   0000007F  l_DSEG                          
 C:   00000080  l_IRAM                          
+C:   000000A5  s_GSFINAL                       
+C:   000000A5  s_GSINIT                        
+C:   000000A5  s_GSINIT5                       
+C:   000000A8  s_CSEG                          
 C:   0000014A  l_CONST                         
-C:   000002CB  l_XSEG                          
-C:   000002CC  s_XISEG                         
-C:   00003DA6  l_CSEG                          
-C:   00003E08  s_CONST                         
-C:   00003F52  s_XINIT                         
+C:   000002C7  l_XSEG                          
+C:   000002C8  s_XISEG                         
+C:   00003A2D  l_CSEG                          
+C:   00003AD5  s_CONST                         
+C:   00003C1F  s_XINIT                         
 
-ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
+ASxxxx Linker V03.00/V05.40 + sdld,  page 3.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
@@ -143,7 +143,7 @@ Area                                    Addr        Size        Decimal Bytes (A
      0000009B  _TB8                               DateTime
      0000009C  _KBLS                              DateTime
      0000009C  _REN                               DateTime
-ASxxxx Linker V03.00 + NoICE + sdld,  page 4.
+ASxxxx Linker V03.00/V05.40 + sdld,  page 4.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
@@ -203,7 +203,7 @@ Area                                    Addr        Size        Decimal Bytes (A
      000000B7  _IPH0                              DateTime
      000000B7  _P3_7                              DateTime
      000000B7  _RD                                DateTime
-ASxxxx Linker V03.00 + NoICE + sdld,  page 5.
+ASxxxx Linker V03.00/V05.40 + sdld,  page 5.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
@@ -263,7 +263,7 @@ Area                                    Addr        Size        Decimal Bytes (A
      000000CF  _T2CON_7                           DateTime
      000000CF  _TF2                               DateTime
      000000D0  _P                                 DateTime
-ASxxxx Linker V03.00 + NoICE + sdld,  page 6.
+ASxxxx Linker V03.00/V05.40 + sdld,  page 6.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
@@ -321,7 +321,16 @@ Area                                    Addr        Size        Decimal Bytes (A
      000000FC  _CCAP2H                            DateTime
      000000FD  _CCAP3H                            DateTime
      000000FE  _CCAP4H                            DateTime
-ASxxxx Linker V03.00 + NoICE + sdld,  page 7.
+ASxxxx Linker V03.00/V05.40 + sdld,  page 7.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+BSEG_BYTES                          00000020    00000001 =           1. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00/V05.40 + sdld,  page 8.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
@@ -330,43 +339,43 @@ REG_BANK_0                          00000000    00000008 =           8. bytes (R
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-ASxxxx Linker V03.00 + NoICE + sdld,  page 8.
+ASxxxx Linker V03.00/V05.40 + sdld,  page 9.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-DSEG                                00000000    00000080 =         128. bytes (REL,CON)
+DSEG                                00000000    0000007F =         127. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     0000004D  _bp                                _bp
+     0000001E  _bp                                _bp
 
-ASxxxx Linker V03.00 + NoICE + sdld,  page 9.
+ASxxxx Linker V03.00/V05.40 + sdld,  page 10.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-OSEG                                0000004E    0000000E =          14. bytes (REL,OVR)
+OSEG                                0000003C    0000000E =          14. bytes (REL,OVR)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-ASxxxx Linker V03.00 + NoICE + sdld,  page 10.
+ASxxxx Linker V03.00/V05.40 + sdld,  page 11.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-SSEG                                0000005C    00000024 =          36. bytes (REL,OVR)
+SSEG                                0000004A    00000036 =          54. bytes (REL,OVR)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     0000005C  __start__stack                     89C51Board
+     0000004A  __start__stack                     89C51Board
 
-ASxxxx Linker V03.00 + NoICE + sdld,  page 11.
+ASxxxx Linker V03.00/V05.40 + sdld,  page 12.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-XSEG                                00000001    000002CB =         715. bytes (REL,CON,XDATA)
+XSEG                                00000001    000002C7 =         711. bytes (REL,CON,XDATA)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -420,12 +429,12 @@ D:   0000029F  _FormatDate_PARM_2                 DateTime
 D:   000002A5  _AddSecondsToDateTime_PARM_2       DateTime
 D:   000002A7  _AddSecondsToDateTime_PARM_3       DateTime
 D:   000002AF  _CompareDateTime_PARM_2            DateTime
-ASxxxx Linker V03.00 + NoICE + sdld,  page 12.
+ASxxxx Linker V03.00/V05.40 + sdld,  page 13.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-XSEG                                00000001    000002CB =         715. bytes (REL,CON,XDATA)
+XSEG                                00000001    000002C7 =         711. bytes (REL,CON,XDATA)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -434,182 +443,184 @@ D:   000002BC  __gptrput_PARM_2                   _gptrput
 D:   000002BD  __mulint_PARM_2                    _mulint
 D:   000002BF  __modsint_PARM_2                   _modsint
 D:   000002C3  __moduint_PARM_2                   _moduint
-D:   000002C8  __divsint_PARM_2                   _divsint
 
-ASxxxx Linker V03.00 + NoICE + sdld,  page 13.
+ASxxxx Linker V03.00/V05.40 + sdld,  page 14.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-HOME                                00000000    00000006 =           6. bytes (REL,CON,CODE)
+HOME                                00000000    0000004C =          76. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   00000003  __sdcc_program_startup             89C51Board
+C:   00000008  sdcc_atomic_exchange_rollback_st   89C51Board
+C:   0000002F  sdcc_atomic_exchange_gptr_impl     89C51Board
+C:   0000002F  sdcc_atomic_exchange_rollback_en   89C51Board
+C:   0000003F  sdcc_atomic_compare_exchange_gpt   89C51Board
+C:   00000049  __sdcc_program_startup             89C51Board
 
-ASxxxx Linker V03.00 + NoICE + sdld,  page 14.
+ASxxxx Linker V03.00/V05.40 + sdld,  page 15.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-GSINIT0                             00000006    00000003 =           3. bytes (REL,CON,CODE)
+GSINIT0                             0000004C    00000003 =           3. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   00000006  __sdcc_gsinit_startup              
+C:   0000004C  __sdcc_gsinit_startup              
 
-ASxxxx Linker V03.00 + NoICE + sdld,  page 15.
+ASxxxx Linker V03.00/V05.40 + sdld,  page 16.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-GSINIT2                             00000009    0000000A =          10. bytes (REL,CON,CODE)
+GSINIT2                             0000004F    0000000A =          10. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-ASxxxx Linker V03.00 + NoICE + sdld,  page 16.
+ASxxxx Linker V03.00/V05.40 + sdld,  page 17.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-GSINIT3                             00000013    00000022 =          34. bytes (REL,CON,CODE)
+GSINIT3                             00000059    00000022 =          34. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   00000013  __mcs51_genXINIT                   
+C:   00000059  __mcs51_genXINIT                   
 
-ASxxxx Linker V03.00 + NoICE + sdld,  page 17.
+ASxxxx Linker V03.00/V05.40 + sdld,  page 18.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-GSINIT4                             00000035    0000002A =          42. bytes (REL,CON,CODE)
+GSINIT4                             0000007B    0000002A =          42. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   00000035  __mcs51_genRAMCLEAR                
-C:   0000003B  __mcs51_genXRAMCLEAR               
+C:   0000007B  __mcs51_genRAMCLEAR                
+C:   00000081  __mcs51_genXRAMCLEAR               
 
-ASxxxx Linker V03.00 + NoICE + sdld,  page 18.
+ASxxxx Linker V03.00/V05.40 + sdld,  page 19.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-GSFINAL                             0000005F    00000003 =           3. bytes (REL,CON,CODE)
+GSFINAL                             000000A5    00000003 =           3. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-ASxxxx Linker V03.00 + NoICE + sdld,  page 19.
+ASxxxx Linker V03.00/V05.40 + sdld,  page 20.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CSEG                                00000062    00003DA6 =       15782. bytes (REL,CON,CODE)
+CSEG                                000000A8    00003A2D =       14893. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   00000062  _main                              89C51Board
-C:   0000006E  _Hardware_ScheduleUserCalls        89C51Board
-C:   00000239  _Hardware_InitialiseHardware       89C51Board
-C:   000002D8  _Hardware_RegisterForTimer         89C51Board
-C:   000003D0  _Hardware_EnableTimer              89C51Board
-C:   00000477  _Hardware_WriteDisplayBuffer       89C51Board
-C:   0000047A  _Hardware_SetRtc                   89C51Board
-C:   0000047D  _Hardware_GetRtc                   89C51Board
-C:   00000480  _Hardware_GetKeyState              89C51Board
-C:   00000543  _Hardware_GetInputPortValues       89C51Board
-C:   00000573  _Hardware_SetOutputPortValues      89C51Board
-C:   00000577  _Hardware_CrashDump                89C51Board
-C:   000005E7  _SimpleCentralHeating              SimpleCentralHeating
-C:   00000A87  _InitialiseMenuDefinitions         MenuMgr
-C:   00000A91  _TerminateMenuDefinitions          MenuMgr
-C:   00000B13  _AddMenuDefinition                 MenuMgr
-C:   00000C0A  _InitialiseMenuController          MenuMgr
-C:   00000C47  _MenuNavigation                    MenuMgr
-C:   00000CAF  _RenderActiveMenu                  MenuMgr
-C:   00000F50  _GetMenuItemExtent                 MenuMgr
-C:   000010F8  _RenderMenuOnBuffer                MenuMgr
-C:   000011DE  _IsParentMenu                      MenuMgr
-C:   00001257  _IsGoBack                          MenuMgr
-C:   00001280  _GoSubMenu                         MenuMgr
-C:   00001350  _GoRight                           MenuMgr
-C:   000013F8  _GoLeft                            MenuMgr
-C:   00001494  _GoBackUp                          MenuMgr
-C:   0000150C  _UserProgram                       CentralHeating
-C:   0000162A  _Callback                          CentralHeating
-C:   0000171C  _DisplayMenuOnHardware             CentralHeating
-C:   000017AB  _PartialWriteToScreen              CentralHeating
-C:   0000182E  _ClearTopLine                      CentralHeating
-C:   0000184B  _HandleMenuCommand                 CentralHeating
-C:   00001E22  _WriteCurrentTime                  CentralHeating
-C:   00001E6E  _PreviewTimeAdjustment             CentralHeating
-C:   00001EBB  _PreviewDateAdjustment             CentralHeating
-C:   00001F03  _TestAndDisplay                    CentralHeating
-C:   00001F4E  _ProcessHeating                    CentralHeating
-C:   00002081  _AnimateScreen                     CentralHeating
-C:   000022E2  _BuildCentralHeatingMenuDefiniti   CentralHeatingMenus
-C:   00002604  _InitialiseLcd                     LcdDisplay
-C:   00002681  _WriteInstructionToLcd             LcdDisplay
-C:   000026B3  _WriteDataToLcd                    LcdDisplay
-C:   000026E5  _PulseLcdEnable                    LcdDisplay
-C:   000026F7  _WaitLcdReady                      LcdDisplay
-C:   00002717  _ClearDisplay                      LcdDisplay
-C:   0000271D  _SetCursorPos                      LcdDisplay
-C:   0000272B  _DirectWriteToDisplay              LcdDisplay
-C:   00002808  _I2C_Initialise                    I2C
-C:   0000280D  _Delay                             I2C
-ASxxxx Linker V03.00 + NoICE + sdld,  page 20.
+C:   000000A8  _main                              89C51Board
+C:   000000B4  _Hardware_ScheduleUserCalls        89C51Board
+C:   000001EB  _Hardware_InitialiseHardware       89C51Board
+C:   0000027E  _Hardware_RegisterForTimer         89C51Board
+C:   00000370  _Hardware_EnableTimer              89C51Board
+C:   0000041A  _Hardware_WriteDisplayBuffer       89C51Board
+C:   0000041D  _Hardware_SetRtc                   89C51Board
+C:   00000420  _Hardware_GetRtc                   89C51Board
+C:   00000423  _Hardware_GetKeyState              89C51Board
+C:   000004E2  _Hardware_GetInputPortValues       89C51Board
+C:   00000512  _Hardware_SetOutputPortValues      89C51Board
+C:   00000516  _Hardware_CrashDump                89C51Board
+C:   00000570  _SimpleCentralHeating              SimpleCentralHeating
+C:   000009FA  _InitialiseMenuDefinitions         MenuMgr
+C:   00000A04  _TerminateMenuDefinitions          MenuMgr
+C:   00000A86  _AddMenuDefinition                 MenuMgr
+C:   00000B74  _InitialiseMenuController          MenuMgr
+C:   00000BB1  _MenuNavigation                    MenuMgr
+C:   00000C19  _RenderActiveMenu                  MenuMgr
+C:   00000EB8  _GetMenuItemExtent                 MenuMgr
+C:   0000105F  _RenderMenuOnBuffer                MenuMgr
+C:   00001143  _IsParentMenu                      MenuMgr
+C:   000011B5  _IsGoBack                          MenuMgr
+C:   000011DE  _GoSubMenu                         MenuMgr
+C:   000012A8  _GoRight                           MenuMgr
+C:   00001341  _GoLeft                            MenuMgr
+C:   000013CF  _GoBackUp                          MenuMgr
+C:   00001447  _UserProgram                       CentralHeating
+C:   00001558  _Callback                          CentralHeating
+C:   0000164A  _DisplayMenuOnHardware             CentralHeating
+C:   000016BC  _PartialWriteToScreen              CentralHeating
+C:   0000173F  _ClearTopLine                      CentralHeating
+C:   0000175C  _HandleMenuCommand                 CentralHeating
+C:   00001D32  _WriteCurrentTime                  CentralHeating
+C:   00001D7D  _PreviewTimeAdjustment             CentralHeating
+C:   00001DCA  _PreviewDateAdjustment             CentralHeating
+C:   00001E11  _TestAndDisplay                    CentralHeating
+C:   00001E5C  _ProcessHeating                    CentralHeating
+C:   00001F8D  _AnimateScreen                     CentralHeating
+C:   000021EB  _BuildCentralHeatingMenuDefiniti   CentralHeatingMenus
+C:   0000250D  _InitialiseLcd                     LcdDisplay
+C:   0000258A  _WriteInstructionToLcd             LcdDisplay
+C:   000025BC  _WriteDataToLcd                    LcdDisplay
+C:   000025EE  _PulseLcdEnable                    LcdDisplay
+C:   00002600  _WaitLcdReady                      LcdDisplay
+C:   00002620  _ClearDisplay                      LcdDisplay
+C:   00002626  _SetCursorPos                      LcdDisplay
+C:   00002634  _DirectWriteToDisplay              LcdDisplay
+C:   000026FD  _I2C_Initialise                    I2C
+C:   00002702  _Delay                             I2C
+ASxxxx Linker V03.00/V05.40 + sdld,  page 21.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CSEG                                00000062    00003DA6 =       15782. bytes (REL,CON,CODE)
+CSEG                                000000A8    00003A2D =       14893. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   0000281B  _SendStart                         I2C
-C:   0000282A  _SendStop                          I2C
-C:   00002836  _ReadAckNack                       I2C
-C:   0000285B  _SendByte                          I2C
-C:   000028A6  _RecvByte                          I2C
-C:   00002917  _SendAddressWithDirection          I2C
-C:   00002934  _I2C_SendData                      I2C
-C:   000029C5  _I2C_RecvData                      I2C
-C:   00002A64  _EncodeAsBcd                       RTC1307
-C:   00002AAF  _DecodeBcd                         RTC1307
-C:   00002ADA  _Rtc_ReadClock                     RTC1307
-C:   00002CC2  _Rtc_WriteClock                    RTC1307
-C:   00002E15  _Rtc_Initialise                    RTC1307
-C:   00002E18  _IntToString                       StringUtils
-C:   00002F0B  _UnsignedCharToString              StringUtils
-C:   00002FE3  _strcat                            StringUtils
-C:   00003073  _strcpy                            StringUtils
-C:   000030E5  _GetNumDaysInMonth                 DateTime
-C:   000031F1  _FormatTime                        DateTime
-C:   00003440  _FormatDate                        DateTime
-C:   0000367D  _AddSecondsToDateTime              DateTime
-C:   000039CB  _CompareDateTime                   DateTime
-C:   00003B9A  __divuint                          _divuint
-C:   00003C27  __gptrput                          _gptrput
-C:   00003C42  __mulint                           _mulint
-C:   00003C62  __modsint                          _modsint
-C:   00003CCA  __moduint                          _moduint
-C:   00003D76  __divsint                          _divsint
-C:   00003DE8  __gptrget                          _gptrget
-C:   00003E04  __sdcc_external_startup            _startup
+C:   00002710  _SendStart                         I2C
+C:   0000271F  _SendStop                          I2C
+C:   0000272B  _ReadAckNack                       I2C
+C:   00002750  _SendByte                          I2C
+C:   0000278B  _RecvByte                          I2C
+C:   000027EB  _SendAddressWithDirection          I2C
+C:   00002808  _I2C_SendData                      I2C
+C:   00002899  _I2C_RecvData                      I2C
+C:   00002938  _EncodeAsBcd                       RTC1307
+C:   00002958  _DecodeBcd                         RTC1307
+C:   00002982  _Rtc_ReadClock                     RTC1307
+C:   00002B70  _Rtc_WriteClock                    RTC1307
+C:   00002CC9  _Rtc_Initialise                    RTC1307
+C:   00002CCC  _IntToString                       StringUtils
+C:   00002DBF  _UnsignedCharToString              StringUtils
+C:   00002E91  _strcat                            StringUtils
+C:   00002F21  _strcpy                            StringUtils
+C:   00002F93  _GetNumDaysInMonth                 DateTime
+C:   0000309F  _FormatTime                        DateTime
+C:   00003221  _FormatDate                        DateTime
+C:   0000338F  _AddSecondsToDateTime              DateTime
+C:   000036FB  _CompareDateTime                   DateTime
+C:   000038DA  __divuint                          _divuint
+C:   00003967  __gptrput                          _gptrput
+C:   00003982  __mulint                           _mulint
+C:   000039A2  __modsint                          _modsint
+C:   00003A0A  __moduint                          _moduint
+C:   00003AB5  __gptrget                          _gptrget
+C:   00003AD1  ___sdcc_external_startup           _startup
 
-ASxxxx Linker V03.00 + NoICE + sdld,  page 21.
+ASxxxx Linker V03.00/V05.40 + sdld,  page 22.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CONST                               00003E08    0000014A =         330. bytes (REL,CON,CODE)
+CONST                               00003AD5    0000014A =         330. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   00003F4E  _rowStartAddresses                 LcdDisplay
+C:   00003C1B  _rowStartAddresses                 LcdDisplay
 
-ASxxxx Linker V03.00 + NoICE + sdld,  page 22.
+ASxxxx Linker V03.00/V05.40 + sdld,  page 23.
 
 Files Linked                              [ module(s) ]
 
@@ -641,8 +652,6 @@ C:\Program Files\SDCC\bin\..\lib\large/libint.lib
                                           [ _modsint.rel ]
 C:\Program Files\SDCC\bin\..\lib\large/libint.lib
                                           [ _moduint.rel ]
-C:\Program Files\SDCC\bin\..\lib\large/libint.lib
-                                          [ _divsint.rel ]
 C:\Program Files\SDCC\bin\..\lib\large/mcs51.lib
                                           [ crtxclear.rel ]
 C:\Program Files\SDCC\bin\..\lib\large/libsdcc.lib
@@ -656,7 +665,7 @@ C:\Program Files\SDCC\bin\..\lib\large/libsdcc.lib
 C:\Program Files\SDCC\bin\..\lib\large/libsdcc.lib
                                           [ _startup.rel ]
 
-ASxxxx Linker V03.00 + NoICE + sdld,  page 23.
+ASxxxx Linker V03.00/V05.40 + sdld,  page 24.
 
 User Base Address Definitions
 

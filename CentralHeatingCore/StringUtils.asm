@@ -1,10 +1,10 @@
 ;--------------------------------------------------------
-; File Created by SDCC : free open source ANSI-C Compiler
-; Version 4.0.0 #11528 (MINGW64)
+; File Created by SDCC : free open source ISO C Compiler
+; Version 4.5.0 #15242 (MINGW64)
 ;--------------------------------------------------------
 	.module StringUtils
-	.optsdcc -mmcs51 --model-large
 	
+	.optsdcc -mmcs51 --model-large
 ;--------------------------------------------------------
 ; Public variables in this module
 ;--------------------------------------------------------
@@ -38,7 +38,7 @@
 _IntToString_sloc0_1_0:
 	.ds 2
 ;--------------------------------------------------------
-; overlayable items in internal ram 
+; overlayable items in internal ram
 ;--------------------------------------------------------
 ;--------------------------------------------------------
 ; indirectly addressable internal ram data
@@ -58,37 +58,37 @@ _IntToString_sloc0_1_0:
 ;--------------------------------------------------------
 	.area PSEG    (PAG,XDATA)
 ;--------------------------------------------------------
-; external ram data
+; uninitialized external ram data
 ;--------------------------------------------------------
 	.area XSEG    (XDATA)
 _IntToString_PARM_2:
 	.ds 2
-_IntToString_p_65536_1:
+_IntToString_p_10000_1:
 	.ds 3
-_IntToString_divider_65536_2:
+_IntToString_divider_10000_2:
 	.ds 2
 _UnsignedCharToString_PARM_2:
 	.ds 1
-_UnsignedCharToString_p_65536_4:
+_UnsignedCharToString_p_10000_4:
 	.ds 3
-_UnsignedCharToString_digit_65536_5:
+_UnsignedCharToString_digit_10000_5:
 	.ds 2
-_UnsignedCharToString_divider_65536_5:
+_UnsignedCharToString_divider_10000_5:
 	.ds 2
 _strcat_PARM_2:
 	.ds 3
-_strcat_p_65536_7:
+_strcat_p_10000_7:
 	.ds 3
 _strcpy_PARM_2:
 	.ds 3
-_strcpy_p_65536_11:
+_strcpy_p_10000_11:
 	.ds 3
 ;--------------------------------------------------------
 ; absolute external ram data
 ;--------------------------------------------------------
 	.area XABS    (ABS,XDATA)
 ;--------------------------------------------------------
-; external initialized ram data
+; initialized external ram data
 ;--------------------------------------------------------
 	.area XISEG   (XDATA)
 	.area HOME    (CODE)
@@ -120,11 +120,11 @@ _strcpy_p_65536_11:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'IntToString'
 ;------------------------------------------------------------
-;sloc0                     Allocated with name '_IntToString_sloc0_1_0'
-;v                         Allocated with name '_IntToString_PARM_2'
-;p                         Allocated with name '_IntToString_p_65536_1'
-;digit                     Allocated with name '_IntToString_digit_65536_2'
-;divider                   Allocated with name '_IntToString_divider_65536_2'
+;sloc0         Allocated with name '_IntToString_sloc0_1_0'
+;v             Allocated with name '_IntToString_PARM_2'
+;p             Allocated with name '_IntToString_p_10000_1'
+;digit         Allocated with name '_IntToString_digit_10000_2'
+;divider       Allocated with name '_IntToString_divider_10000_2'
 ;------------------------------------------------------------
 ;	../Common/StringUtils.c:2: void IntToString(unsigned char *p, unsigned int v)
 ;	-----------------------------------------
@@ -142,7 +142,7 @@ _IntToString:
 	mov	r7,b
 	mov	r6,dph
 	mov	a,dpl
-	mov	dptr,#_IntToString_p_65536_1
+	mov	dptr,#_IntToString_p_10000_1
 	movx	@dptr,a
 	mov	a,r6
 	inc	dptr
@@ -151,14 +151,14 @@ _IntToString:
 	inc	dptr
 	movx	@dptr,a
 ;	../Common/StringUtils.c:6: divider = 10000;
-	mov	dptr,#_IntToString_divider_65536_2
+	mov	dptr,#_IntToString_divider_10000_2
 	mov	a,#0x10
 	movx	@dptr,a
 	mov	a,#0x27
 	inc	dptr
 	movx	@dptr,a
 ;	../Common/StringUtils.c:7: do
-	mov	dptr,#_IntToString_p_65536_1
+	mov	dptr,#_IntToString_p_10000_1
 	movx	a,@dptr
 	mov	r5,a
 	inc	dptr
@@ -169,7 +169,7 @@ _IntToString:
 	mov	r7,a
 00101$:
 ;	../Common/StringUtils.c:9: digit = v / divider;
-	mov	dptr,#_IntToString_divider_65536_2
+	mov	dptr,#_IntToString_divider_10000_2
 	movx	a,@dptr
 	mov	r3,a
 	inc	dptr
@@ -188,16 +188,16 @@ _IntToString:
 	inc	dptr
 	movx	@dptr,a
 ;	../Common/StringUtils.c:10: *p = '0' + digit;
-	mov	dpl,_IntToString_sloc0_1_0
-	mov	dph,(_IntToString_sloc0_1_0 + 1)
+	mov	dpl, _IntToString_sloc0_1_0
+	mov	dph, (_IntToString_sloc0_1_0 + 1)
 	push	ar7
 	push	ar6
 	push	ar5
 	push	ar4
 	push	ar3
 	lcall	__divuint
-	mov	r0,dpl
-	mov	r2,dph
+	mov	r0, dpl
+	mov	r2, dph
 	pop	ar3
 	pop	ar4
 	pop	ar5
@@ -205,7 +205,7 @@ _IntToString:
 	pop	ar7
 	mov	ar1,r0
 	mov	a,#0x30
-	add	a,r1
+	add	a, r1
 	mov	dpl,r5
 	mov	dph,r6
 	mov	b,r7
@@ -220,16 +220,16 @@ _IntToString:
 	mov	a,r4
 	inc	dptr
 	movx	@dptr,a
-	mov	dpl,r0
-	mov	dph,r2
+	mov	dpl, r0
+	mov	dph, r2
 	push	ar7
 	push	ar6
 	push	ar5
 	push	ar4
 	push	ar3
 	lcall	__mulint
-	mov	r1,dpl
-	mov	r2,dph
+	mov	r1, dpl
+	mov	r2, dph
 	pop	ar3
 	pop	ar4
 	mov	dptr,#_IntToString_PARM_2
@@ -248,21 +248,21 @@ _IntToString:
 	clr	a
 	inc	dptr
 	movx	@dptr,a
-	mov	dpl,r3
-	mov	dph,r4
+	mov	dpl, r3
+	mov	dph, r4
 	lcall	__divuint
-	mov	a,dpl
-	mov	b,dph
+	mov	a, dpl
+	mov	b, dph
 	pop	ar5
 	pop	ar6
 	pop	ar7
-	mov	dptr,#_IntToString_divider_65536_2
+	mov	dptr,#_IntToString_divider_10000_2
 	movx	@dptr,a
 	mov	a,b
 	inc	dptr
 	movx	@dptr,a
 ;	../Common/StringUtils.c:13: ++p;
-	mov	dptr,#_IntToString_p_65536_1
+	mov	dptr,#_IntToString_p_10000_1
 	mov	a,r5
 	movx	@dptr,a
 	mov	a,r6
@@ -272,17 +272,17 @@ _IntToString:
 	inc	dptr
 	movx	@dptr,a
 ;	../Common/StringUtils.c:15: while (divider > 0);
-	mov	dptr,#_IntToString_divider_65536_2
+	mov	dptr,#_IntToString_divider_10000_2
 	movx	a,@dptr
 	mov	b,a
 	inc	dptr
 	movx	a,@dptr
 	orl	a,b
-	jz	00115$
+	jz	00119$
 	ljmp	00101$
-00115$:
+00119$:
 ;	../Common/StringUtils.c:16: *p = 0;
-	mov	dptr,#_IntToString_p_65536_1
+	mov	dptr,#_IntToString_p_10000_1
 	mov	a,r5
 	movx	@dptr,a
 	mov	a,r6
@@ -300,10 +300,10 @@ _IntToString:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'UnsignedCharToString'
 ;------------------------------------------------------------
-;v                         Allocated with name '_UnsignedCharToString_PARM_2'
-;p                         Allocated with name '_UnsignedCharToString_p_65536_4'
-;digit                     Allocated with name '_UnsignedCharToString_digit_65536_5'
-;divider                   Allocated with name '_UnsignedCharToString_divider_65536_5'
+;v             Allocated with name '_UnsignedCharToString_PARM_2'
+;p             Allocated with name '_UnsignedCharToString_p_10000_4'
+;digit         Allocated with name '_UnsignedCharToString_digit_10000_5'
+;divider       Allocated with name '_UnsignedCharToString_divider_10000_5'
 ;------------------------------------------------------------
 ;	../Common/StringUtils.c:21: void UnsignedCharToString(unsigned char *p, unsigned char v)
 ;	-----------------------------------------
@@ -313,7 +313,7 @@ _UnsignedCharToString:
 	mov	r7,b
 	mov	r6,dph
 	mov	a,dpl
-	mov	dptr,#_UnsignedCharToString_p_65536_4
+	mov	dptr,#_UnsignedCharToString_p_10000_4
 	movx	@dptr,a
 	mov	a,r6
 	inc	dptr
@@ -322,14 +322,14 @@ _UnsignedCharToString:
 	inc	dptr
 	movx	@dptr,a
 ;	../Common/StringUtils.c:25: divider = 0x80;
-	mov	dptr,#_UnsignedCharToString_divider_65536_5
+	mov	dptr,#_UnsignedCharToString_divider_10000_5
 	mov	a,#0x80
 	movx	@dptr,a
 	clr	a
 	inc	dptr
 	movx	@dptr,a
 ;	../Common/StringUtils.c:26: do
-	mov	dptr,#_UnsignedCharToString_p_65536_4
+	mov	dptr,#_UnsignedCharToString_p_10000_4
 	movx	a,@dptr
 	mov	r5,a
 	inc	dptr
@@ -340,7 +340,7 @@ _UnsignedCharToString:
 	mov	r7,a
 00101$:
 ;	../Common/StringUtils.c:28: digit = v / divider;
-	mov	dptr,#_UnsignedCharToString_divider_65536_5
+	mov	dptr,#_UnsignedCharToString_divider_10000_5
 	movx	a,@dptr
 	mov	r3,a
 	inc	dptr
@@ -356,18 +356,18 @@ _UnsignedCharToString:
 	mov	a,r4
 	inc	dptr
 	movx	@dptr,a
-	mov	dpl,r1
-	mov	dph,r2
+	mov	dpl, r1
+	mov	dph, r2
 	push	ar7
 	push	ar6
 	push	ar5
 	lcall	__divuint
-	mov	r3,dpl
-	mov	r4,dph
+	mov	r3, dpl
+	mov	r4, dph
 	pop	ar5
 	pop	ar6
 	pop	ar7
-	mov	dptr,#_UnsignedCharToString_digit_65536_5
+	mov	dptr,#_UnsignedCharToString_digit_10000_5
 	mov	a,r3
 	movx	@dptr,a
 	mov	a,r4
@@ -380,60 +380,56 @@ _UnsignedCharToString:
 	mov	a,r3
 	orl	a,r4
 	jz	00106$
-	mov	r3,#0x31
-	mov	r4,#0x00
+	mov	r4,#0x31
 	sjmp	00107$
 00106$:
-	mov	r3,#0x30
-	mov	r4,#0x00
+	mov	r4,#0x30
 00107$:
 	mov	dpl,r0
 	mov	dph,r1
 	mov	b,r2
-	mov	a,r3
+	mov	a,r4
 	lcall	__gptrput
 ;	../Common/StringUtils.c:30: v -= digit * divider;
-	mov	dptr,#_UnsignedCharToString_digit_65536_5
+	mov	dptr,#_UnsignedCharToString_digit_10000_5
 	movx	a,@dptr
-	mov	r3,a
-	inc	dptr
-	movx	a,@dptr
-	mov	dptr,#_UnsignedCharToString_divider_65536_5
+	mov	r4,a
+	mov	dptr,#_UnsignedCharToString_divider_10000_5
 	movx	a,@dptr
 	mov	r2,a
 	inc	dptr
 	movx	a,@dptr
-	mov	r4,a
+	mov	r3,a
 	mov	ar1,r2
-	mov	b,r3
+	mov	b,r4
 	mov	a,r1
 	mul	ab
-	mov	r3,a
+	mov	r4,a
 	mov	dptr,#_UnsignedCharToString_PARM_2
 	movx	a,@dptr
 	clr	c
-	subb	a,r3
+	subb	a,r4
 	movx	@dptr,a
 ;	../Common/StringUtils.c:31: divider = divider / 2;
-	mov	a,r4
+	mov	a,r3
 	clr	c
 	rrc	a
 	xch	a,r2
 	rrc	a
 	xch	a,r2
-	mov	r4,a
-	mov	dptr,#_UnsignedCharToString_divider_65536_5
+	mov	r3,a
+	mov	dptr,#_UnsignedCharToString_divider_10000_5
 	mov	a,r2
 	movx	@dptr,a
-	mov	a,r4
+	mov	a,r3
 	inc	dptr
 	movx	@dptr,a
 ;	../Common/StringUtils.c:32: ++p;
 	inc	r5
-	cjne	r5,#0x00,00122$
+	cjne	r5,#0x00,00128$
 	inc	r6
-00122$:
-	mov	dptr,#_UnsignedCharToString_p_65536_4
+00128$:
+	mov	dptr,#_UnsignedCharToString_p_10000_4
 	mov	a,r5
 	movx	@dptr,a
 	mov	a,r6
@@ -443,17 +439,17 @@ _UnsignedCharToString:
 	inc	dptr
 	movx	@dptr,a
 ;	../Common/StringUtils.c:34: while (divider > 0);
-	mov	dptr,#_UnsignedCharToString_divider_65536_5
+	mov	dptr,#_UnsignedCharToString_divider_10000_5
 	movx	a,@dptr
 	mov	b,a
 	inc	dptr
 	movx	a,@dptr
 	orl	a,b
-	jz	00123$
+	jz	00129$
 	ljmp	00101$
-00123$:
+00129$:
 ;	../Common/StringUtils.c:35: *p = 0;
-	mov	dptr,#_UnsignedCharToString_p_65536_4
+	mov	dptr,#_UnsignedCharToString_p_10000_4
 	mov	a,r5
 	movx	@dptr,a
 	mov	a,r6
@@ -471,8 +467,8 @@ _UnsignedCharToString:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'strcat'
 ;------------------------------------------------------------
-;s                         Allocated with name '_strcat_PARM_2'
-;p                         Allocated with name '_strcat_p_65536_7'
+;s             Allocated with name '_strcat_PARM_2'
+;p             Allocated with name '_strcat_p_10000_7'
 ;------------------------------------------------------------
 ;	../Common/StringUtils.c:39: void strcat(char *p, char *s)
 ;	-----------------------------------------
@@ -482,7 +478,7 @@ _strcat:
 	mov	r7,b
 	mov	r6,dph
 	mov	a,dpl
-	mov	dptr,#_strcat_p_65536_7
+	mov	dptr,#_strcat_p_10000_7
 	movx	@dptr,a
 	mov	a,r6
 	inc	dptr
@@ -491,7 +487,7 @@ _strcat:
 	inc	dptr
 	movx	@dptr,a
 ;	../Common/StringUtils.c:41: while (*p)
-	mov	dptr,#_strcat_p_65536_7
+	mov	dptr,#_strcat_p_10000_7
 	movx	a,@dptr
 	mov	r5,a
 	inc	dptr
@@ -508,10 +504,10 @@ _strcat:
 	jz	00113$
 ;	../Common/StringUtils.c:43: ++p;
 	inc	r5
-	cjne	r5,#0x00,00128$
+	cjne	r5,#0x00,00136$
 	inc	r6
-00128$:
-	mov	dptr,#_strcat_p_65536_7
+00136$:
+	mov	dptr,#_strcat_p_10000_7
 	mov	a,r5
 	movx	@dptr,a
 	mov	a,r6
@@ -523,7 +519,7 @@ _strcat:
 ;	../Common/StringUtils.c:45: while (*s)
 	sjmp	00101$
 00113$:
-	mov	dptr,#_strcat_p_65536_7
+	mov	dptr,#_strcat_p_10000_7
 	mov	a,r5
 	movx	@dptr,a
 	mov	a,r6
@@ -558,7 +554,7 @@ _strcat:
 	mov	r5,dpl
 	mov	r6,dph
 ;	../Common/StringUtils.c:48: ++p;
-	mov	dptr,#_strcat_p_65536_7
+	mov	dptr,#_strcat_p_10000_7
 	mov	a,r5
 	movx	@dptr,a
 	mov	a,r6
@@ -573,7 +569,7 @@ _strcat:
 	inc	r3
 	sjmp	00104$
 00114$:
-	mov	dptr,#_strcat_p_65536_7
+	mov	dptr,#_strcat_p_10000_7
 	mov	a,r5
 	movx	@dptr,a
 	mov	a,r6
@@ -592,8 +588,8 @@ _strcat:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'strcpy'
 ;------------------------------------------------------------
-;s                         Allocated with name '_strcpy_PARM_2'
-;p                         Allocated with name '_strcpy_p_65536_11'
+;s             Allocated with name '_strcpy_PARM_2'
+;p             Allocated with name '_strcpy_p_10000_11'
 ;------------------------------------------------------------
 ;	../Common/StringUtils.c:54: void strcpy(char *p, char *s)
 ;	-----------------------------------------
@@ -603,7 +599,7 @@ _strcpy:
 	mov	r7,b
 	mov	r6,dph
 	mov	a,dpl
-	mov	dptr,#_strcpy_p_65536_11
+	mov	dptr,#_strcpy_p_10000_11
 	movx	@dptr,a
 	mov	a,r6
 	inc	dptr
@@ -612,7 +608,7 @@ _strcpy:
 	inc	dptr
 	movx	@dptr,a
 ;	../Common/StringUtils.c:56: *p = 0;
-	mov	dptr,#_strcpy_p_65536_11
+	mov	dptr,#_strcpy_p_10000_11
 	movx	a,@dptr
 	mov	r5,a
 	inc	dptr
@@ -653,7 +649,7 @@ _strcpy:
 	mov	r5,dpl
 	mov	r6,dph
 ;	../Common/StringUtils.c:60: ++p;
-	mov	dptr,#_strcpy_p_65536_11
+	mov	dptr,#_strcpy_p_10000_11
 	mov	a,r5
 	movx	@dptr,a
 	mov	a,r6
@@ -668,7 +664,7 @@ _strcpy:
 	inc	r3
 	sjmp	00101$
 00108$:
-	mov	dptr,#_strcpy_p_65536_11
+	mov	dptr,#_strcpy_p_10000_11
 	mov	a,r5
 	movx	@dptr,a
 	mov	a,r6

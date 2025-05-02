@@ -1,10 +1,10 @@
 ;--------------------------------------------------------
-; File Created by SDCC : free open source ANSI-C Compiler
-; Version 4.0.0 #11528 (MINGW64)
+; File Created by SDCC : free open source ISO C Compiler
+; Version 4.5.0 #15242 (MINGW64)
 ;--------------------------------------------------------
 	.module 89C51Board
-	.optsdcc -mmcs51 --model-large
 	
+	.optsdcc -mmcs51 --model-large
 ;--------------------------------------------------------
 ; Public variables in this module
 ;--------------------------------------------------------
@@ -448,12 +448,12 @@ _P5_7	=	0x00ef
 ;--------------------------------------------------------
 	.area DSEG    (DATA)
 ;--------------------------------------------------------
-; overlayable items in internal ram 
+; overlayable items in internal ram
 ;--------------------------------------------------------
 ;--------------------------------------------------------
-; Stack segment in internal ram 
+; Stack segment in internal ram
 ;--------------------------------------------------------
-	.area	SSEG
+	.area SSEG
 __start__stack:
 	.ds	1
 
@@ -475,7 +475,7 @@ __start__stack:
 ;--------------------------------------------------------
 	.area PSEG    (PAG,XDATA)
 ;--------------------------------------------------------
-; external ram data
+; uninitialized external ram data
 ;--------------------------------------------------------
 	.area XSEG    (XDATA)
 _pRegisterForTimer::
@@ -503,7 +503,7 @@ _timers::
 ;--------------------------------------------------------
 	.area XABS    (ABS,XDATA)
 ;--------------------------------------------------------
-; external initialized ram data
+; initialized external ram data
 ;--------------------------------------------------------
 	.area XISEG   (XDATA)
 	.area HOME    (CODE)
@@ -517,11 +517,69 @@ _timers::
 	.area GSFINAL (CODE)
 	.area CSEG    (CODE)
 ;--------------------------------------------------------
-; interrupt vector 
+; interrupt vector
 ;--------------------------------------------------------
 	.area HOME    (CODE)
 __interrupt_vect:
 	ljmp	__sdcc_gsinit_startup
+; restartable atomic support routines
+	.ds	5
+sdcc_atomic_exchange_rollback_start::
+	nop
+	nop
+sdcc_atomic_exchange_pdata_impl:
+	movx	a, @r0
+	mov	r3, a
+	mov	a, r2
+	movx	@r0, a
+	sjmp	sdcc_atomic_exchange_exit
+	nop
+	nop
+sdcc_atomic_exchange_xdata_impl:
+	movx	a, @dptr
+	mov	r3, a
+	mov	a, r2
+	movx	@dptr, a
+	sjmp	sdcc_atomic_exchange_exit
+sdcc_atomic_compare_exchange_idata_impl:
+	mov	a, @r0
+	cjne	a, ar2, .+#5
+	mov	a, r3
+	mov	@r0, a
+	ret
+	nop
+sdcc_atomic_compare_exchange_pdata_impl:
+	movx	a, @r0
+	cjne	a, ar2, .+#5
+	mov	a, r3
+	movx	@r0, a
+	ret
+	nop
+sdcc_atomic_compare_exchange_xdata_impl:
+	movx	a, @dptr
+	cjne	a, ar2, .+#5
+	mov	a, r3
+	movx	@dptr, a
+	ret
+sdcc_atomic_exchange_rollback_end::
+
+sdcc_atomic_exchange_gptr_impl::
+	jnb	b.6, sdcc_atomic_exchange_xdata_impl
+	mov	r0, dpl
+	jb	b.5, sdcc_atomic_exchange_pdata_impl
+sdcc_atomic_exchange_idata_impl:
+	mov	a, r2
+	xch	a, @r0
+	mov	dpl, a
+	ret
+sdcc_atomic_exchange_exit:
+	mov	dpl, r3
+	ret
+sdcc_atomic_compare_exchange_gptr_impl::
+	jnb	b.6, sdcc_atomic_compare_exchange_xdata_impl
+	mov	r0, dpl
+	jb	b.5, sdcc_atomic_compare_exchange_pdata_impl
+	sjmp	sdcc_atomic_compare_exchange_idata_impl
 ;--------------------------------------------------------
 ; global & static initialisations
 ;--------------------------------------------------------
@@ -577,10 +635,11 @@ _main:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'Hardware_ScheduleUserCalls'
 ;------------------------------------------------------------
-;timerCounter              Allocated to stack - _bp +8
-;c                         Allocated to stack - _bp +4
-;pTimer                    Allocated to stack - _bp +10
-;sloc0                     Allocated to stack - _bp +1
+;timerCounter  Allocated to stack - _bp +5 +2 
+;c             Allocated to registers r4 r5 r6 r7 
+;pTimer        Allocated to registers r3 r4 
+;sloc0         Allocated to stack - _bp +1 +2 
+;sloc1         Allocated to stack - _bp +3 +2 
 ;------------------------------------------------------------
 ;	89C51Board.c:81: void Hardware_ScheduleUserCalls() REENTRANT
 ;	-----------------------------------------
@@ -590,306 +649,218 @@ _Hardware_ScheduleUserCalls:
 	push	_bp
 	mov	a,sp
 	mov	_bp,a
-	add	a,#0x0c
+	add	a,#0x06
 	mov	sp,a
 ;	89C51Board.c:88: for (timerCounter = 0; timerCounter < MAX_TIMERS; ++timerCounter)
 00121$:
 	mov	a,_bp
-	add	a,#0x08
+	add	a,#0x05
 	mov	r0,a
-	clr	a
-	mov	@r0,a
-	inc	r0
-	mov	@r0,a
-	mov	r4,#0x00
+	mov	@r0,#0x00
 	mov	r5,#0x00
+	mov	r6,#0x00
 00111$:
 ;	89C51Board.c:90: TimerSetup *pTimer = timers + timerCounter;
-	mov	a,r4
-	add	a,#_timers
-	mov	r2,a
 	mov	a,r5
-	addc	a,#(_timers >> 8)
+	add	a, #_timers
 	mov	r3,a
-	mov	a,_bp
-	add	a,#0x0a
-	mov	r0,a
-	mov	@r0,ar2
+	mov	a,r6
+	addc	a, #(_timers >> 8)
+	mov	r4,a
+;	89C51Board.c:91: if (pTimer->cookie != 0 && pTimer->periodMilliseconds <= pTimer->ticksSoFar && pTimer->enabled)
+	mov	r0,_bp
 	inc	r0
 	mov	@r0,ar3
 	inc	r0
-	mov	@r0,#0x00
-;	89C51Board.c:91: if (pTimer->cookie != 0 && pTimer->periodMilliseconds <= pTimer->ticksSoFar && pTimer->enabled)
-	mov	a,_bp
-	add	a,#0x0a
-	mov	r0,a
-	mov	dpl,@r0
-	inc	r0
-	mov	dph,@r0
-	inc	r0
-	mov	b,@r0
-	lcall	__gptrget
-	mov	r6,a
-	inc	dptr
-	lcall	__gptrget
-	mov	r7,a
-	orl	a,r6
-	jnz	00151$
-	ljmp	00102$
-00151$:
-	mov	a,_bp
-	add	a,#0x0a
-	mov	r0,a
-	mov	a,#0x02
-	add	a,@r0
-	mov	r3,a
-	clr	a
-	inc	r0
-	addc	a,@r0
-	mov	r6,a
-	inc	r0
-	mov	ar7,@r0
-	mov	dpl,r3
-	mov	dph,r6
-	mov	b,r7
-	lcall	__gptrget
-	mov	r3,a
-	inc	dptr
-	lcall	__gptrget
-	mov	r6,a
-	mov	a,_bp
-	add	a,#0x0a
-	mov	r0,a
-	mov	r1,_bp
-	inc	r1
-	mov	a,#0x04
-	add	a,@r0
-	mov	@r1,a
-	clr	a
-	inc	r0
-	addc	a,@r0
-	inc	r1
-	mov	@r1,a
-	inc	r0
-	inc	r1
-	mov	a,@r0
-	mov	@r1,a
+	mov	@r0,ar4
 	mov	r0,_bp
 	inc	r0
 	mov	dpl,@r0
 	inc	r0
 	mov	dph,@r0
-	inc	r0
-	mov	b,@r0
-	lcall	__gptrget
+	movx	a,@dptr
 	mov	r2,a
 	inc	dptr
-	lcall	__gptrget
+	movx	a,@dptr
+	orl	a,r2
+	jnz	00168$
+	ljmp	00102$
+00168$:
+	push	ar5
+	push	ar6
+	mov	dpl,r3
+	mov	dph,r4
+	inc	dptr
+	inc	dptr
+	movx	a,@dptr
+	mov	r2,a
+	inc	dptr
+	movx	a,@dptr
 	mov	r7,a
+	mov	a,_bp
+	add	a,#0x03
+	mov	r0,a
+	mov	a,#0x04
+	add	a, r3
+	mov	@r0,a
+	clr	a
+	addc	a, r4
+	inc	r0
+	mov	@r0,a
+	mov	a,_bp
+	add	a,#0x03
+	mov	r0,a
+	mov	dpl,@r0
+	inc	r0
+	mov	dph,@r0
+	movx	a,@dptr
+	mov	r5,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r6,a
 	clr	c
-	mov	a,r2
-	subb	a,r3
-	mov	a,r7
+	mov	a,r5
+	subb	a,r2
+	mov	a,r6
 	xrl	a,#0x80
-	mov	b,r6
+	mov	b,r7
 	xrl	b,#0x80
 	subb	a,b
-	jnc	00152$
-	ljmp	00102$
-00152$:
-	mov	a,_bp
-	add	a,#0x0a
-	mov	r0,a
+	pop	ar6
+	pop	ar5
+	jc	00102$
 	mov	a,#0x06
-	add	a,@r0
-	mov	r3,a
+	add	a, r3
+	mov	r2,a
 	clr	a
-	inc	r0
-	addc	a,@r0
-	mov	r6,a
-	inc	r0
-	mov	ar7,@r0
-	mov	dpl,r3
-	mov	dph,r6
-	mov	b,r7
-	lcall	__gptrget
+	addc	a, r4
+	mov	r7,a
+	mov	dpl,r2
+	mov	dph,r7
+	movx	a,@dptr
 	jz	00102$
 ;	89C51Board.c:94: pTimer->ticksSoFar = 0;
+	push	ar5
+	push	ar6
+	mov	a,_bp
+	add	a,#0x03
+	mov	r0,a
+	mov	dpl,@r0
+	inc	r0
+	mov	dph,@r0
+	clr	a
+	movx	@dptr,a
+	inc	dptr
+	movx	@dptr,a
+;	89C51Board.c:95: pTimer->callback(pTimer->cookie);
+	mov	a,#0x07
+	add	a, r3
+	mov	dpl,a
+	clr	a
+	addc	a, r4
+	mov	dph,a
+	movx	a,@dptr
+	mov	r2,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r7,a
 	mov	r0,_bp
 	inc	r0
 	mov	dpl,@r0
 	inc	r0
 	mov	dph,@r0
-	inc	r0
-	mov	b,@r0
-	clr	a
-	lcall	__gptrput
+	movx	a,@dptr
+	mov	r5,a
 	inc	dptr
-	lcall	__gptrput
-;	89C51Board.c:95: pTimer->callback(pTimer->cookie);
-	mov	a,_bp
-	add	a,#0x0a
-	mov	r0,a
-	mov	a,#0x07
-	add	a,@r0
-	mov	r3,a
-	clr	a
-	inc	r0
-	addc	a,@r0
+	movx	a,@dptr
 	mov	r6,a
-	inc	r0
-	mov	ar7,@r0
-	mov	dpl,r3
-	mov	dph,r6
-	mov	b,r7
-	lcall	__gptrget
-	mov	r3,a
-	inc	dptr
-	lcall	__gptrget
-	mov	r6,a
-	mov	a,_bp
-	add	a,#0x0a
-	mov	r0,a
-	mov	dpl,@r0
-	inc	r0
-	mov	dph,@r0
-	inc	r0
-	mov	b,@r0
-	lcall	__gptrget
-	mov	r2,a
-	inc	dptr
-	lcall	__gptrget
-	mov	r7,a
+	push	ar7
 	push	ar6
 	push	ar5
-	push	ar4
-	push	ar3
-	lcall	00154$
-	sjmp	00155$
-00154$:
-	push	ar3
-	push	ar6
-	mov	dpl,r2
-	mov	dph,r7
+	push	ar2
+	lcall	00171$
+	sjmp	00172$
+00171$:
+	push	ar2
+	push	ar7
+	mov	dpl, r5
+	mov	dph, r6
 	ret
-00155$:
-	pop	ar3
-	pop	ar4
+00172$:
+	pop	ar2
 	pop	ar5
 	pop	ar6
+	pop	ar7
+	pop	ar6
+	pop	ar5
 	sjmp	00112$
 00102$:
 ;	89C51Board.c:99: pTimer->ticksSoFar++;
-	push	ar4
-	push	ar5
-	mov	a,_bp
-	add	a,#0x0a
-	mov	r0,a
 	mov	a,#0x04
-	add	a,@r0
+	add	a, r3
 	mov	r3,a
 	clr	a
-	inc	r0
-	addc	a,@r0
-	mov	r6,a
-	inc	r0
-	mov	ar7,@r0
+	addc	a, r4
+	mov	r4,a
 	mov	dpl,r3
-	mov	dph,r6
-	mov	b,r7
-	lcall	__gptrget
+	mov	dph,r4
+	movx	a,@dptr
 	mov	r2,a
 	inc	dptr
-	lcall	__gptrget
-	mov	r5,a
+	movx	a,@dptr
+	mov	r7,a
 	inc	r2
-	cjne	r2,#0x00,00156$
-	inc	r5
-00156$:
+	cjne	r2,#0x00,00173$
+	inc	r7
+00173$:
 	mov	dpl,r3
-	mov	dph,r6
-	mov	b,r7
+	mov	dph,r4
 	mov	a,r2
-	lcall	__gptrput
+	movx	@dptr,a
+	mov	a,r7
 	inc	dptr
-	mov	a,r5
-	lcall	__gptrput
-;	89C51Board.c:104: for (c = 0; c < 100; ++c)
-	pop	ar5
-	pop	ar4
-;	89C51Board.c:99: pTimer->ticksSoFar++;
+	movx	@dptr,a
 00112$:
 ;	89C51Board.c:88: for (timerCounter = 0; timerCounter < MAX_TIMERS; ++timerCounter)
 	mov	a,#0x09
-	add	a,r4
-	mov	r4,a
-	clr	a
-	addc	a,r5
+	add	a, r5
 	mov	r5,a
-	mov	a,_bp
-	add	a,#0x08
-	mov	r0,a
-	inc	@r0
-	cjne	@r0,#0x00,00157$
-	inc	r0
-	inc	@r0
-00157$:
-	mov	a,_bp
-	add	a,#0x08
-	mov	r0,a
-	clr	c
-	mov	a,@r0
-	subb	a,#0x0a
-	inc	r0
-	mov	a,@r0
-	xrl	a,#0x80
-	subb	a,#0x80
-	jnc	00158$
-	ljmp	00111$
-00158$:
-;	89C51Board.c:104: for (c = 0; c < 100; ++c)
-	mov	a,_bp
-	add	a,#0x04
-	mov	r0,a
-	mov	@r0,#0x64
 	clr	a
-	inc	r0
-	mov	@r0,a
-	inc	r0
-	mov	@r0,a
-	inc	r0
-	mov	@r0,a
-00115$:
-	mov	a,_bp
-	add	a,#0x04
-	mov	r0,a
-	mov	a,@r0
-	add	a,#0xff
-	mov	r2,a
-	inc	r0
-	mov	a,@r0
-	addc	a,#0xff
-	mov	r3,a
-	inc	r0
-	mov	a,@r0
-	addc	a,#0xff
+	addc	a, r6
 	mov	r6,a
-	inc	r0
-	mov	a,@r0
-	addc	a,#0xff
-	mov	r7,a
 	mov	a,_bp
-	add	a,#0x04
+	add	a,#0x05
 	mov	r0,a
-	mov	@r0,ar2
-	inc	r0
-	mov	@r0,ar3
-	inc	r0
-	mov	@r0,ar6
-	inc	r0
-	mov	@r0,ar7
-	mov	a,r2
-	orl	a,r3
+	mov	a,_bp
+	add	a,#0x05
+	mov	r1,a
+	mov	a,@r0
+	inc	a
+	mov	@r1,a
+	mov	a,_bp
+	add	a,#0x05
+	mov	r0,a
+	cjne	@r0,#0x0a,00174$
+00174$:
+	jnc	00175$
+	ljmp	00111$
+00175$:
+;	89C51Board.c:104: for (c = 0; c < 100; ++c)
+	mov	r4,#0x64
+	mov	r5,#0x00
+	mov	r6,#0x00
+	mov	r7,#0x00
+00115$:
+	dec	r4
+	cjne	r4,#0xff,00176$
+	dec	r5
+	cjne	r5,#0xff,00176$
+	dec	r6
+	cjne	r6,#0xff,00176$
+	dec	r7
+00176$:
+	mov	a,r4
+	orl	a,r5
 	orl	a,r6
 	orl	a,r7
 	jnz	00115$
@@ -901,7 +872,7 @@ _Hardware_ScheduleUserCalls:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'Hardware_InitialiseHardware'
 ;------------------------------------------------------------
-;i                         Allocated to registers r6 r7 
+;i             Allocated to registers r7 
 ;------------------------------------------------------------
 ;	89C51Board.c:112: void Hardware_InitialiseHardware() REENTRANT
 ;	-----------------------------------------
@@ -909,17 +880,16 @@ _Hardware_ScheduleUserCalls:
 ;	-----------------------------------------
 _Hardware_InitialiseHardware:
 ;	89C51Board.c:116: for (i = 0; i < MAX_TIMERS; ++i)
-	mov	r6,#0x00
 	mov	r7,#0x00
-	mov	r4,#0x00
 	mov	r5,#0x00
+	mov	r6,#0x00
 00102$:
 ;	89C51Board.c:118: timers[i].cookie = 0;
-	mov	a,r4
-	add	a,#_timers
-	mov	dpl,a
 	mov	a,r5
-	addc	a,#(_timers >> 8)
+	add	a, #_timers
+	mov	dpl,a
+	mov	a,r6
+	addc	a, #(_timers >> 8)
 	mov	dph,a
 	clr	a
 	movx	@dptr,a
@@ -927,21 +897,14 @@ _Hardware_InitialiseHardware:
 	movx	@dptr,a
 ;	89C51Board.c:116: for (i = 0; i < MAX_TIMERS; ++i)
 	mov	a,#0x09
-	add	a,r4
-	mov	r4,a
-	clr	a
-	addc	a,r5
+	add	a, r5
 	mov	r5,a
-	inc	r6
-	cjne	r6,#0x00,00115$
+	clr	a
+	addc	a, r6
+	mov	r6,a
 	inc	r7
-00115$:
-	clr	c
-	mov	a,r6
-	subb	a,#0x0a
-	mov	a,r7
-	xrl	a,#0x80
-	subb	a,#0x80
+	cjne	r7,#0x0a,00119$
+00119$:
 	jc	00102$
 ;	89C51Board.c:122: pRegisterForTimer = Hardware_RegisterForTimer;
 	mov	r6,#_Hardware_RegisterForTimer
@@ -1032,12 +995,12 @@ _Hardware_InitialiseHardware:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'Hardware_RegisterForTimer'
 ;------------------------------------------------------------
-;milliSeconds              Allocated to stack - _bp -4
-;callback                  Allocated to stack - _bp -6
-;cookie                    Allocated to stack - _bp +1
-;i                         Allocated to registers r4 r5 
-;sloc0                     Allocated to stack - _bp +5
-;sloc1                     Allocated to stack - _bp +3
+;milliSeconds  Allocated to stack - _bp -4 +2 
+;callback      Allocated to stack - _bp -6 +2 
+;cookie        Allocated to stack - _bp +1 +2 
+;i             Allocated to registers r4 r5 
+;sloc0         Allocated to stack - _bp +5 +2 
+;sloc1         Allocated to stack - _bp +3 +2 
 ;------------------------------------------------------------
 ;	89C51Board.c:140: void Hardware_RegisterForTimer(int cookie, int milliSeconds, CallbackDelegate callback) REENTRANT
 ;	-----------------------------------------
@@ -1060,10 +1023,10 @@ _Hardware_RegisterForTimer:
 00105$:
 ;	89C51Board.c:146: if (timers[i].cookie == 0 || timers[i].cookie == cookie)
 	mov	a,r7
-	add	a,#_timers
+	add	a, #_timers
 	mov	dpl,a
 	mov	a,r6
-	addc	a,#(_timers >> 8)
+	addc	a, #(_timers >> 8)
 	mov	dph,a
 	mov	a,_bp
 	add	a,#0x03
@@ -1088,16 +1051,16 @@ _Hardware_RegisterForTimer:
 	inc	r1
 	mov	b,@r0
 	mov	a,@r1
-	cjne	a,b,00122$
+	cjne	a,b,00128$
 	inc	r0
 	mov	b,@r0
 	inc	r1
 	mov	a,@r1
-	cjne	a,b,00122$
-	sjmp	00123$
-00122$:
+	cjne	a,b,00128$
+	sjmp	00129$
+00128$:
 	sjmp	00106$
-00123$:
+00129$:
 00101$:
 ;	89C51Board.c:148: timers[i].cookie = cookie;
 	mov	dptr,#__mulint_PARM_2
@@ -1108,14 +1071,16 @@ _Hardware_RegisterForTimer:
 	movx	@dptr,a
 	mov	dptr,#0x0009
 	lcall	__mulint
-	mov	r6,dpl
-	mov	r7,dph
+	mov	r6, dpl
+	mov	r7, dph
 	mov	a,r6
-	add	a,#_timers
-	mov	dpl,a
+	add	a, #_timers
+	mov	r6,a
 	mov	a,r7
-	addc	a,#(_timers >> 8)
-	mov	dph,a
+	addc	a, #(_timers >> 8)
+	mov	r7,a
+	mov	dpl,r6
+	mov	dph,r7
 	mov	r0,_bp
 	inc	r0
 	mov	a,@r0
@@ -1125,12 +1090,6 @@ _Hardware_RegisterForTimer:
 	inc	dptr
 	movx	@dptr,a
 ;	89C51Board.c:149: timers[i].periodMilliseconds = milliSeconds;
-	mov	a,r6
-	add	a,#_timers
-	mov	r6,a
-	mov	a,r7
-	addc	a,#(_timers >> 8)
-	mov	r7,a
 	mov	dpl,r6
 	mov	dph,r7
 	inc	dptr
@@ -1157,19 +1116,19 @@ _Hardware_RegisterForTimer:
 	movx	@dptr,a
 ;	89C51Board.c:151: timers[i].enabled = 1;
 	mov	a,#0x06
-	add	a,r6
+	add	a, r6
 	mov	dpl,a
 	clr	a
-	addc	a,r7
+	addc	a, r7
 	mov	dph,a
 	mov	a,#0x01
 	movx	@dptr,a
 ;	89C51Board.c:152: timers[i].callback = callback;
 	mov	a,#0x07
-	add	a,r6
+	add	a, r6
 	mov	dpl,a
 	clr	a
-	addc	a,r7
+	addc	a, r7
 	mov	dph,a
 	mov	a,_bp
 	add	a,#0xfa
@@ -1185,11 +1144,162 @@ _Hardware_RegisterForTimer:
 00106$:
 ;	89C51Board.c:144: for (i = 0; i < MAX_TIMERS; ++i)
 	mov	a,#0x09
-	add	a,r7
+	add	a, r7
 	mov	r7,a
 	clr	a
-	addc	a,r6
+	addc	a, r6
 	mov	r6,a
+	inc	r2
+	cjne	r2,#0x00,00130$
+	inc	r3
+00130$:
+	mov	ar4,r2
+	mov	ar5,r3
+	clr	c
+	mov	a,r2
+	subb	a,#0x0a
+	mov	a,r3
+	xrl	a,#0x80
+	subb	a,#0x80
+	jnc	00131$
+	ljmp	00105$
+00131$:
+;	89C51Board.c:157: pCrashDump("OutOfTimers");
+	lcall	00132$
+	sjmp	00133$
+00132$:
+	mov	dptr,#_pCrashDump
+	movx	a,@dptr
+	push	acc
+	inc	dptr
+	movx	a,@dptr
+	push	acc
+	mov	dptr,#___str_0
+	mov	b, #0x80
+	ret
+00133$:
+00107$:
+;	89C51Board.c:159: }
+	mov	sp,_bp
+	pop	_bp
+	ret
+;------------------------------------------------------------
+;Allocation info for local variables in function 'Hardware_EnableTimer'
+;------------------------------------------------------------
+;enabled       Allocated to stack - _bp -4 +2 
+;cookie        Allocated to registers r6 r7 
+;i             Allocated to registers r4 r5 
+;sloc0         Allocated to stack - _bp +1 +2 
+;sloc1         Allocated to stack - _bp +3 +2 
+;sloc2         Allocated to stack - _bp +9 +1 
+;------------------------------------------------------------
+;	89C51Board.c:162: void Hardware_EnableTimer(int cookie, int enabled) REENTRANT
+;	-----------------------------------------
+;	 function Hardware_EnableTimer
+;	-----------------------------------------
+_Hardware_EnableTimer:
+	push	_bp
+	mov	a,sp
+	mov	_bp,a
+	add	a,#0x04
+	mov	sp,a
+	mov	r6, dpl
+	mov	r7, dph
+;	89C51Board.c:165: for (i = 0; i < MAX_TIMERS; ++i)
+	mov	r4,#0x00
+	mov	r5,#0x00
+	mov	r2,#0x00
+	mov	r3,#0x00
+	mov	r0,_bp
+	inc	r0
+	clr	a
+	mov	@r0,a
+	inc	r0
+	mov	@r0,a
+00105$:
+;	89C51Board.c:167: if (timers[i].cookie == 0 || timers[i].cookie == cookie)
+	mov	r0,_bp
+	inc	r0
+	mov	a,@r0
+	add	a, #_timers
+	mov	dpl,a
+	inc	r0
+	mov	a,@r0
+	addc	a, #(_timers >> 8)
+	mov	dph,a
+	mov	a,_bp
+	add	a,#0x03
+	mov	r0,a
+	movx	a,@dptr
+	mov	@r0,a
+	inc	dptr
+	movx	a,@dptr
+	inc	r0
+	mov	@r0,a
+	mov	a,_bp
+	add	a,#0x03
+	mov	r0,a
+	mov	a,@r0
+	inc	r0
+	orl	a,@r0
+	jz	00101$
+	mov	a,_bp
+	add	a,#0x03
+	mov	r0,a
+	mov	a,@r0
+	cjne	a,ar6,00122$
+	inc	r0
+	mov	a,@r0
+	cjne	a,ar7,00122$
+	sjmp	00123$
+00122$:
+	sjmp	00106$
+00123$:
+00101$:
+;	89C51Board.c:169: timers[i].enabled = enabled;
+	mov	dptr,#__mulint_PARM_2
+	mov	a,r4
+	movx	@dptr,a
+	mov	a,r5
+	inc	dptr
+	movx	@dptr,a
+	mov	dptr,#0x0009
+	lcall	__mulint
+	mov	r7, dpl
+	mov	r6, dph
+	mov	a,r7
+	add	a, #_timers
+	mov	r7,a
+	mov	a,r6
+	addc	a, #(_timers >> 8)
+	mov	r6,a
+	mov	a,#0x06
+	add	a, r7
+	mov	r7,a
+	clr	a
+	addc	a, r6
+	mov	r6,a
+	mov	a,_bp
+	add	a,#0xfc
+	mov	r0,a
+	mov	ar5,@r0
+	mov	dpl,r7
+	mov	dph,r6
+	mov	a,r5
+	movx	@dptr,a
+;	89C51Board.c:170: return;
+	sjmp	00107$
+00106$:
+;	89C51Board.c:165: for (i = 0; i < MAX_TIMERS; ++i)
+	mov	r0,_bp
+	inc	r0
+	mov	a,#0x09
+	add	a, @r0
+	mov	@r0,a
+	clr	a
+	inc	r0
+	addc	a, @r0
+	mov	@r0,a
 	inc	r2
 	cjne	r2,#0x00,00124$
 	inc	r3
@@ -1205,158 +1315,6 @@ _Hardware_RegisterForTimer:
 	jnc	00125$
 	ljmp	00105$
 00125$:
-;	89C51Board.c:157: pCrashDump("OutOfTimers");
-	lcall	00126$
-	sjmp	00127$
-00126$:
-	mov	dptr,#_pCrashDump
-	movx	a,@dptr
-	push	acc
-	inc	dptr
-	movx	a,@dptr
-	push	acc
-	mov	dptr,#___str_0
-	mov	b,#0x80
-	ret
-00127$:
-00107$:
-;	89C51Board.c:159: }
-	mov	sp,_bp
-	pop	_bp
-	ret
-;------------------------------------------------------------
-;Allocation info for local variables in function 'Hardware_EnableTimer'
-;------------------------------------------------------------
-;enabled                   Allocated to stack - _bp -4
-;cookie                    Allocated to registers r6 r7 
-;i                         Allocated to registers r4 r5 
-;sloc0                     Allocated to stack - _bp +3
-;sloc1                     Allocated to stack - _bp +1
-;sloc2                     Allocated to stack - _bp +9
-;------------------------------------------------------------
-;	89C51Board.c:162: void Hardware_EnableTimer(int cookie, int enabled) REENTRANT
-;	-----------------------------------------
-;	 function Hardware_EnableTimer
-;	-----------------------------------------
-_Hardware_EnableTimer:
-	push	_bp
-	mov	a,sp
-	mov	_bp,a
-	add	a,#0x04
-	mov	sp,a
-	mov	r6,dpl
-	mov	r7,dph
-;	89C51Board.c:165: for (i = 0; i < MAX_TIMERS; ++i)
-	clr	a
-	mov	r4,a
-	mov	r5,a
-	mov	r2,a
-	mov	r3,a
-	mov	a,_bp
-	add	a,#0x03
-	mov	r0,a
-	clr	a
-	mov	@r0,a
-	inc	r0
-	mov	@r0,a
-00105$:
-;	89C51Board.c:167: if (timers[i].cookie == 0 || timers[i].cookie == cookie)
-	mov	a,_bp
-	add	a,#0x03
-	mov	r0,a
-	mov	a,@r0
-	add	a,#_timers
-	mov	dpl,a
-	inc	r0
-	mov	a,@r0
-	addc	a,#(_timers >> 8)
-	mov	dph,a
-	mov	r0,_bp
-	inc	r0
-	movx	a,@dptr
-	mov	@r0,a
-	inc	dptr
-	movx	a,@dptr
-	inc	r0
-	mov	@r0,a
-	mov	r0,_bp
-	inc	r0
-	mov	a,@r0
-	inc	r0
-	orl	a,@r0
-	jz	00101$
-	mov	r0,_bp
-	inc	r0
-	mov	a,@r0
-	cjne	a,ar6,00118$
-	inc	r0
-	mov	a,@r0
-	cjne	a,ar7,00118$
-	sjmp	00119$
-00118$:
-	sjmp	00106$
-00119$:
-00101$:
-;	89C51Board.c:169: timers[i].enabled = enabled;
-	mov	dptr,#__mulint_PARM_2
-	mov	a,r4
-	movx	@dptr,a
-	mov	a,r5
-	inc	dptr
-	movx	@dptr,a
-	mov	dptr,#0x0009
-	lcall	__mulint
-	mov	r7,dpl
-	mov	r6,dph
-	mov	a,r7
-	add	a,#_timers
-	mov	r7,a
-	mov	a,r6
-	addc	a,#(_timers >> 8)
-	mov	r6,a
-	mov	a,#0x06
-	add	a,r7
-	mov	r7,a
-	clr	a
-	addc	a,r6
-	mov	r6,a
-	mov	a,_bp
-	add	a,#0xfc
-	mov	r0,a
-	mov	ar5,@r0
-	mov	dpl,r7
-	mov	dph,r6
-	mov	a,r5
-	movx	@dptr,a
-;	89C51Board.c:170: return;
-	sjmp	00107$
-00106$:
-;	89C51Board.c:165: for (i = 0; i < MAX_TIMERS; ++i)
-	mov	a,_bp
-	add	a,#0x03
-	mov	r0,a
-	mov	a,#0x09
-	add	a,@r0
-	mov	@r0,a
-	clr	a
-	inc	r0
-	addc	a,@r0
-	mov	@r0,a
-	inc	r2
-	cjne	r2,#0x00,00120$
-	inc	r3
-00120$:
-	mov	ar4,r2
-	mov	ar5,r3
-	clr	c
-	mov	a,r2
-	subb	a,#0x0a
-	mov	a,r3
-	xrl	a,#0x80
-	subb	a,#0x80
-	jnc	00121$
-	ljmp	00105$
-00121$:
 00107$:
 ;	89C51Board.c:173: }
 	mov	sp,_bp
@@ -1365,7 +1323,7 @@ _Hardware_EnableTimer:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'Hardware_WriteDisplayBuffer'
 ;------------------------------------------------------------
-;buffer                    Allocated to registers r5 r6 r7 
+;buffer        Allocated to registers r5 r6 r7 
 ;------------------------------------------------------------
 ;	89C51Board.c:176: void Hardware_WriteDisplayBuffer(unsigned char* buffer) REENTRANT
 ;	-----------------------------------------
@@ -1378,7 +1336,7 @@ _Hardware_WriteDisplayBuffer:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'Hardware_SetRtc'
 ;------------------------------------------------------------
-;dts                       Allocated to registers r5 r6 r7 
+;dts           Allocated to registers r5 r6 r7 
 ;------------------------------------------------------------
 ;	89C51Board.c:181: void Hardware_SetRtc(DateTimeStruct* dts) REENTRANT
 ;	-----------------------------------------
@@ -1391,7 +1349,7 @@ _Hardware_SetRtc:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'Hardware_GetRtc'
 ;------------------------------------------------------------
-;dts                       Allocated to registers r5 r6 r7 
+;dts           Allocated to registers r5 r6 r7 
 ;------------------------------------------------------------
 ;	89C51Board.c:186: void Hardware_GetRtc(DateTimeStruct* dts) REENTRANT
 ;	-----------------------------------------
@@ -1404,11 +1362,11 @@ _Hardware_GetRtc:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'Hardware_GetKeyState'
 ;------------------------------------------------------------
-;keys                      Allocated to stack - _bp +1
-;rowCount                  Allocated to registers r4 
-;colCount                  Allocated to stack - _bp +4
-;portValue                 Allocated to registers 
-;sloc0                     Allocated to stack - _bp +4
+;keys          Allocated to stack - _bp +1 +3 
+;rowCount      Allocated to registers r4 
+;colCount      Allocated to stack - _bp +4 +1 
+;portValue     Allocated to registers 
+;sloc0         Allocated to stack - _bp +4 +1 
 ;------------------------------------------------------------
 ;	89C51Board.c:191: void Hardware_GetKeyState(int *keys) REENTRANT
 ;	-----------------------------------------
@@ -1434,8 +1392,8 @@ _Hardware_GetKeyState:
 	inc	dptr
 	lcall	__gptrput
 ;	89C51Board.c:197: for (rowCount = 0; rowCount < 4; ++rowCount)
-	mov	r4,#0x00
-	mov	r3,#0x00
+	mov	r4,a
+	mov	r3,a
 00107$:
 ;	89C51Board.c:199: P1 = ~(0x80 >> rowCount) | 0xf;
 	push	ar4
@@ -1446,8 +1404,8 @@ _Hardware_GetKeyState:
 	mov	r4,a
 	rlc	a
 	mov	ov,c
-	sjmp	00128$
-00127$:
+	sjmp	00136$
+00135$:
 	mov	c,ov
 	mov	a,r4
 	rrc	a
@@ -1455,8 +1413,8 @@ _Hardware_GetKeyState:
 	mov	a,r2
 	rrc	a
 	mov	r2,a
-00128$:
-	djnz	b,00127$
+00136$:
+	djnz	b,00135$
 	mov	a,r2
 	cpl	a
 	mov	r2,a
@@ -1478,15 +1436,14 @@ _Hardware_GetKeyState:
 	mov	a,_P1
 	cpl	a
 	mov	r2,a
-	mov	ar4,r7
-	mov	b,r4
+	mov	b,r7
 	inc	b
 	mov	a,#0x01
-	sjmp	00131$
-00129$:
+	sjmp	00138$
+00137$:
 	add	a,acc
-00131$:
-	djnz	b,00129$
+00138$:
+	djnz	b,00137$
 	anl	a,r2
 ;	89C51Board.c:203: if (portValue)
 	pop	ar4
@@ -1512,15 +1469,15 @@ _Hardware_GetKeyState:
 	mov	ar5,@r0
 	mov	r6,#0x00
 	mov	a,r5
-	add	a,r2
+	add	a, r2
 	mov	r2,a
 	mov	a,r6
-	addc	a,r7
+	addc	a, r7
 	mov	r7,a
 	inc	r2
-	cjne	r2,#0x00,00133$
+	cjne	r2,#0x00,00140$
 	inc	r7
-00133$:
+00140$:
 	mov	r0,_bp
 	inc	r0
 	mov	dpl,@r0
@@ -1542,17 +1499,17 @@ _Hardware_GetKeyState:
 	add	a,#0x04
 	mov	r0,a
 	mov	@r0,ar7
-	cjne	r7,#0x04,00134$
-00134$:
+	cjne	r7,#0x04,00141$
+00141$:
 	jc	00105$
 ;	89C51Board.c:197: for (rowCount = 0; rowCount < 4; ++rowCount)
 	inc	r3
 	mov	ar4,r3
-	cjne	r3,#0x04,00136$
-00136$:
-	jnc	00137$
+	cjne	r3,#0x04,00143$
+00143$:
+	jnc	00144$
 	ljmp	00107$
-00137$:
+00144$:
 00109$:
 ;	89C51Board.c:211: }
 	mov	sp,_bp
@@ -1561,16 +1518,16 @@ _Hardware_GetKeyState:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'Hardware_GetInputPortValues'
 ;------------------------------------------------------------
-;pValue                    Allocated to registers r5 r6 r7 
+;pValue        Allocated to registers r5 r6 r7 
 ;------------------------------------------------------------
 ;	89C51Board.c:214: void Hardware_GetInputPortValues(unsigned char *pValue) REENTRANT
 ;	-----------------------------------------
 ;	 function Hardware_GetInputPortValues
 ;	-----------------------------------------
 _Hardware_GetInputPortValues:
-	mov	r5,dpl
-	mov	r6,dph
-	mov	r7,b
+	mov	r5, dpl
+	mov	r6, dph
+	mov	r7, b
 ;	89C51Board.c:216: P3 = 0xfC;
 	mov	_P3,#0xfc
 ;	89C51Board.c:217: *pValue = P3 & 0x3C;
@@ -1599,7 +1556,7 @@ _Hardware_GetInputPortValues:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'Hardware_SetOutputPortValues'
 ;------------------------------------------------------------
-;value                     Allocated to registers 
+;value         Allocated to registers 
 ;------------------------------------------------------------
 ;	89C51Board.c:223: void Hardware_SetOutputPortValues(unsigned char value) REENTRANT
 ;	-----------------------------------------
@@ -1613,11 +1570,10 @@ _Hardware_SetOutputPortValues:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'Hardware_CrashDump'
 ;------------------------------------------------------------
-;message                   Allocated to registers 
-;buffer                    Allocated to stack - _bp +3
-;i                         Allocated to registers r2 r3 
-;sloc0                     Allocated to stack - _bp +1
-;sloc1                     Allocated to stack - _bp +2
+;message       Allocated to registers 
+;buffer        Allocated to stack - _bp +2 +33 
+;i             Allocated to registers r2 
+;sloc0         Allocated to stack - _bp +1 +1 
 ;------------------------------------------------------------
 ;	89C51Board.c:228: void Hardware_CrashDump(unsigned char* message) REENTRANT
 ;	-----------------------------------------
@@ -1627,20 +1583,17 @@ _Hardware_CrashDump:
 	push	_bp
 	mov	a,sp
 	mov	_bp,a
-	add	a,#0x23
+	add	a,#0x22
 	mov	sp,a
-	mov	r5,dpl
-	mov	r6,dph
-	mov	r7,b
+	mov	r5, dpl
+	mov	r6, dph
+	mov	r7, b
 ;	89C51Board.c:232: for (i = 0; i < SCREEN_BUFFER_SIZE; ++i)
 	mov	a,_bp
-	add	a,#0x03
+	add	a,#0x02
 	mov	r4,a
-	mov	r0,_bp
-	inc	r0
-	mov	@r0,ar4
+	mov	r3,a
 	mov	r2,#0x00
-	mov	r3,#0x00
 00108$:
 ;	89C51Board.c:234: if (*message != 0)
 	mov	dpl,r5
@@ -1648,22 +1601,17 @@ _Hardware_CrashDump:
 	mov	b,r7
 	mov	r0,_bp
 	inc	r0
-	inc	r0
 	lcall	__gptrget
 	mov	@r0,a
 	mov	r0,_bp
 	inc	r0
-	inc	r0
 	mov	a,@r0
 	jz	00102$
 ;	89C51Board.c:236: buffer[i] = *message;
-	mov	r0,_bp
-	inc	r0
 	mov	a,r2
-	add	a,@r0
+	add	a, r3
 	mov	r0,a
 	mov	r1,_bp
-	inc	r1
 	inc	r1
 	mov	a,@r1
 	mov	@r0,a
@@ -1675,28 +1623,21 @@ _Hardware_CrashDump:
 00102$:
 ;	89C51Board.c:241: buffer[i] = ' ';
 	mov	a,r2
-	add	a,r4
+	add	a, r4
 	mov	r0,a
 	mov	@r0,#0x20
 00109$:
 ;	89C51Board.c:232: for (i = 0; i < SCREEN_BUFFER_SIZE; ++i)
 	inc	r2
-	cjne	r2,#0x00,00131$
-	inc	r3
-00131$:
-	clr	c
-	mov	a,r2
-	subb	a,#0x20
-	mov	a,r3
-	xrl	a,#0x80
-	subb	a,#0x80
+	cjne	r2,#0x20,00139$
+00139$:
 	jc	00108$
 ;	89C51Board.c:246: DirectWriteToDisplay(buffer);
 	mov	r7,#0x00
 	mov	r6,#0x40
-	mov	dpl,r4
-	mov	dph,r7
-	mov	b,r6
+	mov	dpl, r4
+	mov	dph, r7
+	mov	b, r6
 	lcall	_DirectWriteToDisplay
 ;	89C51Board.c:247: while (1);
 00106$:

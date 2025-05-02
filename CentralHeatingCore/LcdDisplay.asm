@@ -1,10 +1,10 @@
 ;--------------------------------------------------------
-; File Created by SDCC : free open source ANSI-C Compiler
-; Version 4.0.0 #11528 (MINGW64)
+; File Created by SDCC : free open source ISO C Compiler
+; Version 4.5.0 #15242 (MINGW64)
 ;--------------------------------------------------------
 	.module LcdDisplay
-	.optsdcc -mmcs51 --model-large
 	
+	.optsdcc -mmcs51 --model-large
 ;--------------------------------------------------------
 ; Public variables in this module
 ;--------------------------------------------------------
@@ -429,7 +429,7 @@ _P5_7	=	0x00ef
 ;--------------------------------------------------------
 	.area DSEG    (DATA)
 ;--------------------------------------------------------
-; overlayable items in internal ram 
+; overlayable items in internal ram
 ;--------------------------------------------------------
 ;--------------------------------------------------------
 ; indirectly addressable internal ram data
@@ -449,27 +449,27 @@ _P5_7	=	0x00ef
 ;--------------------------------------------------------
 	.area PSEG    (PAG,XDATA)
 ;--------------------------------------------------------
-; external ram data
+; uninitialized external ram data
 ;--------------------------------------------------------
 	.area XSEG    (XDATA)
-_WriteInstructionToLcd_i_65536_60:
+_WriteInstructionToLcd_i_10000_62:
 	.ds 1
-_WriteDataToLcd_i_65536_62:
+_WriteDataToLcd_i_10000_64:
 	.ds 1
-_WaitLcdReady_busy_status_65536_68:
+_WaitLcdReady_busy_status_10000_70:
 	.ds 1
-_SetCursorPos_pos_65536_72:
+_SetCursorPos_pos_10000_74:
 	.ds 1
-_DirectWriteToDisplay_contents_65536_74:
+_DirectWriteToDisplay_contents_10000_76:
 	.ds 3
-_DirectWriteToDisplay_p_65536_75:
+_DirectWriteToDisplay_p_10000_77:
 	.ds 3
 ;--------------------------------------------------------
 ; absolute external ram data
 ;--------------------------------------------------------
 	.area XABS    (ABS,XDATA)
 ;--------------------------------------------------------
-; external initialized ram data
+; initialized external ram data
 ;--------------------------------------------------------
 	.area XISEG   (XDATA)
 	.area HOME    (CODE)
@@ -501,7 +501,7 @@ _DirectWriteToDisplay_p_65536_75:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'InitialiseLcd'
 ;------------------------------------------------------------
-;i                         Allocated with name '_InitialiseLcd_i_65536_56'
+;i             Allocated with name '_InitialiseLcd_i_10000_58'
 ;------------------------------------------------------------
 ;	LcdDisplay.c:51: void InitialiseLcd()
 ;	-----------------------------------------
@@ -530,9 +530,9 @@ _InitialiseLcd:
 	mov	r7,#0x27
 00112$:
 	dec	r6
-	cjne	r6,#0xff,00164$
+	cjne	r6,#0xff,00184$
 	dec	r7
-00164$:
+00184$:
 	mov	a,r6
 	orl	a,r7
 	jnz	00112$
@@ -547,9 +547,9 @@ _InitialiseLcd:
 	mov	r7,#0x09
 00115$:
 	dec	r6
-	cjne	r6,#0xff,00166$
+	cjne	r6,#0xff,00186$
 	dec	r7
-00166$:
+00186$:
 	mov	a,r6
 	orl	a,r7
 	jnz	00115$
@@ -564,9 +564,9 @@ _InitialiseLcd:
 	mov	r7,#0x00
 00118$:
 	dec	r6
-	cjne	r6,#0xff,00168$
+	cjne	r6,#0xff,00188$
 	dec	r7
-00168$:
+00188$:
 	mov	a,r6
 	orl	a,r7
 	jnz	00118$
@@ -579,7 +579,7 @@ _InitialiseLcd:
 ;	LcdDisplay.c:73: while(WaitLcdReady());      				// Wait LCD Execute Complete
 00104$:
 	lcall	_WaitLcdReady
-	mov	a,dpl
+	mov	a, dpl
 	jnz	00104$
 ;	LcdDisplay.c:75: PORT_LCD &= 0x0F;       				// Clear old LCD Data (Bit[7..4])
 	anl	_P0,#0x0f
@@ -590,28 +590,28 @@ _InitialiseLcd:
 ;	LcdDisplay.c:78: while(WaitLcdReady());      				// Wait LCD Execute Complete
 00107$:
 	lcall	_WaitLcdReady
-	mov	a,dpl
+	mov	a, dpl
 	jnz	00107$
 ;	LcdDisplay.c:80: WriteInstructionToLcd(0x28);  					// Function Set (DL=0 4-Bit,N=1 2 Line,F=0 5X7)
-	mov	dpl,#0x28
+	mov	dpl, #0x28
 	lcall	_WriteInstructionToLcd
 ;	LcdDisplay.c:81: WriteInstructionToLcd(0x0C);  					// Display on/off Control (Entry Display,Cursor off,Cursor not Blink)
-	mov	dpl,#0x0c
+	mov	dpl, #0x0c
 	lcall	_WriteInstructionToLcd
 ;	LcdDisplay.c:82: WriteInstructionToLcd(0x06);  					// Entry Mode Set (I/D=1 Increment,S=0 Cursor Shift)
-	mov	dpl,#0x06
+	mov	dpl, #0x06
 	lcall	_WriteInstructionToLcd
 ;	LcdDisplay.c:83: WriteInstructionToLcd(0x01);  					// Clear Display  (Clear Display,Set DD RAM Address=0)
-	mov	dpl,#0x01
+	mov	dpl, #0x01
 	lcall	_WriteInstructionToLcd
 ;	LcdDisplay.c:85: SetCursorPos(0);
-	mov	dpl,#0x00
+	mov	dpl, #0x00
 ;	LcdDisplay.c:88: }
 	ljmp	_SetCursorPos
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'WriteInstructionToLcd'
 ;------------------------------------------------------------
-;i                         Allocated with name '_WriteInstructionToLcd_i_65536_60'
+;i             Allocated with name '_WriteInstructionToLcd_i_10000_62'
 ;------------------------------------------------------------
 ;	LcdDisplay.c:93: void WriteInstructionToLcd(unsigned char i)
 ;	-----------------------------------------
@@ -619,7 +619,7 @@ _InitialiseLcd:
 ;	-----------------------------------------
 _WriteInstructionToLcd:
 	mov	a,dpl
-	mov	dptr,#_WriteInstructionToLcd_i_65536_60
+	mov	dptr,#_WriteInstructionToLcd_i_10000_62
 	movx	@dptr,a
 ;	LcdDisplay.c:95: PORT_LCD_RS  = 0;			 			// Instruction Select
 ;	assignBit
@@ -630,7 +630,7 @@ _WriteInstructionToLcd:
 ;	LcdDisplay.c:98: PORT_LCD &= 0x0F;       				// Clear old LCD Data (Bit[7..4])
 	anl	_P0,#0x0f
 ;	LcdDisplay.c:99: PORT_LCD |= i & 0xF0;   				// Strobe High Nibble Command
-	mov	dptr,#_WriteInstructionToLcd_i_65536_60
+	mov	dptr,#_WriteInstructionToLcd_i_10000_62
 	movx	a,@dptr
 	mov	r7,a
 	mov	a,#0xf0
@@ -652,14 +652,14 @@ _WriteInstructionToLcd:
 ;	LcdDisplay.c:106: while(WaitLcdReady());      				// Wait LCD Execute Complete
 00101$:
 	lcall	_WaitLcdReady
-	mov	a,dpl
+	mov	a, dpl
 	jnz	00101$
 ;	LcdDisplay.c:107: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'WriteDataToLcd'
 ;------------------------------------------------------------
-;i                         Allocated with name '_WriteDataToLcd_i_65536_62'
+;i             Allocated with name '_WriteDataToLcd_i_10000_64'
 ;------------------------------------------------------------
 ;	LcdDisplay.c:112: void WriteDataToLcd(unsigned char i)
 ;	-----------------------------------------
@@ -667,7 +667,7 @@ _WriteInstructionToLcd:
 ;	-----------------------------------------
 _WriteDataToLcd:
 	mov	a,dpl
-	mov	dptr,#_WriteDataToLcd_i_65536_62
+	mov	dptr,#_WriteDataToLcd_i_10000_64
 	movx	@dptr,a
 ;	LcdDisplay.c:114: PORT_LCD_RS  = 1;				  		// Data Select
 ;	assignBit
@@ -678,7 +678,7 @@ _WriteDataToLcd:
 ;	LcdDisplay.c:117: PORT_LCD &= 0x0F;    					// Clear old LCD Data (Bit[7..4])
 	anl	_P0,#0x0f
 ;	LcdDisplay.c:118: PORT_LCD |= i & 0xF0;  				// Strobe High Nibble Data
-	mov	dptr,#_WriteDataToLcd_i_65536_62
+	mov	dptr,#_WriteDataToLcd_i_10000_64
 	movx	a,@dptr
 	mov	r7,a
 	mov	a,#0xf0
@@ -700,14 +700,14 @@ _WriteDataToLcd:
 ;	LcdDisplay.c:125: while(WaitLcdReady());      				// Wait LCD Execute Complete
 00101$:
 	lcall	_WaitLcdReady
-	mov	a,dpl
+	mov	a, dpl
 	jnz	00101$
 ;	LcdDisplay.c:126: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'PulseLcdEnable'
 ;------------------------------------------------------------
-;i                         Allocated with name '_PulseLcdEnable_i_65536_65'
+;i             Allocated with name '_PulseLcdEnable_i_10000_67'
 ;------------------------------------------------------------
 ;	LcdDisplay.c:131: void PulseLcdEnable(void)	 				// Enable Pulse
 ;	-----------------------------------------
@@ -722,9 +722,9 @@ _PulseLcdEnable:
 	mov	r7,#0x01
 00104$:
 	dec	r6
-	cjne	r6,#0xff,00116$
+	cjne	r6,#0xff,00120$
 	dec	r7
-00116$:
+00120$:
 	mov	a,r6
 	orl	a,r7
 	jnz	00104$
@@ -736,7 +736,7 @@ _PulseLcdEnable:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'WaitLcdReady'
 ;------------------------------------------------------------
-;busy_status               Allocated with name '_WaitLcdReady_busy_status_65536_68'
+;busy_status   Allocated with name '_WaitLcdReady_busy_status_10000_70'
 ;------------------------------------------------------------
 ;	LcdDisplay.c:142: char WaitLcdReady(void)
 ;	-----------------------------------------
@@ -753,7 +753,7 @@ _WaitLcdReady:
 ;	assignBit
 	setb	_P0_1
 ;	LcdDisplay.c:149: busy_status = PORT_LCD;				// Read LCD Data
-	mov	dptr,#_WaitLcdReady_busy_status_65536_68
+	mov	dptr,#_WaitLcdReady_busy_status_10000_70
 	mov	a,_P0
 	movx	@dptr,a
 ;	LcdDisplay.c:151: if(busy_status & 0x80)   				// Read & Check Busy Flag
@@ -766,7 +766,7 @@ _WaitLcdReady:
 ;	assignBit
 	clr	_P0_2
 ;	LcdDisplay.c:155: return 1;							// LCD Busy Status
-	mov	dpl,#0x01
+	mov	dpl, #0x01
 	ret
 00102$:
 ;	LcdDisplay.c:159: PORT_LCD_E = 0;       				// Disable Read
@@ -776,7 +776,7 @@ _WaitLcdReady:
 ;	assignBit
 	clr	_P0_2
 ;	LcdDisplay.c:161: return 0;							// LCD Ready Status
-	mov	dpl,#0x00
+	mov	dpl, #0x00
 ;	LcdDisplay.c:163: }
 	ret
 ;------------------------------------------------------------
@@ -788,13 +788,13 @@ _WaitLcdReady:
 ;	-----------------------------------------
 _ClearDisplay:
 ;	LcdDisplay.c:169: WriteInstructionToLcd(0x01);
-	mov	dpl,#0x01
+	mov	dpl, #0x01
 ;	LcdDisplay.c:170: }
 	ljmp	_WriteInstructionToLcd
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'SetCursorPos'
 ;------------------------------------------------------------
-;pos                       Allocated with name '_SetCursorPos_pos_65536_72'
+;pos           Allocated with name '_SetCursorPos_pos_10000_74'
 ;------------------------------------------------------------
 ;	LcdDisplay.c:177: void SetCursorPos(unsigned char pos)
 ;	-----------------------------------------
@@ -802,7 +802,7 @@ _ClearDisplay:
 ;	-----------------------------------------
 _SetCursorPos:
 	mov	a,dpl
-	mov	dptr,#_SetCursorPos_pos_65536_72
+	mov	dptr,#_SetCursorPos_pos_10000_74
 	movx	@dptr,a
 ;	LcdDisplay.c:179: WriteInstructionToLcd(pos | 0x80);			// Set DD-RAM Address Command  
 	movx	a,@dptr
@@ -813,10 +813,10 @@ _SetCursorPos:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'DirectWriteToDisplay'
 ;------------------------------------------------------------
-;contents                  Allocated with name '_DirectWriteToDisplay_contents_65536_74'
-;row                       Allocated with name '_DirectWriteToDisplay_row_65536_75'
-;col                       Allocated with name '_DirectWriteToDisplay_col_65536_75'
-;p                         Allocated with name '_DirectWriteToDisplay_p_65536_75'
+;contents      Allocated with name '_DirectWriteToDisplay_contents_10000_76'
+;row           Allocated with name '_DirectWriteToDisplay_row_10000_77'
+;col           Allocated with name '_DirectWriteToDisplay_col_10000_77'
+;p             Allocated with name '_DirectWriteToDisplay_p_10000_77'
 ;------------------------------------------------------------
 ;	LcdDisplay.c:287: void DirectWriteToDisplay(unsigned char* contents)
 ;	-----------------------------------------
@@ -826,7 +826,7 @@ _DirectWriteToDisplay:
 	mov	r7,b
 	mov	r6,dph
 	mov	a,dpl
-	mov	dptr,#_DirectWriteToDisplay_contents_65536_74
+	mov	dptr,#_DirectWriteToDisplay_contents_10000_76
 	movx	@dptr,a
 	mov	a,r6
 	inc	dptr
@@ -835,7 +835,7 @@ _DirectWriteToDisplay:
 	inc	dptr
 	movx	@dptr,a
 ;	LcdDisplay.c:294: p = contents;
-	mov	dptr,#_DirectWriteToDisplay_contents_65536_74
+	mov	dptr,#_DirectWriteToDisplay_contents_10000_76
 	movx	a,@dptr
 	mov	r5,a
 	inc	dptr
@@ -844,7 +844,7 @@ _DirectWriteToDisplay:
 	inc	dptr
 	movx	a,@dptr
 	mov	r7,a
-	mov	dptr,#_DirectWriteToDisplay_p_65536_75
+	mov	dptr,#_DirectWriteToDisplay_p_10000_77
 	mov	a,r5
 	movx	@dptr,a
 	mov	a,r6
@@ -865,10 +865,10 @@ _DirectWriteToDisplay:
 	rlc	a
 	mov	r5,a
 	mov	a,r4
-	add	a,#_rowStartAddresses
+	add	a, #_rowStartAddresses
 	mov	dpl,a
 	mov	a,r5
-	addc	a,#(_rowStartAddresses >> 8)
+	addc	a, #(_rowStartAddresses >> 8)
 	mov	dph,a
 	clr	a
 	movc	a,@a+dptr
@@ -879,7 +879,7 @@ _DirectWriteToDisplay:
 	pop	ar6
 	pop	ar7
 ;	LcdDisplay.c:298: for (col = 0; col < COL_COUNT; ++col)
-	mov	dptr,#_DirectWriteToDisplay_p_65536_75
+	mov	dptr,#_DirectWriteToDisplay_p_10000_77
 	movx	a,@dptr
 	mov	r3,a
 	inc	dptr
@@ -888,7 +888,6 @@ _DirectWriteToDisplay:
 	inc	dptr
 	movx	a,@dptr
 	mov	r5,a
-	mov	r1,#0x00
 	mov	r2,#0x00
 00106$:
 ;	LcdDisplay.c:300: if (*p != 0)
@@ -896,19 +895,17 @@ _DirectWriteToDisplay:
 	mov	dph,r4
 	mov	b,r5
 	lcall	__gptrget
-	mov	r0,a
+	mov	r1,a
 	jz	00102$
 ;	LcdDisplay.c:302: WriteDataToLcd(*p);
-	mov	dpl,r0
+	mov	dpl, r1
 	push	ar7
 	push	ar6
 	push	ar5
 	push	ar4
 	push	ar3
 	push	ar2
-	push	ar1
 	lcall	_WriteDataToLcd
-	pop	ar1
 	pop	ar2
 	pop	ar3
 	pop	ar4
@@ -922,16 +919,14 @@ _DirectWriteToDisplay:
 	sjmp	00107$
 00102$:
 ;	LcdDisplay.c:307: WriteDataToLcd(' ');
-	mov	dpl,#0x20
+	mov	dpl, #0x20
 	push	ar7
 	push	ar6
 	push	ar5
 	push	ar4
 	push	ar3
 	push	ar2
-	push	ar1
 	lcall	_WriteDataToLcd
-	pop	ar1
 	pop	ar2
 	pop	ar3
 	pop	ar4
@@ -940,19 +935,12 @@ _DirectWriteToDisplay:
 	pop	ar7
 00107$:
 ;	LcdDisplay.c:298: for (col = 0; col < COL_COUNT; ++col)
-	inc	r1
-	cjne	r1,#0x00,00132$
 	inc	r2
-00132$:
-	clr	c
-	mov	a,r1
-	subb	a,#0x10
-	mov	a,r2
-	xrl	a,#0x80
-	subb	a,#0x80
+	cjne	r2,#0x10,00140$
+00140$:
 	jc	00106$
 ;	LcdDisplay.c:295: for (row = 0; row < ROW_COUNT; ++row)
-	mov	dptr,#_DirectWriteToDisplay_p_65536_75
+	mov	dptr,#_DirectWriteToDisplay_p_10000_77
 	mov	a,r3
 	movx	@dptr,a
 	mov	a,r4
@@ -962,24 +950,26 @@ _DirectWriteToDisplay:
 	inc	dptr
 	movx	@dptr,a
 	inc	r6
-	cjne	r6,#0x00,00134$
+	cjne	r6,#0x00,00142$
 	inc	r7
-00134$:
+00142$:
 	clr	c
 	mov	a,r6
 	subb	a,#0x02
 	mov	a,r7
 	xrl	a,#0x80
 	subb	a,#0x80
-	jnc	00135$
+	jnc	00143$
 	ljmp	00108$
-00135$:
+00143$:
 ;	LcdDisplay.c:311: }
 	ret
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
+	.area CONST   (CODE)
 _rowStartAddresses:
 	.byte #0x00, #0x00	;  0
 	.byte #0x40, #0x00	;  64
+	.area CSEG    (CODE)
 	.area XINIT   (CODE)
 	.area CABS    (ABS,CODE)

@@ -1,10 +1,10 @@
                                       1 ;--------------------------------------------------------
-                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
-                                      3 ; Version 4.0.0 #11528 (MINGW64)
+                                      2 ; File Created by SDCC : free open source ISO C Compiler
+                                      3 ; Version 4.5.0 #15242 (MINGW64)
                                       4 ;--------------------------------------------------------
                                       5 	.module LcdDisplay
-                                      6 	.optsdcc -mmcs51 --model-large
-                                      7 	
+                                      6 	
+                                      7 	.optsdcc -mmcs51 --model-large
                                       8 ;--------------------------------------------------------
                                       9 ; Public variables in this module
                                      10 ;--------------------------------------------------------
@@ -429,7 +429,7 @@
                                     429 ;--------------------------------------------------------
                                     430 	.area DSEG    (DATA)
                                     431 ;--------------------------------------------------------
-                                    432 ; overlayable items in internal ram 
+                                    432 ; overlayable items in internal ram
                                     433 ;--------------------------------------------------------
                                     434 ;--------------------------------------------------------
                                     435 ; indirectly addressable internal ram data
@@ -449,27 +449,27 @@
                                     449 ;--------------------------------------------------------
                                     450 	.area PSEG    (PAG,XDATA)
                                     451 ;--------------------------------------------------------
-                                    452 ; external ram data
+                                    452 ; uninitialized external ram data
                                     453 ;--------------------------------------------------------
                                     454 	.area XSEG    (XDATA)
-      000244                        455 _WriteInstructionToLcd_i_65536_60:
+      000244                        455 _WriteInstructionToLcd_i_10000_62:
       000244                        456 	.ds 1
-      000245                        457 _WriteDataToLcd_i_65536_62:
+      000245                        457 _WriteDataToLcd_i_10000_64:
       000245                        458 	.ds 1
-      000246                        459 _WaitLcdReady_busy_status_65536_68:
+      000246                        459 _WaitLcdReady_busy_status_10000_70:
       000246                        460 	.ds 1
-      000247                        461 _SetCursorPos_pos_65536_72:
+      000247                        461 _SetCursorPos_pos_10000_74:
       000247                        462 	.ds 1
-      000248                        463 _DirectWriteToDisplay_contents_65536_74:
+      000248                        463 _DirectWriteToDisplay_contents_10000_76:
       000248                        464 	.ds 3
-      00024B                        465 _DirectWriteToDisplay_p_65536_75:
+      00024B                        465 _DirectWriteToDisplay_p_10000_77:
       00024B                        466 	.ds 3
                                     467 ;--------------------------------------------------------
                                     468 ; absolute external ram data
                                     469 ;--------------------------------------------------------
                                     470 	.area XABS    (ABS,XDATA)
                                     471 ;--------------------------------------------------------
-                                    472 ; external initialized ram data
+                                    472 ; initialized external ram data
                                     473 ;--------------------------------------------------------
                                     474 	.area XISEG   (XDATA)
                                     475 	.area HOME    (CODE)
@@ -501,13 +501,13 @@
                                     501 ;------------------------------------------------------------
                                     502 ;Allocation info for local variables in function 'InitialiseLcd'
                                     503 ;------------------------------------------------------------
-                                    504 ;i                         Allocated with name '_InitialiseLcd_i_65536_56'
+                                    504 ;i             Allocated with name '_InitialiseLcd_i_10000_58'
                                     505 ;------------------------------------------------------------
                                     506 ;	LcdDisplay.c:51: void InitialiseLcd()
                                     507 ;	-----------------------------------------
                                     508 ;	 function InitialiseLcd
                                     509 ;	-----------------------------------------
-      002604                        510 _InitialiseLcd:
+      00250D                        510 _InitialiseLcd:
                            000007   511 	ar7 = 0x07
                            000006   512 	ar6 = 0x06
                            000005   513 	ar5 = 0x05
@@ -518,267 +518,267 @@
                            000000   518 	ar0 = 0x00
                                     519 ;	LcdDisplay.c:55: PORT_LCD_E = 0;						// Start LCD Control (Disable)
                                     520 ;	assignBit
-      002604 C2 81            [12]  521 	clr	_P0_1
+      00250D C2 81            [12]  521 	clr	_P0_1
                                     522 ;	LcdDisplay.c:56: PORT_LCD_RS = 0;						// Default Instruction
                                     523 ;	assignBit
-      002606 C2 83            [12]  524 	clr	_P0_3
+      00250F C2 83            [12]  524 	clr	_P0_3
                                     525 ;	LcdDisplay.c:57: PORT_LCD_RW = 0;						// Default = Write Direction
                                     526 ;	assignBit
-      002608 C2 82            [12]  527 	clr	_P0_2
+      002511 C2 82            [12]  527 	clr	_P0_2
                                     528 ;	LcdDisplay.c:58: for (i=0;i<10000;i++);				// Power-On Delay (15 mS)  
-      00260A 7E 10            [12]  529 	mov	r6,#0x10
-      00260C 7F 27            [12]  530 	mov	r7,#0x27
-      00260E                        531 00112$:
-      00260E 1E               [12]  532 	dec	r6
-      00260F BE FF 01         [24]  533 	cjne	r6,#0xff,00164$
-      002612 1F               [12]  534 	dec	r7
-      002613                        535 00164$:
-      002613 EE               [12]  536 	mov	a,r6
-      002614 4F               [12]  537 	orl	a,r7
-      002615 70 F7            [24]  538 	jnz	00112$
+      002513 7E 10            [12]  529 	mov	r6,#0x10
+      002515 7F 27            [12]  530 	mov	r7,#0x27
+      002517                        531 00112$:
+      002517 1E               [12]  532 	dec	r6
+      002518 BE FF 01         [24]  533 	cjne	r6,#0xff,00184$
+      00251B 1F               [12]  534 	dec	r7
+      00251C                        535 00184$:
+      00251C EE               [12]  536 	mov	a,r6
+      00251D 4F               [12]  537 	orl	a,r7
+      00251E 70 F7            [24]  538 	jnz	00112$
                                     539 ;	LcdDisplay.c:60: PORT_LCD &= 0x0F;       				// Clear old LCD Data (Bit[7..4])
-      002617 53 80 0F         [24]  540 	anl	_P0,#0x0f
+      002520 53 80 0F         [24]  540 	anl	_P0,#0x0f
                                     541 ;	LcdDisplay.c:61: PORT_LCD |= 0x30;						// DB5:DB4 = 1:1
-      00261A 43 80 30         [24]  542 	orl	_P0,#0x30
+      002523 43 80 30         [24]  542 	orl	_P0,#0x30
                                     543 ;	LcdDisplay.c:62: PulseLcdEnable();							// Enable Pulse
-      00261D 12 26 E5         [24]  544 	lcall	_PulseLcdEnable
+      002526 12 25 EE         [24]  544 	lcall	_PulseLcdEnable
                                     545 ;	LcdDisplay.c:63: for (i=0;i<2500;i++);					// Delay 4.1mS
-      002620 7E C4            [12]  546 	mov	r6,#0xc4
-      002622 7F 09            [12]  547 	mov	r7,#0x09
-      002624                        548 00115$:
-      002624 1E               [12]  549 	dec	r6
-      002625 BE FF 01         [24]  550 	cjne	r6,#0xff,00166$
-      002628 1F               [12]  551 	dec	r7
-      002629                        552 00166$:
-      002629 EE               [12]  553 	mov	a,r6
-      00262A 4F               [12]  554 	orl	a,r7
-      00262B 70 F7            [24]  555 	jnz	00115$
+      002529 7E C4            [12]  546 	mov	r6,#0xc4
+      00252B 7F 09            [12]  547 	mov	r7,#0x09
+      00252D                        548 00115$:
+      00252D 1E               [12]  549 	dec	r6
+      00252E BE FF 01         [24]  550 	cjne	r6,#0xff,00186$
+      002531 1F               [12]  551 	dec	r7
+      002532                        552 00186$:
+      002532 EE               [12]  553 	mov	a,r6
+      002533 4F               [12]  554 	orl	a,r7
+      002534 70 F7            [24]  555 	jnz	00115$
                                     556 ;	LcdDisplay.c:65: PORT_LCD &= 0x0F;       				// Clear old LCD Data (Bit[7..4])
-      00262D 53 80 0F         [24]  557 	anl	_P0,#0x0f
+      002536 53 80 0F         [24]  557 	anl	_P0,#0x0f
                                     558 ;	LcdDisplay.c:66: PORT_LCD |= 0x30;						// DB5:DB4 = 1:1
-      002630 43 80 30         [24]  559 	orl	_P0,#0x30
+      002539 43 80 30         [24]  559 	orl	_P0,#0x30
                                     560 ;	LcdDisplay.c:67: PulseLcdEnable();							// Enable Pulse
-      002633 12 26 E5         [24]  561 	lcall	_PulseLcdEnable
+      00253C 12 25 EE         [24]  561 	lcall	_PulseLcdEnable
                                     562 ;	LcdDisplay.c:68: for (i=0;i<100;i++);					// delay 100uS
-      002636 7E 64            [12]  563 	mov	r6,#0x64
-      002638 7F 00            [12]  564 	mov	r7,#0x00
-      00263A                        565 00118$:
-      00263A 1E               [12]  566 	dec	r6
-      00263B BE FF 01         [24]  567 	cjne	r6,#0xff,00168$
-      00263E 1F               [12]  568 	dec	r7
-      00263F                        569 00168$:
-      00263F EE               [12]  570 	mov	a,r6
-      002640 4F               [12]  571 	orl	a,r7
-      002641 70 F7            [24]  572 	jnz	00118$
+      00253F 7E 64            [12]  563 	mov	r6,#0x64
+      002541 7F 00            [12]  564 	mov	r7,#0x00
+      002543                        565 00118$:
+      002543 1E               [12]  566 	dec	r6
+      002544 BE FF 01         [24]  567 	cjne	r6,#0xff,00188$
+      002547 1F               [12]  568 	dec	r7
+      002548                        569 00188$:
+      002548 EE               [12]  570 	mov	a,r6
+      002549 4F               [12]  571 	orl	a,r7
+      00254A 70 F7            [24]  572 	jnz	00118$
                                     573 ;	LcdDisplay.c:70: PORT_LCD &= 0x0F;       				// Clear old LCD Data (Bit[7..4])
-      002643 53 80 0F         [24]  574 	anl	_P0,#0x0f
+      00254C 53 80 0F         [24]  574 	anl	_P0,#0x0f
                                     575 ;	LcdDisplay.c:71: PORT_LCD |= 0x30;						// DB5:DB4 = 1:1
-      002646 43 80 30         [24]  576 	orl	_P0,#0x30
+      00254F 43 80 30         [24]  576 	orl	_P0,#0x30
                                     577 ;	LcdDisplay.c:72: PulseLcdEnable();							// Enable Pulse
-      002649 12 26 E5         [24]  578 	lcall	_PulseLcdEnable
+      002552 12 25 EE         [24]  578 	lcall	_PulseLcdEnable
                                     579 ;	LcdDisplay.c:73: while(WaitLcdReady());      				// Wait LCD Execute Complete
-      00264C                        580 00104$:
-      00264C 12 26 F7         [24]  581 	lcall	_WaitLcdReady
-      00264F E5 82            [12]  582 	mov	a,dpl
-      002651 70 F9            [24]  583 	jnz	00104$
+      002555                        580 00104$:
+      002555 12 26 00         [24]  581 	lcall	_WaitLcdReady
+      002558 E5 82            [12]  582 	mov	a, dpl
+      00255A 70 F9            [24]  583 	jnz	00104$
                                     584 ;	LcdDisplay.c:75: PORT_LCD &= 0x0F;       				// Clear old LCD Data (Bit[7..4])
-      002653 53 80 0F         [24]  585 	anl	_P0,#0x0f
+      00255C 53 80 0F         [24]  585 	anl	_P0,#0x0f
                                     586 ;	LcdDisplay.c:76: PORT_LCD |= 0x20;						// DB5:DB4 = 1:0
-      002656 43 80 20         [24]  587 	orl	_P0,#0x20
+      00255F 43 80 20         [24]  587 	orl	_P0,#0x20
                                     588 ;	LcdDisplay.c:77: PulseLcdEnable();							// Enable Pulse
-      002659 12 26 E5         [24]  589 	lcall	_PulseLcdEnable
+      002562 12 25 EE         [24]  589 	lcall	_PulseLcdEnable
                                     590 ;	LcdDisplay.c:78: while(WaitLcdReady());      				// Wait LCD Execute Complete
-      00265C                        591 00107$:
-      00265C 12 26 F7         [24]  592 	lcall	_WaitLcdReady
-      00265F E5 82            [12]  593 	mov	a,dpl
-      002661 70 F9            [24]  594 	jnz	00107$
+      002565                        591 00107$:
+      002565 12 26 00         [24]  592 	lcall	_WaitLcdReady
+      002568 E5 82            [12]  593 	mov	a, dpl
+      00256A 70 F9            [24]  594 	jnz	00107$
                                     595 ;	LcdDisplay.c:80: WriteInstructionToLcd(0x28);  					// Function Set (DL=0 4-Bit,N=1 2 Line,F=0 5X7)
-      002663 75 82 28         [24]  596 	mov	dpl,#0x28
-      002666 12 26 81         [24]  597 	lcall	_WriteInstructionToLcd
+      00256C 75 82 28         [24]  596 	mov	dpl, #0x28
+      00256F 12 25 8A         [24]  597 	lcall	_WriteInstructionToLcd
                                     598 ;	LcdDisplay.c:81: WriteInstructionToLcd(0x0C);  					// Display on/off Control (Entry Display,Cursor off,Cursor not Blink)
-      002669 75 82 0C         [24]  599 	mov	dpl,#0x0c
-      00266C 12 26 81         [24]  600 	lcall	_WriteInstructionToLcd
+      002572 75 82 0C         [24]  599 	mov	dpl, #0x0c
+      002575 12 25 8A         [24]  600 	lcall	_WriteInstructionToLcd
                                     601 ;	LcdDisplay.c:82: WriteInstructionToLcd(0x06);  					// Entry Mode Set (I/D=1 Increment,S=0 Cursor Shift)
-      00266F 75 82 06         [24]  602 	mov	dpl,#0x06
-      002672 12 26 81         [24]  603 	lcall	_WriteInstructionToLcd
+      002578 75 82 06         [24]  602 	mov	dpl, #0x06
+      00257B 12 25 8A         [24]  603 	lcall	_WriteInstructionToLcd
                                     604 ;	LcdDisplay.c:83: WriteInstructionToLcd(0x01);  					// Clear Display  (Clear Display,Set DD RAM Address=0)
-      002675 75 82 01         [24]  605 	mov	dpl,#0x01
-      002678 12 26 81         [24]  606 	lcall	_WriteInstructionToLcd
+      00257E 75 82 01         [24]  605 	mov	dpl, #0x01
+      002581 12 25 8A         [24]  606 	lcall	_WriteInstructionToLcd
                                     607 ;	LcdDisplay.c:85: SetCursorPos(0);
-      00267B 75 82 00         [24]  608 	mov	dpl,#0x00
+      002584 75 82 00         [24]  608 	mov	dpl, #0x00
                                     609 ;	LcdDisplay.c:88: }
-      00267E 02 27 1D         [24]  610 	ljmp	_SetCursorPos
+      002587 02 26 26         [24]  610 	ljmp	_SetCursorPos
                                     611 ;------------------------------------------------------------
                                     612 ;Allocation info for local variables in function 'WriteInstructionToLcd'
                                     613 ;------------------------------------------------------------
-                                    614 ;i                         Allocated with name '_WriteInstructionToLcd_i_65536_60'
+                                    614 ;i             Allocated with name '_WriteInstructionToLcd_i_10000_62'
                                     615 ;------------------------------------------------------------
                                     616 ;	LcdDisplay.c:93: void WriteInstructionToLcd(unsigned char i)
                                     617 ;	-----------------------------------------
                                     618 ;	 function WriteInstructionToLcd
                                     619 ;	-----------------------------------------
-      002681                        620 _WriteInstructionToLcd:
-      002681 E5 82            [12]  621 	mov	a,dpl
-      002683 90 02 44         [24]  622 	mov	dptr,#_WriteInstructionToLcd_i_65536_60
-      002686 F0               [24]  623 	movx	@dptr,a
+      00258A                        620 _WriteInstructionToLcd:
+      00258A E5 82            [12]  621 	mov	a,dpl
+      00258C 90 02 44         [24]  622 	mov	dptr,#_WriteInstructionToLcd_i_10000_62
+      00258F F0               [24]  623 	movx	@dptr,a
                                     624 ;	LcdDisplay.c:95: PORT_LCD_RS  = 0;			 			// Instruction Select
                                     625 ;	assignBit
-      002687 C2 83            [12]  626 	clr	_P0_3
+      002590 C2 83            [12]  626 	clr	_P0_3
                                     627 ;	LcdDisplay.c:96: PORT_LCD_RW  = 0;						// Write Select
                                     628 ;	assignBit
-      002689 C2 82            [12]  629 	clr	_P0_2
+      002592 C2 82            [12]  629 	clr	_P0_2
                                     630 ;	LcdDisplay.c:98: PORT_LCD &= 0x0F;       				// Clear old LCD Data (Bit[7..4])
-      00268B 53 80 0F         [24]  631 	anl	_P0,#0x0f
+      002594 53 80 0F         [24]  631 	anl	_P0,#0x0f
                                     632 ;	LcdDisplay.c:99: PORT_LCD |= i & 0xF0;   				// Strobe High Nibble Command
-      00268E 90 02 44         [24]  633 	mov	dptr,#_WriteInstructionToLcd_i_65536_60
-      002691 E0               [24]  634 	movx	a,@dptr
-      002692 FF               [12]  635 	mov	r7,a
-      002693 74 F0            [12]  636 	mov	a,#0xf0
-      002695 5F               [12]  637 	anl	a,r7
-      002696 42 80            [12]  638 	orl	_P0,a
+      002597 90 02 44         [24]  633 	mov	dptr,#_WriteInstructionToLcd_i_10000_62
+      00259A E0               [24]  634 	movx	a,@dptr
+      00259B FF               [12]  635 	mov	r7,a
+      00259C 74 F0            [12]  636 	mov	a,#0xf0
+      00259E 5F               [12]  637 	anl	a,r7
+      00259F 42 80            [12]  638 	orl	_P0,a
                                     639 ;	LcdDisplay.c:100: PulseLcdEnable();							// Enable Pulse
-      002698 C0 07            [24]  640 	push	ar7
-      00269A 12 26 E5         [24]  641 	lcall	_PulseLcdEnable
-      00269D D0 07            [24]  642 	pop	ar7
+      0025A1 C0 07            [24]  640 	push	ar7
+      0025A3 12 25 EE         [24]  641 	lcall	_PulseLcdEnable
+      0025A6 D0 07            [24]  642 	pop	ar7
                                     643 ;	LcdDisplay.c:102: PORT_LCD &= 0x0F;        				// Clear old LCD Data (Bit[7..4])
-      00269F 53 80 0F         [24]  644 	anl	_P0,#0x0f
+      0025A8 53 80 0F         [24]  644 	anl	_P0,#0x0f
                                     645 ;	LcdDisplay.c:103: PORT_LCD |= (i << 4) & 0xF0;			// Strobe Low Nibble Command
-      0026A2 EF               [12]  646 	mov	a,r7
-      0026A3 C4               [12]  647 	swap	a
-      0026A4 54 F0            [12]  648 	anl	a,#(0xf0&0xf0)
-      0026A6 42 80            [12]  649 	orl	_P0,a
+      0025AB EF               [12]  646 	mov	a,r7
+      0025AC C4               [12]  647 	swap	a
+      0025AD 54 F0            [12]  648 	anl	a,#(0xf0&0xf0)
+      0025AF 42 80            [12]  649 	orl	_P0,a
                                     650 ;	LcdDisplay.c:104: PulseLcdEnable();							// Enable Pulse
-      0026A8 12 26 E5         [24]  651 	lcall	_PulseLcdEnable
+      0025B1 12 25 EE         [24]  651 	lcall	_PulseLcdEnable
                                     652 ;	LcdDisplay.c:106: while(WaitLcdReady());      				// Wait LCD Execute Complete
-      0026AB                        653 00101$:
-      0026AB 12 26 F7         [24]  654 	lcall	_WaitLcdReady
-      0026AE E5 82            [12]  655 	mov	a,dpl
-      0026B0 70 F9            [24]  656 	jnz	00101$
+      0025B4                        653 00101$:
+      0025B4 12 26 00         [24]  654 	lcall	_WaitLcdReady
+      0025B7 E5 82            [12]  655 	mov	a, dpl
+      0025B9 70 F9            [24]  656 	jnz	00101$
                                     657 ;	LcdDisplay.c:107: }
-      0026B2 22               [24]  658 	ret
+      0025BB 22               [24]  658 	ret
                                     659 ;------------------------------------------------------------
                                     660 ;Allocation info for local variables in function 'WriteDataToLcd'
                                     661 ;------------------------------------------------------------
-                                    662 ;i                         Allocated with name '_WriteDataToLcd_i_65536_62'
+                                    662 ;i             Allocated with name '_WriteDataToLcd_i_10000_64'
                                     663 ;------------------------------------------------------------
                                     664 ;	LcdDisplay.c:112: void WriteDataToLcd(unsigned char i)
                                     665 ;	-----------------------------------------
                                     666 ;	 function WriteDataToLcd
                                     667 ;	-----------------------------------------
-      0026B3                        668 _WriteDataToLcd:
-      0026B3 E5 82            [12]  669 	mov	a,dpl
-      0026B5 90 02 45         [24]  670 	mov	dptr,#_WriteDataToLcd_i_65536_62
-      0026B8 F0               [24]  671 	movx	@dptr,a
+      0025BC                        668 _WriteDataToLcd:
+      0025BC E5 82            [12]  669 	mov	a,dpl
+      0025BE 90 02 45         [24]  670 	mov	dptr,#_WriteDataToLcd_i_10000_64
+      0025C1 F0               [24]  671 	movx	@dptr,a
                                     672 ;	LcdDisplay.c:114: PORT_LCD_RS  = 1;				  		// Data Select
                                     673 ;	assignBit
-      0026B9 D2 83            [12]  674 	setb	_P0_3
+      0025C2 D2 83            [12]  674 	setb	_P0_3
                                     675 ;	LcdDisplay.c:115: PORT_LCD_RW  = 0;						// Write Select
                                     676 ;	assignBit
-      0026BB C2 82            [12]  677 	clr	_P0_2
+      0025C4 C2 82            [12]  677 	clr	_P0_2
                                     678 ;	LcdDisplay.c:117: PORT_LCD &= 0x0F;    					// Clear old LCD Data (Bit[7..4])
-      0026BD 53 80 0F         [24]  679 	anl	_P0,#0x0f
+      0025C6 53 80 0F         [24]  679 	anl	_P0,#0x0f
                                     680 ;	LcdDisplay.c:118: PORT_LCD |= i & 0xF0;  				// Strobe High Nibble Data
-      0026C0 90 02 45         [24]  681 	mov	dptr,#_WriteDataToLcd_i_65536_62
-      0026C3 E0               [24]  682 	movx	a,@dptr
-      0026C4 FF               [12]  683 	mov	r7,a
-      0026C5 74 F0            [12]  684 	mov	a,#0xf0
-      0026C7 5F               [12]  685 	anl	a,r7
-      0026C8 42 80            [12]  686 	orl	_P0,a
+      0025C9 90 02 45         [24]  681 	mov	dptr,#_WriteDataToLcd_i_10000_64
+      0025CC E0               [24]  682 	movx	a,@dptr
+      0025CD FF               [12]  683 	mov	r7,a
+      0025CE 74 F0            [12]  684 	mov	a,#0xf0
+      0025D0 5F               [12]  685 	anl	a,r7
+      0025D1 42 80            [12]  686 	orl	_P0,a
                                     687 ;	LcdDisplay.c:119: PulseLcdEnable();							// Enable Pulse  
-      0026CA C0 07            [24]  688 	push	ar7
-      0026CC 12 26 E5         [24]  689 	lcall	_PulseLcdEnable
-      0026CF D0 07            [24]  690 	pop	ar7
+      0025D3 C0 07            [24]  688 	push	ar7
+      0025D5 12 25 EE         [24]  689 	lcall	_PulseLcdEnable
+      0025D8 D0 07            [24]  690 	pop	ar7
                                     691 ;	LcdDisplay.c:121: PORT_LCD &= 0x0F;    					// Clear old LCD Data (Bit[7..4])
-      0026D1 53 80 0F         [24]  692 	anl	_P0,#0x0f
+      0025DA 53 80 0F         [24]  692 	anl	_P0,#0x0f
                                     693 ;	LcdDisplay.c:122: PORT_LCD |= (i << 4) & 0xF0; 			// Strobe Low Nibble Data
-      0026D4 EF               [12]  694 	mov	a,r7
-      0026D5 C4               [12]  695 	swap	a
-      0026D6 54 F0            [12]  696 	anl	a,#(0xf0&0xf0)
-      0026D8 42 80            [12]  697 	orl	_P0,a
+      0025DD EF               [12]  694 	mov	a,r7
+      0025DE C4               [12]  695 	swap	a
+      0025DF 54 F0            [12]  696 	anl	a,#(0xf0&0xf0)
+      0025E1 42 80            [12]  697 	orl	_P0,a
                                     698 ;	LcdDisplay.c:123: PulseLcdEnable();							// Enable Pulse
-      0026DA 12 26 E5         [24]  699 	lcall	_PulseLcdEnable
+      0025E3 12 25 EE         [24]  699 	lcall	_PulseLcdEnable
                                     700 ;	LcdDisplay.c:125: while(WaitLcdReady());      				// Wait LCD Execute Complete
-      0026DD                        701 00101$:
-      0026DD 12 26 F7         [24]  702 	lcall	_WaitLcdReady
-      0026E0 E5 82            [12]  703 	mov	a,dpl
-      0026E2 70 F9            [24]  704 	jnz	00101$
+      0025E6                        701 00101$:
+      0025E6 12 26 00         [24]  702 	lcall	_WaitLcdReady
+      0025E9 E5 82            [12]  703 	mov	a, dpl
+      0025EB 70 F9            [24]  704 	jnz	00101$
                                     705 ;	LcdDisplay.c:126: }
-      0026E4 22               [24]  706 	ret
+      0025ED 22               [24]  706 	ret
                                     707 ;------------------------------------------------------------
                                     708 ;Allocation info for local variables in function 'PulseLcdEnable'
                                     709 ;------------------------------------------------------------
-                                    710 ;i                         Allocated with name '_PulseLcdEnable_i_65536_65'
+                                    710 ;i             Allocated with name '_PulseLcdEnable_i_10000_67'
                                     711 ;------------------------------------------------------------
                                     712 ;	LcdDisplay.c:131: void PulseLcdEnable(void)	 				// Enable Pulse
                                     713 ;	-----------------------------------------
                                     714 ;	 function PulseLcdEnable
                                     715 ;	-----------------------------------------
-      0026E5                        716 _PulseLcdEnable:
+      0025EE                        716 _PulseLcdEnable:
                                     717 ;	LcdDisplay.c:134: PORT_LCD_E = 1;   					// Enable ON
                                     718 ;	assignBit
-      0026E5 D2 81            [12]  719 	setb	_P0_1
+      0025EE D2 81            [12]  719 	setb	_P0_1
                                     720 ;	LcdDisplay.c:135: for (i=0;i<500;i++);
-      0026E7 7E F4            [12]  721 	mov	r6,#0xf4
-      0026E9 7F 01            [12]  722 	mov	r7,#0x01
-      0026EB                        723 00104$:
-      0026EB 1E               [12]  724 	dec	r6
-      0026EC BE FF 01         [24]  725 	cjne	r6,#0xff,00116$
-      0026EF 1F               [12]  726 	dec	r7
-      0026F0                        727 00116$:
-      0026F0 EE               [12]  728 	mov	a,r6
-      0026F1 4F               [12]  729 	orl	a,r7
-      0026F2 70 F7            [24]  730 	jnz	00104$
+      0025F0 7E F4            [12]  721 	mov	r6,#0xf4
+      0025F2 7F 01            [12]  722 	mov	r7,#0x01
+      0025F4                        723 00104$:
+      0025F4 1E               [12]  724 	dec	r6
+      0025F5 BE FF 01         [24]  725 	cjne	r6,#0xff,00120$
+      0025F8 1F               [12]  726 	dec	r7
+      0025F9                        727 00120$:
+      0025F9 EE               [12]  728 	mov	a,r6
+      0025FA 4F               [12]  729 	orl	a,r7
+      0025FB 70 F7            [24]  730 	jnz	00104$
                                     731 ;	LcdDisplay.c:136: PORT_LCD_E = 0;   					// Enable OFF 
                                     732 ;	assignBit
-      0026F4 C2 81            [12]  733 	clr	_P0_1
+      0025FD C2 81            [12]  733 	clr	_P0_1
                                     734 ;	LcdDisplay.c:137: }
-      0026F6 22               [24]  735 	ret
+      0025FF 22               [24]  735 	ret
                                     736 ;------------------------------------------------------------
                                     737 ;Allocation info for local variables in function 'WaitLcdReady'
                                     738 ;------------------------------------------------------------
-                                    739 ;busy_status               Allocated with name '_WaitLcdReady_busy_status_65536_68'
+                                    739 ;busy_status   Allocated with name '_WaitLcdReady_busy_status_10000_70'
                                     740 ;------------------------------------------------------------
                                     741 ;	LcdDisplay.c:142: char WaitLcdReady(void)
                                     742 ;	-----------------------------------------
                                     743 ;	 function WaitLcdReady
                                     744 ;	-----------------------------------------
-      0026F7                        745 _WaitLcdReady:
+      002600                        745 _WaitLcdReady:
                                     746 ;	LcdDisplay.c:146: PORT_LCD_RS  = 0;			 			// Instruction Select
                                     747 ;	assignBit
-      0026F7 C2 83            [12]  748 	clr	_P0_3
+      002600 C2 83            [12]  748 	clr	_P0_3
                                     749 ;	LcdDisplay.c:147: PORT_LCD_RW  = 1; 					// Read Direction
                                     750 ;	assignBit
-      0026F9 D2 82            [12]  751 	setb	_P0_2
+      002602 D2 82            [12]  751 	setb	_P0_2
                                     752 ;	LcdDisplay.c:148: PORT_LCD_E = 1;						// Start Read Busy
                                     753 ;	assignBit
-      0026FB D2 81            [12]  754 	setb	_P0_1
+      002604 D2 81            [12]  754 	setb	_P0_1
                                     755 ;	LcdDisplay.c:149: busy_status = PORT_LCD;				// Read LCD Data
-      0026FD 90 02 46         [24]  756 	mov	dptr,#_WaitLcdReady_busy_status_65536_68
-      002700 E5 80            [12]  757 	mov	a,_P0
-      002702 F0               [24]  758 	movx	@dptr,a
+      002606 90 02 46         [24]  756 	mov	dptr,#_WaitLcdReady_busy_status_10000_70
+      002609 E5 80            [12]  757 	mov	a,_P0
+      00260B F0               [24]  758 	movx	@dptr,a
                                     759 ;	LcdDisplay.c:151: if(busy_status & 0x80)   				// Read & Check Busy Flag
-      002703 E0               [24]  760 	movx	a,@dptr
-      002704 30 E7 08         [24]  761 	jnb	acc.7,00102$
+      00260C E0               [24]  760 	movx	a,@dptr
+      00260D 30 E7 08         [24]  761 	jnb	acc.7,00102$
                                     762 ;	LcdDisplay.c:153: PORT_LCD_E = 0;       				// Disable Read
                                     763 ;	assignBit
-      002707 C2 81            [12]  764 	clr	_P0_1
+      002610 C2 81            [12]  764 	clr	_P0_1
                                     765 ;	LcdDisplay.c:154: PORT_LCD_RW = 0;					// Default = Write Direction
                                     766 ;	assignBit
-      002709 C2 82            [12]  767 	clr	_P0_2
+      002612 C2 82            [12]  767 	clr	_P0_2
                                     768 ;	LcdDisplay.c:155: return 1;							// LCD Busy Status
-      00270B 75 82 01         [24]  769 	mov	dpl,#0x01
-      00270E 22               [24]  770 	ret
-      00270F                        771 00102$:
+      002614 75 82 01         [24]  769 	mov	dpl, #0x01
+      002617 22               [24]  770 	ret
+      002618                        771 00102$:
                                     772 ;	LcdDisplay.c:159: PORT_LCD_E = 0;       				// Disable Read
                                     773 ;	assignBit
-      00270F C2 81            [12]  774 	clr	_P0_1
+      002618 C2 81            [12]  774 	clr	_P0_1
                                     775 ;	LcdDisplay.c:160: PORT_LCD_RW = 0;					// Default = Write Direction
                                     776 ;	assignBit
-      002711 C2 82            [12]  777 	clr	_P0_2
+      00261A C2 82            [12]  777 	clr	_P0_2
                                     778 ;	LcdDisplay.c:161: return 0;							// LCD Ready Status
-      002713 75 82 00         [24]  779 	mov	dpl,#0x00
+      00261C 75 82 00         [24]  779 	mov	dpl, #0x00
                                     780 ;	LcdDisplay.c:163: }
-      002716 22               [24]  781 	ret
+      00261F 22               [24]  781 	ret
                                     782 ;------------------------------------------------------------
                                     783 ;Allocation info for local variables in function 'ClearDisplay'
                                     784 ;------------------------------------------------------------
@@ -786,200 +786,190 @@
                                     786 ;	-----------------------------------------
                                     787 ;	 function ClearDisplay
                                     788 ;	-----------------------------------------
-      002717                        789 _ClearDisplay:
+      002620                        789 _ClearDisplay:
                                     790 ;	LcdDisplay.c:169: WriteInstructionToLcd(0x01);
-      002717 75 82 01         [24]  791 	mov	dpl,#0x01
+      002620 75 82 01         [24]  791 	mov	dpl, #0x01
                                     792 ;	LcdDisplay.c:170: }
-      00271A 02 26 81         [24]  793 	ljmp	_WriteInstructionToLcd
+      002623 02 25 8A         [24]  793 	ljmp	_WriteInstructionToLcd
                                     794 ;------------------------------------------------------------
                                     795 ;Allocation info for local variables in function 'SetCursorPos'
                                     796 ;------------------------------------------------------------
-                                    797 ;pos                       Allocated with name '_SetCursorPos_pos_65536_72'
+                                    797 ;pos           Allocated with name '_SetCursorPos_pos_10000_74'
                                     798 ;------------------------------------------------------------
                                     799 ;	LcdDisplay.c:177: void SetCursorPos(unsigned char pos)
                                     800 ;	-----------------------------------------
                                     801 ;	 function SetCursorPos
                                     802 ;	-----------------------------------------
-      00271D                        803 _SetCursorPos:
-      00271D E5 82            [12]  804 	mov	a,dpl
-      00271F 90 02 47         [24]  805 	mov	dptr,#_SetCursorPos_pos_65536_72
-      002722 F0               [24]  806 	movx	@dptr,a
+      002626                        803 _SetCursorPos:
+      002626 E5 82            [12]  804 	mov	a,dpl
+      002628 90 02 47         [24]  805 	mov	dptr,#_SetCursorPos_pos_10000_74
+      00262B F0               [24]  806 	movx	@dptr,a
                                     807 ;	LcdDisplay.c:179: WriteInstructionToLcd(pos | 0x80);			// Set DD-RAM Address Command  
-      002723 E0               [24]  808 	movx	a,@dptr
-      002724 44 80            [12]  809 	orl	a,#0x80
-      002726 F5 82            [12]  810 	mov	dpl,a
+      00262C E0               [24]  808 	movx	a,@dptr
+      00262D 44 80            [12]  809 	orl	a,#0x80
+      00262F F5 82            [12]  810 	mov	dpl,a
                                     811 ;	LcdDisplay.c:180: }
-      002728 02 26 81         [24]  812 	ljmp	_WriteInstructionToLcd
+      002631 02 25 8A         [24]  812 	ljmp	_WriteInstructionToLcd
                                     813 ;------------------------------------------------------------
                                     814 ;Allocation info for local variables in function 'DirectWriteToDisplay'
                                     815 ;------------------------------------------------------------
-                                    816 ;contents                  Allocated with name '_DirectWriteToDisplay_contents_65536_74'
-                                    817 ;row                       Allocated with name '_DirectWriteToDisplay_row_65536_75'
-                                    818 ;col                       Allocated with name '_DirectWriteToDisplay_col_65536_75'
-                                    819 ;p                         Allocated with name '_DirectWriteToDisplay_p_65536_75'
+                                    816 ;contents      Allocated with name '_DirectWriteToDisplay_contents_10000_76'
+                                    817 ;row           Allocated with name '_DirectWriteToDisplay_row_10000_77'
+                                    818 ;col           Allocated with name '_DirectWriteToDisplay_col_10000_77'
+                                    819 ;p             Allocated with name '_DirectWriteToDisplay_p_10000_77'
                                     820 ;------------------------------------------------------------
                                     821 ;	LcdDisplay.c:287: void DirectWriteToDisplay(unsigned char* contents)
                                     822 ;	-----------------------------------------
                                     823 ;	 function DirectWriteToDisplay
                                     824 ;	-----------------------------------------
-      00272B                        825 _DirectWriteToDisplay:
-      00272B AF F0            [24]  826 	mov	r7,b
-      00272D AE 83            [24]  827 	mov	r6,dph
-      00272F E5 82            [12]  828 	mov	a,dpl
-      002731 90 02 48         [24]  829 	mov	dptr,#_DirectWriteToDisplay_contents_65536_74
-      002734 F0               [24]  830 	movx	@dptr,a
-      002735 EE               [12]  831 	mov	a,r6
-      002736 A3               [24]  832 	inc	dptr
-      002737 F0               [24]  833 	movx	@dptr,a
-      002738 EF               [12]  834 	mov	a,r7
-      002739 A3               [24]  835 	inc	dptr
-      00273A F0               [24]  836 	movx	@dptr,a
+      002634                        825 _DirectWriteToDisplay:
+      002634 AF F0            [24]  826 	mov	r7,b
+      002636 AE 83            [24]  827 	mov	r6,dph
+      002638 E5 82            [12]  828 	mov	a,dpl
+      00263A 90 02 48         [24]  829 	mov	dptr,#_DirectWriteToDisplay_contents_10000_76
+      00263D F0               [24]  830 	movx	@dptr,a
+      00263E EE               [12]  831 	mov	a,r6
+      00263F A3               [24]  832 	inc	dptr
+      002640 F0               [24]  833 	movx	@dptr,a
+      002641 EF               [12]  834 	mov	a,r7
+      002642 A3               [24]  835 	inc	dptr
+      002643 F0               [24]  836 	movx	@dptr,a
                                     837 ;	LcdDisplay.c:294: p = contents;
-      00273B 90 02 48         [24]  838 	mov	dptr,#_DirectWriteToDisplay_contents_65536_74
-      00273E E0               [24]  839 	movx	a,@dptr
-      00273F FD               [12]  840 	mov	r5,a
-      002740 A3               [24]  841 	inc	dptr
-      002741 E0               [24]  842 	movx	a,@dptr
-      002742 FE               [12]  843 	mov	r6,a
-      002743 A3               [24]  844 	inc	dptr
-      002744 E0               [24]  845 	movx	a,@dptr
-      002745 FF               [12]  846 	mov	r7,a
-      002746 90 02 4B         [24]  847 	mov	dptr,#_DirectWriteToDisplay_p_65536_75
-      002749 ED               [12]  848 	mov	a,r5
-      00274A F0               [24]  849 	movx	@dptr,a
-      00274B EE               [12]  850 	mov	a,r6
-      00274C A3               [24]  851 	inc	dptr
-      00274D F0               [24]  852 	movx	@dptr,a
-      00274E EF               [12]  853 	mov	a,r7
-      00274F A3               [24]  854 	inc	dptr
-      002750 F0               [24]  855 	movx	@dptr,a
+      002644 90 02 48         [24]  838 	mov	dptr,#_DirectWriteToDisplay_contents_10000_76
+      002647 E0               [24]  839 	movx	a,@dptr
+      002648 FD               [12]  840 	mov	r5,a
+      002649 A3               [24]  841 	inc	dptr
+      00264A E0               [24]  842 	movx	a,@dptr
+      00264B FE               [12]  843 	mov	r6,a
+      00264C A3               [24]  844 	inc	dptr
+      00264D E0               [24]  845 	movx	a,@dptr
+      00264E FF               [12]  846 	mov	r7,a
+      00264F 90 02 4B         [24]  847 	mov	dptr,#_DirectWriteToDisplay_p_10000_77
+      002652 ED               [12]  848 	mov	a,r5
+      002653 F0               [24]  849 	movx	@dptr,a
+      002654 EE               [12]  850 	mov	a,r6
+      002655 A3               [24]  851 	inc	dptr
+      002656 F0               [24]  852 	movx	@dptr,a
+      002657 EF               [12]  853 	mov	a,r7
+      002658 A3               [24]  854 	inc	dptr
+      002659 F0               [24]  855 	movx	@dptr,a
                                     856 ;	LcdDisplay.c:295: for (row = 0; row < ROW_COUNT; ++row)
-      002751 7E 00            [12]  857 	mov	r6,#0x00
-      002753 7F 00            [12]  858 	mov	r7,#0x00
-      002755                        859 00108$:
+      00265A 7E 00            [12]  857 	mov	r6,#0x00
+      00265C 7F 00            [12]  858 	mov	r7,#0x00
+      00265E                        859 00108$:
                                     860 ;	LcdDisplay.c:297: SetCursorPos(rowStartAddresses[row]);
-      002755 EE               [12]  861 	mov	a,r6
-      002756 2E               [12]  862 	add	a,r6
-      002757 FC               [12]  863 	mov	r4,a
-      002758 EF               [12]  864 	mov	a,r7
-      002759 33               [12]  865 	rlc	a
-      00275A FD               [12]  866 	mov	r5,a
-      00275B EC               [12]  867 	mov	a,r4
-      00275C 24 4E            [12]  868 	add	a,#_rowStartAddresses
-      00275E F5 82            [12]  869 	mov	dpl,a
-      002760 ED               [12]  870 	mov	a,r5
-      002761 34 3F            [12]  871 	addc	a,#(_rowStartAddresses >> 8)
-      002763 F5 83            [12]  872 	mov	dph,a
-      002765 E4               [12]  873 	clr	a
-      002766 93               [24]  874 	movc	a,@a+dptr
-      002767 F5 82            [12]  875 	mov	dpl,a
-      002769 C0 07            [24]  876 	push	ar7
-      00276B C0 06            [24]  877 	push	ar6
-      00276D 12 27 1D         [24]  878 	lcall	_SetCursorPos
-      002770 D0 06            [24]  879 	pop	ar6
-      002772 D0 07            [24]  880 	pop	ar7
+      00265E EE               [12]  861 	mov	a,r6
+      00265F 2E               [12]  862 	add	a,r6
+      002660 FC               [12]  863 	mov	r4,a
+      002661 EF               [12]  864 	mov	a,r7
+      002662 33               [12]  865 	rlc	a
+      002663 FD               [12]  866 	mov	r5,a
+      002664 EC               [12]  867 	mov	a,r4
+      002665 24 1B            [12]  868 	add	a, #_rowStartAddresses
+      002667 F5 82            [12]  869 	mov	dpl,a
+      002669 ED               [12]  870 	mov	a,r5
+      00266A 34 3C            [12]  871 	addc	a, #(_rowStartAddresses >> 8)
+      00266C F5 83            [12]  872 	mov	dph,a
+      00266E E4               [12]  873 	clr	a
+      00266F 93               [24]  874 	movc	a,@a+dptr
+      002670 F5 82            [12]  875 	mov	dpl,a
+      002672 C0 07            [24]  876 	push	ar7
+      002674 C0 06            [24]  877 	push	ar6
+      002676 12 26 26         [24]  878 	lcall	_SetCursorPos
+      002679 D0 06            [24]  879 	pop	ar6
+      00267B D0 07            [24]  880 	pop	ar7
                                     881 ;	LcdDisplay.c:298: for (col = 0; col < COL_COUNT; ++col)
-      002774 90 02 4B         [24]  882 	mov	dptr,#_DirectWriteToDisplay_p_65536_75
-      002777 E0               [24]  883 	movx	a,@dptr
-      002778 FB               [12]  884 	mov	r3,a
-      002779 A3               [24]  885 	inc	dptr
-      00277A E0               [24]  886 	movx	a,@dptr
-      00277B FC               [12]  887 	mov	r4,a
-      00277C A3               [24]  888 	inc	dptr
-      00277D E0               [24]  889 	movx	a,@dptr
-      00277E FD               [12]  890 	mov	r5,a
-      00277F 79 00            [12]  891 	mov	r1,#0x00
-      002781 7A 00            [12]  892 	mov	r2,#0x00
-      002783                        893 00106$:
-                                    894 ;	LcdDisplay.c:300: if (*p != 0)
-      002783 8B 82            [24]  895 	mov	dpl,r3
-      002785 8C 83            [24]  896 	mov	dph,r4
-      002787 8D F0            [24]  897 	mov	b,r5
-      002789 12 3D E8         [24]  898 	lcall	__gptrget
-      00278C F8               [12]  899 	mov	r0,a
-      00278D 60 28            [24]  900 	jz	00102$
-                                    901 ;	LcdDisplay.c:302: WriteDataToLcd(*p);
-      00278F 88 82            [24]  902 	mov	dpl,r0
-      002791 C0 07            [24]  903 	push	ar7
-      002793 C0 06            [24]  904 	push	ar6
-      002795 C0 05            [24]  905 	push	ar5
-      002797 C0 04            [24]  906 	push	ar4
-      002799 C0 03            [24]  907 	push	ar3
-      00279B C0 02            [24]  908 	push	ar2
-      00279D C0 01            [24]  909 	push	ar1
-      00279F 12 26 B3         [24]  910 	lcall	_WriteDataToLcd
-      0027A2 D0 01            [24]  911 	pop	ar1
-      0027A4 D0 02            [24]  912 	pop	ar2
-      0027A6 D0 03            [24]  913 	pop	ar3
-      0027A8 D0 04            [24]  914 	pop	ar4
-      0027AA D0 05            [24]  915 	pop	ar5
-      0027AC D0 06            [24]  916 	pop	ar6
-      0027AE D0 07            [24]  917 	pop	ar7
-                                    918 ;	LcdDisplay.c:303: ++p;
-      0027B0 0B               [12]  919 	inc	r3
-      0027B1 BB 00 25         [24]  920 	cjne	r3,#0x00,00107$
-      0027B4 0C               [12]  921 	inc	r4
-      0027B5 80 22            [24]  922 	sjmp	00107$
-      0027B7                        923 00102$:
-                                    924 ;	LcdDisplay.c:307: WriteDataToLcd(' ');
-      0027B7 75 82 20         [24]  925 	mov	dpl,#0x20
-      0027BA C0 07            [24]  926 	push	ar7
-      0027BC C0 06            [24]  927 	push	ar6
-      0027BE C0 05            [24]  928 	push	ar5
-      0027C0 C0 04            [24]  929 	push	ar4
-      0027C2 C0 03            [24]  930 	push	ar3
-      0027C4 C0 02            [24]  931 	push	ar2
-      0027C6 C0 01            [24]  932 	push	ar1
-      0027C8 12 26 B3         [24]  933 	lcall	_WriteDataToLcd
-      0027CB D0 01            [24]  934 	pop	ar1
-      0027CD D0 02            [24]  935 	pop	ar2
-      0027CF D0 03            [24]  936 	pop	ar3
-      0027D1 D0 04            [24]  937 	pop	ar4
-      0027D3 D0 05            [24]  938 	pop	ar5
-      0027D5 D0 06            [24]  939 	pop	ar6
-      0027D7 D0 07            [24]  940 	pop	ar7
-      0027D9                        941 00107$:
-                                    942 ;	LcdDisplay.c:298: for (col = 0; col < COL_COUNT; ++col)
-      0027D9 09               [12]  943 	inc	r1
-      0027DA B9 00 01         [24]  944 	cjne	r1,#0x00,00132$
-      0027DD 0A               [12]  945 	inc	r2
-      0027DE                        946 00132$:
-      0027DE C3               [12]  947 	clr	c
-      0027DF E9               [12]  948 	mov	a,r1
-      0027E0 94 10            [12]  949 	subb	a,#0x10
-      0027E2 EA               [12]  950 	mov	a,r2
-      0027E3 64 80            [12]  951 	xrl	a,#0x80
-      0027E5 94 80            [12]  952 	subb	a,#0x80
-      0027E7 40 9A            [24]  953 	jc	00106$
-                                    954 ;	LcdDisplay.c:295: for (row = 0; row < ROW_COUNT; ++row)
-      0027E9 90 02 4B         [24]  955 	mov	dptr,#_DirectWriteToDisplay_p_65536_75
-      0027EC EB               [12]  956 	mov	a,r3
-      0027ED F0               [24]  957 	movx	@dptr,a
-      0027EE EC               [12]  958 	mov	a,r4
-      0027EF A3               [24]  959 	inc	dptr
-      0027F0 F0               [24]  960 	movx	@dptr,a
-      0027F1 ED               [12]  961 	mov	a,r5
-      0027F2 A3               [24]  962 	inc	dptr
-      0027F3 F0               [24]  963 	movx	@dptr,a
-      0027F4 0E               [12]  964 	inc	r6
-      0027F5 BE 00 01         [24]  965 	cjne	r6,#0x00,00134$
-      0027F8 0F               [12]  966 	inc	r7
-      0027F9                        967 00134$:
-      0027F9 C3               [12]  968 	clr	c
-      0027FA EE               [12]  969 	mov	a,r6
-      0027FB 94 02            [12]  970 	subb	a,#0x02
-      0027FD EF               [12]  971 	mov	a,r7
-      0027FE 64 80            [12]  972 	xrl	a,#0x80
-      002800 94 80            [12]  973 	subb	a,#0x80
-      002802 50 03            [24]  974 	jnc	00135$
-      002804 02 27 55         [24]  975 	ljmp	00108$
-      002807                        976 00135$:
-                                    977 ;	LcdDisplay.c:311: }
-      002807 22               [24]  978 	ret
-                                    979 	.area CSEG    (CODE)
-                                    980 	.area CONST   (CODE)
-      003F4E                        981 _rowStartAddresses:
-      003F4E 00 00                  982 	.byte #0x00, #0x00	;  0
-      003F50 40 00                  983 	.byte #0x40, #0x00	;  64
-                                    984 	.area XINIT   (CODE)
-                                    985 	.area CABS    (ABS,CODE)
+      00267D 90 02 4B         [24]  882 	mov	dptr,#_DirectWriteToDisplay_p_10000_77
+      002680 E0               [24]  883 	movx	a,@dptr
+      002681 FB               [12]  884 	mov	r3,a
+      002682 A3               [24]  885 	inc	dptr
+      002683 E0               [24]  886 	movx	a,@dptr
+      002684 FC               [12]  887 	mov	r4,a
+      002685 A3               [24]  888 	inc	dptr
+      002686 E0               [24]  889 	movx	a,@dptr
+      002687 FD               [12]  890 	mov	r5,a
+      002688 7A 00            [12]  891 	mov	r2,#0x00
+      00268A                        892 00106$:
+                                    893 ;	LcdDisplay.c:300: if (*p != 0)
+      00268A 8B 82            [24]  894 	mov	dpl,r3
+      00268C 8C 83            [24]  895 	mov	dph,r4
+      00268E 8D F0            [24]  896 	mov	b,r5
+      002690 12 3A B5         [24]  897 	lcall	__gptrget
+      002693 F9               [12]  898 	mov	r1,a
+      002694 60 24            [24]  899 	jz	00102$
+                                    900 ;	LcdDisplay.c:302: WriteDataToLcd(*p);
+      002696 89 82            [24]  901 	mov	dpl, r1
+      002698 C0 07            [24]  902 	push	ar7
+      00269A C0 06            [24]  903 	push	ar6
+      00269C C0 05            [24]  904 	push	ar5
+      00269E C0 04            [24]  905 	push	ar4
+      0026A0 C0 03            [24]  906 	push	ar3
+      0026A2 C0 02            [24]  907 	push	ar2
+      0026A4 12 25 BC         [24]  908 	lcall	_WriteDataToLcd
+      0026A7 D0 02            [24]  909 	pop	ar2
+      0026A9 D0 03            [24]  910 	pop	ar3
+      0026AB D0 04            [24]  911 	pop	ar4
+      0026AD D0 05            [24]  912 	pop	ar5
+      0026AF D0 06            [24]  913 	pop	ar6
+      0026B1 D0 07            [24]  914 	pop	ar7
+                                    915 ;	LcdDisplay.c:303: ++p;
+      0026B3 0B               [12]  916 	inc	r3
+      0026B4 BB 00 21         [24]  917 	cjne	r3,#0x00,00107$
+      0026B7 0C               [12]  918 	inc	r4
+      0026B8 80 1E            [24]  919 	sjmp	00107$
+      0026BA                        920 00102$:
+                                    921 ;	LcdDisplay.c:307: WriteDataToLcd(' ');
+      0026BA 75 82 20         [24]  922 	mov	dpl, #0x20
+      0026BD C0 07            [24]  923 	push	ar7
+      0026BF C0 06            [24]  924 	push	ar6
+      0026C1 C0 05            [24]  925 	push	ar5
+      0026C3 C0 04            [24]  926 	push	ar4
+      0026C5 C0 03            [24]  927 	push	ar3
+      0026C7 C0 02            [24]  928 	push	ar2
+      0026C9 12 25 BC         [24]  929 	lcall	_WriteDataToLcd
+      0026CC D0 02            [24]  930 	pop	ar2
+      0026CE D0 03            [24]  931 	pop	ar3
+      0026D0 D0 04            [24]  932 	pop	ar4
+      0026D2 D0 05            [24]  933 	pop	ar5
+      0026D4 D0 06            [24]  934 	pop	ar6
+      0026D6 D0 07            [24]  935 	pop	ar7
+      0026D8                        936 00107$:
+                                    937 ;	LcdDisplay.c:298: for (col = 0; col < COL_COUNT; ++col)
+      0026D8 0A               [12]  938 	inc	r2
+      0026D9 BA 10 00         [24]  939 	cjne	r2,#0x10,00140$
+      0026DC                        940 00140$:
+      0026DC 40 AC            [24]  941 	jc	00106$
+                                    942 ;	LcdDisplay.c:295: for (row = 0; row < ROW_COUNT; ++row)
+      0026DE 90 02 4B         [24]  943 	mov	dptr,#_DirectWriteToDisplay_p_10000_77
+      0026E1 EB               [12]  944 	mov	a,r3
+      0026E2 F0               [24]  945 	movx	@dptr,a
+      0026E3 EC               [12]  946 	mov	a,r4
+      0026E4 A3               [24]  947 	inc	dptr
+      0026E5 F0               [24]  948 	movx	@dptr,a
+      0026E6 ED               [12]  949 	mov	a,r5
+      0026E7 A3               [24]  950 	inc	dptr
+      0026E8 F0               [24]  951 	movx	@dptr,a
+      0026E9 0E               [12]  952 	inc	r6
+      0026EA BE 00 01         [24]  953 	cjne	r6,#0x00,00142$
+      0026ED 0F               [12]  954 	inc	r7
+      0026EE                        955 00142$:
+      0026EE C3               [12]  956 	clr	c
+      0026EF EE               [12]  957 	mov	a,r6
+      0026F0 94 02            [12]  958 	subb	a,#0x02
+      0026F2 EF               [12]  959 	mov	a,r7
+      0026F3 64 80            [12]  960 	xrl	a,#0x80
+      0026F5 94 80            [12]  961 	subb	a,#0x80
+      0026F7 50 03            [24]  962 	jnc	00143$
+      0026F9 02 26 5E         [24]  963 	ljmp	00108$
+      0026FC                        964 00143$:
+                                    965 ;	LcdDisplay.c:311: }
+      0026FC 22               [24]  966 	ret
+                                    967 	.area CSEG    (CODE)
+                                    968 	.area CONST   (CODE)
+                                    969 	.area CONST   (CODE)
+      003C1B                        970 _rowStartAddresses:
+      003C1B 00 00                  971 	.byte #0x00, #0x00	;  0
+      003C1D 40 00                  972 	.byte #0x40, #0x00	;  64
+                                    973 	.area CSEG    (CODE)
+                                    974 	.area XINIT   (CODE)
+                                    975 	.area CABS    (ABS,CODE)

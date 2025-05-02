@@ -1,10 +1,10 @@
 ;--------------------------------------------------------
-; File Created by SDCC : free open source ANSI-C Compiler
-; Version 4.0.0 #11528 (MINGW64)
+; File Created by SDCC : free open source ISO C Compiler
+; Version 4.5.0 #15242 (MINGW64)
 ;--------------------------------------------------------
 	.module I2C
-	.optsdcc -mmcs51 --model-large
 	
+	.optsdcc -mmcs51 --model-large
 ;--------------------------------------------------------
 ; Public variables in this module
 ;--------------------------------------------------------
@@ -437,7 +437,7 @@ _P5_7	=	0x00ef
 _I2C_RecvData_sloc0_1_0:
 	.ds 2
 ;--------------------------------------------------------
-; overlayable items in internal ram 
+; overlayable items in internal ram
 ;--------------------------------------------------------
 ;--------------------------------------------------------
 ; indirectly addressable internal ram data
@@ -457,39 +457,39 @@ _I2C_RecvData_sloc0_1_0:
 ;--------------------------------------------------------
 	.area PSEG    (PAG,XDATA)
 ;--------------------------------------------------------
-; external ram data
+; uninitialized external ram data
 ;--------------------------------------------------------
 	.area XSEG    (XDATA)
-_ReadAckNack_ack_65536_24:
+_ReadAckNack_ack_10000_24:
 	.ds 1
-_SendByte_byteValue_65536_27:
+_SendByte_byteValue_10000_27:
 	.ds 1
-_RecvByte_ack_65536_33:
+_RecvByte_ack_10000_33:
 	.ds 1
-_RecvByte_byteValue_65536_34:
+_RecvByte_byteValue_10000_34:
 	.ds 1
 _SendAddressWithDirection_PARM_2:
 	.ds 1
-_SendAddressWithDirection_slaveAddress_65536_39:
+_SendAddressWithDirection_slaveAddress_10000_39:
 	.ds 1
 _I2C_SendData_PARM_2:
 	.ds 3
 _I2C_SendData_PARM_3:
 	.ds 2
-_I2C_SendData_slaveAddress_65536_41:
+_I2C_SendData_slaveAddress_10000_41:
 	.ds 1
 _I2C_RecvData_PARM_2:
 	.ds 3
 _I2C_RecvData_PARM_3:
 	.ds 2
-_I2C_RecvData_slaveAddress_65536_47:
+_I2C_RecvData_slaveAddress_10000_47:
 	.ds 1
 ;--------------------------------------------------------
 ; absolute external ram data
 ;--------------------------------------------------------
 	.area XABS    (ABS,XDATA)
 ;--------------------------------------------------------
-; external initialized ram data
+; initialized external ram data
 ;--------------------------------------------------------
 	.area XISEG   (XDATA)
 	.area HOME    (CODE)
@@ -545,7 +545,7 @@ _I2C_Initialise:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'Delay'
 ;------------------------------------------------------------
-;i                         Allocated with name '_Delay_i_65536_19'
+;i             Allocated with name '_Delay_i_10000_19'
 ;------------------------------------------------------------
 ;	I2C.c:16: void Delay()
 ;	-----------------------------------------
@@ -557,9 +557,9 @@ _Delay:
 	mov	r7,#0x00
 00104$:
 	dec	r6
-	cjne	r6,#0xff,00113$
+	cjne	r6,#0xff,00115$
 	dec	r7
-00113$:
+00115$:
 	mov	a,r6
 	orl	a,r7
 	jnz	00104$
@@ -614,7 +614,7 @@ _SendStop:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'ReadAckNack'
 ;------------------------------------------------------------
-;ack                       Allocated with name '_ReadAckNack_ack_65536_24'
+;ack           Allocated with name '_ReadAckNack_ack_10000_24'
 ;------------------------------------------------------------
 ;	I2C.c:61: unsigned char ReadAckNack()
 ;	-----------------------------------------
@@ -632,13 +632,13 @@ _ReadAckNack:
 ;	I2C.c:75: if (SDA)
 	jnb	_P3_6,00102$
 ;	I2C.c:77: ack = 0;
-	mov	dptr,#_ReadAckNack_ack_65536_24
+	mov	dptr,#_ReadAckNack_ack_10000_24
 	clr	a
 	movx	@dptr,a
 	sjmp	00103$
 00102$:
 ;	I2C.c:81: ack = 1;
-	mov	dptr,#_ReadAckNack_ack_65536_24
+	mov	dptr,#_ReadAckNack_ack_10000_24
 	mov	a,#0x01
 	movx	@dptr,a
 00103$:
@@ -651,7 +651,7 @@ _ReadAckNack:
 ;	assignBit
 	clr	_P3_6
 ;	I2C.c:92: return ack;
-	mov	dptr,#_ReadAckNack_ack_65536_24
+	mov	dptr,#_ReadAckNack_ack_10000_24
 	movx	a,@dptr
 ;	I2C.c:93: }
 	mov	dpl,a
@@ -659,9 +659,9 @@ _ReadAckNack:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'SendByte'
 ;------------------------------------------------------------
-;byteValue                 Allocated with name '_SendByte_byteValue_65536_27'
-;ack                       Allocated with name '_SendByte_ack_65536_28'
-;i                         Allocated with name '_SendByte_i_65536_28'
+;byteValue     Allocated with name '_SendByte_byteValue_10000_27'
+;ack           Allocated with name '_SendByte_ack_10000_28'
+;i             Allocated with name '_SendByte_i_10000_28'
 ;------------------------------------------------------------
 ;	I2C.c:97: unsigned char SendByte(unsigned char byteValue)
 ;	-----------------------------------------
@@ -669,14 +669,13 @@ _ReadAckNack:
 ;	-----------------------------------------
 _SendByte:
 	mov	a,dpl
-	mov	dptr,#_SendByte_byteValue_65536_27
+	mov	dptr,#_SendByte_byteValue_10000_27
 	movx	@dptr,a
 ;	I2C.c:102: for (i = 0; i < 8; ++i)
-	mov	r6,#0x00
 	mov	r7,#0x00
 00105$:
 ;	I2C.c:105: if (byteValue & 0x80)
-	mov	dptr,#_SendByte_byteValue_65536_27
+	mov	dptr,#_SendByte_byteValue_10000_27
 	movx	a,@dptr
 	jnb	acc.7,00102$
 ;	I2C.c:107: SDA = 1;
@@ -690,7 +689,6 @@ _SendByte:
 00103$:
 ;	I2C.c:113: Delay();
 	push	ar7
-	push	ar6
 	lcall	_Delay
 ;	I2C.c:115: SCL = 1;
 ;	assignBit
@@ -707,24 +705,16 @@ _SendByte:
 	clr	_P3_6
 ;	I2C.c:125: Delay();
 	lcall	_Delay
-	pop	ar6
 	pop	ar7
 ;	I2C.c:127: byteValue <<= 1;
-	mov	dptr,#_SendByte_byteValue_65536_27
+	mov	dptr,#_SendByte_byteValue_10000_27
 	movx	a,@dptr
 	add	a,acc
 	movx	@dptr,a
 ;	I2C.c:102: for (i = 0; i < 8; ++i)
-	inc	r6
-	cjne	r6,#0x00,00123$
 	inc	r7
-00123$:
-	clr	c
-	mov	a,r6
-	subb	a,#0x08
-	mov	a,r7
-	xrl	a,#0x80
-	subb	a,#0x80
+	cjne	r7,#0x08,00129$
+00129$:
 	jc	00105$
 ;	I2C.c:130: ack = ReadAckNack();
 ;	I2C.c:132: return ack;
@@ -733,10 +723,10 @@ _SendByte:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'RecvByte'
 ;------------------------------------------------------------
-;ack                       Allocated with name '_RecvByte_ack_65536_33'
-;byteValue                 Allocated with name '_RecvByte_byteValue_65536_34'
-;bitValue                  Allocated with name '_RecvByte_bitValue_65536_34'
-;i                         Allocated with name '_RecvByte_i_65536_34'
+;ack           Allocated with name '_RecvByte_ack_10000_33'
+;byteValue     Allocated with name '_RecvByte_byteValue_10000_34'
+;bitValue      Allocated with name '_RecvByte_bitValue_10000_34'
+;i             Allocated with name '_RecvByte_i_10000_34'
 ;------------------------------------------------------------
 ;	I2C.c:136: unsigned char RecvByte(unsigned char ack)
 ;	-----------------------------------------
@@ -744,18 +734,17 @@ _SendByte:
 ;	-----------------------------------------
 _RecvByte:
 	mov	a,dpl
-	mov	dptr,#_RecvByte_ack_65536_33
+	mov	dptr,#_RecvByte_ack_10000_33
 	movx	@dptr,a
 ;	I2C.c:142: byteValue = 0;
-	mov	dptr,#_RecvByte_byteValue_65536_34
+	mov	dptr,#_RecvByte_byteValue_10000_34
 	clr	a
 	movx	@dptr,a
 ;	I2C.c:144: for (i = 0; i < 8; ++i)
-	mov	r6,#0x00
-	mov	r7,#0x00
+	mov	r7,a
 00105$:
 ;	I2C.c:146: byteValue <<= 1;
-	mov	dptr,#_RecvByte_byteValue_65536_34
+	mov	dptr,#_RecvByte_byteValue_10000_34
 	movx	a,@dptr
 	add	a,acc
 	movx	@dptr,a
@@ -767,7 +756,6 @@ _RecvByte:
 	clr	_P3_7
 ;	I2C.c:151: Delay();
 	push	ar7
-	push	ar6
 	lcall	_Delay
 ;	I2C.c:154: SCL = 1;
 ;	assignBit
@@ -778,37 +766,29 @@ _RecvByte:
 	mov	c,_P3_6
 	clr	a
 	rlc	a
-	mov	r5,a
+	mov	r6,a
 ;	I2C.c:158: Delay();
-	push	ar5
+	push	ar6
 	lcall	_Delay
 ;	I2C.c:160: SCL = 0;
 ;	assignBit
 	clr	_P3_7
 ;	I2C.c:161: Delay();
 	lcall	_Delay
-	pop	ar5
 	pop	ar6
 	pop	ar7
 ;	I2C.c:163: byteValue |= bitValue;
-	mov	dptr,#_RecvByte_byteValue_65536_34
+	mov	dptr,#_RecvByte_byteValue_10000_34
 	movx	a,@dptr
-	orl	a,r5
+	orl	a,r6
 	movx	@dptr,a
 ;	I2C.c:144: for (i = 0; i < 8; ++i)
-	inc	r6
-	cjne	r6,#0x00,00122$
 	inc	r7
-00122$:
-	clr	c
-	mov	a,r6
-	subb	a,#0x08
-	mov	a,r7
-	xrl	a,#0x80
-	subb	a,#0x80
+	cjne	r7,#0x08,00128$
+00128$:
 	jc	00105$
 ;	I2C.c:167: if (ack)
-	mov	dptr,#_RecvByte_ack_65536_33
+	mov	dptr,#_RecvByte_ack_10000_33
 	movx	a,@dptr
 	jz	00103$
 ;	I2C.c:169: SDA = 0;
@@ -833,7 +813,7 @@ _RecvByte:
 ;	I2C.c:182: Delay();
 	lcall	_Delay
 ;	I2C.c:184: return byteValue;
-	mov	dptr,#_RecvByte_byteValue_65536_34
+	mov	dptr,#_RecvByte_byteValue_10000_34
 	movx	a,@dptr
 ;	I2C.c:185: }
 	mov	dpl,a
@@ -841,9 +821,9 @@ _RecvByte:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'SendAddressWithDirection'
 ;------------------------------------------------------------
-;readFlag                  Allocated with name '_SendAddressWithDirection_PARM_2'
-;slaveAddress              Allocated with name '_SendAddressWithDirection_slaveAddress_65536_39'
-;ack                       Allocated with name '_SendAddressWithDirection_ack_65536_40'
+;readFlag      Allocated with name '_SendAddressWithDirection_PARM_2'
+;slaveAddress  Allocated with name '_SendAddressWithDirection_slaveAddress_10000_39'
+;ack           Allocated with name '_SendAddressWithDirection_ack_10000_40'
 ;------------------------------------------------------------
 ;	I2C.c:190: unsigned char SendAddressWithDirection(unsigned char slaveAddress, unsigned char readFlag)
 ;	-----------------------------------------
@@ -851,7 +831,7 @@ _RecvByte:
 ;	-----------------------------------------
 _SendAddressWithDirection:
 	mov	a,dpl
-	mov	dptr,#_SendAddressWithDirection_slaveAddress_65536_39
+	mov	dptr,#_SendAddressWithDirection_slaveAddress_10000_39
 	movx	@dptr,a
 ;	I2C.c:195: slaveAddress <<= 1;
 	movx	a,@dptr
@@ -862,7 +842,7 @@ _SendAddressWithDirection:
 	movx	a,@dptr
 	anl	a,#0x01
 	mov	r7,a
-	mov	dptr,#_SendAddressWithDirection_slaveAddress_65536_39
+	mov	dptr,#_SendAddressWithDirection_slaveAddress_10000_39
 	movx	a,@dptr
 	orl	a,r7
 	movx	@dptr,a
@@ -875,11 +855,11 @@ _SendAddressWithDirection:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'I2C_SendData'
 ;------------------------------------------------------------
-;byte                      Allocated with name '_I2C_SendData_PARM_2'
-;dataLen                   Allocated with name '_I2C_SendData_PARM_3'
-;slaveAddress              Allocated with name '_I2C_SendData_slaveAddress_65536_41'
-;i                         Allocated with name '_I2C_SendData_i_65536_42'
-;ack                       Allocated with name '_I2C_SendData_ack_65536_42'
+;byte          Allocated with name '_I2C_SendData_PARM_2'
+;dataLen       Allocated with name '_I2C_SendData_PARM_3'
+;slaveAddress  Allocated with name '_I2C_SendData_slaveAddress_10000_41'
+;i             Allocated with name '_I2C_SendData_i_10000_42'
+;ack           Allocated with name '_I2C_SendData_ack_10000_42'
 ;------------------------------------------------------------
 ;	I2C.c:205: unsigned char I2C_SendData(unsigned char slaveAddress, unsigned char *byte, int dataLen)
 ;	-----------------------------------------
@@ -887,26 +867,26 @@ _SendAddressWithDirection:
 ;	-----------------------------------------
 _I2C_SendData:
 	mov	a,dpl
-	mov	dptr,#_I2C_SendData_slaveAddress_65536_41
+	mov	dptr,#_I2C_SendData_slaveAddress_10000_41
 	movx	@dptr,a
 ;	I2C.c:210: SendStart();
 	lcall	_SendStart
 ;	I2C.c:212: ack = SendAddressWithDirection(slaveAddress, 0);
-	mov	dptr,#_I2C_SendData_slaveAddress_65536_41
+	mov	dptr,#_I2C_SendData_slaveAddress_10000_41
 	movx	a,@dptr
 	mov	r7,a
 	mov	dptr,#_SendAddressWithDirection_PARM_2
 	clr	a
 	movx	@dptr,a
-	mov	dpl,r7
+	mov	dpl, r7
 	lcall	_SendAddressWithDirection
-	mov	a,dpl
+	mov	a, dpl
 ;	I2C.c:213: if (!ack)
 	jnz	00114$
 ;	I2C.c:215: SendStop();
 	lcall	_SendStop
 ;	I2C.c:216: return 0;
-	mov	dpl,#0x00
+	mov	dpl, #0x00
 ;	I2C.c:219: for (i = 0; i < dataLen; ++i)
 	ret
 00114$:
@@ -951,7 +931,7 @@ _I2C_SendData:
 	push	ar2
 	push	ar1
 	lcall	_SendByte
-	mov	a,dpl
+	mov	a, dpl
 	pop	ar1
 	pop	ar2
 	pop	ar3
@@ -964,14 +944,14 @@ _I2C_SendData:
 ;	I2C.c:224: SendStop();
 	lcall	_SendStop
 ;	I2C.c:225: return 0;
-	mov	dpl,#0x00
+	mov	dpl, #0x00
 	ret
 00104$:
 ;	I2C.c:227: ++byte;
 	inc	r3
-	cjne	r3,#0x00,00130$
+	cjne	r3,#0x00,00138$
 	inc	r4
-00130$:
+00138$:
 ;	I2C.c:219: for (i = 0; i < dataLen; ++i)
 	inc	r1
 	cjne	r1,#0x00,00107$
@@ -981,18 +961,18 @@ _I2C_SendData:
 ;	I2C.c:230: SendStop();
 	lcall	_SendStop
 ;	I2C.c:231: return 1;
-	mov	dpl,#0x01
+	mov	dpl, #0x01
 ;	I2C.c:232: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'I2C_RecvData'
 ;------------------------------------------------------------
-;sloc0                     Allocated with name '_I2C_RecvData_sloc0_1_0'
-;pbyte                     Allocated with name '_I2C_RecvData_PARM_2'
-;dataLen                   Allocated with name '_I2C_RecvData_PARM_3'
-;slaveAddress              Allocated with name '_I2C_RecvData_slaveAddress_65536_47'
-;i                         Allocated with name '_I2C_RecvData_i_65536_48'
-;ack                       Allocated with name '_I2C_RecvData_ack_65536_48'
+;sloc0         Allocated with name '_I2C_RecvData_sloc0_1_0'
+;pbyte         Allocated with name '_I2C_RecvData_PARM_2'
+;dataLen       Allocated with name '_I2C_RecvData_PARM_3'
+;slaveAddress  Allocated with name '_I2C_RecvData_slaveAddress_10000_47'
+;i             Allocated with name '_I2C_RecvData_i_10000_48'
+;ack           Allocated with name '_I2C_RecvData_ack_10000_48'
 ;------------------------------------------------------------
 ;	I2C.c:236: unsigned char I2C_RecvData(unsigned char slaveAddress, unsigned char *pbyte, int dataLen)
 ;	-----------------------------------------
@@ -1000,26 +980,26 @@ _I2C_SendData:
 ;	-----------------------------------------
 _I2C_RecvData:
 	mov	a,dpl
-	mov	dptr,#_I2C_RecvData_slaveAddress_65536_47
+	mov	dptr,#_I2C_RecvData_slaveAddress_10000_47
 	movx	@dptr,a
 ;	I2C.c:241: SendStart();
 	lcall	_SendStart
 ;	I2C.c:243: ack = SendAddressWithDirection(slaveAddress, 1);
-	mov	dptr,#_I2C_RecvData_slaveAddress_65536_47
+	mov	dptr,#_I2C_RecvData_slaveAddress_10000_47
 	movx	a,@dptr
 	mov	r7,a
 	mov	dptr,#_SendAddressWithDirection_PARM_2
 	mov	a,#0x01
 	movx	@dptr,a
-	mov	dpl,r7
+	mov	dpl, r7
 	lcall	_SendAddressWithDirection
-	mov	a,dpl
+	mov	a, dpl
 ;	I2C.c:244: if (!ack)
 	jnz	00111$
 ;	I2C.c:246: SendStop();
 	lcall	_SendStop
 ;	I2C.c:247: return 0;
-	mov	dpl,#0x00
+	mov	dpl, #0x00
 ;	I2C.c:250: for (i = 0; i < dataLen; ++i)
 	ret
 00111$:
@@ -1075,7 +1055,7 @@ _I2C_RecvData:
 	push	ar2
 	push	ar1
 	lcall	_RecvByte
-	mov	r7,dpl
+	mov	r7, dpl
 	pop	ar1
 	pop	ar2
 	pop	ar3
@@ -1099,7 +1079,7 @@ _I2C_RecvData:
 ;	I2C.c:258: SendStop();
 	lcall	_SendStop
 ;	I2C.c:259: return 1;
-	mov	dpl,#0x01
+	mov	dpl, #0x01
 ;	I2C.c:260: }
 	ret
 	.area CSEG    (CODE)

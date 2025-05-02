@@ -1,10 +1,10 @@
 ;--------------------------------------------------------
-; File Created by SDCC : free open source ANSI-C Compiler
-; Version 4.0.0 #11528 (MINGW64)
+; File Created by SDCC : free open source ISO C Compiler
+; Version 4.5.0 #15242 (MINGW64)
 ;--------------------------------------------------------
 	.module MenuMgr
-	.optsdcc -mmcs51 --model-large
 	
+	.optsdcc -mmcs51 --model-large
 ;--------------------------------------------------------
 ; Public variables in this module
 ;--------------------------------------------------------
@@ -453,9 +453,9 @@ _RenderActiveMenu_sloc2_1_0:
 _RenderActiveMenu_sloc3_1_0:
 	.ds 2
 _RenderActiveMenu_sloc4_1_0:
-	.ds 2
-_RenderActiveMenu_sloc5_1_0:
 	.ds 3
+_RenderActiveMenu_sloc5_1_0:
+	.ds 1
 _GetMenuItemExtent_sloc0_1_0:
 	.ds 2
 _GetMenuItemExtent_sloc1_1_0:
@@ -465,17 +465,13 @@ _GetMenuItemExtent_sloc2_1_0:
 _GetMenuItemExtent_sloc3_1_0:
 	.ds 2
 _GetMenuItemExtent_sloc4_1_0:
-	.ds 2
-_GetMenuItemExtent_sloc5_1_0:
 	.ds 3
 _RenderMenuOnBuffer_sloc0_1_0:
 	.ds 2
 _IsParentMenu_sloc0_1_0:
 	.ds 2
-_GoRight_sloc0_1_0:
-	.ds 2
 ;--------------------------------------------------------
-; overlayable items in internal ram 
+; overlayable items in internal ram
 ;--------------------------------------------------------
 ;--------------------------------------------------------
 ; indirectly addressable internal ram data
@@ -495,7 +491,7 @@ _GoRight_sloc0_1_0:
 ;--------------------------------------------------------
 	.area PSEG    (PAG,XDATA)
 ;--------------------------------------------------------
-; external ram data
+; uninitialized external ram data
 ;--------------------------------------------------------
 	.area XSEG    (XDATA)
 _MenuDefinitions::
@@ -508,42 +504,42 @@ _AddMenuDefinition_PARM_2:
 	.ds 2
 _AddMenuDefinition_PARM_3:
 	.ds 2
-_AddMenuDefinition_text_65536_61:
+_AddMenuDefinition_text_10000_68:
 	.ds 3
-_MenuNavigation_navType_65536_65:
+_MenuNavigation_navType_10000_72:
 	.ds 1
 _RenderActiveMenu_PARM_2:
 	.ds 2
 _RenderActiveMenu_PARM_3:
 	.ds 2
-_RenderActiveMenu_pDisplay_65536_71:
+_RenderActiveMenu_pDisplay_10000_78:
 	.ds 3
-_RenderActiveMenu_ch_65536_72:
+_RenderActiveMenu_ch_10000_79:
 	.ds 1
-_RenderActiveMenu_currentPos_65536_72:
+_RenderActiveMenu_currentPos_10000_79:
 	.ds 2
 _GetMenuItemExtent_PARM_2:
 	.ds 3
 _GetMenuItemExtent_PARM_3:
 	.ds 3
-_GetMenuItemExtent_menuItem_65536_85:
+_GetMenuItemExtent_menuItem_10000_92:
 	.ds 2
-_GetMenuItemExtent_currentPos_65536_86:
+_GetMenuItemExtent_currentPos_10000_93:
 	.ds 2
 _RenderMenuOnBuffer_PARM_2:
 	.ds 2
-_RenderMenuOnBuffer_pBuffer_65536_94:
+_RenderMenuOnBuffer_pBuffer_10000_101:
 	.ds 3
-_RenderMenuOnBuffer_startPos_131072_96:
+_RenderMenuOnBuffer_startPos_20000_103:
 	.ds 2
-_RenderMenuOnBuffer_endPos_131072_96:
+_RenderMenuOnBuffer_endPos_20000_103:
 	.ds 2
 ;--------------------------------------------------------
 ; absolute external ram data
 ;--------------------------------------------------------
 	.area XABS    (ABS,XDATA)
 ;--------------------------------------------------------
-; external initialized ram data
+; initialized external ram data
 ;--------------------------------------------------------
 	.area XISEG   (XDATA)
 	.area HOME    (CODE)
@@ -620,13 +616,13 @@ _TerminateMenuDefinitions:
 	movx	@dptr,a
 	mov	dptr,#0x0005
 	lcall	__mulint
-	mov	r6,dpl
-	mov	r7,dph
+	mov	r6, dpl
+	mov	r7, dph
 	mov	a,r6
-	add	a,#_MenuDefinitions
+	add	a, #_MenuDefinitions
 	mov	r6,a
 	mov	a,r7
-	addc	a,#(_MenuDefinitions >> 8)
+	addc	a, #(_MenuDefinitions >> 8)
 	mov	r7,a
 	mov	dpl,r6
 	mov	dph,r7
@@ -651,13 +647,13 @@ _TerminateMenuDefinitions:
 	movx	@dptr,a
 	mov	dptr,#0x0005
 	lcall	__mulint
-	mov	r6,dpl
-	mov	r7,dph
+	mov	r6, dpl
+	mov	r7, dph
 	mov	a,r6
-	add	a,#_MenuDefinitions
+	add	a, #_MenuDefinitions
 	mov	dpl,a
 	mov	a,r7
-	addc	a,#(_MenuDefinitions >> 8)
+	addc	a, #(_MenuDefinitions >> 8)
 	mov	dph,a
 	clr	a
 	movx	@dptr,a
@@ -680,13 +676,13 @@ _TerminateMenuDefinitions:
 	movx	@dptr,a
 	mov	dptr,#0x0005
 	lcall	__mulint
-	mov	r6,dpl
-	mov	r7,dph
+	mov	r6, dpl
+	mov	r7, dph
 	mov	a,r6
-	add	a,#_MenuDefinitions
+	add	a, #_MenuDefinitions
 	mov	r6,a
 	mov	a,r7
-	addc	a,#(_MenuDefinitions >> 8)
+	addc	a, #(_MenuDefinitions >> 8)
 	mov	r7,a
 	mov	dpl,r6
 	mov	dph,r7
@@ -700,9 +696,9 @@ _TerminateMenuDefinitions:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'AddMenuDefinition'
 ;------------------------------------------------------------
-;parent                    Allocated with name '_AddMenuDefinition_PARM_2'
-;id                        Allocated with name '_AddMenuDefinition_PARM_3'
-;text                      Allocated with name '_AddMenuDefinition_text_65536_61'
+;parent        Allocated with name '_AddMenuDefinition_PARM_2'
+;id            Allocated with name '_AddMenuDefinition_PARM_3'
+;text          Allocated with name '_AddMenuDefinition_text_10000_68'
 ;------------------------------------------------------------
 ;	../Common/MenuMgr.c:60: void AddMenuDefinition(char *text, int parent, int id)
 ;	-----------------------------------------
@@ -712,7 +708,7 @@ _AddMenuDefinition:
 	mov	r7,b
 	mov	r6,dph
 	mov	a,dpl
-	mov	dptr,#_AddMenuDefinition_text_65536_61
+	mov	dptr,#_AddMenuDefinition_text_10000_68
 	movx	@dptr,a
 	mov	a,r6
 	inc	dptr
@@ -735,28 +731,24 @@ _AddMenuDefinition:
 	movx	@dptr,a
 	mov	dptr,#0x0005
 	lcall	__mulint
-	mov	r6,dpl
-	mov	r7,dph
+	mov	r6, dpl
+	mov	r7, dph
 	mov	a,r6
-	add	a,#_MenuDefinitions
+	add	a, #_MenuDefinitions
 	mov	r6,a
 	mov	a,r7
-	addc	a,#(_MenuDefinitions >> 8)
+	addc	a, #(_MenuDefinitions >> 8)
 	mov	r7,a
 	mov	a,#0x04
-	add	a,r6
+	add	a, r6
 	mov	r6,a
 	clr	a
-	addc	a,r7
+	addc	a, r7
 	mov	r7,a
 	mov	dptr,#_AddMenuDefinition_PARM_3
 	movx	a,@dptr
-	mov	r4,a
-	inc	dptr
-	movx	a,@dptr
 	mov	dpl,r6
 	mov	dph,r7
-	mov	a,r4
 	movx	@dptr,a
 ;	../Common/MenuMgr.c:63: MenuDefinitions[MenuDefinitionCounter].text = text;
 	mov	dptr,#_MenuDefinitionCounter
@@ -773,15 +765,15 @@ _AddMenuDefinition:
 	movx	@dptr,a
 	mov	dptr,#0x0005
 	lcall	__mulint
-	mov	r6,dpl
-	mov	r7,dph
+	mov	r6, dpl
+	mov	r7, dph
 	mov	a,r6
-	add	a,#_MenuDefinitions
+	add	a, #_MenuDefinitions
 	mov	r6,a
 	mov	a,r7
-	addc	a,#(_MenuDefinitions >> 8)
+	addc	a, #(_MenuDefinitions >> 8)
 	mov	r7,a
-	mov	dptr,#_AddMenuDefinition_text_65536_61
+	mov	dptr,#_AddMenuDefinition_text_10000_68
 	movx	a,@dptr
 	mov	r3,a
 	inc	dptr
@@ -815,38 +807,33 @@ _AddMenuDefinition:
 	movx	@dptr,a
 	mov	dptr,#0x0005
 	lcall	__mulint
-	mov	r6,dpl
-	mov	r7,dph
+	mov	r6, dpl
+	mov	r7, dph
 	mov	a,r6
-	add	a,#_MenuDefinitions
+	add	a, #_MenuDefinitions
 	mov	r6,a
 	mov	a,r7
-	addc	a,#(_MenuDefinitions >> 8)
+	addc	a, #(_MenuDefinitions >> 8)
 	mov	r7,a
 	mov	a,#0x03
-	add	a,r6
+	add	a, r6
 	mov	r6,a
 	clr	a
-	addc	a,r7
+	addc	a, r7
 	mov	r7,a
 	mov	dptr,#_AddMenuDefinition_PARM_2
 	movx	a,@dptr
-	mov	r4,a
-	inc	dptr
-	movx	a,@dptr
-	mov	r5,a
 	mov	dpl,r6
 	mov	dph,r7
-	mov	a,r4
 	movx	@dptr,a
 ;	../Common/MenuMgr.c:66: ++MenuDefinitionCounter;
 	mov	dptr,#_MenuDefinitionCounter
 	movx	a,@dptr
-	add	a,#0x01
+	add	a, #0x01
 	movx	@dptr,a
 	inc	dptr
 	movx	a,@dptr
-	addc	a,#0x00
+	addc	a, #0x00
 	movx	@dptr,a
 ;	../Common/MenuMgr.c:67: if ((MenuDefinitionCounter + 1) > MAX_MENU_ITEMS)
 	mov	dptr,#_MenuDefinitionCounter
@@ -856,9 +843,9 @@ _AddMenuDefinition:
 	movx	a,@dptr
 	mov	r7,a
 	inc	r6
-	cjne	r6,#0x00,00109$
+	cjne	r6,#0x00,00111$
 	inc	r7
-00109$:
+00111$:
 	clr	c
 	mov	a,#0x28
 	subb	a,r6
@@ -868,9 +855,9 @@ _AddMenuDefinition:
 	subb	a,b
 	jnc	00102$
 ;	../Common/MenuMgr.c:69: pCrashDump("Menu item count");
-	lcall	00111$
-	sjmp	00112$
-00111$:
+	lcall	00113$
+	sjmp	00114$
+00113$:
 	mov	dptr,#_pCrashDump
 	movx	a,@dptr
 	push	acc
@@ -878,9 +865,9 @@ _AddMenuDefinition:
 	movx	a,@dptr
 	push	acc
 	mov	dptr,#___str_0
-	mov	b,#0x80
+	mov	b, #0x80
 	ret
-00112$:
+00114$:
 00102$:
 ;	../Common/MenuMgr.c:72: TerminateMenuDefinitions();
 ;	../Common/MenuMgr.c:73: }
@@ -911,10 +898,10 @@ _InitialiseMenuController:
 	movx	a,@dptr
 	mov	b,#0x05
 	mul	ab
-	add	a,#_MenuDefinitions
+	add	a, #_MenuDefinitions
 	mov	r6,a
 	mov	a,#(_MenuDefinitions >> 8)
-	addc	a,b
+	addc	a, b
 	mov	r7,a
 	mov	dpl,r6
 	mov	dph,r7
@@ -931,14 +918,14 @@ _InitialiseMenuController:
 	clr	a
 	inc	dptr
 	movx	@dptr,a
-	mov	dpl,r7
-	mov	dph,r6
+	mov	dpl, r7
+	mov	dph, r6
 ;	../Common/MenuMgr.c:84: }
 	ljmp	_HandleMenuCommand
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'MenuNavigation'
 ;------------------------------------------------------------
-;navType                   Allocated with name '_MenuNavigation_navType_65536_65'
+;navType       Allocated with name '_MenuNavigation_navType_10000_72'
 ;------------------------------------------------------------
 ;	../Common/MenuMgr.c:87: void MenuNavigation(char navType)
 ;	-----------------------------------------
@@ -946,17 +933,17 @@ _InitialiseMenuController:
 ;	-----------------------------------------
 _MenuNavigation:
 	mov	a,dpl
-	mov	dptr,#_MenuNavigation_navType_65536_65
+	mov	dptr,#_MenuNavigation_navType_10000_72
 	movx	@dptr,a
 ;	../Common/MenuMgr.c:89: switch (navType)
 	movx	a,@dptr
 	mov	r7,a
-	cjne	r7,#0x01,00133$
+	cjne	r7,#0x01,00143$
 	sjmp	00102$
-00133$:
-	cjne	r7,#0x02,00134$
+00143$:
+	cjne	r7,#0x02,00144$
 	sjmp	00101$
-00134$:
+00144$:
 ;	../Common/MenuMgr.c:91: case NAVTYPE_RIGHT :
 	cjne	r7,#0x03,00111$
 	sjmp	00103$
@@ -973,8 +960,8 @@ _MenuNavigation:
 00103$:
 ;	../Common/MenuMgr.c:101: if (IsParentMenu())
 	lcall	_IsParentMenu
-	mov	a,dpl
-	mov	b,dph
+	mov	a, dpl
+	mov	b, dph
 	orl	a,b
 	jz	00108$
 ;	../Common/MenuMgr.c:103: GoSubMenu();
@@ -982,8 +969,8 @@ _MenuNavigation:
 00108$:
 ;	../Common/MenuMgr.c:105: else if (IsGoBack())
 	lcall	_IsGoBack
-	mov	a,dpl
-	mov	b,dph
+	mov	a, dpl
+	mov	b, dph
 	orl	a,b
 	jz	00105$
 ;	../Common/MenuMgr.c:107: GoBackUp();
@@ -994,10 +981,10 @@ _MenuNavigation:
 	movx	a,@dptr
 	mov	b,#0x05
 	mul	ab
-	add	a,#_MenuDefinitions
+	add	a, #_MenuDefinitions
 	mov	r6,a
 	mov	a,#(_MenuDefinitions >> 8)
-	addc	a,b
+	addc	a, b
 	mov	r7,a
 	mov	dpl,r6
 	mov	dph,r7
@@ -1014,8 +1001,8 @@ _MenuNavigation:
 	clr	a
 	inc	dptr
 	movx	@dptr,a
-	mov	dpl,r7
-	mov	dph,r6
+	mov	dpl, r7
+	mov	dph, r6
 ;	../Common/MenuMgr.c:116: }
 ;	../Common/MenuMgr.c:117: }
 	ljmp	_HandleMenuCommand
@@ -1024,20 +1011,20 @@ _MenuNavigation:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'RenderActiveMenu'
 ;------------------------------------------------------------
-;sloc0                     Allocated with name '_RenderActiveMenu_sloc0_1_0'
-;sloc1                     Allocated with name '_RenderActiveMenu_sloc1_1_0'
-;sloc2                     Allocated with name '_RenderActiveMenu_sloc2_1_0'
-;sloc3                     Allocated with name '_RenderActiveMenu_sloc3_1_0'
-;sloc4                     Allocated with name '_RenderActiveMenu_sloc4_1_0'
-;sloc5                     Allocated with name '_RenderActiveMenu_sloc5_1_0'
-;windowStart               Allocated with name '_RenderActiveMenu_PARM_2'
-;windowEnd                 Allocated with name '_RenderActiveMenu_PARM_3'
-;pDisplay                  Allocated with name '_RenderActiveMenu_pDisplay_65536_71'
-;currentParent             Allocated with name '_RenderActiveMenu_currentParent_65536_72'
-;i                         Allocated with name '_RenderActiveMenu_i_65536_72'
-;pTemp                     Allocated with name '_RenderActiveMenu_pTemp_65536_72'
-;ch                        Allocated with name '_RenderActiveMenu_ch_65536_72'
-;currentPos                Allocated with name '_RenderActiveMenu_currentPos_65536_72'
+;sloc0         Allocated with name '_RenderActiveMenu_sloc0_1_0'
+;sloc1         Allocated with name '_RenderActiveMenu_sloc1_1_0'
+;sloc2         Allocated with name '_RenderActiveMenu_sloc2_1_0'
+;sloc3         Allocated with name '_RenderActiveMenu_sloc3_1_0'
+;sloc4         Allocated with name '_RenderActiveMenu_sloc4_1_0'
+;sloc5         Allocated with name '_RenderActiveMenu_sloc5_1_0'
+;windowStart   Allocated with name '_RenderActiveMenu_PARM_2'
+;windowEnd     Allocated with name '_RenderActiveMenu_PARM_3'
+;pDisplay      Allocated with name '_RenderActiveMenu_pDisplay_10000_78'
+;currentParent Allocated with name '_RenderActiveMenu_currentParent_10000_79'
+;i             Allocated with name '_RenderActiveMenu_i_10000_79'
+;pTemp         Allocated with name '_RenderActiveMenu_pTemp_10000_79'
+;ch            Allocated with name '_RenderActiveMenu_ch_10000_79'
+;currentPos    Allocated with name '_RenderActiveMenu_currentPos_10000_79'
 ;------------------------------------------------------------
 ;	../Common/MenuMgr.c:121: void RenderActiveMenu(char *pDisplay, int windowStart, int windowEnd)
 ;	-----------------------------------------
@@ -1047,7 +1034,7 @@ _RenderActiveMenu:
 	mov	r7,b
 	mov	r6,dph
 	mov	a,dpl
-	mov	dptr,#_RenderActiveMenu_pDisplay_65536_71
+	mov	dptr,#_RenderActiveMenu_pDisplay_10000_78
 	movx	@dptr,a
 	mov	a,r6
 	inc	dptr
@@ -1060,10 +1047,10 @@ _RenderActiveMenu:
 	movx	a,@dptr
 	mov	b,#0x05
 	mul	ab
-	add	a,#_MenuDefinitions
+	add	a, #_MenuDefinitions
 	mov	r6,a
 	mov	a,#(_MenuDefinitions >> 8)
-	addc	a,b
+	addc	a, b
 	mov	r7,a
 	mov	dpl,r6
 	mov	dph,r7
@@ -1072,10 +1059,8 @@ _RenderActiveMenu:
 	inc	dptr
 	movx	a,@dptr
 	mov	r7,a
-	mov	_RenderActiveMenu_sloc3_1_0,r7
-	mov	(_RenderActiveMenu_sloc3_1_0 + 1),#0x00
 ;	../Common/MenuMgr.c:131: currentPos = 0;
-	mov	dptr,#_RenderActiveMenu_currentPos_65536_72
+	mov	dptr,#_RenderActiveMenu_currentPos_10000_79
 	clr	a
 	movx	@dptr,a
 	inc	dptr
@@ -1083,24 +1068,25 @@ _RenderActiveMenu:
 ;	../Common/MenuMgr.c:132: for (i = 0; MenuDefinitions[i].text != 0; ++i)
 	mov	dptr,#_RenderActiveMenu_PARM_3
 	movx	a,@dptr
-	mov	r4,a
+	mov	r5,a
 	inc	dptr
 	movx	a,@dptr
-	mov	r5,a
+	mov	r6,a
 	mov	dptr,#_RenderActiveMenu_PARM_2
 	movx	a,@dptr
-	mov	r2,a
+	mov	r3,a
 	inc	dptr
 	movx	a,@dptr
-	mov	r3,a
-	mov	_RenderActiveMenu_sloc4_1_0,r4
-	mov	(_RenderActiveMenu_sloc4_1_0 + 1),r5
-	mov	_RenderActiveMenu_sloc0_1_0,r4
-	mov	(_RenderActiveMenu_sloc0_1_0 + 1),r5
+	mov	r4,a
+	mov	_RenderActiveMenu_sloc3_1_0,r5
+	mov	(_RenderActiveMenu_sloc3_1_0 + 1),r6
+	mov	_RenderActiveMenu_sloc0_1_0,r5
+	mov	(_RenderActiveMenu_sloc0_1_0 + 1),r6
 	clr	a
 	mov	_RenderActiveMenu_sloc1_1_0,a
 	mov	(_RenderActiveMenu_sloc1_1_0 + 1),a
 00124$:
+	push	ar7
 	mov	dptr,#__mulint_PARM_2
 	mov	a,_RenderActiveMenu_sloc1_1_0
 	movx	@dptr,a
@@ -1108,149 +1094,145 @@ _RenderActiveMenu:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#0x0005
+	push	ar6
 	push	ar5
 	push	ar4
 	push	ar3
-	push	ar2
 	lcall	__mulint
-	mov	_RenderActiveMenu_sloc2_1_0,dpl
-	mov	(_RenderActiveMenu_sloc2_1_0 + 1),dph
-	pop	ar2
+	mov	r0, dpl
+	mov	r7, dph
 	pop	ar3
 	pop	ar4
 	pop	ar5
-	mov	a,_RenderActiveMenu_sloc2_1_0
-	add	a,#_MenuDefinitions
-	mov	dpl,a
-	mov	a,(_RenderActiveMenu_sloc2_1_0 + 1)
-	addc	a,#(_MenuDefinitions >> 8)
-	mov	dph,a
+	pop	ar6
+	mov	a,r0
+	add	a, #_MenuDefinitions
+	mov	_RenderActiveMenu_sloc2_1_0,a
+	mov	a,r7
+	addc	a, #(_MenuDefinitions >> 8)
+	mov	(_RenderActiveMenu_sloc2_1_0 + 1),a
+	mov	dpl,_RenderActiveMenu_sloc2_1_0
+	mov	dph,(_RenderActiveMenu_sloc2_1_0 + 1)
 	movx	a,@dptr
-	mov	r1,a
+	mov	r0,a
 	inc	dptr
 	movx	a,@dptr
-	mov	r6,a
+	mov	r2,a
 	inc	dptr
 	movx	a,@dptr
-	mov	a,r1
-	orl	a,r6
-	jnz	00182$
+	mov	a,r0
+	orl	a,r2
+	pop	ar7
+	jnz	00208$
 	ret
-00182$:
+00208$:
 ;	../Common/MenuMgr.c:134: if (MenuDefinitions[i].parent == currentParent)
-	mov	a,_RenderActiveMenu_sloc2_1_0
-	add	a,#_MenuDefinitions
-	mov	r6,a
-	mov	a,(_RenderActiveMenu_sloc2_1_0 + 1)
-	addc	a,#(_MenuDefinitions >> 8)
-	mov	r7,a
-	mov	dpl,r6
-	mov	dph,r7
+	mov	dpl,_RenderActiveMenu_sloc2_1_0
+	mov	dph,(_RenderActiveMenu_sloc2_1_0 + 1)
 	inc	dptr
 	inc	dptr
 	inc	dptr
 	movx	a,@dptr
-	mov	r7,a
-	mov	r6,#0x00
-	cjne	a,_RenderActiveMenu_sloc3_1_0,00183$
-	mov	a,r6
-	cjne	a,(_RenderActiveMenu_sloc3_1_0 + 1),00183$
-	sjmp	00184$
-00183$:
+	cjne	a,ar7,00209$
+	sjmp	00210$
+00209$:
 	ljmp	00125$
-00184$:
+00210$:
 ;	../Common/MenuMgr.c:136: if (i == MenuController.currentSelectedMenuIndex)
 	mov	dptr,#_MenuController
 	movx	a,@dptr
-	mov	r6,#0x00
+	mov	r2,#0x00
 	cjne	a,_RenderActiveMenu_sloc1_1_0,00102$
-	mov	a,r6
+	mov	a,r2
 	cjne	a,(_RenderActiveMenu_sloc1_1_0 + 1),00102$
 ;	../Common/MenuMgr.c:138: ch = '[';
-	mov	dptr,#_RenderActiveMenu_ch_65536_72
+	mov	dptr,#_RenderActiveMenu_ch_10000_79
 	mov	a,#0x5b
 	movx	@dptr,a
 	sjmp	00103$
 00102$:
 ;	../Common/MenuMgr.c:142: ch = ' ';
-	mov	dptr,#_RenderActiveMenu_ch_65536_72
+	mov	dptr,#_RenderActiveMenu_ch_10000_79
 	mov	a,#0x20
 	movx	@dptr,a
 00103$:
 ;	../Common/MenuMgr.c:144: COPY_IF_IN_WINDOW(pDisplay, ch, currentPos, windowStart, windowEnd);
-	mov	dptr,#_RenderActiveMenu_currentPos_65536_72
+	mov	dptr,#_RenderActiveMenu_currentPos_10000_79
 	movx	a,@dptr
-	mov	r6,a
+	mov	r1,a
 	inc	dptr
 	movx	a,@dptr
-	mov	r7,a
+	mov	r2,a
 	clr	c
-	mov	a,r6
-	subb	a,r2
-	mov	a,r7
+	mov	a,r1
+	subb	a,r3
+	mov	a,r2
 	xrl	a,#0x80
-	mov	b,r3
+	mov	b,r4
 	xrl	b,#0x80
 	subb	a,b
 	jc	00105$
-	mov	a,r6
-	subb	a,r4
-	mov	a,r7
+	mov	a,r1
+	subb	a,r5
+	mov	a,r2
 	xrl	a,#0x80
-	mov	b,r5
+	mov	b,r6
 	xrl	b,#0x80
 	subb	a,b
 	jnc	00105$
-	mov	dptr,#_RenderActiveMenu_pDisplay_65536_71
-	movx	a,@dptr
-	mov	r1,a
-	inc	dptr
-	movx	a,@dptr
-	mov	r6,a
-	inc	dptr
-	movx	a,@dptr
-	mov	r7,a
-	mov	dptr,#_RenderActiveMenu_ch_65536_72
+	push	ar7
+	mov	dptr,#_RenderActiveMenu_pDisplay_10000_78
 	movx	a,@dptr
 	mov	r0,a
-	mov	dpl,r1
-	mov	dph,r6
-	mov	b,r7
-	lcall	__gptrput
-	mov	dptr,#_RenderActiveMenu_pDisplay_65536_71
-	mov	a,#0x01
-	add	a,r1
-	movx	@dptr,a
-	clr	a
-	addc	a,r6
 	inc	dptr
-	movx	@dptr,a
-	mov	a,r7
-	inc	dptr
-	movx	@dptr,a
-	mov	dptr,#_RenderActiveMenu_pDisplay_65536_71
 	movx	a,@dptr
 	mov	r1,a
 	inc	dptr
 	movx	a,@dptr
-	mov	r6,a
+	mov	r2,a
+	mov	dptr,#_RenderActiveMenu_ch_10000_79
+	movx	a,@dptr
+	mov	dpl,r0
+	mov	dph,r1
+	mov	b,r2
+	lcall	__gptrput
+	mov	dptr,#_RenderActiveMenu_pDisplay_10000_78
+	mov	a,#0x01
+	add	a, r0
+	movx	@dptr,a
+	clr	a
+	addc	a, r1
+	inc	dptr
+	movx	@dptr,a
+	mov	a,r2
+	inc	dptr
+	movx	@dptr,a
+	mov	dptr,#_RenderActiveMenu_pDisplay_10000_78
+	movx	a,@dptr
+	mov	r1,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r2,a
 	inc	dptr
 	movx	a,@dptr
 	mov	r7,a
 	mov	dpl,r1
-	mov	dph,r6
+	mov	dph,r2
 	mov	b,r7
 	clr	a
 	lcall	__gptrput
+;	../Common/MenuMgr.c:132: for (i = 0; MenuDefinitions[i].text != 0; ++i)
+	pop	ar7
+;	../Common/MenuMgr.c:144: COPY_IF_IN_WINDOW(pDisplay, ch, currentPos, windowStart, windowEnd);
 00105$:
 ;	../Common/MenuMgr.c:145: ++currentPos;
-	mov	dptr,#_RenderActiveMenu_currentPos_65536_72
+	mov	dptr,#_RenderActiveMenu_currentPos_10000_79
 	movx	a,@dptr
-	add	a,#0x01
+	add	a, #0x01
 	movx	@dptr,a
 	inc	dptr
 	movx	a,@dptr
-	addc	a,#0x00
+	addc	a, #0x00
 	movx	@dptr,a
 ;	../Common/MenuMgr.c:147: for (pTemp = MenuDefinitions[i].text; *pTemp; ++pTemp)
 	mov	dptr,#__mulint_PARM_2
@@ -1260,116 +1242,118 @@ _RenderActiveMenu:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#0x0005
+	push	ar7
+	push	ar6
 	push	ar5
 	push	ar4
 	push	ar3
-	push	ar2
 	lcall	__mulint
-	mov	r6,dpl
-	mov	r7,dph
-	pop	ar2
+	mov	r1, dpl
+	mov	r2, dph
 	pop	ar3
 	pop	ar4
 	pop	ar5
-	mov	a,r6
-	add	a,#_MenuDefinitions
+	pop	ar6
+	pop	ar7
+	mov	a,r1
+	add	a, #_MenuDefinitions
 	mov	dpl,a
-	mov	a,r7
-	addc	a,#(_MenuDefinitions >> 8)
+	mov	a,r2
+	addc	a, #(_MenuDefinitions >> 8)
 	mov	dph,a
+	movx	a,@dptr
+	mov	r0,a
+	inc	dptr
 	movx	a,@dptr
 	mov	r1,a
 	inc	dptr
 	movx	a,@dptr
-	mov	r6,a
+	mov	r2,a
+	mov	dptr,#_RenderActiveMenu_pDisplay_10000_78
+	movx	a,@dptr
+	mov	_RenderActiveMenu_sloc4_1_0,a
 	inc	dptr
 	movx	a,@dptr
-	mov	r7,a
-	mov	dptr,#_RenderActiveMenu_pDisplay_65536_71
-	movx	a,@dptr
-	mov	_RenderActiveMenu_sloc5_1_0,a
+	mov	(_RenderActiveMenu_sloc4_1_0 + 1),a
 	inc	dptr
 	movx	a,@dptr
-	mov	(_RenderActiveMenu_sloc5_1_0 + 1),a
-	inc	dptr
-	movx	a,@dptr
-	mov	(_RenderActiveMenu_sloc5_1_0 + 2),a
-	mov	dptr,#_RenderActiveMenu_currentPos_65536_72
+	mov	(_RenderActiveMenu_sloc4_1_0 + 2),a
+	mov	dptr,#_RenderActiveMenu_currentPos_10000_79
 	movx	a,@dptr
 	mov	_RenderActiveMenu_sloc2_1_0,a
 	inc	dptr
 	movx	a,@dptr
 	mov	(_RenderActiveMenu_sloc2_1_0 + 1),a
 00121$:
-	mov	dpl,r1
-	mov	dph,r6
-	mov	b,r7
+	mov	dpl,r0
+	mov	dph,r1
+	mov	b,r2
 	lcall	__gptrget
-	mov	r0,a
+	mov	_RenderActiveMenu_sloc5_1_0,a
 	jz	00141$
 ;	../Common/MenuMgr.c:149: COPY_IF_IN_WINDOW(pDisplay, *pTemp, currentPos, windowStart, windowEnd);
 	clr	c
 	mov	a,_RenderActiveMenu_sloc2_1_0
-	subb	a,r2
+	subb	a,r3
 	mov	a,(_RenderActiveMenu_sloc2_1_0 + 1)
 	xrl	a,#0x80
-	mov	b,r3
+	mov	b,r4
 	xrl	b,#0x80
 	subb	a,b
 	jc	00108$
 	mov	a,_RenderActiveMenu_sloc2_1_0
-	subb	a,_RenderActiveMenu_sloc4_1_0
+	subb	a,_RenderActiveMenu_sloc3_1_0
 	mov	a,(_RenderActiveMenu_sloc2_1_0 + 1)
 	xrl	a,#0x80
-	mov	b,(_RenderActiveMenu_sloc4_1_0 + 1)
+	mov	b,(_RenderActiveMenu_sloc3_1_0 + 1)
 	xrl	b,#0x80
 	subb	a,b
 	jnc	00108$
-	mov	dpl,_RenderActiveMenu_sloc5_1_0
-	mov	dph,(_RenderActiveMenu_sloc5_1_0 + 1)
-	mov	b,(_RenderActiveMenu_sloc5_1_0 + 2)
-	mov	a,r0
+	mov	dpl,_RenderActiveMenu_sloc4_1_0
+	mov	dph,(_RenderActiveMenu_sloc4_1_0 + 1)
+	mov	b,(_RenderActiveMenu_sloc4_1_0 + 2)
+	mov	a,_RenderActiveMenu_sloc5_1_0
 	lcall	__gptrput
 	inc	dptr
-	mov	_RenderActiveMenu_sloc5_1_0,dpl
-	mov	(_RenderActiveMenu_sloc5_1_0 + 1),dph
-	mov	dptr,#_RenderActiveMenu_pDisplay_65536_71
-	mov	a,_RenderActiveMenu_sloc5_1_0
+	mov	_RenderActiveMenu_sloc4_1_0,dpl
+	mov	(_RenderActiveMenu_sloc4_1_0 + 1),dph
+	mov	dptr,#_RenderActiveMenu_pDisplay_10000_78
+	mov	a,_RenderActiveMenu_sloc4_1_0
 	movx	@dptr,a
-	mov	a,(_RenderActiveMenu_sloc5_1_0 + 1)
+	mov	a,(_RenderActiveMenu_sloc4_1_0 + 1)
 	inc	dptr
 	movx	@dptr,a
-	mov	a,(_RenderActiveMenu_sloc5_1_0 + 2)
+	mov	a,(_RenderActiveMenu_sloc4_1_0 + 2)
 	inc	dptr
 	movx	@dptr,a
-	mov	dpl,_RenderActiveMenu_sloc5_1_0
-	mov	dph,(_RenderActiveMenu_sloc5_1_0 + 1)
-	mov	b,(_RenderActiveMenu_sloc5_1_0 + 2)
+	mov	dpl,_RenderActiveMenu_sloc4_1_0
+	mov	dph,(_RenderActiveMenu_sloc4_1_0 + 1)
+	mov	b,(_RenderActiveMenu_sloc4_1_0 + 2)
 	clr	a
 	lcall	__gptrput
 00108$:
 ;	../Common/MenuMgr.c:150: ++currentPos;
 	inc	_RenderActiveMenu_sloc2_1_0
 	clr	a
-	cjne	a,_RenderActiveMenu_sloc2_1_0,00192$
+	cjne	a,_RenderActiveMenu_sloc2_1_0,00218$
 	inc	(_RenderActiveMenu_sloc2_1_0 + 1)
-00192$:
+00218$:
 ;	../Common/MenuMgr.c:147: for (pTemp = MenuDefinitions[i].text; *pTemp; ++pTemp)
+	inc	r0
+	cjne	r0,#0x00,00121$
 	inc	r1
-	cjne	r1,#0x00,00121$
-	inc	r6
 	sjmp	00121$
 00141$:
-	mov	dptr,#_RenderActiveMenu_pDisplay_65536_71
-	mov	a,_RenderActiveMenu_sloc5_1_0
+	mov	dptr,#_RenderActiveMenu_pDisplay_10000_78
+	mov	a,_RenderActiveMenu_sloc4_1_0
 	movx	@dptr,a
-	mov	a,(_RenderActiveMenu_sloc5_1_0 + 1)
+	mov	a,(_RenderActiveMenu_sloc4_1_0 + 1)
 	inc	dptr
 	movx	@dptr,a
-	mov	a,(_RenderActiveMenu_sloc5_1_0 + 2)
+	mov	a,(_RenderActiveMenu_sloc4_1_0 + 2)
 	inc	dptr
 	movx	@dptr,a
-	mov	dptr,#_RenderActiveMenu_currentPos_65536_72
+	mov	dptr,#_RenderActiveMenu_currentPos_10000_79
 	mov	a,_RenderActiveMenu_sloc2_1_0
 	movx	@dptr,a
 	mov	a,(_RenderActiveMenu_sloc2_1_0 + 1)
@@ -1378,121 +1362,123 @@ _RenderActiveMenu:
 ;	../Common/MenuMgr.c:153: if (i == MenuController.currentSelectedMenuIndex)
 	mov	dptr,#_MenuController
 	movx	a,@dptr
-	mov	r6,#0x00
+	mov	r2,#0x00
 	cjne	a,_RenderActiveMenu_sloc1_1_0,00112$
-	mov	a,r6
+	mov	a,r2
 	cjne	a,(_RenderActiveMenu_sloc1_1_0 + 1),00112$
 ;	../Common/MenuMgr.c:155: ch = ']';
-	mov	dptr,#_RenderActiveMenu_ch_65536_72
+	mov	dptr,#_RenderActiveMenu_ch_10000_79
 	mov	a,#0x5d
 	movx	@dptr,a
 	sjmp	00113$
 00112$:
 ;	../Common/MenuMgr.c:159: ch = ' ';
-	mov	dptr,#_RenderActiveMenu_ch_65536_72
+	mov	dptr,#_RenderActiveMenu_ch_10000_79
 	mov	a,#0x20
 	movx	@dptr,a
 00113$:
 ;	../Common/MenuMgr.c:161: COPY_IF_IN_WINDOW(pDisplay, ch, currentPos, windowStart, windowEnd);
-	mov	dptr,#_RenderActiveMenu_currentPos_65536_72
+	mov	dptr,#_RenderActiveMenu_currentPos_10000_79
 	movx	a,@dptr
-	mov	r6,a
+	mov	r1,a
 	inc	dptr
 	movx	a,@dptr
-	mov	r7,a
+	mov	r2,a
 	clr	c
-	mov	a,r6
-	subb	a,r2
-	mov	a,r7
+	mov	a,r1
+	subb	a,r3
+	mov	a,r2
 	xrl	a,#0x80
-	mov	b,r3
+	mov	b,r4
 	xrl	b,#0x80
 	subb	a,b
 	jc	00115$
-	mov	a,r6
+	mov	a,r1
 	subb	a,_RenderActiveMenu_sloc0_1_0
-	mov	a,r7
+	mov	a,r2
 	xrl	a,#0x80
 	mov	b,(_RenderActiveMenu_sloc0_1_0 + 1)
 	xrl	b,#0x80
 	subb	a,b
 	jnc	00115$
-	mov	dptr,#_RenderActiveMenu_pDisplay_65536_71
-	movx	a,@dptr
-	mov	r1,a
-	inc	dptr
-	movx	a,@dptr
-	mov	r6,a
-	inc	dptr
-	movx	a,@dptr
-	mov	r7,a
-	mov	dptr,#_RenderActiveMenu_ch_65536_72
+	push	ar7
+	mov	dptr,#_RenderActiveMenu_pDisplay_10000_78
 	movx	a,@dptr
 	mov	r0,a
-	mov	dpl,r1
-	mov	dph,r6
-	mov	b,r7
-	lcall	__gptrput
-	mov	dptr,#_RenderActiveMenu_pDisplay_65536_71
-	mov	a,#0x01
-	add	a,r1
-	movx	@dptr,a
-	clr	a
-	addc	a,r6
 	inc	dptr
-	movx	@dptr,a
-	mov	a,r7
-	inc	dptr
-	movx	@dptr,a
-	mov	dptr,#_RenderActiveMenu_pDisplay_65536_71
 	movx	a,@dptr
 	mov	r1,a
 	inc	dptr
 	movx	a,@dptr
-	mov	r6,a
+	mov	r2,a
+	mov	dptr,#_RenderActiveMenu_ch_10000_79
+	movx	a,@dptr
+	mov	dpl,r0
+	mov	dph,r1
+	mov	b,r2
+	lcall	__gptrput
+	mov	dptr,#_RenderActiveMenu_pDisplay_10000_78
+	mov	a,#0x01
+	add	a, r0
+	movx	@dptr,a
+	clr	a
+	addc	a, r1
+	inc	dptr
+	movx	@dptr,a
+	mov	a,r2
+	inc	dptr
+	movx	@dptr,a
+	mov	dptr,#_RenderActiveMenu_pDisplay_10000_78
+	movx	a,@dptr
+	mov	r1,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r2,a
 	inc	dptr
 	movx	a,@dptr
 	mov	r7,a
 	mov	dpl,r1
-	mov	dph,r6
+	mov	dph,r2
 	mov	b,r7
 	clr	a
 	lcall	__gptrput
+;	../Common/MenuMgr.c:132: for (i = 0; MenuDefinitions[i].text != 0; ++i)
+	pop	ar7
+;	../Common/MenuMgr.c:161: COPY_IF_IN_WINDOW(pDisplay, ch, currentPos, windowStart, windowEnd);
 00115$:
 ;	../Common/MenuMgr.c:162: ++currentPos;
-	mov	dptr,#_RenderActiveMenu_currentPos_65536_72
+	mov	dptr,#_RenderActiveMenu_currentPos_10000_79
 	movx	a,@dptr
-	add	a,#0x01
+	add	a, #0x01
 	movx	@dptr,a
 	inc	dptr
 	movx	a,@dptr
-	addc	a,#0x00
+	addc	a, #0x00
 	movx	@dptr,a
 00125$:
 ;	../Common/MenuMgr.c:132: for (i = 0; MenuDefinitions[i].text != 0; ++i)
 	inc	_RenderActiveMenu_sloc1_1_0
 	clr	a
-	cjne	a,_RenderActiveMenu_sloc1_1_0,00198$
+	cjne	a,_RenderActiveMenu_sloc1_1_0,00224$
 	inc	(_RenderActiveMenu_sloc1_1_0 + 1)
-00198$:
+00224$:
 ;	../Common/MenuMgr.c:165: }
 	ljmp	00124$
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'GetMenuItemExtent'
 ;------------------------------------------------------------
-;sloc0                     Allocated with name '_GetMenuItemExtent_sloc0_1_0'
-;sloc1                     Allocated with name '_GetMenuItemExtent_sloc1_1_0'
-;sloc2                     Allocated with name '_GetMenuItemExtent_sloc2_1_0'
-;sloc3                     Allocated with name '_GetMenuItemExtent_sloc3_1_0'
-;sloc4                     Allocated with name '_GetMenuItemExtent_sloc4_1_0'
-;sloc5                     Allocated with name '_GetMenuItemExtent_sloc5_1_0'
-;pStartPos                 Allocated with name '_GetMenuItemExtent_PARM_2'
-;pEndPos                   Allocated with name '_GetMenuItemExtent_PARM_3'
-;menuItem                  Allocated with name '_GetMenuItemExtent_menuItem_65536_85'
-;currentParent             Allocated with name '_GetMenuItemExtent_currentParent_65536_86'
-;i                         Allocated with name '_GetMenuItemExtent_i_65536_86'
-;currentPos                Allocated with name '_GetMenuItemExtent_currentPos_65536_86'
-;pTemp                     Allocated with name '_GetMenuItemExtent_pTemp_65536_86'
+;sloc0         Allocated with name '_GetMenuItemExtent_sloc0_1_0'
+;sloc1         Allocated with name '_GetMenuItemExtent_sloc1_1_0'
+;sloc2         Allocated with name '_GetMenuItemExtent_sloc2_1_0'
+;sloc3         Allocated with name '_GetMenuItemExtent_sloc3_1_0'
+;sloc4         Allocated with name '_GetMenuItemExtent_sloc4_1_0'
+;pStartPos     Allocated with name '_GetMenuItemExtent_PARM_2'
+;pEndPos       Allocated with name '_GetMenuItemExtent_PARM_3'
+;menuItem      Allocated with name '_GetMenuItemExtent_menuItem_10000_92'
+;currentParent Allocated with name '_GetMenuItemExtent_currentParent_10000_93'
+;i             Allocated with name '_GetMenuItemExtent_i_10000_93'
+;currentPos    Allocated with name '_GetMenuItemExtent_currentPos_10000_93'
+;pTemp         Allocated with name '_GetMenuItemExtent_pTemp_10000_93'
 ;------------------------------------------------------------
 ;	../Common/MenuMgr.c:167: void GetMenuItemExtent(int menuItem, int *pStartPos, int *pEndPos)
 ;	-----------------------------------------
@@ -1501,7 +1487,7 @@ _RenderActiveMenu:
 _GetMenuItemExtent:
 	mov	r7,dph
 	mov	a,dpl
-	mov	dptr,#_GetMenuItemExtent_menuItem_65536_85
+	mov	dptr,#_GetMenuItemExtent_menuItem_10000_92
 	movx	@dptr,a
 	mov	a,r7
 	inc	dptr
@@ -1526,27 +1512,27 @@ _GetMenuItemExtent:
 ;	../Common/MenuMgr.c:175: *pEndPos = 0;
 	mov	dptr,#_GetMenuItemExtent_PARM_3
 	movx	a,@dptr
-	mov	_GetMenuItemExtent_sloc5_1_0,a
+	mov	_GetMenuItemExtent_sloc4_1_0,a
 	inc	dptr
 	movx	a,@dptr
-	mov	(_GetMenuItemExtent_sloc5_1_0 + 1),a
+	mov	(_GetMenuItemExtent_sloc4_1_0 + 1),a
 	inc	dptr
 	movx	a,@dptr
-	mov	(_GetMenuItemExtent_sloc5_1_0 + 2),a
-	mov	dpl,_GetMenuItemExtent_sloc5_1_0
-	mov	dph,(_GetMenuItemExtent_sloc5_1_0 + 1)
-	mov	b,(_GetMenuItemExtent_sloc5_1_0 + 2)
+	mov	(_GetMenuItemExtent_sloc4_1_0 + 2),a
+	mov	dpl,_GetMenuItemExtent_sloc4_1_0
+	mov	dph,(_GetMenuItemExtent_sloc4_1_0 + 1)
+	mov	b,(_GetMenuItemExtent_sloc4_1_0 + 2)
 	clr	a
 	lcall	__gptrput
 	inc	dptr
 	lcall	__gptrput
 ;	../Common/MenuMgr.c:176: currentPos = 0;
-	mov	dptr,#_GetMenuItemExtent_currentPos_65536_86
+	mov	dptr,#_GetMenuItemExtent_currentPos_10000_93
 	movx	@dptr,a
 	inc	dptr
 	movx	@dptr,a
 ;	../Common/MenuMgr.c:178: currentParent = MenuDefinitions[menuItem].parent;
-	mov	dptr,#_GetMenuItemExtent_menuItem_65536_85
+	mov	dptr,#_GetMenuItemExtent_menuItem_10000_92
 	movx	a,@dptr
 	mov	_GetMenuItemExtent_sloc0_1_0,a
 	inc	dptr
@@ -1563,16 +1549,16 @@ _GetMenuItemExtent:
 	push	ar6
 	push	ar5
 	lcall	__mulint
-	mov	r0,dpl
-	mov	r1,dph
+	mov	r0, dpl
+	mov	r1, dph
 	pop	ar5
 	pop	ar6
 	pop	ar7
 	mov	a,r0
-	add	a,#_MenuDefinitions
+	add	a, #_MenuDefinitions
 	mov	r0,a
 	mov	a,r1
-	addc	a,#(_MenuDefinitions >> 8)
+	addc	a, #(_MenuDefinitions >> 8)
 	mov	r1,a
 	mov	dpl,r0
 	mov	dph,r1
@@ -1581,8 +1567,6 @@ _GetMenuItemExtent:
 	inc	dptr
 	movx	a,@dptr
 	mov	r1,a
-	mov	_GetMenuItemExtent_sloc4_1_0,r1
-	mov	(_GetMenuItemExtent_sloc4_1_0 + 1),#0x00
 ;	../Common/MenuMgr.c:180: for (i = 0; MenuDefinitions[i].text != 0; ++i)
 	mov	_GetMenuItemExtent_sloc1_1_0,_GetMenuItemExtent_sloc0_1_0
 	mov	(_GetMenuItemExtent_sloc1_1_0 + 1),(_GetMenuItemExtent_sloc0_1_0 + 1)
@@ -1590,6 +1574,7 @@ _GetMenuItemExtent:
 	mov	_GetMenuItemExtent_sloc2_1_0,a
 	mov	(_GetMenuItemExtent_sloc2_1_0 + 1),a
 00113$:
+	push	ar1
 	mov	dptr,#__mulint_PARM_2
 	mov	a,_GetMenuItemExtent_sloc2_1_0
 	movx	@dptr,a
@@ -1601,17 +1586,19 @@ _GetMenuItemExtent:
 	push	ar6
 	push	ar5
 	lcall	__mulint
-	mov	_GetMenuItemExtent_sloc3_1_0,dpl
-	mov	(_GetMenuItemExtent_sloc3_1_0 + 1),dph
+	mov	r0, dpl
+	mov	r1, dph
 	pop	ar5
 	pop	ar6
 	pop	ar7
-	mov	a,_GetMenuItemExtent_sloc3_1_0
-	add	a,#_MenuDefinitions
-	mov	dpl,a
-	mov	a,(_GetMenuItemExtent_sloc3_1_0 + 1)
-	addc	a,#(_MenuDefinitions >> 8)
-	mov	dph,a
+	mov	a,r0
+	add	a, #_MenuDefinitions
+	mov	_GetMenuItemExtent_sloc3_1_0,a
+	mov	a,r1
+	addc	a, #(_MenuDefinitions >> 8)
+	mov	(_GetMenuItemExtent_sloc3_1_0 + 1),a
+	mov	dpl,_GetMenuItemExtent_sloc3_1_0
+	mov	dph,(_GetMenuItemExtent_sloc3_1_0 + 1)
 	movx	a,@dptr
 	mov	r0,a
 	inc	dptr
@@ -1621,38 +1608,29 @@ _GetMenuItemExtent:
 	movx	a,@dptr
 	mov	a,r0
 	orl	a,r1
-	jnz	00147$
+	pop	ar1
+	jnz	00161$
 	ret
-00147$:
+00161$:
 ;	../Common/MenuMgr.c:182: if (MenuDefinitions[i].parent == currentParent)
-	mov	a,_GetMenuItemExtent_sloc3_1_0
-	add	a,#_MenuDefinitions
-	mov	r3,a
-	mov	a,(_GetMenuItemExtent_sloc3_1_0 + 1)
-	addc	a,#(_MenuDefinitions >> 8)
-	mov	r4,a
-	mov	dpl,r3
-	mov	dph,r4
+	mov	dpl,_GetMenuItemExtent_sloc3_1_0
+	mov	dph,(_GetMenuItemExtent_sloc3_1_0 + 1)
 	inc	dptr
 	inc	dptr
 	inc	dptr
 	movx	a,@dptr
-	mov	r4,a
-	mov	r3,#0x00
-	cjne	a,_GetMenuItemExtent_sloc4_1_0,00148$
-	mov	a,r3
-	cjne	a,(_GetMenuItemExtent_sloc4_1_0 + 1),00148$
-	sjmp	00149$
-00148$:
+	cjne	a,ar1,00162$
+	sjmp	00163$
+00162$:
 	ljmp	00114$
-00149$:
+00163$:
 ;	../Common/MenuMgr.c:184: if (i == menuItem)
 	mov	a,_GetMenuItemExtent_sloc1_1_0
 	cjne	a,_GetMenuItemExtent_sloc2_1_0,00102$
 	mov	a,(_GetMenuItemExtent_sloc1_1_0 + 1)
 	cjne	a,(_GetMenuItemExtent_sloc2_1_0 + 1),00102$
 ;	../Common/MenuMgr.c:186: *pStartPos = currentPos;
-	mov	dptr,#_GetMenuItemExtent_currentPos_65536_86
+	mov	dptr,#_GetMenuItemExtent_currentPos_10000_93
 	movx	a,@dptr
 	mov	r3,a
 	inc	dptr
@@ -1668,13 +1646,13 @@ _GetMenuItemExtent:
 	lcall	__gptrput
 00102$:
 ;	../Common/MenuMgr.c:188: currentPos++; 
-	mov	dptr,#_GetMenuItemExtent_currentPos_65536_86
+	mov	dptr,#_GetMenuItemExtent_currentPos_10000_93
 	movx	a,@dptr
-	add	a,#0x01
+	add	a, #0x01
 	movx	@dptr,a
 	inc	dptr
 	movx	a,@dptr
-	addc	a,#0x00
+	addc	a, #0x00
 	movx	@dptr,a
 ;	../Common/MenuMgr.c:191: for (pTemp = MenuDefinitions[i].text; *pTemp; ++pTemp)
 	mov	dptr,#__mulint_PARM_2
@@ -1687,17 +1665,19 @@ _GetMenuItemExtent:
 	push	ar7
 	push	ar6
 	push	ar5
+	push	ar1
 	lcall	__mulint
-	mov	r3,dpl
-	mov	r4,dph
+	mov	r3, dpl
+	mov	r4, dph
+	pop	ar1
 	pop	ar5
 	pop	ar6
 	pop	ar7
 	mov	a,r3
-	add	a,#_MenuDefinitions
+	add	a, #_MenuDefinitions
 	mov	dpl,a
 	mov	a,r4
-	addc	a,#(_MenuDefinitions >> 8)
+	addc	a, #(_MenuDefinitions >> 8)
 	mov	dph,a
 	movx	a,@dptr
 	mov	r2,a
@@ -1707,12 +1687,12 @@ _GetMenuItemExtent:
 	inc	dptr
 	movx	a,@dptr
 	mov	r4,a
-	mov	dptr,#_GetMenuItemExtent_currentPos_65536_86
+	mov	dptr,#_GetMenuItemExtent_currentPos_10000_93
 	movx	a,@dptr
-	mov	r0,a
+	mov	_GetMenuItemExtent_sloc3_1_0,a
 	inc	dptr
 	movx	a,@dptr
-	mov	r1,a
+	mov	(_GetMenuItemExtent_sloc3_1_0 + 1),a
 00110$:
 	mov	dpl,r2
 	mov	dph,r3
@@ -1720,20 +1700,21 @@ _GetMenuItemExtent:
 	lcall	__gptrget
 	jz	00124$
 ;	../Common/MenuMgr.c:193: currentPos++;
-	inc	r0
-	cjne	r0,#0x00,00153$
-	inc	r1
-00153$:
+	inc	_GetMenuItemExtent_sloc3_1_0
+	clr	a
+	cjne	a,_GetMenuItemExtent_sloc3_1_0,00167$
+	inc	(_GetMenuItemExtent_sloc3_1_0 + 1)
+00167$:
 ;	../Common/MenuMgr.c:191: for (pTemp = MenuDefinitions[i].text; *pTemp; ++pTemp)
 	inc	r2
 	cjne	r2,#0x00,00110$
 	inc	r3
 	sjmp	00110$
 00124$:
-	mov	dptr,#_GetMenuItemExtent_currentPos_65536_86
-	mov	a,r0
+	mov	dptr,#_GetMenuItemExtent_currentPos_10000_93
+	mov	a,_GetMenuItemExtent_sloc3_1_0
 	movx	@dptr,a
-	mov	a,r1
+	mov	a,(_GetMenuItemExtent_sloc3_1_0 + 1)
 	inc	dptr
 	movx	@dptr,a
 ;	../Common/MenuMgr.c:196: if (i == menuItem)
@@ -1742,41 +1723,41 @@ _GetMenuItemExtent:
 	mov	a,(_GetMenuItemExtent_sloc0_1_0 + 1)
 	cjne	a,(_GetMenuItemExtent_sloc2_1_0 + 1),00105$
 ;	../Common/MenuMgr.c:198: *pEndPos = currentPos;
-	mov	dpl,_GetMenuItemExtent_sloc5_1_0
-	mov	dph,(_GetMenuItemExtent_sloc5_1_0 + 1)
-	mov	b,(_GetMenuItemExtent_sloc5_1_0 + 2)
-	mov	a,r0
+	mov	dpl,_GetMenuItemExtent_sloc4_1_0
+	mov	dph,(_GetMenuItemExtent_sloc4_1_0 + 1)
+	mov	b,(_GetMenuItemExtent_sloc4_1_0 + 2)
+	mov	a,_GetMenuItemExtent_sloc3_1_0
 	lcall	__gptrput
 	inc	dptr
-	mov	a,r1
+	mov	a,(_GetMenuItemExtent_sloc3_1_0 + 1)
 	lcall	__gptrput
 00105$:
 ;	../Common/MenuMgr.c:200: currentPos++;
-	mov	dptr,#_GetMenuItemExtent_currentPos_65536_86
+	mov	dptr,#_GetMenuItemExtent_currentPos_10000_93
 	movx	a,@dptr
-	add	a,#0x01
+	add	a, #0x01
 	movx	@dptr,a
 	inc	dptr
 	movx	a,@dptr
-	addc	a,#0x00
+	addc	a, #0x00
 	movx	@dptr,a
 00114$:
 ;	../Common/MenuMgr.c:180: for (i = 0; MenuDefinitions[i].text != 0; ++i)
 	inc	_GetMenuItemExtent_sloc2_1_0
 	clr	a
-	cjne	a,_GetMenuItemExtent_sloc2_1_0,00157$
+	cjne	a,_GetMenuItemExtent_sloc2_1_0,00171$
 	inc	(_GetMenuItemExtent_sloc2_1_0 + 1)
-00157$:
+00171$:
 ;	../Common/MenuMgr.c:203: }
 	ljmp	00113$
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'RenderMenuOnBuffer'
 ;------------------------------------------------------------
-;sloc0                     Allocated with name '_RenderMenuOnBuffer_sloc0_1_0'
-;maxLength                 Allocated with name '_RenderMenuOnBuffer_PARM_2'
-;pBuffer                   Allocated with name '_RenderMenuOnBuffer_pBuffer_65536_94'
-;startPos                  Allocated with name '_RenderMenuOnBuffer_startPos_131072_96'
-;endPos                    Allocated with name '_RenderMenuOnBuffer_endPos_131072_96'
+;sloc0         Allocated with name '_RenderMenuOnBuffer_sloc0_1_0'
+;maxLength     Allocated with name '_RenderMenuOnBuffer_PARM_2'
+;pBuffer       Allocated with name '_RenderMenuOnBuffer_pBuffer_10000_101'
+;startPos      Allocated with name '_RenderMenuOnBuffer_startPos_20000_103'
+;endPos        Allocated with name '_RenderMenuOnBuffer_endPos_20000_103'
 ;------------------------------------------------------------
 ;	../Common/MenuMgr.c:205: void RenderMenuOnBuffer(char *pBuffer, int maxLength)
 ;	-----------------------------------------
@@ -1786,7 +1767,7 @@ _RenderMenuOnBuffer:
 	mov	r7,b
 	mov	r6,dph
 	mov	a,dpl
-	mov	dptr,#_RenderMenuOnBuffer_pBuffer_65536_94
+	mov	dptr,#_RenderMenuOnBuffer_pBuffer_10000_101
 	movx	@dptr,a
 	mov	a,r6
 	inc	dptr
@@ -1795,7 +1776,7 @@ _RenderMenuOnBuffer:
 	inc	dptr
 	movx	@dptr,a
 ;	../Common/MenuMgr.c:207: *pBuffer = 0;
-	mov	dptr,#_RenderMenuOnBuffer_pBuffer_65536_94
+	mov	dptr,#_RenderMenuOnBuffer_pBuffer_10000_101
 	movx	a,@dptr
 	mov	r5,a
 	inc	dptr
@@ -1815,31 +1796,31 @@ _RenderMenuOnBuffer:
 	mov	r7,a
 	mov	r6,#0x00
 	mov	dptr,#_GetMenuItemExtent_PARM_2
-	mov	a,#_RenderMenuOnBuffer_startPos_131072_96
+	mov	a,#_RenderMenuOnBuffer_startPos_20000_103
 	movx	@dptr,a
-	mov	a,#(_RenderMenuOnBuffer_startPos_131072_96 >> 8)
+	mov	a,#(_RenderMenuOnBuffer_startPos_20000_103 >> 8)
 	inc	dptr
 	movx	@dptr,a
 	clr	a
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_GetMenuItemExtent_PARM_3
-	mov	a,#_RenderMenuOnBuffer_endPos_131072_96
+	mov	a,#_RenderMenuOnBuffer_endPos_20000_103
 	movx	@dptr,a
-	mov	a,#(_RenderMenuOnBuffer_endPos_131072_96 >> 8)
+	mov	a,#(_RenderMenuOnBuffer_endPos_20000_103 >> 8)
 	inc	dptr
 	movx	@dptr,a
 	clr	a
 	inc	dptr
 	movx	@dptr,a
-	mov	dpl,r7
-	mov	dph,r6
+	mov	dpl, r7
+	mov	dph, r6
 	lcall	_GetMenuItemExtent
 ;	../Common/MenuMgr.c:219: if (startPos < MenuController.scrollPos)
 	mov	dptr,#(_MenuController + 0x0005)
 	movx	a,@dptr
 	mov	r7,a
-	mov	dptr,#_RenderMenuOnBuffer_startPos_131072_96
+	mov	dptr,#_RenderMenuOnBuffer_startPos_20000_103
 	movx	a,@dptr
 	mov	r5,a
 	inc	dptr
@@ -1870,12 +1851,12 @@ _RenderMenuOnBuffer:
 	movx	a,@dptr
 	mov	r6,a
 	mov	a,r5
-	add	a,r4
+	add	a, r4
 	mov	r4,a
 	mov	a,r6
-	addc	a,r7
+	addc	a, r7
 	mov	r7,a
-	mov	dptr,#_RenderMenuOnBuffer_endPos_131072_96
+	mov	dptr,#_RenderMenuOnBuffer_endPos_20000_103
 	movx	a,@dptr
 	mov	r2,a
 	inc	dptr
@@ -1895,12 +1876,11 @@ _RenderMenuOnBuffer:
 	clr	c
 	subb	a,r5
 	inc	a
-	mov	r7,a
 	mov	dptr,#(_MenuController + 0x0005)
 	movx	@dptr,a
 00105$:
 ;	../Common/MenuMgr.c:228: RenderActiveMenu(pBuffer, MenuController.scrollPos, MenuController.scrollPos + maxLength);
-	mov	dptr,#_RenderMenuOnBuffer_pBuffer_65536_94
+	mov	dptr,#_RenderMenuOnBuffer_pBuffer_10000_101
 	movx	a,@dptr
 	mov	r5,a
 	inc	dptr
@@ -1915,9 +1895,7 @@ _RenderMenuOnBuffer:
 	mov	r3,#0x00
 	mov	dptr,#(_MenuController + 0x0005)
 	movx	a,@dptr
-	mov	r2,a
-	mov	_RenderMenuOnBuffer_sloc0_1_0,r2
-;	1-genFromRTrack replaced	mov	(_RenderMenuOnBuffer_sloc0_1_0 + 1),#0x00
+	mov	_RenderMenuOnBuffer_sloc0_1_0, a
 	mov	(_RenderMenuOnBuffer_sloc0_1_0 + 1),r3
 	mov	dptr,#_RenderMenuOnBuffer_PARM_2
 	movx	a,@dptr
@@ -1926,10 +1904,10 @@ _RenderMenuOnBuffer:
 	movx	a,@dptr
 	mov	r2,a
 	mov	a,r0
-	add	a,_RenderMenuOnBuffer_sloc0_1_0
+	add	a, _RenderMenuOnBuffer_sloc0_1_0
 	mov	r0,a
 	mov	a,r2
-	addc	a,(_RenderMenuOnBuffer_sloc0_1_0 + 1)
+	addc	a, (_RenderMenuOnBuffer_sloc0_1_0 + 1)
 	mov	r2,a
 	mov	dptr,#_RenderActiveMenu_PARM_2
 	mov	a,r4
@@ -1943,16 +1921,16 @@ _RenderMenuOnBuffer:
 	mov	a,r2
 	inc	dptr
 	movx	@dptr,a
-	mov	dpl,r5
-	mov	dph,r6
-	mov	b,r7
+	mov	dpl, r5
+	mov	dph, r6
+	mov	b, r7
 ;	../Common/MenuMgr.c:230: }
 	ljmp	_RenderActiveMenu
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'IsParentMenu'
 ;------------------------------------------------------------
-;sloc0                     Allocated with name '_IsParentMenu_sloc0_1_0'
-;i                         Allocated with name '_IsParentMenu_i_65536_99'
+;sloc0         Allocated with name '_IsParentMenu_sloc0_1_0'
+;i             Allocated with name '_IsParentMenu_i_10000_106'
 ;------------------------------------------------------------
 ;	../Common/MenuMgr.c:232: int IsParentMenu()
 ;	-----------------------------------------
@@ -1962,7 +1940,6 @@ _IsParentMenu:
 ;	../Common/MenuMgr.c:235: for (i = 0; MenuDefinitions[i].text != 0; ++i)
 	mov	dptr,#_MenuController
 	movx	a,@dptr
-	mov	r7,a
 	mov	b,#0x05
 	mul	ab
 	mov	_IsParentMenu_sloc0_1_0,a
@@ -1980,16 +1957,18 @@ _IsParentMenu:
 	push	ar5
 	push	ar4
 	lcall	__mulint
-	mov	r2,dpl
-	mov	r3,dph
+	mov	r2, dpl
+	mov	r3, dph
 	pop	ar4
 	pop	ar5
 	mov	a,r2
-	add	a,#_MenuDefinitions
-	mov	dpl,a
+	add	a, #_MenuDefinitions
+	mov	r2,a
 	mov	a,r3
-	addc	a,#(_MenuDefinitions >> 8)
-	mov	dph,a
+	addc	a, #(_MenuDefinitions >> 8)
+	mov	r3,a
+	mov	dpl,r2
+	mov	dph,r3
 	movx	a,@dptr
 	mov	r0,a
 	inc	dptr
@@ -2001,12 +1980,6 @@ _IsParentMenu:
 	orl	a,r1
 	jz	00103$
 ;	../Common/MenuMgr.c:237: if (MenuDefinitions[i].parent == MenuDefinitions[MenuController.currentSelectedMenuIndex].id)
-	mov	a,r2
-	add	a,#_MenuDefinitions
-	mov	r2,a
-	mov	a,r3
-	addc	a,#(_MenuDefinitions >> 8)
-	mov	r3,a
 	mov	dpl,r2
 	mov	dph,r3
 	inc	dptr
@@ -2015,10 +1988,10 @@ _IsParentMenu:
 	movx	a,@dptr
 	mov	r7,a
 	mov	a,_IsParentMenu_sloc0_1_0
-	add	a,#_MenuDefinitions
+	add	a, #_MenuDefinitions
 	mov	r3,a
 	mov	a,(_IsParentMenu_sloc0_1_0 + 1)
-	addc	a,#(_MenuDefinitions >> 8)
+	addc	a, #(_MenuDefinitions >> 8)
 	mov	r6,a
 	mov	dpl,r3
 	mov	dph,r6
@@ -2057,10 +2030,10 @@ _IsGoBack:
 	movx	a,@dptr
 	mov	b,#0x05
 	mul	ab
-	add	a,#_MenuDefinitions
+	add	a, #_MenuDefinitions
 	mov	r6,a
 	mov	a,#(_MenuDefinitions >> 8)
-	addc	a,b
+	addc	a, b
 	mov	r7,a
 	mov	dpl,r6
 	mov	dph,r7
@@ -2078,14 +2051,14 @@ _IsGoBack:
 00104$:
 	mov	r7,a
 	mov	r6,#0x00
-	mov	dpl,r7
-	mov	dph,r6
+	mov	dpl, r7
+	mov	dph, r6
 ;	../Common/MenuMgr.c:248: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'GoSubMenu'
 ;------------------------------------------------------------
-;i                         Allocated with name '_GoSubMenu_i_65536_104'
+;i             Allocated with name '_GoSubMenu_i_10000_111'
 ;------------------------------------------------------------
 ;	../Common/MenuMgr.c:250: void GoSubMenu()
 ;	-----------------------------------------
@@ -2106,16 +2079,18 @@ _GoSubMenu:
 	push	ar7
 	push	ar6
 	lcall	__mulint
-	mov	r4,dpl
-	mov	r5,dph
+	mov	r4, dpl
+	mov	r5, dph
 	pop	ar6
 	pop	ar7
 	mov	a,r4
-	add	a,#_MenuDefinitions
-	mov	dpl,a
+	add	a, #_MenuDefinitions
+	mov	r4,a
 	mov	a,r5
-	addc	a,#(_MenuDefinitions >> 8)
-	mov	dph,a
+	addc	a, #(_MenuDefinitions >> 8)
+	mov	r5,a
+	mov	dpl,r4
+	mov	dph,r5
 	movx	a,@dptr
 	mov	r1,a
 	inc	dptr
@@ -2125,16 +2100,10 @@ _GoSubMenu:
 	movx	a,@dptr
 	mov	a,r1
 	orl	a,r2
-	jnz	00121$
+	jnz	00127$
 	ret
-00121$:
+00127$:
 ;	../Common/MenuMgr.c:255: if (MenuDefinitions[i].parent == MenuDefinitions[MenuController.currentSelectedMenuIndex].id)
-	mov	a,r4
-	add	a,#_MenuDefinitions
-	mov	r4,a
-	mov	a,r5
-	addc	a,#(_MenuDefinitions >> 8)
-	mov	r5,a
 	mov	dpl,r4
 	mov	dph,r5
 	inc	dptr
@@ -2146,10 +2115,10 @@ _GoSubMenu:
 	movx	a,@dptr
 	mov	b,#0x05
 	mul	ab
-	add	a,#_MenuDefinitions
+	add	a, #_MenuDefinitions
 	mov	r3,a
 	mov	a,#(_MenuDefinitions >> 8)
-	addc	a,b
+	addc	a, b
 	mov	r4,a
 	mov	dpl,r3
 	mov	dph,r4
@@ -2169,8 +2138,8 @@ _GoSubMenu:
 	clr	a
 	inc	dptr
 	movx	@dptr,a
-	mov	dpl,r4
-	mov	dph,r5
+	mov	dpl, r4
+	mov	dph, r5
 	push	ar7
 	push	ar6
 	lcall	_HandleMenuCommand
@@ -2184,10 +2153,10 @@ _GoSubMenu:
 	mov	dptr,#(_MenuController + 0x0004)
 	movx	@dptr,a
 	mov	a,r5
-	add	a,#(_MenuController + 0x0001)
+	add	a, #(_MenuController + 0x0001)
 	mov	r5,a
 	clr	a
-	addc	a,#((_MenuController + 0x0001) >> 8)
+	addc	a, #((_MenuController + 0x0001) >> 8)
 	mov	r4,a
 	mov	dptr,#_MenuController
 	movx	a,@dptr
@@ -2203,10 +2172,10 @@ _GoSubMenu:
 	mov	a,r5
 	mov	b,#0x05
 	mul	ab
-	add	a,#_MenuDefinitions
+	add	a, #_MenuDefinitions
 	mov	r4,a
 	mov	a,#(_MenuDefinitions >> 8)
-	addc	a,b
+	addc	a, b
 	mov	r5,a
 	mov	dpl,r4
 	mov	dph,r5
@@ -2223,24 +2192,23 @@ _GoSubMenu:
 	clr	a
 	inc	dptr
 	movx	@dptr,a
-	mov	dpl,r5
-	mov	dph,r4
+	mov	dpl, r5
+	mov	dph, r4
 ;	../Common/MenuMgr.c:262: break;
 	ljmp	_HandleMenuCommand
 00106$:
 ;	../Common/MenuMgr.c:253: for (i = 0; MenuDefinitions[i].text != 0; ++i)
 	inc	r6
-	cjne	r6,#0x00,00124$
+	cjne	r6,#0x00,00130$
 	inc	r7
-00124$:
+00130$:
 ;	../Common/MenuMgr.c:265: }
 	ljmp	00105$
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'GoRight'
 ;------------------------------------------------------------
-;sloc0                     Allocated with name '_GoRight_sloc0_1_0'
-;i                         Allocated with name '_GoRight_i_65536_108'
-;currentParent             Allocated with name '_GoRight_currentParent_65536_108'
+;i             Allocated with name '_GoRight_i_10000_115'
+;currentParent Allocated with name '_GoRight_currentParent_10000_115'
 ;------------------------------------------------------------
 ;	../Common/MenuMgr.c:267: void GoRight()
 ;	-----------------------------------------
@@ -2253,10 +2221,10 @@ _GoRight:
 	mov	r7,a
 	mov	b,#0x05
 	mul	ab
-	add	a,#_MenuDefinitions
+	add	a, #_MenuDefinitions
 	mov	r5,a
 	mov	a,#(_MenuDefinitions >> 8)
-	addc	a,b
+	addc	a, b
 	mov	r6,a
 	mov	dpl,r5
 	mov	dph,r6
@@ -2265,36 +2233,38 @@ _GoRight:
 	inc	dptr
 	movx	a,@dptr
 	mov	r6,a
-	mov	_GoRight_sloc0_1_0,r6
-	mov	(_GoRight_sloc0_1_0 + 1),#0x00
 ;	../Common/MenuMgr.c:273: i = MenuController.currentSelectedMenuIndex + 1;
-	mov	r4,#0x00
+	mov	r5,#0x00
 	inc	r7
-	cjne	r7,#0x00,00121$
-	inc	r4
-00121$:
+	cjne	r7,#0x00,00127$
+	inc	r5
+00127$:
 ;	../Common/MenuMgr.c:274: while (MenuDefinitions[i].text != 0)
 00104$:
 	mov	dptr,#__mulint_PARM_2
 	mov	a,r7
 	movx	@dptr,a
-	mov	a,r4
+	mov	a,r5
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#0x0005
 	push	ar7
-	push	ar4
+	push	ar6
+	push	ar5
 	lcall	__mulint
-	mov	r2,dpl
-	mov	r3,dph
-	pop	ar4
+	mov	r3, dpl
+	mov	r4, dph
+	pop	ar5
+	pop	ar6
 	pop	ar7
-	mov	a,r2
-	add	a,#_MenuDefinitions
-	mov	dpl,a
 	mov	a,r3
-	addc	a,#(_MenuDefinitions >> 8)
-	mov	dph,a
+	add	a, #_MenuDefinitions
+	mov	r3,a
+	mov	a,r4
+	addc	a, #(_MenuDefinitions >> 8)
+	mov	r4,a
+	mov	dpl,r3
+	mov	dph,r4
 	movx	a,@dptr
 	mov	r0,a
 	inc	dptr
@@ -2306,71 +2276,60 @@ _GoRight:
 	orl	a,r1
 	jz	00107$
 ;	../Common/MenuMgr.c:276: if (MenuDefinitions[i].parent == currentParent)
-	mov	a,r2
-	add	a,#_MenuDefinitions
-	mov	r2,a
-	mov	a,r3
-	addc	a,#(_MenuDefinitions >> 8)
-	mov	r3,a
-	mov	dpl,r2
-	mov	dph,r3
+	mov	dpl,r3
+	mov	dph,r4
 	inc	dptr
 	inc	dptr
 	inc	dptr
 	movx	a,@dptr
-	mov	r6,a
-	mov	r5,#0x00
-	cjne	a,_GoRight_sloc0_1_0,00102$
-	mov	a,r5
-	cjne	a,(_GoRight_sloc0_1_0 + 1),00102$
+	cjne	a,ar6,00102$
 ;	../Common/MenuMgr.c:278: MenuController.currentSelectedMenuIndex = i;
-	mov	ar6,r7
+	mov	ar4,r7
 	mov	dptr,#_MenuController
-	mov	a,r6
+	mov	a,r4
 	movx	@dptr,a
 ;	../Common/MenuMgr.c:279: HandleMenuCommand(MenuDefinitions[MenuController.currentSelectedMenuIndex].id, MENU_HOVERED);
-	mov	a,r6
+	mov	a,r4
 	mov	b,#0x05
 	mul	ab
-	add	a,#_MenuDefinitions
-	mov	r5,a
+	add	a, #_MenuDefinitions
+	mov	r3,a
 	mov	a,#(_MenuDefinitions >> 8)
-	addc	a,b
-	mov	r6,a
-	mov	dpl,r5
-	mov	dph,r6
+	addc	a, b
+	mov	r4,a
+	mov	dpl,r3
+	mov	dph,r4
 	inc	dptr
 	inc	dptr
 	inc	dptr
 	inc	dptr
 	movx	a,@dptr
-	mov	r6,a
-	mov	r5,#0x00
+	mov	r4,a
+	mov	r3,#0x00
 	mov	dptr,#_HandleMenuCommand_PARM_2
 	mov	a,#0x01
 	movx	@dptr,a
 	clr	a
 	inc	dptr
 	movx	@dptr,a
-	mov	dpl,r6
-	mov	dph,r5
+	mov	dpl, r4
+	mov	dph, r3
 ;	../Common/MenuMgr.c:280: break;
 	ljmp	_HandleMenuCommand
 00102$:
 ;	../Common/MenuMgr.c:284: i++;
 	inc	r7
-	cjne	r7,#0x00,00125$
-	inc	r4
-00125$:
-	ljmp	00104$
+	cjne	r7,#0x00,00104$
+	inc	r5
+	sjmp	00104$
 00107$:
 ;	../Common/MenuMgr.c:288: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'GoLeft'
 ;------------------------------------------------------------
-;i                         Allocated with name '_GoLeft_i_65536_112'
-;currentParent             Allocated with name '_GoLeft_currentParent_65536_112'
+;i             Allocated with name '_GoLeft_i_10000_119'
+;currentParent Allocated with name '_GoLeft_currentParent_10000_119'
 ;------------------------------------------------------------
 ;	../Common/MenuMgr.c:290: void GoLeft()
 ;	-----------------------------------------
@@ -2383,10 +2342,10 @@ _GoLeft:
 	mov	r7,a
 	mov	b,#0x05
 	mul	ab
-	add	a,#_MenuDefinitions
+	add	a, #_MenuDefinitions
 	mov	r5,a
 	mov	a,#(_MenuDefinitions >> 8)
-	addc	a,b
+	addc	a, b
 	mov	r6,a
 	mov	dpl,r5
 	mov	dph,r6
@@ -2394,97 +2353,90 @@ _GoLeft:
 	inc	dptr
 	inc	dptr
 	movx	a,@dptr
-	mov	r5,a
-	mov	r6,#0x00
+	mov	r6,a
 ;	../Common/MenuMgr.c:296: i = MenuController.currentSelectedMenuIndex - 1;
-	mov	r4,#0x00
+	mov	r5,#0x00
 	dec	r7
-	cjne	r7,#0xff,00121$
-	dec	r4
-00121$:
+	cjne	r7,#0xff,00127$
+	dec	r5
+00127$:
 ;	../Common/MenuMgr.c:297: while (i >= 0)
 00104$:
-	mov	a,r4
-	jnb	acc.7,00122$
-	ret
-00122$:
+	mov	a,r5
+	jb	acc.7,00107$
 ;	../Common/MenuMgr.c:299: if (MenuDefinitions[i].parent == currentParent)
 	mov	dptr,#__mulint_PARM_2
 	mov	a,r7
 	movx	@dptr,a
-	mov	a,r4
+	mov	a,r5
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#0x0005
 	push	ar7
 	push	ar6
 	push	ar5
-	push	ar4
 	lcall	__mulint
-	mov	r2,dpl
-	mov	r3,dph
-	pop	ar4
+	mov	r3, dpl
+	mov	r4, dph
 	pop	ar5
 	pop	ar6
 	pop	ar7
-	mov	a,r2
-	add	a,#_MenuDefinitions
-	mov	r2,a
 	mov	a,r3
-	addc	a,#(_MenuDefinitions >> 8)
+	add	a, #_MenuDefinitions
 	mov	r3,a
-	mov	dpl,r2
-	mov	dph,r3
+	mov	a,r4
+	addc	a, #(_MenuDefinitions >> 8)
+	mov	r4,a
+	mov	dpl,r3
+	mov	dph,r4
 	inc	dptr
 	inc	dptr
 	inc	dptr
 	movx	a,@dptr
-	mov	r3,a
-	mov	r2,#0x00
-	cjne	a,ar5,00102$
-	mov	a,r2
 	cjne	a,ar6,00102$
 ;	../Common/MenuMgr.c:301: MenuController.currentSelectedMenuIndex = i;
-	mov	ar3,r7
+	mov	ar4,r7
 	mov	dptr,#_MenuController
-	mov	a,r3
+	mov	a,r4
 	movx	@dptr,a
 ;	../Common/MenuMgr.c:302: HandleMenuCommand(MenuDefinitions[MenuController.currentSelectedMenuIndex].id, MENU_HOVERED);
-	mov	a,r3
+	mov	a,r4
 	mov	b,#0x05
 	mul	ab
-	add	a,#_MenuDefinitions
-	mov	r2,a
-	mov	a,#(_MenuDefinitions >> 8)
-	addc	a,b
+	add	a, #_MenuDefinitions
 	mov	r3,a
-	mov	dpl,r2
-	mov	dph,r3
+	mov	a,#(_MenuDefinitions >> 8)
+	addc	a, b
+	mov	r4,a
+	mov	dpl,r3
+	mov	dph,r4
 	inc	dptr
 	inc	dptr
 	inc	dptr
 	inc	dptr
 	movx	a,@dptr
-	mov	r3,a
-	mov	r2,#0x00
+	mov	r4,a
+	mov	r3,#0x00
 	mov	dptr,#_HandleMenuCommand_PARM_2
 	mov	a,#0x01
 	movx	@dptr,a
 	clr	a
 	inc	dptr
 	movx	@dptr,a
-	mov	dpl,r3
-	mov	dph,r2
+	mov	dpl, r4
+	mov	dph, r3
 ;	../Common/MenuMgr.c:303: break;
 	ljmp	_HandleMenuCommand
 00102$:
 ;	../Common/MenuMgr.c:307: i--;
 	dec	r7
-	cjne	r7,#0xff,00125$
-	dec	r4
-00125$:
+	cjne	r7,#0xff,00131$
+	dec	r5
+00131$:
+	sjmp	00104$
+00107$:
 ;	../Common/MenuMgr.c:311: }
-	ljmp	00104$
+	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'GoBackUp'
 ;------------------------------------------------------------
@@ -2508,10 +2460,10 @@ _GoBackUp:
 	mov	a,r7
 	movx	@dptr,a
 	mov	a,r7
-	add	a,#(_MenuController + 0x0001)
+	add	a, #(_MenuController + 0x0001)
 	mov	dpl,a
 	clr	a
-	addc	a,#((_MenuController + 0x0001) >> 8)
+	addc	a, #((_MenuController + 0x0001) >> 8)
 	mov	dph,a
 	movx	a,@dptr
 	mov	r7,a
@@ -2521,10 +2473,10 @@ _GoBackUp:
 	mov	a,r7
 	mov	b,#0x05
 	mul	ab
-	add	a,#_MenuDefinitions
+	add	a, #_MenuDefinitions
 	mov	r6,a
 	mov	a,#(_MenuDefinitions >> 8)
-	addc	a,b
+	addc	a, b
 	mov	r7,a
 	mov	dpl,r6
 	mov	dph,r7
@@ -2541,18 +2493,18 @@ _GoBackUp:
 	clr	a
 	inc	dptr
 	movx	@dptr,a
-	mov	dpl,r7
-	mov	dph,r6
+	mov	dpl, r7
+	mov	dph, r6
 	lcall	_HandleMenuCommand
 ;	../Common/MenuMgr.c:321: HandleMenuCommand(MenuDefinitions[MenuController.currentSelectedMenuIndex].id, MENU_HOVERED);
 	mov	dptr,#_MenuController
 	movx	a,@dptr
 	mov	b,#0x05
 	mul	ab
-	add	a,#_MenuDefinitions
+	add	a, #_MenuDefinitions
 	mov	r6,a
 	mov	a,#(_MenuDefinitions >> 8)
-	addc	a,b
+	addc	a, b
 	mov	r7,a
 	mov	dpl,r6
 	mov	dph,r7
@@ -2569,8 +2521,8 @@ _GoBackUp:
 	clr	a
 	inc	dptr
 	movx	@dptr,a
-	mov	dpl,r7
-	mov	dph,r6
+	mov	dpl, r7
+	mov	dph, r6
 ;	../Common/MenuMgr.c:323: }
 	ljmp	_HandleMenuCommand
 00103$:

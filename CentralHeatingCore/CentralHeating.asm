@@ -1,10 +1,10 @@
 ;--------------------------------------------------------
-; File Created by SDCC : free open source ANSI-C Compiler
-; Version 4.0.0 #11528 (MINGW64)
+; File Created by SDCC : free open source ISO C Compiler
+; Version 4.5.0 #15242 (MINGW64)
 ;--------------------------------------------------------
 	.module CentralHeating
-	.optsdcc -mmcs51 --model-large
 	
+	.optsdcc -mmcs51 --model-large
 ;--------------------------------------------------------
 ; Public variables in this module
 ;--------------------------------------------------------
@@ -457,7 +457,7 @@ _P5_7	=	0x00ef
 ;--------------------------------------------------------
 	.area DSEG    (DATA)
 ;--------------------------------------------------------
-; overlayable items in internal ram 
+; overlayable items in internal ram
 ;--------------------------------------------------------
 ;--------------------------------------------------------
 ; indirectly addressable internal ram data
@@ -477,7 +477,7 @@ _P5_7	=	0x00ef
 ;--------------------------------------------------------
 	.area PSEG    (PAG,XDATA)
 ;--------------------------------------------------------
-; external ram data
+; uninitialized external ram data
 ;--------------------------------------------------------
 	.area XSEG    (XDATA)
 _screenBuffer::
@@ -500,62 +500,62 @@ _currentDateTime::
 	.ds 7
 _provideHotwaterUntil::
 	.ds 7
-_Callback_cookie_65536_31:
+_Callback_cookie_10000_31:
 	.ds 2
-_Callback_keys_65536_32:
+_Callback_keys_10000_32:
 	.ds 2
-_DisplayMenuOnHardware_buffer_65536_47:
+_DisplayMenuOnHardware_buffer_10000_47:
 	.ds 17
 _PartialWriteToScreen_PARM_2:
 	.ds 2
 _PartialWriteToScreen_PARM_3:
 	.ds 3
-_PartialWriteToScreen_screenPosition_65536_52:
+_PartialWriteToScreen_screenPosition_10000_52:
 	.ds 2
 _HandleMenuCommand_PARM_2:
 	.ds 2
-_HandleMenuCommand_menuItem_65536_59:
+_HandleMenuCommand_menuItem_10000_59:
 	.ds 2
-_HandleMenuCommand_dt_65536_60:
+_HandleMenuCommand_dt_10000_60:
 	.ds 7
-_WriteCurrentTime_strBuffer_65536_100:
+_WriteCurrentTime_strBuffer_10000_100:
 	.ds 10
-_PreviewTimeAdjustment_strBuffer_65536_101:
+_PreviewTimeAdjustment_strBuffer_10000_101:
 	.ds 10
-_PreviewTimeAdjustment_dt_65536_101:
+_PreviewTimeAdjustment_dt_10000_101:
 	.ds 7
-_PreviewDateAdjustment_strBuffer_65536_102:
+_PreviewDateAdjustment_strBuffer_10000_102:
 	.ds 10
-_PreviewDateAdjustment_dt_65536_102:
+_PreviewDateAdjustment_dt_10000_102:
 	.ds 7
 _TestAndDisplay_PARM_2:
 	.ds 1
-_TestAndDisplay_description_65536_103:
+_TestAndDisplay_description_10000_103:
 	.ds 3
-_ProcessHeating_inputs_65536_105:
+_ProcessHeating_inputs_10000_105:
 	.ds 1
-_ProcessHeating_zones_65536_105:
+_ProcessHeating_zones_10000_105:
 	.ds 5
-_ProcessHeating_pump_65536_105:
+_ProcessHeating_pump_10000_105:
 	.ds 1
-_ProcessHeating_boiler_65536_105:
+_ProcessHeating_boiler_10000_105:
 	.ds 1
-_ProcessHeating_output_65536_105:
+_ProcessHeating_output_10000_105:
 	.ds 1
-_AnimateScreen_strBuffer_65536_115:
+_AnimateScreen_strBuffer_10000_115:
 	.ds 11
-_AnimateScreen_numericValue_65536_115:
+_AnimateScreen_numericValue_10000_115:
 	.ds 2
-_AnimateScreen_zones_65536_115:
+_AnimateScreen_zones_10000_115:
 	.ds 5
-_AnimateScreen_outputs_65536_115:
+_AnimateScreen_outputs_10000_115:
 	.ds 4
 ;--------------------------------------------------------
 ; absolute external ram data
 ;--------------------------------------------------------
 	.area XABS    (ABS,XDATA)
 ;--------------------------------------------------------
-; external initialized ram data
+; initialized external ram data
 ;--------------------------------------------------------
 	.area XISEG   (XDATA)
 	.area HOME    (CODE)
@@ -587,7 +587,7 @@ _AnimateScreen_outputs_65536_115:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'UserProgram'
 ;------------------------------------------------------------
-;i                         Allocated with name '_UserProgram_i_65536_28'
+;i             Allocated with name '_UserProgram_i_10000_28'
 ;------------------------------------------------------------
 ;	../Common/CentralHeating.c:79: void STDCALL UserProgram()
 ;	-----------------------------------------
@@ -643,34 +643,26 @@ _UserProgram:
 	mov	dptr,#(_provideHotwaterUntil + 0x0006)
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:104: for (i = 0; i < SCREEN_BUFFER_SIZE; ++i)
-	mov	r6,#0x00
-	mov	r7,#0x00
+	mov	r7,a
 00102$:
 ;	../Common/CentralHeating.c:106: screenBuffer[i] = ' ';
-	mov	a,r6
-	add	a,#_screenBuffer
-	mov	dpl,a
 	mov	a,r7
-	addc	a,#(_screenBuffer >> 8)
+	add	a, #_screenBuffer
+	mov	dpl,a
+	clr	a
+	addc	a, #(_screenBuffer >> 8)
 	mov	dph,a
 	mov	a,#0x20
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:104: for (i = 0; i < SCREEN_BUFFER_SIZE; ++i)
-	inc	r6
-	cjne	r6,#0x00,00115$
 	inc	r7
-00115$:
-	clr	c
-	mov	a,r6
-	subb	a,#0x20
-	mov	a,r7
-	xrl	a,#0x80
-	subb	a,#0x80
+	cjne	r7,#0x20,00119$
+00119$:
 	jc	00102$
 ;	../Common/CentralHeating.c:109: pWriteDisplayBuffer(screenBuffer);
-	lcall	00117$
-	sjmp	00118$
-00117$:
+	lcall	00121$
+	sjmp	00122$
+00121$:
 	mov	dptr,#_pWriteDisplayBuffer
 	movx	a,@dptr
 	push	acc
@@ -678,9 +670,9 @@ _UserProgram:
 	movx	a,@dptr
 	push	acc
 	mov	dptr,#_screenBuffer
-	mov	b,#0x00
+	mov	b, #0x00
 	ret
-00118$:
+00122$:
 ;	../Common/CentralHeating.c:113: currentScreen = SCREEN_HOME;
 	mov	dptr,#_currentScreen
 	mov	a,#0x01
@@ -694,9 +686,9 @@ _UserProgram:
 	push	acc
 	mov	a,#0x01
 	push	acc
-	lcall	00119$
-	sjmp	00120$
-00119$:
+	lcall	00123$
+	sjmp	00124$
+00123$:
 	mov	dptr,#_pRegisterForTimer
 	movx	a,@dptr
 	push	acc
@@ -705,7 +697,7 @@ _UserProgram:
 	push	acc
 	mov	dptr,#0x0001
 	ret
-00120$:
+00124$:
 	mov	a,sp
 	add	a,#0xfc
 	mov	sp,a
@@ -718,9 +710,9 @@ _UserProgram:
 	push	acc
 	clr	a
 	push	acc
-	lcall	00121$
-	sjmp	00122$
-00121$:
+	lcall	00125$
+	sjmp	00126$
+00125$:
 	mov	dptr,#_pRegisterForTimer
 	movx	a,@dptr
 	push	acc
@@ -729,7 +721,7 @@ _UserProgram:
 	push	acc
 	mov	dptr,#0x0002
 	ret
-00122$:
+00126$:
 	mov	a,sp
 	add	a,#0xfc
 	mov	sp,a
@@ -742,9 +734,9 @@ _UserProgram:
 	push	acc
 	mov	a,#0x03
 	push	acc
-	lcall	00123$
-	sjmp	00124$
-00123$:
+	lcall	00127$
+	sjmp	00128$
+00127$:
 	mov	dptr,#_pRegisterForTimer
 	movx	a,@dptr
 	push	acc
@@ -753,7 +745,7 @@ _UserProgram:
 	push	acc
 	mov	dptr,#0x0003
 	ret
-00124$:
+00128$:
 	mov	a,sp
 	add	a,#0xfc
 	mov	sp,a
@@ -766,9 +758,9 @@ _UserProgram:
 	push	acc
 	mov	a,#0x03
 	push	acc
-	lcall	00125$
-	sjmp	00126$
-00125$:
+	lcall	00129$
+	sjmp	00130$
+00129$:
 	mov	dptr,#_pRegisterForTimer
 	movx	a,@dptr
 	push	acc
@@ -777,7 +769,7 @@ _UserProgram:
 	push	acc
 	mov	dptr,#0x0004
 	ret
-00126$:
+00130$:
 	mov	a,sp
 	add	a,#0xfc
 	mov	sp,a
@@ -791,8 +783,8 @@ _UserProgram:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'Callback'
 ;------------------------------------------------------------
-;cookie                    Allocated with name '_Callback_cookie_65536_31'
-;keys                      Allocated with name '_Callback_keys_65536_32'
+;cookie        Allocated with name '_Callback_cookie_10000_31'
+;keys          Allocated with name '_Callback_keys_10000_32'
 ;------------------------------------------------------------
 ;	../Common/CentralHeating.c:134: void STDCALL Callback(int cookie)
 ;	-----------------------------------------
@@ -801,34 +793,34 @@ _UserProgram:
 _Callback:
 	mov	r7,dph
 	mov	a,dpl
-	mov	dptr,#_Callback_cookie_65536_31
+	mov	dptr,#_Callback_cookie_10000_31
 	movx	@dptr,a
 	mov	a,r7
 	inc	dptr
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:138: switch (cookie)
-	mov	dptr,#_Callback_cookie_65536_31
+	mov	dptr,#_Callback_cookie_10000_31
 	movx	a,@dptr
 	mov	r6,a
 	inc	dptr
 	movx	a,@dptr
 	mov	r7,a
-	cjne	r6,#0x01,00196$
-	cjne	r7,#0x00,00196$
+	cjne	r6,#0x01,00226$
+	cjne	r7,#0x00,00226$
 	sjmp	00101$
-00196$:
-	cjne	r6,#0x02,00197$
-	cjne	r7,#0x00,00197$
+00226$:
+	cjne	r6,#0x02,00227$
+	cjne	r7,#0x00,00227$
 	sjmp	00116$
-00197$:
-	cjne	r6,#0x03,00198$
-	cjne	r7,#0x00,00198$
+00227$:
+	cjne	r6,#0x03,00228$
+	cjne	r7,#0x00,00228$
 	ljmp	00127$
-00198$:
-	cjne	r6,#0x04,00199$
-	cjne	r7,#0x00,00199$
+00228$:
+	cjne	r6,#0x04,00229$
+	cjne	r7,#0x00,00229$
 	ljmp	00130$
-00199$:
+00229$:
 	ret
 ;	../Common/CentralHeating.c:140: case RTCUPDATECOOKIE :
 00101$:
@@ -863,11 +855,11 @@ _Callback:
 	ret
 00111$:
 ;	../Common/CentralHeating.c:159: else if (currentScreen == SCREEN_SETTIME)
-	cjne	r7,#0x03,00205$
-	sjmp	00206$
-00205$:
+	cjne	r7,#0x03,00235$
+	sjmp	00236$
+00235$:
 	ret
-00206$:
+00236$:
 ;	../Common/CentralHeating.c:161: if (flashDateTime)
 	mov	dptr,#_flashDateTime
 	movx	a,@dptr
@@ -891,21 +883,21 @@ _Callback:
 ;	../Common/CentralHeating.c:174: case READKEYSCOOKIE :
 00116$:
 ;	../Common/CentralHeating.c:175: pGetKeyState(&keys);
-	lcall	00208$
-	sjmp	00209$
-00208$:
+	lcall	00238$
+	sjmp	00239$
+00238$:
 	mov	dptr,#_pGetKeyState
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_Callback_keys_65536_32
-	mov	b,#0x00
+	mov	dptr,#_Callback_keys_10000_32
+	mov	b, #0x00
 	ret
-00209$:
+00239$:
 ;	../Common/CentralHeating.c:176: if (keys != lastKeys)
-	mov	dptr,#_Callback_keys_65536_32
+	mov	dptr,#_Callback_keys_10000_32
 	movx	a,@dptr
 	mov	r6,a
 	inc	dptr
@@ -913,14 +905,14 @@ _Callback:
 	mov	r7,a
 	mov	dptr,#_lastKeys
 	movx	a,@dptr
-	mov	r5,a
-	mov	r4,#0x00
+	mov	r4,a
+	mov	r5,#0x00
 	mov	a,r6
-	cjne	a,ar5,00210$
+	cjne	a,ar4,00240$
 	mov	a,r7
-	cjne	a,ar4,00210$
+	cjne	a,ar5,00240$
 	ret
-00210$:
+00240$:
 ;	../Common/CentralHeating.c:178: lastKeys = keys;
 	mov	dptr,#_lastKeys
 	mov	a,r6
@@ -929,7 +921,7 @@ _Callback:
 	cjne	r6,#0x01,00123$
 	cjne	r7,#0x00,00123$
 ;	../Common/CentralHeating.c:182: MenuNavigation(NAVTYPE_LEFT);
-	mov	dpl,#0x01
+	mov	dpl, #0x01
 	lcall	_MenuNavigation
 	sjmp	00124$
 00123$:
@@ -937,7 +929,7 @@ _Callback:
 	cjne	r6,#0x02,00120$
 	cjne	r7,#0x00,00120$
 ;	../Common/CentralHeating.c:186: MenuNavigation(NAVTYPE_SELECTITEM);
-	mov	dpl,#0x03
+	mov	dpl, #0x03
 	lcall	_MenuNavigation
 	sjmp	00124$
 00120$:
@@ -945,7 +937,7 @@ _Callback:
 	cjne	r6,#0x03,00124$
 	cjne	r7,#0x00,00124$
 ;	../Common/CentralHeating.c:190: MenuNavigation(NAVTYPE_RIGHT);
-	mov	dpl,#0x02
+	mov	dpl, #0x02
 	lcall	_MenuNavigation
 00124$:
 ;	../Common/CentralHeating.c:192: DisplayMenuOnHardware();
@@ -957,9 +949,9 @@ _Callback:
 	mov	dptr,#_currentScreen
 	movx	a,@dptr
 	mov	r7,a
-	cjne	r7,#0x04,00217$
+	cjne	r7,#0x04,00247$
 	ret
-00217$:
+00247$:
 ;	../Common/CentralHeating.c:199: ProcessHeating();
 ;	../Common/CentralHeating.c:201: break;
 ;	../Common/CentralHeating.c:203: case SCREENACTIVITY :
@@ -979,9 +971,9 @@ _Callback:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'DisplayMenuOnHardware'
 ;------------------------------------------------------------
-;buffer                    Allocated with name '_DisplayMenuOnHardware_buffer_65536_47'
-;i                         Allocated with name '_DisplayMenuOnHardware_i_65536_47'
-;j                         Allocated with name '_DisplayMenuOnHardware_j_65536_47'
+;buffer        Allocated with name '_DisplayMenuOnHardware_buffer_10000_47'
+;i             Allocated with name '_DisplayMenuOnHardware_i_10000_47'
+;j             Allocated with name '_DisplayMenuOnHardware_j_10000_47'
 ;------------------------------------------------------------
 ;	../Common/CentralHeating.c:215: void DisplayMenuOnHardware()
 ;	-----------------------------------------
@@ -995,89 +987,68 @@ _DisplayMenuOnHardware:
 	clr	a
 	inc	dptr
 	movx	@dptr,a
-	mov	dptr,#_DisplayMenuOnHardware_buffer_65536_47
-	mov	b,#0x00
+	mov	dptr,#_DisplayMenuOnHardware_buffer_10000_47
+	mov	b,a
 	lcall	_RenderMenuOnBuffer
 ;	../Common/CentralHeating.c:224: for (i = 0; i < SCREEN_BUFFER_SIZE / 2; ++i)
 	mov	r6,#0x00
 	mov	r7,#0x00
-	mov	r4,#0x00
 	mov	r5,#0x00
 00105$:
 ;	../Common/CentralHeating.c:226: if (buffer[j] != 0)
 	mov	a,r6
-	add	a,#_DisplayMenuOnHardware_buffer_65536_47
-	mov	r2,a
-	mov	a,r7
-	addc	a,#(_DisplayMenuOnHardware_buffer_65536_47 >> 8)
+	add	a, #_DisplayMenuOnHardware_buffer_10000_47
 	mov	r3,a
-	mov	dpl,r2
-	mov	dph,r3
+	mov	a,r7
+	addc	a, #(_DisplayMenuOnHardware_buffer_10000_47 >> 8)
+	mov	r4,a
+	mov	dpl,r3
+	mov	dph,r4
 	movx	a,@dptr
 	jz	00102$
 ;	../Common/CentralHeating.c:228: screenBuffer[i + SCREEN_BUFFER_SIZE / 2] = buffer[j++];
-	mov	ar3,r4
+	mov	ar4,r5
 	mov	a,#0x10
-	add	a,r3
-	mov	r3,a
-	rlc	a
-	subb	a,acc
-	mov	r2,a
-	mov	a,r3
+	add	a, r4
 	add	a,#_screenBuffer
+	mov	r4,a
+	clr	a
+	addc	a, #(_screenBuffer >> 8)
 	mov	r3,a
-	mov	a,r2
-	addc	a,#(_screenBuffer >> 8)
-	mov	r2,a
 	mov	a,r6
-	add	a,#_DisplayMenuOnHardware_buffer_65536_47
+	add	a, #_DisplayMenuOnHardware_buffer_10000_47
 	mov	dpl,a
 	mov	a,r7
-	addc	a,#(_DisplayMenuOnHardware_buffer_65536_47 >> 8)
+	addc	a, #(_DisplayMenuOnHardware_buffer_10000_47 >> 8)
 	mov	dph,a
 	inc	r6
-	cjne	r6,#0x00,00123$
+	cjne	r6,#0x00,00129$
 	inc	r7
-00123$:
+00129$:
 	movx	a,@dptr
-	mov	r1,a
-	mov	dpl,r3
-	mov	dph,r2
+	mov	dpl,r4
+	mov	dph,r3
 	movx	@dptr,a
 	sjmp	00106$
 00102$:
 ;	../Common/CentralHeating.c:232: screenBuffer[i + SCREEN_BUFFER_SIZE / 2] = ' ';
-	mov	ar3,r4
+	mov	ar4,r5
 	mov	a,#0x10
-	add	a,r3
-	mov	r3,a
-	rlc	a
-	subb	a,acc
-	mov	r2,a
-	mov	a,r3
-	add	a,#_screenBuffer
+	add	a, r4
+	add	a, #_screenBuffer
 	mov	dpl,a
-	mov	a,r2
-	addc	a,#(_screenBuffer >> 8)
+	clr	a
+	addc	a, #(_screenBuffer >> 8)
 	mov	dph,a
 	mov	a,#0x20
 	movx	@dptr,a
 00106$:
 ;	../Common/CentralHeating.c:224: for (i = 0; i < SCREEN_BUFFER_SIZE / 2; ++i)
-	inc	r4
-	cjne	r4,#0x00,00124$
 	inc	r5
-00124$:
-	clr	c
-	mov	a,r4
-	subb	a,#0x10
-	mov	a,r5
-	xrl	a,#0x80
-	subb	a,#0x80
+	cjne	r5,#0x10,00130$
+00130$:
 	jc	00105$
 ;	../Common/CentralHeating.c:236: pWriteDisplayBuffer(screenBuffer);    
-	ljmp	00126$
-00126$:
 	mov	dptr,#_pWriteDisplayBuffer
 	movx	a,@dptr
 	push	acc
@@ -1085,18 +1056,18 @@ _DisplayMenuOnHardware:
 	movx	a,@dptr
 	push	acc
 	mov	dptr,#_screenBuffer
-	mov	b,#0x00
+	mov	b, #0x00
 	ret
 ;	../Common/CentralHeating.c:237: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'PartialWriteToScreen'
 ;------------------------------------------------------------
-;maxLen                    Allocated with name '_PartialWriteToScreen_PARM_2'
-;information               Allocated with name '_PartialWriteToScreen_PARM_3'
-;screenPosition            Allocated with name '_PartialWriteToScreen_screenPosition_65536_52'
-;p                         Allocated with name '_PartialWriteToScreen_p_65536_53'
-;i                         Allocated with name '_PartialWriteToScreen_i_65536_53'
+;maxLen        Allocated with name '_PartialWriteToScreen_PARM_2'
+;information   Allocated with name '_PartialWriteToScreen_PARM_3'
+;screenPosition Allocated with name '_PartialWriteToScreen_screenPosition_10000_52'
+;p             Allocated with name '_PartialWriteToScreen_p_10000_53'
+;i             Allocated with name '_PartialWriteToScreen_i_10000_53'
 ;------------------------------------------------------------
 ;	../Common/CentralHeating.c:241: void PartialWriteToScreen(int screenPosition, int maxLen, char *information)
 ;	-----------------------------------------
@@ -1105,7 +1076,7 @@ _DisplayMenuOnHardware:
 _PartialWriteToScreen:
 	mov	r7,dph
 	mov	a,dpl
-	mov	dptr,#_PartialWriteToScreen_screenPosition_65536_52
+	mov	dptr,#_PartialWriteToScreen_screenPosition_10000_52
 	movx	@dptr,a
 	mov	a,r7
 	inc	dptr
@@ -1121,7 +1092,7 @@ _PartialWriteToScreen:
 	movx	a,@dptr
 	mov	r7,a
 ;	../Common/CentralHeating.c:245: for (i = screenPosition; i < (screenPosition + maxLen); ++i)
-	mov	dptr,#_PartialWriteToScreen_screenPosition_65536_52
+	mov	dptr,#_PartialWriteToScreen_screenPosition_10000_52
 	movx	a,@dptr
 	mov	r3,a
 	inc	dptr
@@ -1134,10 +1105,10 @@ _PartialWriteToScreen:
 	movx	a,@dptr
 	mov	r2,a
 	mov	a,r1
-	add	a,r3
+	add	a, r3
 	mov	r1,a
 	mov	a,r2
-	addc	a,r4
+	addc	a, r4
 	mov	r2,a
 00106$:
 	clr	c
@@ -1158,10 +1129,10 @@ _PartialWriteToScreen:
 	jnz	00102$
 ;	../Common/CentralHeating.c:249: screenBuffer[i] = ' ';
 	mov	a,r3
-	add	a,#_screenBuffer
+	add	a, #_screenBuffer
 	mov	dpl,a
 	mov	a,r4
-	addc	a,#(_screenBuffer >> 8)
+	addc	a, #(_screenBuffer >> 8)
 	mov	dph,a
 	mov	a,#0x20
 	movx	@dptr,a
@@ -1169,18 +1140,18 @@ _PartialWriteToScreen:
 00102$:
 ;	../Common/CentralHeating.c:253: screenBuffer[i] = *p;
 	mov	a,r3
-	add	a,#_screenBuffer
+	add	a, #_screenBuffer
 	mov	dpl,a
 	mov	a,r4
-	addc	a,#(_screenBuffer >> 8)
+	addc	a, #(_screenBuffer >> 8)
 	mov	dph,a
 	mov	a,r0
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:254: ++p;
 	inc	r5
-	cjne	r5,#0x00,00125$
+	cjne	r5,#0x00,00131$
 	inc	r6
-00125$:
+00131$:
 00107$:
 ;	../Common/CentralHeating.c:245: for (i = screenPosition; i < (screenPosition + maxLen); ++i)
 	inc	r3
@@ -1189,8 +1160,8 @@ _PartialWriteToScreen:
 	sjmp	00106$
 00104$:
 ;	../Common/CentralHeating.c:257: pWriteDisplayBuffer(screenBuffer);    
-	ljmp	00127$
-00127$:
+	ljmp	00133$
+00133$:
 	mov	dptr,#_pWriteDisplayBuffer
 	movx	a,@dptr
 	push	acc
@@ -1198,7 +1169,7 @@ _PartialWriteToScreen:
 	movx	a,@dptr
 	push	acc
 	mov	dptr,#_screenBuffer
-	mov	b,#0x00
+	mov	b, #0x00
 	ret
 ;	../Common/CentralHeating.c:258: }
 	ret
@@ -1232,9 +1203,9 @@ _ClearTopLine:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'HandleMenuCommand'
 ;------------------------------------------------------------
-;eventType                 Allocated with name '_HandleMenuCommand_PARM_2'
-;menuItem                  Allocated with name '_HandleMenuCommand_menuItem_65536_59'
-;dt                        Allocated with name '_HandleMenuCommand_dt_65536_60'
+;eventType     Allocated with name '_HandleMenuCommand_PARM_2'
+;menuItem      Allocated with name '_HandleMenuCommand_menuItem_10000_59'
+;dt            Allocated with name '_HandleMenuCommand_dt_10000_60'
 ;------------------------------------------------------------
 ;	../Common/CentralHeating.c:267: void HandleMenuCommand(int menuItem, int eventType)
 ;	-----------------------------------------
@@ -1243,13 +1214,13 @@ _ClearTopLine:
 _HandleMenuCommand:
 	mov	r7,dph
 	mov	a,dpl
-	mov	dptr,#_HandleMenuCommand_menuItem_65536_59
+	mov	dptr,#_HandleMenuCommand_menuItem_10000_59
 	movx	@dptr,a
 	mov	a,r7
 	inc	dptr
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:270: switch (menuItem)
-	mov	dptr,#_HandleMenuCommand_menuItem_65536_59
+	mov	dptr,#_HandleMenuCommand_menuItem_10000_59
 	movx	a,@dptr
 	mov	r6,a
 	inc	dptr
@@ -1261,9 +1232,9 @@ _HandleMenuCommand:
 	mov	a,r7
 	xrl	a,#0x80
 	subb	a,#0x80
-	jnc	00346$
+	jnc	00418$
 	ret
-00346$:
+00418$:
 	clr	c
 	mov	a,#0x2a
 	subb	a,r6
@@ -1271,22 +1242,22 @@ _HandleMenuCommand:
 	mov	b,r7
 	xrl	b,#0x80
 	subb	a,b
-	jnc	00347$
+	jnc	00419$
 	ret
-00347$:
+00419$:
 	mov	a,r6
 	add	a,#0xf5
 	mov	r6,a
-	add	a,#(00348$-3-.)
+	add	a,#(00420$-3-.)
 	movc	a,@a+pc
 	mov	dpl,a
 	mov	a,r6
-	add	a,#(00349$-3-.)
+	add	a,#(00421$-3-.)
 	movc	a,@a+pc
 	mov	dph,a
 	clr	a
 	jmp	@a+dptr
-00348$:
+00420$:
 	.db	00103$
 	.db	00115$
 	.db	00120$
@@ -1319,7 +1290,7 @@ _HandleMenuCommand:
 	.db	00200$
 	.db	00101$
 	.db	00102$
-00349$:
+00421$:
 	.db	00103$>>8
 	.db	00115$>>8
 	.db	00120$>>8
@@ -1371,7 +1342,7 @@ _HandleMenuCommand:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_currentDateTime
-	mov	b,#0x00
+	mov	b,a
 ;	../Common/CentralHeating.c:274: break;
 	ljmp	_AddSecondsToDateTime
 ;	../Common/CentralHeating.c:276: case MENUID_HOTWATERRST :
@@ -1405,12 +1376,12 @@ _HandleMenuCommand:
 	ljmp	_ClearTopLine
 00107$:
 ;	../Common/CentralHeating.c:287: else if (eventType == MENU_SUBMENUEXIT)
-	cjne	r6,#0x04,00352$
-	cjne	r7,#0x00,00352$
-	sjmp	00353$
-00352$:
+	cjne	r6,#0x04,00424$
+	cjne	r7,#0x00,00424$
+	sjmp	00425$
+00424$:
 	ret
-00353$:
+00425$:
 ;	../Common/CentralHeating.c:289: currentScreen = SCREEN_HOME;
 	mov	dptr,#_currentScreen
 	mov	a,#0x01
@@ -1441,12 +1412,12 @@ _HandleMenuCommand:
 	ljmp	_ClearTopLine
 00113$:
 ;	../Common/CentralHeating.c:301: else if (eventType == MENU_SUBMENUEXIT)
-	cjne	r6,#0x04,00356$
-	cjne	r7,#0x00,00356$
-	sjmp	00357$
-00356$:
+	cjne	r6,#0x04,00428$
+	cjne	r7,#0x00,00428$
+	sjmp	00429$
+00428$:
 	ret
-00357$:
+00429$:
 ;	../Common/CentralHeating.c:303: currentScreen = SCREEN_HOME;
 	mov	dptr,#_currentScreen
 	mov	a,#0x01
@@ -1463,66 +1434,66 @@ _HandleMenuCommand:
 	inc	dptr
 	movx	a,@dptr
 	mov	r7,a
-	cjne	r6,#0x02,00358$
-	cjne	r7,#0x00,00358$
-	sjmp	00359$
-00358$:
+	cjne	r6,#0x02,00430$
+	cjne	r7,#0x00,00430$
+	sjmp	00431$
+00430$:
 	ret
-00359$:
+00431$:
 ;	../Common/CentralHeating.c:311: pGetRtc(&dt);
-	lcall	00360$
-	sjmp	00361$
-00360$:
+	lcall	00432$
+	sjmp	00433$
+00432$:
 	mov	dptr,#_pGetRtc
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_HandleMenuCommand_dt_65536_60
-	mov	b,#0x00
+	mov	dptr,#_HandleMenuCommand_dt_10000_60
+	mov	b, #0x00
 	ret
-00361$:
+00433$:
 ;	../Common/CentralHeating.c:312: if (dt.day == GetNumDaysInMonth(&dt))
-	mov	dptr,#(_HandleMenuCommand_dt_65536_60 + 0x0004)
+	mov	dptr,#(_HandleMenuCommand_dt_10000_60 + 0x0004)
 	movx	a,@dptr
 	mov	r7,a
-	mov	dptr,#_HandleMenuCommand_dt_65536_60
-	mov	b,#0x00
+	mov	dptr,#_HandleMenuCommand_dt_10000_60
+	mov	b, #0x00
 	push	ar7
 	lcall	_GetNumDaysInMonth
-	mov	r5,dpl
-	mov	r6,dph
+	mov	r5, dpl
+	mov	r6, dph
 	pop	ar7
 	mov	r4,#0x00
 	mov	a,r7
-	cjne	a,ar5,00362$
+	cjne	a,ar5,00434$
 	mov	a,r4
-	cjne	a,ar6,00362$
+	cjne	a,ar6,00434$
 	ret
-00362$:
+00434$:
 ;	../Common/CentralHeating.c:316: dt.day++;
-	mov	dptr,#(_HandleMenuCommand_dt_65536_60 + 0x0004)
+	mov	dptr,#(_HandleMenuCommand_dt_10000_60 + 0x0004)
 	movx	a,@dptr
 	mov	r7,a
 	inc	r7
-	mov	dptr,#(_HandleMenuCommand_dt_65536_60 + 0x0004)
+	mov	dptr,#(_HandleMenuCommand_dt_10000_60 + 0x0004)
 	mov	a,r7
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:317: pSetRtc(&dt);
-	lcall	00363$
-	sjmp	00364$
-00363$:
+	lcall	00435$
+	sjmp	00436$
+00435$:
 	mov	dptr,#_pSetRtc
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_HandleMenuCommand_dt_65536_60
-	mov	b,#0x00
+	mov	dptr,#_HandleMenuCommand_dt_10000_60
+	mov	b, #0x00
 	ret
-00364$:
+00436$:
 ;	../Common/CentralHeating.c:318: flashDateTime = 0;
 	mov	dptr,#_flashDateTime
 	clr	a
@@ -1539,52 +1510,52 @@ _HandleMenuCommand:
 	inc	dptr
 	movx	a,@dptr
 	mov	r7,a
-	cjne	r6,#0x02,00365$
-	cjne	r7,#0x00,00365$
-	sjmp	00366$
-00365$:
+	cjne	r6,#0x02,00437$
+	cjne	r7,#0x00,00437$
+	sjmp	00438$
+00437$:
 	ret
-00366$:
+00438$:
 ;	../Common/CentralHeating.c:326: pGetRtc(&dt);
-	lcall	00367$
-	sjmp	00368$
-00367$:
+	lcall	00439$
+	sjmp	00440$
+00439$:
 	mov	dptr,#_pGetRtc
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_HandleMenuCommand_dt_65536_60
-	mov	b,#0x00
+	mov	dptr,#_HandleMenuCommand_dt_10000_60
+	mov	b, #0x00
 	ret
-00368$:
+00440$:
 ;	../Common/CentralHeating.c:327: if (dt.day == 1)
-	mov	dptr,#(_HandleMenuCommand_dt_65536_60 + 0x0004)
+	mov	dptr,#(_HandleMenuCommand_dt_10000_60 + 0x0004)
 	movx	a,@dptr
 	mov	r7,a
-	cjne	r7,#0x01,00369$
+	cjne	r7,#0x01,00441$
 	ret
-00369$:
+00441$:
 ;	../Common/CentralHeating.c:331: dt.day--;
 	dec	r7
-	mov	dptr,#(_HandleMenuCommand_dt_65536_60 + 0x0004)
+	mov	dptr,#(_HandleMenuCommand_dt_10000_60 + 0x0004)
 	mov	a,r7
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:332: pSetRtc(&dt);
-	lcall	00370$
-	sjmp	00371$
-00370$:
+	lcall	00442$
+	sjmp	00443$
+00442$:
 	mov	dptr,#_pSetRtc
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_HandleMenuCommand_dt_65536_60
-	mov	b,#0x00
+	mov	dptr,#_HandleMenuCommand_dt_10000_60
+	mov	b, #0x00
 	ret
-00371$:
+00443$:
 ;	../Common/CentralHeating.c:333: flashDateTime = 0;
 	mov	dptr,#_flashDateTime
 	clr	a
@@ -1601,52 +1572,52 @@ _HandleMenuCommand:
 	inc	dptr
 	movx	a,@dptr
 	mov	r7,a
-	cjne	r6,#0x02,00372$
-	cjne	r7,#0x00,00372$
-	sjmp	00373$
-00372$:
+	cjne	r6,#0x02,00444$
+	cjne	r7,#0x00,00444$
+	sjmp	00445$
+00444$:
 	ret
-00373$:
+00445$:
 ;	../Common/CentralHeating.c:341: pGetRtc(&dt);
-	lcall	00374$
-	sjmp	00375$
-00374$:
+	lcall	00446$
+	sjmp	00447$
+00446$:
 	mov	dptr,#_pGetRtc
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_HandleMenuCommand_dt_65536_60
-	mov	b,#0x00
+	mov	dptr,#_HandleMenuCommand_dt_10000_60
+	mov	b, #0x00
 	ret
-00375$:
+00447$:
 ;	../Common/CentralHeating.c:342: if (dt.month == 12)
-	mov	dptr,#(_HandleMenuCommand_dt_65536_60 + 0x0005)
+	mov	dptr,#(_HandleMenuCommand_dt_10000_60 + 0x0005)
 	movx	a,@dptr
 	mov	r7,a
-	cjne	r7,#0x0c,00376$
+	cjne	r7,#0x0c,00448$
 	ret
-00376$:
+00448$:
 ;	../Common/CentralHeating.c:346: dt.month++;
 	inc	r7
-	mov	dptr,#(_HandleMenuCommand_dt_65536_60 + 0x0005)
+	mov	dptr,#(_HandleMenuCommand_dt_10000_60 + 0x0005)
 	mov	a,r7
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:347: pSetRtc(&dt);
-	lcall	00377$
-	sjmp	00378$
-00377$:
+	lcall	00449$
+	sjmp	00450$
+00449$:
 	mov	dptr,#_pSetRtc
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_HandleMenuCommand_dt_65536_60
-	mov	b,#0x00
+	mov	dptr,#_HandleMenuCommand_dt_10000_60
+	mov	b, #0x00
 	ret
-00378$:
+00450$:
 ;	../Common/CentralHeating.c:348: flashDateTime = 0;
 	mov	dptr,#_flashDateTime
 	clr	a
@@ -1663,52 +1634,52 @@ _HandleMenuCommand:
 	inc	dptr
 	movx	a,@dptr
 	mov	r7,a
-	cjne	r6,#0x02,00379$
-	cjne	r7,#0x00,00379$
-	sjmp	00380$
-00379$:
+	cjne	r6,#0x02,00451$
+	cjne	r7,#0x00,00451$
+	sjmp	00452$
+00451$:
 	ret
-00380$:
+00452$:
 ;	../Common/CentralHeating.c:356: pGetRtc(&dt);
-	lcall	00381$
-	sjmp	00382$
-00381$:
+	lcall	00453$
+	sjmp	00454$
+00453$:
 	mov	dptr,#_pGetRtc
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_HandleMenuCommand_dt_65536_60
-	mov	b,#0x00
+	mov	dptr,#_HandleMenuCommand_dt_10000_60
+	mov	b, #0x00
 	ret
-00382$:
+00454$:
 ;	../Common/CentralHeating.c:357: if (dt.month == 1)
-	mov	dptr,#(_HandleMenuCommand_dt_65536_60 + 0x0005)
+	mov	dptr,#(_HandleMenuCommand_dt_10000_60 + 0x0005)
 	movx	a,@dptr
 	mov	r7,a
-	cjne	r7,#0x01,00383$
+	cjne	r7,#0x01,00455$
 	ret
-00383$:
+00455$:
 ;	../Common/CentralHeating.c:361: dt.month--;
 	dec	r7
-	mov	dptr,#(_HandleMenuCommand_dt_65536_60 + 0x0005)
+	mov	dptr,#(_HandleMenuCommand_dt_10000_60 + 0x0005)
 	mov	a,r7
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:362: pSetRtc(&dt);
-	lcall	00384$
-	sjmp	00385$
-00384$:
+	lcall	00456$
+	sjmp	00457$
+00456$:
 	mov	dptr,#_pSetRtc
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_HandleMenuCommand_dt_65536_60
-	mov	b,#0x00
+	mov	dptr,#_HandleMenuCommand_dt_10000_60
+	mov	b, #0x00
 	ret
-00385$:
+00457$:
 ;	../Common/CentralHeating.c:363: flashDateTime = 0;
 	mov	dptr,#_flashDateTime
 	clr	a
@@ -1725,52 +1696,52 @@ _HandleMenuCommand:
 	inc	dptr
 	movx	a,@dptr
 	mov	r7,a
-	cjne	r6,#0x02,00386$
-	cjne	r7,#0x00,00386$
-	sjmp	00387$
-00386$:
+	cjne	r6,#0x02,00458$
+	cjne	r7,#0x00,00458$
+	sjmp	00459$
+00458$:
 	ret
-00387$:
+00459$:
 ;	../Common/CentralHeating.c:371: pGetRtc(&dt);
-	lcall	00388$
-	sjmp	00389$
-00388$:
+	lcall	00460$
+	sjmp	00461$
+00460$:
 	mov	dptr,#_pGetRtc
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_HandleMenuCommand_dt_65536_60
-	mov	b,#0x00
+	mov	dptr,#_HandleMenuCommand_dt_10000_60
+	mov	b, #0x00
 	ret
-00389$:
+00461$:
 ;	../Common/CentralHeating.c:372: if (dt.year == 50)
-	mov	dptr,#(_HandleMenuCommand_dt_65536_60 + 0x0006)
+	mov	dptr,#(_HandleMenuCommand_dt_10000_60 + 0x0006)
 	movx	a,@dptr
 	mov	r7,a
-	cjne	r7,#0x32,00390$
+	cjne	r7,#0x32,00462$
 	ret
-00390$:
+00462$:
 ;	../Common/CentralHeating.c:376: dt.year++;
 	inc	r7
-	mov	dptr,#(_HandleMenuCommand_dt_65536_60 + 0x0006)
+	mov	dptr,#(_HandleMenuCommand_dt_10000_60 + 0x0006)
 	mov	a,r7
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:377: pSetRtc(&dt);
-	lcall	00391$
-	sjmp	00392$
-00391$:
+	lcall	00463$
+	sjmp	00464$
+00463$:
 	mov	dptr,#_pSetRtc
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_HandleMenuCommand_dt_65536_60
-	mov	b,#0x00
+	mov	dptr,#_HandleMenuCommand_dt_10000_60
+	mov	b, #0x00
 	ret
-00392$:
+00464$:
 ;	../Common/CentralHeating.c:378: flashDateTime = 0;
 	mov	dptr,#_flashDateTime
 	clr	a
@@ -1787,52 +1758,52 @@ _HandleMenuCommand:
 	inc	dptr
 	movx	a,@dptr
 	mov	r7,a
-	cjne	r6,#0x02,00393$
-	cjne	r7,#0x00,00393$
-	sjmp	00394$
-00393$:
+	cjne	r6,#0x02,00465$
+	cjne	r7,#0x00,00465$
+	sjmp	00466$
+00465$:
 	ret
-00394$:
+00466$:
 ;	../Common/CentralHeating.c:386: pGetRtc(&dt);
-	lcall	00395$
-	sjmp	00396$
-00395$:
+	lcall	00467$
+	sjmp	00468$
+00467$:
 	mov	dptr,#_pGetRtc
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_HandleMenuCommand_dt_65536_60
-	mov	b,#0x00
+	mov	dptr,#_HandleMenuCommand_dt_10000_60
+	mov	b, #0x00
 	ret
-00396$:
+00468$:
 ;	../Common/CentralHeating.c:387: if (dt.year == 10)
-	mov	dptr,#(_HandleMenuCommand_dt_65536_60 + 0x0006)
+	mov	dptr,#(_HandleMenuCommand_dt_10000_60 + 0x0006)
 	movx	a,@dptr
 	mov	r7,a
-	cjne	r7,#0x0a,00397$
+	cjne	r7,#0x0a,00469$
 	ret
-00397$:
+00469$:
 ;	../Common/CentralHeating.c:391: dt.year--;
 	dec	r7
-	mov	dptr,#(_HandleMenuCommand_dt_65536_60 + 0x0006)
+	mov	dptr,#(_HandleMenuCommand_dt_10000_60 + 0x0006)
 	mov	a,r7
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:392: pSetRtc(&dt);
-	lcall	00398$
-	sjmp	00399$
-00398$:
+	lcall	00470$
+	sjmp	00471$
+00470$:
 	mov	dptr,#_pSetRtc
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_HandleMenuCommand_dt_65536_60
-	mov	b,#0x00
+	mov	dptr,#_HandleMenuCommand_dt_10000_60
+	mov	b, #0x00
 	ret
-00399$:
+00471$:
 ;	../Common/CentralHeating.c:393: flashDateTime = 0;
 	mov	dptr,#_flashDateTime
 	clr	a
@@ -1849,57 +1820,57 @@ _HandleMenuCommand:
 	inc	dptr
 	movx	a,@dptr
 	mov	r7,a
-	cjne	r6,#0x02,00400$
-	cjne	r7,#0x00,00400$
-	sjmp	00401$
-00400$:
+	cjne	r6,#0x02,00472$
+	cjne	r7,#0x00,00472$
+	sjmp	00473$
+00472$:
 	ret
-00401$:
+00473$:
 ;	../Common/CentralHeating.c:402: pGetRtc(&dt);
-	lcall	00402$
-	sjmp	00403$
-00402$:
+	lcall	00474$
+	sjmp	00475$
+00474$:
 	mov	dptr,#_pGetRtc
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_HandleMenuCommand_dt_65536_60
-	mov	b,#0x00
+	mov	dptr,#_HandleMenuCommand_dt_10000_60
+	mov	b, #0x00
 	ret
-00403$:
+00475$:
 ;	../Common/CentralHeating.c:403: if (dt.minutes == 59)
-	mov	dptr,#(_HandleMenuCommand_dt_65536_60 + 0x0001)
+	mov	dptr,#(_HandleMenuCommand_dt_10000_60 + 0x0001)
 	movx	a,@dptr
 	mov	r7,a
 	cjne	r7,#0x3b,00147$
 ;	../Common/CentralHeating.c:405: dt.minutes = 0;
-	mov	dptr,#(_HandleMenuCommand_dt_65536_60 + 0x0001)
+	mov	dptr,#(_HandleMenuCommand_dt_10000_60 + 0x0001)
 	clr	a
 	movx	@dptr,a
 	sjmp	00148$
 00147$:
 ;	../Common/CentralHeating.c:409: dt.minutes++;
 	inc	r7
-	mov	dptr,#(_HandleMenuCommand_dt_65536_60 + 0x0001)
+	mov	dptr,#(_HandleMenuCommand_dt_10000_60 + 0x0001)
 	mov	a,r7
 	movx	@dptr,a
 00148$:
 ;	../Common/CentralHeating.c:411: pSetRtc(&dt);
-	lcall	00406$
-	sjmp	00407$
-00406$:
+	lcall	00478$
+	sjmp	00479$
+00478$:
 	mov	dptr,#_pSetRtc
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_HandleMenuCommand_dt_65536_60
-	mov	b,#0x00
+	mov	dptr,#_HandleMenuCommand_dt_10000_60
+	mov	b, #0x00
 	ret
-00407$:
+00479$:
 ;	../Common/CentralHeating.c:412: flashDateTime = 0;
 	mov	dptr,#_flashDateTime
 	clr	a
@@ -1916,57 +1887,57 @@ _HandleMenuCommand:
 	inc	dptr
 	movx	a,@dptr
 	mov	r7,a
-	cjne	r6,#0x02,00408$
-	cjne	r7,#0x00,00408$
-	sjmp	00409$
-00408$:
+	cjne	r6,#0x02,00480$
+	cjne	r7,#0x00,00480$
+	sjmp	00481$
+00480$:
 	ret
-00409$:
+00481$:
 ;	../Common/CentralHeating.c:420: pGetRtc(&dt);
-	lcall	00410$
-	sjmp	00411$
-00410$:
+	lcall	00482$
+	sjmp	00483$
+00482$:
 	mov	dptr,#_pGetRtc
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_HandleMenuCommand_dt_65536_60
-	mov	b,#0x00
+	mov	dptr,#_HandleMenuCommand_dt_10000_60
+	mov	b, #0x00
 	ret
-00411$:
+00483$:
 ;	../Common/CentralHeating.c:421: if (dt.minutes == 0)
-	mov	dptr,#(_HandleMenuCommand_dt_65536_60 + 0x0001)
+	mov	dptr,#(_HandleMenuCommand_dt_10000_60 + 0x0001)
 	movx	a,@dptr
 	mov	r7,a
 	jnz	00153$
 ;	../Common/CentralHeating.c:423: dt.minutes = 59;
-	mov	dptr,#(_HandleMenuCommand_dt_65536_60 + 0x0001)
+	mov	dptr,#(_HandleMenuCommand_dt_10000_60 + 0x0001)
 	mov	a,#0x3b
 	movx	@dptr,a
 	sjmp	00154$
 00153$:
 ;	../Common/CentralHeating.c:427: dt.minutes--;
 	dec	r7
-	mov	dptr,#(_HandleMenuCommand_dt_65536_60 + 0x0001)
+	mov	dptr,#(_HandleMenuCommand_dt_10000_60 + 0x0001)
 	mov	a,r7
 	movx	@dptr,a
 00154$:
 ;	../Common/CentralHeating.c:429: pSetRtc(&dt);
-	lcall	00413$
-	sjmp	00414$
-00413$:
+	lcall	00485$
+	sjmp	00486$
+00485$:
 	mov	dptr,#_pSetRtc
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_HandleMenuCommand_dt_65536_60
-	mov	b,#0x00
+	mov	dptr,#_HandleMenuCommand_dt_10000_60
+	mov	b, #0x00
 	ret
-00414$:
+00486$:
 ;	../Common/CentralHeating.c:430: flashDateTime = 0;
 	mov	dptr,#_flashDateTime
 	clr	a
@@ -1983,57 +1954,57 @@ _HandleMenuCommand:
 	inc	dptr
 	movx	a,@dptr
 	mov	r7,a
-	cjne	r6,#0x02,00415$
-	cjne	r7,#0x00,00415$
-	sjmp	00416$
-00415$:
+	cjne	r6,#0x02,00487$
+	cjne	r7,#0x00,00487$
+	sjmp	00488$
+00487$:
 	ret
-00416$:
+00488$:
 ;	../Common/CentralHeating.c:439: pGetRtc(&dt);
-	lcall	00417$
-	sjmp	00418$
-00417$:
+	lcall	00489$
+	sjmp	00490$
+00489$:
 	mov	dptr,#_pGetRtc
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_HandleMenuCommand_dt_65536_60
-	mov	b,#0x00
+	mov	dptr,#_HandleMenuCommand_dt_10000_60
+	mov	b, #0x00
 	ret
-00418$:
+00490$:
 ;	../Common/CentralHeating.c:440: if (dt.hours == 23)
-	mov	dptr,#(_HandleMenuCommand_dt_65536_60 + 0x0002)
+	mov	dptr,#(_HandleMenuCommand_dt_10000_60 + 0x0002)
 	movx	a,@dptr
 	mov	r7,a
 	cjne	r7,#0x17,00159$
 ;	../Common/CentralHeating.c:442: dt.hours = 0;
-	mov	dptr,#(_HandleMenuCommand_dt_65536_60 + 0x0002)
+	mov	dptr,#(_HandleMenuCommand_dt_10000_60 + 0x0002)
 	clr	a
 	movx	@dptr,a
 	sjmp	00160$
 00159$:
 ;	../Common/CentralHeating.c:446: dt.hours++;
 	inc	r7
-	mov	dptr,#(_HandleMenuCommand_dt_65536_60 + 0x0002)
+	mov	dptr,#(_HandleMenuCommand_dt_10000_60 + 0x0002)
 	mov	a,r7
 	movx	@dptr,a
 00160$:
 ;	../Common/CentralHeating.c:448: pSetRtc(&dt);
-	lcall	00421$
-	sjmp	00422$
-00421$:
+	lcall	00493$
+	sjmp	00494$
+00493$:
 	mov	dptr,#_pSetRtc
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_HandleMenuCommand_dt_65536_60
-	mov	b,#0x00
+	mov	dptr,#_HandleMenuCommand_dt_10000_60
+	mov	b, #0x00
 	ret
-00422$:
+00494$:
 ;	../Common/CentralHeating.c:449: flashDateTime = 0;
 	mov	dptr,#_flashDateTime
 	clr	a
@@ -2050,57 +2021,57 @@ _HandleMenuCommand:
 	inc	dptr
 	movx	a,@dptr
 	mov	r7,a
-	cjne	r6,#0x02,00423$
-	cjne	r7,#0x00,00423$
-	sjmp	00424$
-00423$:
+	cjne	r6,#0x02,00495$
+	cjne	r7,#0x00,00495$
+	sjmp	00496$
+00495$:
 	ret
-00424$:
+00496$:
 ;	../Common/CentralHeating.c:457: pGetRtc(&dt);
-	lcall	00425$
-	sjmp	00426$
-00425$:
+	lcall	00497$
+	sjmp	00498$
+00497$:
 	mov	dptr,#_pGetRtc
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_HandleMenuCommand_dt_65536_60
-	mov	b,#0x00
+	mov	dptr,#_HandleMenuCommand_dt_10000_60
+	mov	b, #0x00
 	ret
-00426$:
+00498$:
 ;	../Common/CentralHeating.c:458: if (dt.hours == 0)
-	mov	dptr,#(_HandleMenuCommand_dt_65536_60 + 0x0002)
+	mov	dptr,#(_HandleMenuCommand_dt_10000_60 + 0x0002)
 	movx	a,@dptr
 	mov	r7,a
 	jnz	00165$
 ;	../Common/CentralHeating.c:460: dt.hours = 23;
-	mov	dptr,#(_HandleMenuCommand_dt_65536_60 + 0x0002)
+	mov	dptr,#(_HandleMenuCommand_dt_10000_60 + 0x0002)
 	mov	a,#0x17
 	movx	@dptr,a
 	sjmp	00166$
 00165$:
 ;	../Common/CentralHeating.c:464: dt.hours--;
 	dec	r7
-	mov	dptr,#(_HandleMenuCommand_dt_65536_60 + 0x0002)
+	mov	dptr,#(_HandleMenuCommand_dt_10000_60 + 0x0002)
 	mov	a,r7
 	movx	@dptr,a
 00166$:
 ;	../Common/CentralHeating.c:466: pSetRtc(&dt);
-	lcall	00428$
-	sjmp	00429$
-00428$:
+	lcall	00500$
+	sjmp	00501$
+00500$:
 	mov	dptr,#_pSetRtc
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_HandleMenuCommand_dt_65536_60
-	mov	b,#0x00
+	mov	dptr,#_HandleMenuCommand_dt_10000_60
+	mov	b, #0x00
 	ret
-00429$:
+00501$:
 ;	../Common/CentralHeating.c:467: flashDateTime = 0;
 	mov	dptr,#_flashDateTime
 	clr	a
@@ -2117,44 +2088,44 @@ _HandleMenuCommand:
 	inc	dptr
 	movx	a,@dptr
 	mov	r7,a
-	cjne	r6,#0x02,00430$
-	cjne	r7,#0x00,00430$
-	sjmp	00431$
-00430$:
+	cjne	r6,#0x02,00502$
+	cjne	r7,#0x00,00502$
+	sjmp	00503$
+00502$:
 	ret
-00431$:
+00503$:
 ;	../Common/CentralHeating.c:475: pGetRtc(&dt);
-	lcall	00432$
-	sjmp	00433$
-00432$:
+	lcall	00504$
+	sjmp	00505$
+00504$:
 	mov	dptr,#_pGetRtc
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_HandleMenuCommand_dt_65536_60
-	mov	b,#0x00
+	mov	dptr,#_HandleMenuCommand_dt_10000_60
+	mov	b, #0x00
 	ret
-00433$:
+00505$:
 ;	../Common/CentralHeating.c:476: dt.seconds = 0;
-	mov	dptr,#_HandleMenuCommand_dt_65536_60
+	mov	dptr,#_HandleMenuCommand_dt_10000_60
 	clr	a
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:477: pSetRtc(&dt);
-	lcall	00434$
-	sjmp	00435$
-00434$:
+	lcall	00506$
+	sjmp	00507$
+00506$:
 	mov	dptr,#_pSetRtc
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_HandleMenuCommand_dt_65536_60
-	mov	b,#0x00
+	mov	dptr,#_HandleMenuCommand_dt_10000_60
+	mov	b, #0x00
 	ret
-00435$:
+00507$:
 ;	../Common/CentralHeating.c:478: flashDateTime = 0;
 	mov	dptr,#_flashDateTime
 	clr	a
@@ -2184,16 +2155,16 @@ _HandleMenuCommand:
 	clr	a
 	movx	@dptr,a
 	mov	dptr,#___str_1
-	mov	b,#0x80
+	mov	b, #0x80
 	ljmp	_TestAndDisplay
 00176$:
 ;	../Common/CentralHeating.c:490: else if (eventType == MENU_SUBMENUEXIT)
-	cjne	r6,#0x04,00438$
-	cjne	r7,#0x00,00438$
-	sjmp	00439$
-00438$:
+	cjne	r6,#0x04,00510$
+	cjne	r7,#0x00,00510$
+	sjmp	00511$
+00510$:
 	ret
-00439$:
+00511$:
 ;	../Common/CentralHeating.c:492: currentScreen = SCREEN_HOME;
 	mov	dptr,#_currentScreen
 	mov	a,#0x01
@@ -2210,18 +2181,18 @@ _HandleMenuCommand:
 	inc	dptr
 	movx	a,@dptr
 	mov	r7,a
-	cjne	r6,#0x02,00440$
-	cjne	r7,#0x00,00440$
-	sjmp	00441$
-00440$:
+	cjne	r6,#0x02,00512$
+	cjne	r7,#0x00,00512$
+	sjmp	00513$
+00512$:
 	ret
-00441$:
+00513$:
 ;	../Common/CentralHeating.c:500: TestAndDisplay("Boiler", OUTPUT_BOILER);
 	mov	dptr,#_TestAndDisplay_PARM_2
 	mov	a,#0x20
 	movx	@dptr,a
 	mov	dptr,#___str_2
-	mov	b,#0x80
+	mov	b, #0x80
 ;	../Common/CentralHeating.c:502: break;
 	ljmp	_TestAndDisplay
 ;	../Common/CentralHeating.c:504: case MENUID_TEST_PUMP :
@@ -2233,18 +2204,18 @@ _HandleMenuCommand:
 	inc	dptr
 	movx	a,@dptr
 	mov	r7,a
-	cjne	r6,#0x02,00442$
-	cjne	r7,#0x00,00442$
-	sjmp	00443$
-00442$:
+	cjne	r6,#0x02,00514$
+	cjne	r7,#0x00,00514$
+	sjmp	00515$
+00514$:
 	ret
-00443$:
+00515$:
 ;	../Common/CentralHeating.c:507: TestAndDisplay("Pump", OUTPUT_PUMP);
 	mov	dptr,#_TestAndDisplay_PARM_2
 	mov	a,#0x10
 	movx	@dptr,a
 	mov	dptr,#___str_3
-	mov	b,#0x80
+	mov	b, #0x80
 ;	../Common/CentralHeating.c:509: break;
 	ljmp	_TestAndDisplay
 ;	../Common/CentralHeating.c:511: case MENUID_TEST_ZONE1 :
@@ -2256,18 +2227,18 @@ _HandleMenuCommand:
 	inc	dptr
 	movx	a,@dptr
 	mov	r7,a
-	cjne	r6,#0x02,00444$
-	cjne	r7,#0x00,00444$
-	sjmp	00445$
-00444$:
+	cjne	r6,#0x02,00516$
+	cjne	r7,#0x00,00516$
+	sjmp	00517$
+00516$:
 	ret
-00445$:
+00517$:
 ;	../Common/CentralHeating.c:514: TestAndDisplay("Zone 1", OUTPUT_ACTUATOR1);
 	mov	dptr,#_TestAndDisplay_PARM_2
 	mov	a,#0x01
 	movx	@dptr,a
 	mov	dptr,#___str_4
-	mov	b,#0x80
+	mov	b, #0x80
 ;	../Common/CentralHeating.c:516: break;
 	ljmp	_TestAndDisplay
 ;	../Common/CentralHeating.c:518: case MENUID_TEST_ZONE2 :
@@ -2279,18 +2250,18 @@ _HandleMenuCommand:
 	inc	dptr
 	movx	a,@dptr
 	mov	r7,a
-	cjne	r6,#0x02,00446$
-	cjne	r7,#0x00,00446$
-	sjmp	00447$
-00446$:
+	cjne	r6,#0x02,00518$
+	cjne	r7,#0x00,00518$
+	sjmp	00519$
+00518$:
 	ret
-00447$:
+00519$:
 ;	../Common/CentralHeating.c:521: TestAndDisplay("Zone 2", OUTPUT_ACTUATOR2);
 	mov	dptr,#_TestAndDisplay_PARM_2
 	mov	a,#0x02
 	movx	@dptr,a
 	mov	dptr,#___str_5
-	mov	b,#0x80
+	mov	b, #0x80
 ;	../Common/CentralHeating.c:523: break;
 ;	../Common/CentralHeating.c:525: case MENUID_TEST_ZONE3 :
 	ljmp	_TestAndDisplay
@@ -2309,7 +2280,7 @@ _HandleMenuCommand:
 	mov	a,#0x04
 	movx	@dptr,a
 	mov	dptr,#___str_6
-	mov	b,#0x80
+	mov	b, #0x80
 ;	../Common/CentralHeating.c:530: break;
 ;	../Common/CentralHeating.c:532: case MENUID_TEST_ZONE4 :
 	ljmp	_TestAndDisplay
@@ -2328,7 +2299,7 @@ _HandleMenuCommand:
 	mov	a,#0x08
 	movx	@dptr,a
 	mov	dptr,#___str_7
-	mov	b,#0x80
+	mov	b, #0x80
 ;	../Common/CentralHeating.c:537: break;
 ;	../Common/CentralHeating.c:540: case MENUID_TEST_RESET :
 	ljmp	_TestAndDisplay
@@ -2347,7 +2318,7 @@ _HandleMenuCommand:
 	clr	a
 	movx	@dptr,a
 	mov	dptr,#___str_8
-	mov	b,#0x80
+	mov	b, #0x80
 ;	../Common/CentralHeating.c:548: }
 ;	../Common/CentralHeating.c:550: }
 	ljmp	_TestAndDisplay
@@ -2356,7 +2327,7 @@ _HandleMenuCommand:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'WriteCurrentTime'
 ;------------------------------------------------------------
-;strBuffer                 Allocated with name '_WriteCurrentTime_strBuffer_65536_100'
+;strBuffer     Allocated with name '_WriteCurrentTime_strBuffer_10000_100'
 ;------------------------------------------------------------
 ;	../Common/CentralHeating.c:554: void WriteCurrentTime()
 ;	-----------------------------------------
@@ -2374,7 +2345,7 @@ _WriteCurrentTime:
 	movx	a,@dptr
 	push	acc
 	mov	dptr,#_currentDateTime
-	mov	b,#0x00
+	mov	b, #0x00
 	ret
 00104$:
 ;	../Common/CentralHeating.c:559: FormatTime(strBuffer, &currentDateTime, 0);
@@ -2389,8 +2360,8 @@ _WriteCurrentTime:
 	movx	@dptr,a
 	mov	dptr,#_FormatTime_PARM_3
 	movx	@dptr,a
-	mov	dptr,#_WriteCurrentTime_strBuffer_65536_100
-	mov	b,#0x00
+	mov	dptr,#_WriteCurrentTime_strBuffer_10000_100
+	mov	b,a
 	lcall	_FormatTime
 ;	../Common/CentralHeating.c:560: PartialWriteToScreen(11, 5, strBuffer);
 	mov	dptr,#_PartialWriteToScreen_PARM_2
@@ -2400,9 +2371,9 @@ _WriteCurrentTime:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_PartialWriteToScreen_PARM_3
-	mov	a,#_WriteCurrentTime_strBuffer_65536_100
+	mov	a,#_WriteCurrentTime_strBuffer_10000_100
 	movx	@dptr,a
-	mov	a,#(_WriteCurrentTime_strBuffer_65536_100 >> 8)
+	mov	a,#(_WriteCurrentTime_strBuffer_10000_100 >> 8)
 	inc	dptr
 	movx	@dptr,a
 	clr	a
@@ -2414,8 +2385,8 @@ _WriteCurrentTime:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'PreviewTimeAdjustment'
 ;------------------------------------------------------------
-;strBuffer                 Allocated with name '_PreviewTimeAdjustment_strBuffer_65536_101'
-;dt                        Allocated with name '_PreviewTimeAdjustment_dt_65536_101'
+;strBuffer     Allocated with name '_PreviewTimeAdjustment_strBuffer_10000_101'
+;dt            Allocated with name '_PreviewTimeAdjustment_dt_10000_101'
 ;------------------------------------------------------------
 ;	../Common/CentralHeating.c:564: void PreviewTimeAdjustment()
 ;	-----------------------------------------
@@ -2432,15 +2403,15 @@ _PreviewTimeAdjustment:
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_PreviewTimeAdjustment_dt_65536_101
-	mov	b,#0x00
+	mov	dptr,#_PreviewTimeAdjustment_dt_10000_101
+	mov	b, #0x00
 	ret
 00104$:
 ;	../Common/CentralHeating.c:569: FormatTime(strBuffer, &dt, 1);
 	mov	dptr,#_FormatTime_PARM_2
-	mov	a,#_PreviewTimeAdjustment_dt_65536_101
+	mov	a,#_PreviewTimeAdjustment_dt_10000_101
 	movx	@dptr,a
-	mov	a,#(_PreviewTimeAdjustment_dt_65536_101 >> 8)
+	mov	a,#(_PreviewTimeAdjustment_dt_10000_101 >> 8)
 	inc	dptr
 	movx	@dptr,a
 	clr	a
@@ -2449,8 +2420,8 @@ _PreviewTimeAdjustment:
 	mov	dptr,#_FormatTime_PARM_3
 	inc	a
 	movx	@dptr,a
-	mov	dptr,#_PreviewTimeAdjustment_strBuffer_65536_101
-	mov	b,#0x00
+	mov	dptr,#_PreviewTimeAdjustment_strBuffer_10000_101
+	mov	b, #0x00
 	lcall	_FormatTime
 ;	../Common/CentralHeating.c:570: PartialWriteToScreen(0, 16, strBuffer);
 	mov	dptr,#_PartialWriteToScreen_PARM_2
@@ -2460,9 +2431,9 @@ _PreviewTimeAdjustment:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_PartialWriteToScreen_PARM_3
-	mov	a,#_PreviewTimeAdjustment_strBuffer_65536_101
+	mov	a,#_PreviewTimeAdjustment_strBuffer_10000_101
 	movx	@dptr,a
-	mov	a,#(_PreviewTimeAdjustment_strBuffer_65536_101 >> 8)
+	mov	a,#(_PreviewTimeAdjustment_strBuffer_10000_101 >> 8)
 	inc	dptr
 	movx	@dptr,a
 	clr	a
@@ -2474,8 +2445,8 @@ _PreviewTimeAdjustment:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'PreviewDateAdjustment'
 ;------------------------------------------------------------
-;strBuffer                 Allocated with name '_PreviewDateAdjustment_strBuffer_65536_102'
-;dt                        Allocated with name '_PreviewDateAdjustment_dt_65536_102'
+;strBuffer     Allocated with name '_PreviewDateAdjustment_strBuffer_10000_102'
+;dt            Allocated with name '_PreviewDateAdjustment_dt_10000_102'
 ;------------------------------------------------------------
 ;	../Common/CentralHeating.c:574: void PreviewDateAdjustment()
 ;	-----------------------------------------
@@ -2492,22 +2463,22 @@ _PreviewDateAdjustment:
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_PreviewDateAdjustment_dt_65536_102
-	mov	b,#0x00
+	mov	dptr,#_PreviewDateAdjustment_dt_10000_102
+	mov	b, #0x00
 	ret
 00104$:
 ;	../Common/CentralHeating.c:579: FormatDate(strBuffer, &dt);
 	mov	dptr,#_FormatDate_PARM_2
-	mov	a,#_PreviewDateAdjustment_dt_65536_102
+	mov	a,#_PreviewDateAdjustment_dt_10000_102
 	movx	@dptr,a
-	mov	a,#(_PreviewDateAdjustment_dt_65536_102 >> 8)
+	mov	a,#(_PreviewDateAdjustment_dt_10000_102 >> 8)
 	inc	dptr
 	movx	@dptr,a
 	clr	a
 	inc	dptr
 	movx	@dptr,a
-	mov	dptr,#_PreviewDateAdjustment_strBuffer_65536_102
-	mov	b,#0x00
+	mov	dptr,#_PreviewDateAdjustment_strBuffer_10000_102
+	mov	b,a
 	lcall	_FormatDate
 ;	../Common/CentralHeating.c:580: PartialWriteToScreen(0, 16, strBuffer);
 	mov	dptr,#_PartialWriteToScreen_PARM_2
@@ -2517,9 +2488,9 @@ _PreviewDateAdjustment:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_PartialWriteToScreen_PARM_3
-	mov	a,#_PreviewDateAdjustment_strBuffer_65536_102
+	mov	a,#_PreviewDateAdjustment_strBuffer_10000_102
 	movx	@dptr,a
-	mov	a,#(_PreviewDateAdjustment_strBuffer_65536_102 >> 8)
+	mov	a,#(_PreviewDateAdjustment_strBuffer_10000_102 >> 8)
 	inc	dptr
 	movx	@dptr,a
 	clr	a
@@ -2531,8 +2502,8 @@ _PreviewDateAdjustment:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'TestAndDisplay'
 ;------------------------------------------------------------
-;output                    Allocated with name '_TestAndDisplay_PARM_2'
-;description               Allocated with name '_TestAndDisplay_description_65536_103'
+;output        Allocated with name '_TestAndDisplay_PARM_2'
+;description   Allocated with name '_TestAndDisplay_description_10000_103'
 ;------------------------------------------------------------
 ;	../Common/CentralHeating.c:584: void TestAndDisplay(char *description, unsigned char output)
 ;	-----------------------------------------
@@ -2542,7 +2513,7 @@ _TestAndDisplay:
 	mov	r7,b
 	mov	r6,dph
 	mov	a,dpl
-	mov	dptr,#_TestAndDisplay_description_65536_103
+	mov	dptr,#_TestAndDisplay_description_10000_103
 	movx	@dptr,a
 	mov	a,r6
 	inc	dptr
@@ -2551,7 +2522,7 @@ _TestAndDisplay:
 	inc	dptr
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:586: PartialWriteToScreen(0, 16, description);
-	mov	dptr,#_TestAndDisplay_description_65536_103
+	mov	dptr,#_TestAndDisplay_description_10000_103
 	movx	a,@dptr
 	mov	r5,a
 	inc	dptr
@@ -2589,18 +2560,18 @@ _TestAndDisplay:
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dpl,r7
+	mov	dpl, r7
 	ret
 ;	../Common/CentralHeating.c:588: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'ProcessHeating'
 ;------------------------------------------------------------
-;inputs                    Allocated with name '_ProcessHeating_inputs_65536_105'
-;zones                     Allocated with name '_ProcessHeating_zones_65536_105'
-;pump                      Allocated with name '_ProcessHeating_pump_65536_105'
-;boiler                    Allocated with name '_ProcessHeating_boiler_65536_105'
-;output                    Allocated with name '_ProcessHeating_output_65536_105'
+;inputs        Allocated with name '_ProcessHeating_inputs_10000_105'
+;zones         Allocated with name '_ProcessHeating_zones_10000_105'
+;pump          Allocated with name '_ProcessHeating_pump_10000_105'
+;boiler        Allocated with name '_ProcessHeating_boiler_10000_105'
+;output        Allocated with name '_ProcessHeating_output_10000_105'
 ;------------------------------------------------------------
 ;	../Common/CentralHeating.c:594: void ProcessHeating()
 ;	-----------------------------------------
@@ -2608,90 +2579,90 @@ _TestAndDisplay:
 ;	-----------------------------------------
 _ProcessHeating:
 ;	../Common/CentralHeating.c:604: inputs = 0;
-	mov	dptr,#_ProcessHeating_inputs_65536_105
+	mov	dptr,#_ProcessHeating_inputs_10000_105
 	clr	a
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:605: pGetInputPortValues(&inputs);
-	lcall	00169$
-	sjmp	00170$
-00169$:
+	lcall	00191$
+	sjmp	00192$
+00191$:
 	mov	dptr,#_pGetInputPortValues
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dptr,#_ProcessHeating_inputs_65536_105
-	mov	b,#0x00
+	mov	dptr,#_ProcessHeating_inputs_10000_105
+	mov	b, #0x00
 	ret
-00170$:
+00192$:
 ;	../Common/CentralHeating.c:607: lastInputState = inputs;
-	mov	dptr,#_ProcessHeating_inputs_65536_105
+	mov	dptr,#_ProcessHeating_inputs_10000_105
 	movx	a,@dptr
 	mov	r7,a
 	mov	dptr,#_lastInputState
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:609: zones[0] = inputs & INPUT_ZONE1;
 	anl	ar7,#0x10
-	mov	dptr,#_ProcessHeating_zones_65536_105
+	mov	dptr,#_ProcessHeating_zones_10000_105
 	mov	a,r7
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:610: zones[1] = inputs & INPUT_ZONE2;
-	mov	dptr,#_ProcessHeating_inputs_65536_105
+	mov	dptr,#_ProcessHeating_inputs_10000_105
 	movx	a,@dptr
 	anl	a,#0x20
-	mov	dptr,#(_ProcessHeating_zones_65536_105 + 0x0001)
+	mov	dptr,#(_ProcessHeating_zones_10000_105 + 0x0001)
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:611: zones[2] = inputs & INPUT_ZONE3;
-	mov	dptr,#_ProcessHeating_inputs_65536_105
+	mov	dptr,#_ProcessHeating_inputs_10000_105
 	movx	a,@dptr
 	anl	a,#0x04
-	mov	dptr,#(_ProcessHeating_zones_65536_105 + 0x0002)
+	mov	dptr,#(_ProcessHeating_zones_10000_105 + 0x0002)
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:612: zones[3] = inputs & INPUT_ZONE4;
-	mov	dptr,#_ProcessHeating_inputs_65536_105
+	mov	dptr,#_ProcessHeating_inputs_10000_105
 	movx	a,@dptr
 	anl	a,#0x08
-	mov	dptr,#(_ProcessHeating_zones_65536_105 + 0x0003)
+	mov	dptr,#(_ProcessHeating_zones_10000_105 + 0x0003)
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:613: zones[4] = inputs & INPUT_ZONE5;
-	mov	dptr,#_ProcessHeating_inputs_65536_105
+	mov	dptr,#_ProcessHeating_inputs_10000_105
 	movx	a,@dptr
 	anl	a,#0x40
-	mov	r6,a
-	mov	dptr,#(_ProcessHeating_zones_65536_105 + 0x0004)
+	mov	dptr,#(_ProcessHeating_zones_10000_105 + 0x0004)
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:615: if (zones[0] || zones[1] || zones[2] || zones[3] || zones[4])
-	mov	a,r7
-	jnz	00106$
-	mov	dptr,#(_ProcessHeating_zones_65536_105 + 0x0001)
+	mov	dptr,#_ProcessHeating_zones_10000_105
 	movx	a,@dptr
 	jnz	00106$
-	mov	dptr,#(_ProcessHeating_zones_65536_105 + 0x0002)
+	mov	dptr,#(_ProcessHeating_zones_10000_105 + 0x0001)
 	movx	a,@dptr
 	jnz	00106$
-	mov	dptr,#(_ProcessHeating_zones_65536_105 + 0x0003)
+	mov	dptr,#(_ProcessHeating_zones_10000_105 + 0x0002)
 	movx	a,@dptr
 	jnz	00106$
-	mov	dptr,#(_ProcessHeating_zones_65536_105 + 0x0004)
+	mov	dptr,#(_ProcessHeating_zones_10000_105 + 0x0003)
+	movx	a,@dptr
+	jnz	00106$
+	mov	dptr,#(_ProcessHeating_zones_10000_105 + 0x0004)
 	movx	a,@dptr
 	jz	00107$
 00106$:
 ;	../Common/CentralHeating.c:617: pump = 1;
-	mov	dptr,#_ProcessHeating_pump_65536_105
+	mov	dptr,#_ProcessHeating_pump_10000_105
 	mov	a,#0x01
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:618: boiler = 1;
-	mov	dptr,#_ProcessHeating_boiler_65536_105
+	mov	dptr,#_ProcessHeating_boiler_10000_105
 	movx	@dptr,a
 	sjmp	00108$
 00107$:
 ;	../Common/CentralHeating.c:622: pump = 0;
-	mov	dptr,#_ProcessHeating_pump_65536_105
+	mov	dptr,#_ProcessHeating_pump_10000_105
 	clr	a
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:623: boiler = 0;
-	mov	dptr,#_ProcessHeating_boiler_65536_105
+	mov	dptr,#_ProcessHeating_boiler_10000_105
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:626: if (CompareDateTime(&currentDateTime, &provideHotwaterUntil) < 0 ||
 	mov	dptr,#_CompareDateTime_PARM_2
@@ -2704,19 +2675,17 @@ _ProcessHeating:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_currentDateTime
-	mov	b,#0x00
+	mov	b,a
 	lcall	_CompareDateTime
-	mov	r6,dpl
 	mov	a,dph
-	mov	r7,a
 	jb	acc.7,00101$
 ;	../Common/CentralHeating.c:627: currentDateTime.hours == 17 || currentDateTime.hours == 18 )
 	mov	dptr,#(_currentDateTime + 0x0002)
 	movx	a,@dptr
 	mov	r7,a
-	cjne	r7,#0x11,00177$
+	cjne	r7,#0x11,00199$
 	sjmp	00101$
-00177$:
+00199$:
 	cjne	r7,#0x12,00102$
 00101$:
 ;	../Common/CentralHeating.c:629: hotWaterNeeded = 1;
@@ -2724,7 +2693,7 @@ _ProcessHeating:
 	mov	a,#0x01
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:630: boiler = 1;
-	mov	dptr,#_ProcessHeating_boiler_65536_105
+	mov	dptr,#_ProcessHeating_boiler_10000_105
 	movx	@dptr,a
 	sjmp	00108$
 00102$:
@@ -2734,80 +2703,80 @@ _ProcessHeating:
 	movx	@dptr,a
 00108$:
 ;	../Common/CentralHeating.c:639: output = 0;
-	mov	dptr,#_ProcessHeating_output_65536_105
+	mov	dptr,#_ProcessHeating_output_10000_105
 	clr	a
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:640: if (boiler)
-	mov	dptr,#_ProcessHeating_boiler_65536_105
+	mov	dptr,#_ProcessHeating_boiler_10000_105
 	movx	a,@dptr
 	jz	00114$
 ;	../Common/CentralHeating.c:642: output |= OUTPUT_BOILER;
-	mov	dptr,#_ProcessHeating_output_65536_105
+	mov	dptr,#_ProcessHeating_output_10000_105
 	mov	a,#0x20
 	movx	@dptr,a
 00114$:
 ;	../Common/CentralHeating.c:644: if (pump)
-	mov	dptr,#_ProcessHeating_pump_65536_105
+	mov	dptr,#_ProcessHeating_pump_10000_105
 	movx	a,@dptr
 	jz	00116$
 ;	../Common/CentralHeating.c:646: output |= OUTPUT_PUMP;
-	mov	dptr,#_ProcessHeating_output_65536_105
+	mov	dptr,#_ProcessHeating_output_10000_105
 	movx	a,@dptr
 	orl	acc,#0x10
 	movx	@dptr,a
 00116$:
 ;	../Common/CentralHeating.c:649: if (zones[0])
-	mov	dptr,#_ProcessHeating_zones_65536_105
+	mov	dptr,#_ProcessHeating_zones_10000_105
 	movx	a,@dptr
 	jz	00118$
 ;	../Common/CentralHeating.c:651: output |= OUTPUT_ACTUATOR1;
-	mov	dptr,#_ProcessHeating_output_65536_105
+	mov	dptr,#_ProcessHeating_output_10000_105
 	movx	a,@dptr
 	orl	acc,#0x01
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:652: output |= OUTPUT_ACTUATOR2;
-	mov	dptr,#_ProcessHeating_output_65536_105
+	mov	dptr,#_ProcessHeating_output_10000_105
 	movx	a,@dptr
 	orl	acc,#0x02
 	movx	@dptr,a
 00118$:
 ;	../Common/CentralHeating.c:654: if (zones[1])
-	mov	dptr,#(_ProcessHeating_zones_65536_105 + 0x0001)
+	mov	dptr,#(_ProcessHeating_zones_10000_105 + 0x0001)
 	movx	a,@dptr
 	jz	00120$
 ;	../Common/CentralHeating.c:656: output |= OUTPUT_ACTUATOR3;
-	mov	dptr,#_ProcessHeating_output_65536_105
+	mov	dptr,#_ProcessHeating_output_10000_105
 	movx	a,@dptr
 	orl	acc,#0x04
 	movx	@dptr,a
 00120$:
 ;	../Common/CentralHeating.c:658: if (zones[2])
-	mov	dptr,#(_ProcessHeating_zones_65536_105 + 0x0002)
+	mov	dptr,#(_ProcessHeating_zones_10000_105 + 0x0002)
 	movx	a,@dptr
 	jz	00122$
 ;	../Common/CentralHeating.c:660: output |= OUTPUT_ACTUATOR4;
-	mov	dptr,#_ProcessHeating_output_65536_105
+	mov	dptr,#_ProcessHeating_output_10000_105
 	movx	a,@dptr
 	orl	acc,#0x08
 	movx	@dptr,a
 00122$:
 ;	../Common/CentralHeating.c:663: pSetOutputPortValues(output);
-	mov	dptr,#_ProcessHeating_output_65536_105
+	mov	dptr,#_ProcessHeating_output_10000_105
 	movx	a,@dptr
 	mov	r7,a
 	push	ar7
-	lcall	00185$
-	sjmp	00186$
-00185$:
+	lcall	00207$
+	sjmp	00208$
+00207$:
 	mov	dptr,#_pSetOutputPortValues
 	movx	a,@dptr
 	push	acc
 	inc	dptr
 	movx	a,@dptr
 	push	acc
-	mov	dpl,r7
+	mov	dpl, r7
 	ret
-00186$:
+00208$:
 	pop	ar7
 ;	../Common/CentralHeating.c:664: lastOutputState = output;
 	mov	dptr,#_lastOutputState
@@ -2818,11 +2787,11 @@ _ProcessHeating:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'AnimateScreen'
 ;------------------------------------------------------------
-;strBuffer                 Allocated with name '_AnimateScreen_strBuffer_65536_115'
-;numericValue              Allocated with name '_AnimateScreen_numericValue_65536_115'
-;zones                     Allocated with name '_AnimateScreen_zones_65536_115'
-;outputs                   Allocated with name '_AnimateScreen_outputs_65536_115'
-;index                     Allocated with name '_AnimateScreen_index_65536_115'
+;strBuffer     Allocated with name '_AnimateScreen_strBuffer_10000_115'
+;numericValue  Allocated with name '_AnimateScreen_numericValue_10000_115'
+;zones         Allocated with name '_AnimateScreen_zones_10000_115'
+;outputs       Allocated with name '_AnimateScreen_outputs_10000_115'
+;index         Allocated with name '_AnimateScreen_index_10000_115'
 ;------------------------------------------------------------
 ;	../Common/CentralHeating.c:668: void AnimateScreen()
 ;	-----------------------------------------
@@ -2833,38 +2802,38 @@ _AnimateScreen:
 	mov	dptr,#_animationType
 	movx	a,@dptr
 	mov	r7,a
-	jz	00195$
+	jz	00223$
 	ljmp	00127$
-00195$:
+00223$:
 ;	../Common/CentralHeating.c:678: zones[0] = lastInputState & INPUT_ZONE1;
 	mov	dptr,#_lastInputState
 	movx	a,@dptr
 	anl	a,#0x10
-	mov	dptr,#_AnimateScreen_zones_65536_115
+	mov	dptr,#_AnimateScreen_zones_10000_115
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:679: zones[1] = lastInputState & INPUT_ZONE2;
 	mov	dptr,#_lastInputState
 	movx	a,@dptr
 	anl	a,#0x20
-	mov	dptr,#(_AnimateScreen_zones_65536_115 + 0x0001)
+	mov	dptr,#(_AnimateScreen_zones_10000_115 + 0x0001)
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:680: zones[2] = lastInputState & INPUT_ZONE3;
 	mov	dptr,#_lastInputState
 	movx	a,@dptr
 	anl	a,#0x04
-	mov	dptr,#(_AnimateScreen_zones_65536_115 + 0x0002)
+	mov	dptr,#(_AnimateScreen_zones_10000_115 + 0x0002)
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:681: zones[3] = lastInputState & INPUT_ZONE4;
 	mov	dptr,#_lastInputState
 	movx	a,@dptr
 	anl	a,#0x08
-	mov	dptr,#(_AnimateScreen_zones_65536_115 + 0x0003)
+	mov	dptr,#(_AnimateScreen_zones_10000_115 + 0x0003)
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:682: zones[4] = lastInputState & INPUT_ZONE5;
 	mov	dptr,#_lastInputState
 	movx	a,@dptr
 	anl	a,#0x40
-	mov	dptr,#(_AnimateScreen_zones_65536_115 + 0x0004)
+	mov	dptr,#(_AnimateScreen_zones_10000_115 + 0x0004)
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:685: strcpy(strBuffer, "Zone ");
 	mov	dptr,#_strcpy_PARM_2
@@ -2876,18 +2845,18 @@ _AnimateScreen:
 	mov	a,#0x80
 	inc	dptr
 	movx	@dptr,a
-	mov	dptr,#_AnimateScreen_strBuffer_65536_115
-	mov	b,#0x00
+	mov	dptr,#_AnimateScreen_strBuffer_10000_115
+	mov	b, #0x00
 	lcall	_strcpy
 ;	../Common/CentralHeating.c:686: for (index = 0; index < 5; ++index)
 	mov	r6,#0x00
 00131$:
 ;	../Common/CentralHeating.c:688: if (zones[index])
 	mov	a,r6
-	add	a,#_AnimateScreen_zones_65536_115
+	add	a, #_AnimateScreen_zones_10000_115
 	mov	r4,a
 	clr	a
-	addc	a,#(_AnimateScreen_zones_65536_115 >> 8)
+	addc	a, #(_AnimateScreen_zones_10000_115 >> 8)
 	mov	r5,a
 	mov	dpl,r4
 	mov	dph,r5
@@ -2896,25 +2865,25 @@ _AnimateScreen:
 ;	../Common/CentralHeating.c:690: numericValue[0] = '1' + index;
 	mov	ar5,r6
 	mov	a,#0x31
-	add	a,r5
-	mov	dptr,#_AnimateScreen_numericValue_65536_115
+	add	a, r5
+	mov	dptr,#_AnimateScreen_numericValue_10000_115
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:691: numericValue[1] = 0;
-	mov	dptr,#(_AnimateScreen_numericValue_65536_115 + 0x0001)
+	mov	dptr,#(_AnimateScreen_numericValue_10000_115 + 0x0001)
 	clr	a
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:692: strcat(strBuffer, numericValue);
 	mov	dptr,#_strcat_PARM_2
-	mov	a,#_AnimateScreen_numericValue_65536_115
+	mov	a,#_AnimateScreen_numericValue_10000_115
 	movx	@dptr,a
-	mov	a,#(_AnimateScreen_numericValue_65536_115 >> 8)
+	mov	a,#(_AnimateScreen_numericValue_10000_115 >> 8)
 	inc	dptr
 	movx	@dptr,a
 	clr	a
 	inc	dptr
 	movx	@dptr,a
-	mov	dptr,#_AnimateScreen_strBuffer_65536_115
-	mov	b,#0x00
+	mov	dptr,#_AnimateScreen_strBuffer_10000_115
+	mov	b,a
 	push	ar6
 	lcall	_strcat
 	pop	ar6
@@ -2930,48 +2899,48 @@ _AnimateScreen:
 	mov	a,#0x80
 	inc	dptr
 	movx	@dptr,a
-	mov	dptr,#_AnimateScreen_strBuffer_65536_115
-	mov	b,#0x00
+	mov	dptr,#_AnimateScreen_strBuffer_10000_115
+	mov	b, #0x00
 	push	ar6
 	lcall	_strcat
 	pop	ar6
 00132$:
 ;	../Common/CentralHeating.c:686: for (index = 0; index < 5; ++index)
 	inc	r6
-	cjne	r6,#0x05,00197$
-00197$:
+	cjne	r6,#0x05,00225$
+00225$:
 	jc	00131$
 	ljmp	00128$
 00127$:
 ;	../Common/CentralHeating.c:700: else if (animationType == ANIMATE_OUTPUTS)
-	cjne	r7,#0x01,00199$
-	sjmp	00200$
-00199$:
+	cjne	r7,#0x01,00227$
+	sjmp	00228$
+00227$:
 	ljmp	00124$
-00200$:
+00228$:
 ;	../Common/CentralHeating.c:702: outputs[0] = lastOutputState & OUTPUT_ACTUATOR1;
 	mov	dptr,#_lastOutputState
 	movx	a,@dptr
 	anl	a,#0x01
-	mov	dptr,#_AnimateScreen_outputs_65536_115
+	mov	dptr,#_AnimateScreen_outputs_10000_115
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:703: outputs[1] = lastOutputState & OUTPUT_ACTUATOR2;
 	mov	dptr,#_lastOutputState
 	movx	a,@dptr
 	anl	a,#0x02
-	mov	dptr,#(_AnimateScreen_outputs_65536_115 + 0x0001)
+	mov	dptr,#(_AnimateScreen_outputs_10000_115 + 0x0001)
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:704: outputs[2] = lastOutputState & OUTPUT_ACTUATOR3;
 	mov	dptr,#_lastOutputState
 	movx	a,@dptr
 	anl	a,#0x04
-	mov	dptr,#(_AnimateScreen_outputs_65536_115 + 0x0002)
+	mov	dptr,#(_AnimateScreen_outputs_10000_115 + 0x0002)
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:705: outputs[3] = lastOutputState & OUTPUT_ACTUATOR4;
 	mov	dptr,#_lastOutputState
 	movx	a,@dptr
 	anl	a,#0x08
-	mov	dptr,#(_AnimateScreen_outputs_65536_115 + 0x0003)
+	mov	dptr,#(_AnimateScreen_outputs_10000_115 + 0x0003)
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:707: strcpy(strBuffer, "Out ");
 	mov	dptr,#_strcpy_PARM_2
@@ -2983,18 +2952,18 @@ _AnimateScreen:
 	mov	a,#0x80
 	inc	dptr
 	movx	@dptr,a
-	mov	dptr,#_AnimateScreen_strBuffer_65536_115
-	mov	b,#0x00
+	mov	dptr,#_AnimateScreen_strBuffer_10000_115
+	mov	b, #0x00
 	lcall	_strcpy
 ;	../Common/CentralHeating.c:708: for (index = 0; index < 4; ++index)
 	mov	r6,#0x00
 00133$:
 ;	../Common/CentralHeating.c:710: if (outputs[index])
 	mov	a,r6
-	add	a,#_AnimateScreen_outputs_65536_115
+	add	a, #_AnimateScreen_outputs_10000_115
 	mov	r4,a
 	clr	a
-	addc	a,#(_AnimateScreen_outputs_65536_115 >> 8)
+	addc	a, #(_AnimateScreen_outputs_10000_115 >> 8)
 	mov	r5,a
 	mov	dpl,r4
 	mov	dph,r5
@@ -3003,25 +2972,25 @@ _AnimateScreen:
 ;	../Common/CentralHeating.c:712: numericValue[0] = '1' + index;
 	mov	ar5,r6
 	mov	a,#0x31
-	add	a,r5
-	mov	dptr,#_AnimateScreen_numericValue_65536_115
+	add	a, r5
+	mov	dptr,#_AnimateScreen_numericValue_10000_115
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:713: numericValue[1] = 0;
-	mov	dptr,#(_AnimateScreen_numericValue_65536_115 + 0x0001)
+	mov	dptr,#(_AnimateScreen_numericValue_10000_115 + 0x0001)
 	clr	a
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:714: strcat(strBuffer, numericValue);
 	mov	dptr,#_strcat_PARM_2
-	mov	a,#_AnimateScreen_numericValue_65536_115
+	mov	a,#_AnimateScreen_numericValue_10000_115
 	movx	@dptr,a
-	mov	a,#(_AnimateScreen_numericValue_65536_115 >> 8)
+	mov	a,#(_AnimateScreen_numericValue_10000_115 >> 8)
 	inc	dptr
 	movx	@dptr,a
 	clr	a
 	inc	dptr
 	movx	@dptr,a
-	mov	dptr,#_AnimateScreen_strBuffer_65536_115
-	mov	b,#0x00
+	mov	dptr,#_AnimateScreen_strBuffer_10000_115
+	mov	b,a
 	push	ar6
 	lcall	_strcat
 	pop	ar6
@@ -3037,16 +3006,16 @@ _AnimateScreen:
 	mov	a,#0x80
 	inc	dptr
 	movx	@dptr,a
-	mov	dptr,#_AnimateScreen_strBuffer_65536_115
-	mov	b,#0x00
+	mov	dptr,#_AnimateScreen_strBuffer_10000_115
+	mov	b, #0x00
 	push	ar6
 	lcall	_strcat
 	pop	ar6
 00134$:
 ;	../Common/CentralHeating.c:708: for (index = 0; index < 4; ++index)
 	inc	r6
-	cjne	r6,#0x04,00202$
-00202$:
+	cjne	r6,#0x04,00230$
+00230$:
 	jc	00133$
 ;	../Common/CentralHeating.c:722: if (lastOutputState & OUTPUT_PUMP)
 	mov	dptr,#_lastOutputState
@@ -3062,8 +3031,8 @@ _AnimateScreen:
 	mov	a,#0x80
 	inc	dptr
 	movx	@dptr,a
-	mov	dptr,#_AnimateScreen_strBuffer_65536_115
-	mov	b,#0x00
+	mov	dptr,#_AnimateScreen_strBuffer_10000_115
+	mov	b, #0x00
 	lcall	_strcat
 	sjmp	00111$
 00110$:
@@ -3077,8 +3046,8 @@ _AnimateScreen:
 	mov	a,#0x80
 	inc	dptr
 	movx	@dptr,a
-	mov	dptr,#_AnimateScreen_strBuffer_65536_115
-	mov	b,#0x00
+	mov	dptr,#_AnimateScreen_strBuffer_10000_115
+	mov	b, #0x00
 	lcall	_strcat
 00111$:
 ;	../Common/CentralHeating.c:731: if (lastOutputState & OUTPUT_BOILER)
@@ -3095,8 +3064,8 @@ _AnimateScreen:
 	mov	a,#0x80
 	inc	dptr
 	movx	@dptr,a
-	mov	dptr,#_AnimateScreen_strBuffer_65536_115
-	mov	b,#0x00
+	mov	dptr,#_AnimateScreen_strBuffer_10000_115
+	mov	b, #0x00
 	lcall	_strcat
 	ljmp	00128$
 00113$:
@@ -3110,10 +3079,10 @@ _AnimateScreen:
 	mov	a,#0x80
 	inc	dptr
 	movx	@dptr,a
-	mov	dptr,#_AnimateScreen_strBuffer_65536_115
-	mov	b,#0x00
+	mov	dptr,#_AnimateScreen_strBuffer_10000_115
+	mov	b, #0x00
 	lcall	_strcat
-	ljmp	00128$
+	sjmp	00128$
 00124$:
 ;	../Common/CentralHeating.c:740: else if (animationType == ANIMATE_HW)
 	cjne	r7,#0x02,00121$
@@ -3127,8 +3096,8 @@ _AnimateScreen:
 	mov	a,#0x80
 	inc	dptr
 	movx	@dptr,a
-	mov	dptr,#_AnimateScreen_strBuffer_65536_115
-	mov	b,#0x00
+	mov	dptr,#_AnimateScreen_strBuffer_10000_115
+	mov	b, #0x00
 	lcall	_strcpy
 ;	../Common/CentralHeating.c:743: if (hotWaterNeeded)
 	mov	dptr,#_hotWaterNeeded
@@ -3144,8 +3113,8 @@ _AnimateScreen:
 	mov	a,#0x80
 	inc	dptr
 	movx	@dptr,a
-	mov	dptr,#_AnimateScreen_strBuffer_65536_115
-	mov	b,#0x00
+	mov	dptr,#_AnimateScreen_strBuffer_10000_115
+	mov	b, #0x00
 	lcall	_strcat
 	sjmp	00128$
 00116$:
@@ -3159,8 +3128,8 @@ _AnimateScreen:
 	mov	a,#0x80
 	inc	dptr
 	movx	@dptr,a
-	mov	dptr,#_AnimateScreen_strBuffer_65536_115
-	mov	b,#0x00
+	mov	dptr,#_AnimateScreen_strBuffer_10000_115
+	mov	b, #0x00
 	lcall	_strcat
 	sjmp	00128$
 00121$:
@@ -3176,8 +3145,8 @@ _AnimateScreen:
 	mov	a,#0x80
 	inc	dptr
 	movx	@dptr,a
-	mov	dptr,#_AnimateScreen_strBuffer_65536_115
-	mov	b,#0x00
+	mov	dptr,#_AnimateScreen_strBuffer_10000_115
+	mov	b, #0x00
 	lcall	_strcpy
 00128$:
 ;	../Common/CentralHeating.c:757: PartialWriteToScreen(0, 10, strBuffer);
@@ -3188,9 +3157,9 @@ _AnimateScreen:
 	inc	dptr
 	movx	@dptr,a
 	mov	dptr,#_PartialWriteToScreen_PARM_3
-	mov	a,#_AnimateScreen_strBuffer_65536_115
+	mov	a,#_AnimateScreen_strBuffer_10000_115
 	movx	@dptr,a
-	mov	a,#(_AnimateScreen_strBuffer_65536_115 >> 8)
+	mov	a,#(_AnimateScreen_strBuffer_10000_115 >> 8)
 	inc	dptr
 	movx	@dptr,a
 	clr	a
@@ -3201,7 +3170,7 @@ _AnimateScreen:
 ;	../Common/CentralHeating.c:758: animationType++;
 	mov	dptr,#_animationType
 	movx	a,@dptr
-	add	a,#0x01
+	add	a, #0x01
 	movx	@dptr,a
 ;	../Common/CentralHeating.c:759: if (animationType > ANIMATE_VERSION)
 	movx	a,@dptr
