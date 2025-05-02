@@ -4,5 +4,17 @@
 
 /.vs
 /**/.vs/*
-/x86Emulated/Debug
+/**/Debug
 /CentralHeatingCore
+/**/*.lst
+/**/*.rel
+/**/*.rst
+/**/*.sym
+/**/*.asm
+/**/*.hex
+/**/*.tlog
+/**/*.ihx
+/**/*.lk
+/**/*.map
+/**/*.user
+/**/DefaultOutput
