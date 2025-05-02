@@ -1,2 +1,0 @@
-C:\Users\huseyin\Google Drive\source\c\x86Emulated\Debug\x86Emulated.dll
-C:\Users\huseyin\Google Drive\source\c\x86Emulated\Debug\x86Emulated.pdb

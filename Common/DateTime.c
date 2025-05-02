@@ -101,15 +101,15 @@ void AddSecondsToDateTime(DateTimeStruct* pdt, int seconds, DateTimeStruct* resu
         secondsLeft -= secondsAdded;
 
         // look for overflows
-        if (result->seconds == 60)
+        if (result->seconds >= 60)
         {
             result->seconds = 0;
             result->minutes++;
-            if (result->minutes == 60)
+            if (result->minutes >= 60)
             {
                 result->minutes = 0;
                 result->hours++;
-                if (result->hours == 24)
+                if (result->hours >= 24)
                 {
                     result->hours = 0;
                     result->day++;
@@ -118,7 +118,7 @@ void AddSecondsToDateTime(DateTimeStruct* pdt, int seconds, DateTimeStruct* resu
                     {
                         result->day = 1;
                         result->month++;
-                        if (result->month == 12)
+                        if (result->month >= 12)
                         {
                             result->month = 1;
                             result->year++;

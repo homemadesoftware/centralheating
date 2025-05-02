@@ -5,7 +5,7 @@
 #include "../Common/CentralHeatingMenus.h"
 #include "../Common/StringUtils.h"
 
-#define COMPILED_AT "20200718"
+#define COMPILED_AT "20250502"
 
 
 #define SCREEN_BUFFER_SIZE  32
@@ -40,7 +40,7 @@
 #define OUTPUT_ACTUATOR2   (0x02)
 #define OUTPUT_ACTUATOR3   (0x04)
 #define OUTPUT_ACTUATOR4   (0x08)
-#define OUTPUT_PUMP        (0x10)
+#define OUTPUT_HWACTUATOR  (0x10)
 #define OUTPUT_BOILER      (0x20)
 
 #define ANIMATE_INPUTS      (0)
@@ -501,13 +501,6 @@ void HandleMenuCommand(int menuItem, int eventType)
             }
             break;
 
-        case MENUID_TEST_PUMP :
-            if (eventType == MENU_COMMAND)
-            {
-                TestAndDisplay("Pump", OUTPUT_PUMP);
-            }
-            break;
-
         case MENUID_TEST_ZONE1 :
             if (eventType == MENU_COMMAND)
             {
@@ -536,7 +529,13 @@ void HandleMenuCommand(int menuItem, int eventType)
             }
             break;
 
-        
+        case MENUID_TEST_HW:
+            if (eventType == MENU_COMMAND)
+            {
+                TestAndDisplay("HW Act", OUTPUT_HWACTUATOR);
+            }
+            break;
+
         case MENUID_TEST_RESET :
             if (eventType == MENU_COMMAND)
             {
@@ -595,7 +594,6 @@ void ProcessHeating()
 {
     unsigned char inputs;
     unsigned char zones[5];
-    unsigned char pump;
     unsigned char boiler;
     unsigned char output;
 
@@ -614,12 +612,10 @@ void ProcessHeating()
 
     if (zones[0] || zones[1] || zones[2] || zones[3] || zones[4])
     {
-        pump = 1;
         boiler = 1;
     }
     else
     {
-        pump = 0;
         boiler = 0;
 
         // If the boiler is NOT on, check if we need hot water!
@@ -641,9 +637,9 @@ void ProcessHeating()
     {
         output |= OUTPUT_BOILER;
     }
-    if (pump)
+    if (hotWaterNeeded)
     {
-        output |= OUTPUT_PUMP;
+        output |= OUTPUT_HWACTUATOR;
     }
 
 	if (zones[0])
@@ -719,9 +715,9 @@ void AnimateScreen()
             }
         }
 
-        if (lastOutputState & OUTPUT_PUMP)
+        if (lastOutputState & OUTPUT_HWACTUATOR)
         {
-            strcat(strBuffer, "P");
+            strcat(strBuffer, "H");
         }
         else
         {
