@@ -36,7 +36,7 @@ void UnsignedCharToString(unsigned char *p, unsigned char v)
 }
 
 
-void strcat(char *p, char *s)
+void strcat(unsigned char *p, unsigned char *s)
 {
     while (*p)
     {
@@ -51,7 +51,7 @@ void strcat(char *p, char *s)
     *p = 0;
 }
 
-void strcpy(char *p, char *s)
+void strcpy(unsigned char *p, unsigned char *s)
 {
     *p = 0;
     while (*s)

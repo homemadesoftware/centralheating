@@ -60,6 +60,7 @@ unsigned char animationType;
 unsigned char hotWaterNeeded;
 DateTimeStruct currentDateTime;
 DateTimeStruct provideHotwaterUntil;
+int postBoilerSwitchOffCountdown;
 
 
 // Helpers
@@ -631,13 +632,28 @@ void ProcessHeating()
         }
     }
 
+
+    unsigned char extendPumpDischarge = 0;
+    if (boiler)
+    {
+        postBoilerSwitchOffCountdown = 180;
+    }
+    else 
+    {
+        if (postBoilerSwitchOffCountdown > 0)
+        {
+            postBoilerSwitchOffCountdown--;
+            extendPumpDischarge = 1;
+        }
+    }
+    
 	
     output = 0;
     if (boiler)
     {
         output |= OUTPUT_BOILER;
     }
-    if (hotWaterNeeded)
+    if (hotWaterNeeded || extendPumpDischarge)
     {
         output |= OUTPUT_HWACTUATOR;
     }
