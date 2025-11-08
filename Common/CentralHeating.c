@@ -47,6 +47,12 @@
 #define ANIMATE_OUTPUTS     (1)
 #define ANIMATE_HW          (2)
 #define ANIMATE_VERSION     (3)
+
+
+// The boiler stops the pump 5 minutes after the boiler stops. 
+// We need an open valve (HOT WATER) to prevent overheat - 5 minutes and 10 seconds
+#define POST_SWITCH_OFF_PUMP_OVERRUN ((5 * 60) + 10) 
+
     
 
 // Globals
@@ -60,7 +66,7 @@ unsigned char animationType;
 unsigned char hotWaterNeeded;
 DateTimeStruct currentDateTime;
 DateTimeStruct provideHotwaterUntil;
-int postBoilerSwitchOffCountdown;
+DateTimeStruct pumpRunOffUntil;
 
 
 // Helpers
@@ -618,41 +624,44 @@ void ProcessHeating()
     else
     {
         boiler = 0;
-
-        // If the boiler is NOT on, check if we need hot water!
-        if (CompareDateTime(&currentDateTime, &provideHotwaterUntil) < 0 ||
-            currentDateTime.hours == 17 || currentDateTime.hours == 18 )
-        {
-            hotWaterNeeded = 1;
-            boiler = 1;
-        }
-        else
-        {
-            hotWaterNeeded = 0;
-        }
     }
 
+    // check if we need hot water!
+    if (CompareDateTime(&currentDateTime, &provideHotwaterUntil) < 0 ||
+        currentDateTime.hours == 18 || 
+        currentDateTime.hours == 06)
+    {
+        hotWaterNeeded = 1;
+        boiler = 1;
+    }
+    else
+    {
+        hotWaterNeeded = 0;
+    }
 
-    unsigned char extendPumpDischarge = 0;
     if (boiler)
     {
-        postBoilerSwitchOffCountdown = 180;
-    }
-    else 
-    {
-        if (postBoilerSwitchOffCountdown > 0)
-        {
-            postBoilerSwitchOffCountdown--;
-            extendPumpDischarge = 1;
-        }
+        AddSecondsToDateTime(&currentDateTime, POST_SWITCH_OFF_PUMP_OVERRUN, &pumpRunOffUntil);
     }
     
-	
+
     output = 0;
     if (boiler)
     {
         output |= OUTPUT_BOILER;
     }
+
+    
+    unsigned char extendPumpDischarge = 0;
+    if (!boiler)
+    {
+        if (CompareDateTime(&pumpRunOffUntil, &currentDateTime) > 0)
+        {
+            extendPumpDischarge = 1;
+        }
+    }
+    
+
     if (hotWaterNeeded || extendPumpDischarge)
     {
         output |= OUTPUT_HWACTUATOR;
