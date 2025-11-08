@@ -1,6 +1,6 @@
 #include "HardwareAbstraction.h"
 #include "LcdDisplay.h"
-#include "Rtc1307.h"
+#include "RTC1307.h"
 #include "89C51Board.h"
 #include "StringUtils.h"
 

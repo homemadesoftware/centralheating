@@ -5,7 +5,7 @@
 
 #ifdef MC8051
 
-#include <mcs51\at89c51ed2.h>
+#include <mcs51/at89c51ed2.h>
 #define STDCALL 
 #define EXPORTEDFUNCTION 
 #define REENTRANT __reentrant 
