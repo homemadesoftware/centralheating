@@ -38,11 +38,12 @@ target_link_libraries(
     # Pico libs
     pico_stdlib
     pico_stdio
+    pico_multicore
     pico_cyw43_arch_none
     hardware_spi
     
     # ePaper libs (order here matters)
-    examples
+    #examples
     Config
     Fonts
     GUI
@@ -54,7 +55,7 @@ target_include_directories(my_project PRIVATE
     ${waveshare_epaper_SOURCE_DIR}/c/lib/e-Paper
     ${waveshare_epaper_SOURCE_DIR}/c/lib/GUI
     ${waveshare_epaper_SOURCE_DIR}/c/lib/Fonts
-    ${waveshare_epaper_SOURCE_DIR}/c/examples
+    #${waveshare_epaper_SOURCE_DIR}/c/examples
 )
 
 pico_enable_stdio_usb(my_project 1)
