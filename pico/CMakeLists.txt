@@ -1,24 +1,34 @@
 cmake_minimum_required(VERSION 3.13...3.27)
+include(FetchContent)
+
+#
+# 1. Fetch, setup and initialise Pico SDK
+#
+set(PICO_SDK_FETCH_FROM_GIT on)
+set(PICO_SDK_FETCH_FROM_GIT_TAG 2.2.0)
+set(PICO_BOARD pico_w)
+unset(PICO_SDK_PATH)
 include(pico_sdk_import.cmake)
 project(my_project)
 pico_sdk_init()
 
-# epaper
-# This bit downloads the git repo for the e-paper library
-# Doing it here means we don't have to build it into any docker images
-include(FetchContent)
+#
+# 2. Fetch and setup e-paper library
+#
 
 FetchContent_Declare(
     waveshare_epaper
     GIT_REPOSITORY https://github.com/waveshare/Pico_ePaper_Code.git
-    GIT_TAG main
+    GIT_TAG c9bcd84db5adf5f085353649a8a5c31492bc5fb8
 )
 
 FetchContent_MakeAvailable(waveshare_epaper)
 
 add_subdirectory(${waveshare_epaper_SOURCE_DIR}/c)
 
-# rest of your project
+#
+# 3. Main project decleration
+#
 
 add_executable(my_project main.c)
 
