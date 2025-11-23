@@ -1,22 +1,13 @@
-Write-Host "Building compiler-image..." -ForegroundColor Cyan
-docker build . -f Dockerfile -t compiler-image
-
-Write-Host "Removing old container if it exists..." -ForegroundColor Cyan
-docker rm -f compiler 2>$null
-
-# Path to the UF2 file
-$uf2 = Join-Path $PWD "build\my_project.uf2"
+# Path to the UF2 file we are trying to build
+$uf2 = Join-Path $PWD "build-outputs\my_project.uf2"
 if (Test-Path $uf2) {
     Write-Host "Removing old UF2..." -ForegroundColor Yellow
     Remove-Item $uf2
 }
 
-Write-Host "Running build inside Docker..." -ForegroundColor Cyan
-docker run `
-    --name compiler `
-    -v ${PWD}:/usr/src/project `
-    compiler-image `
-    bash -c "make -C build -j10"
+# Run the container once again. It is already attached to our source and is warm
+docker start -a pico-compiler
+    
 
 if (Test-Path $uf2)
 {

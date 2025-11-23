@@ -1,1 +1,1 @@
-docker build . -f DockerfileBase -t mybase
+docker build . -f BaseDockerfile -t pico-compiler-base
