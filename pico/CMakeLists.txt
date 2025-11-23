@@ -19,7 +19,20 @@ add_subdirectory(${waveshare_epaper}/c waveshare_build)
 # 3. Main project decleration
 #
 
-add_executable(my_project main.c)
+add_executable(my_project 
+    #main.c
+    PicoEntryPoint.c
+    Display.c
+    Rtc.c
+
+    ../Common/MenuMgr.c
+    ../Common/CentralHeating.c
+    ../Common/CentralHeatingMenus.c
+    ../Common/StringUtils.c
+    ../Common/DateTime.c
+)
+
+
 
 target_link_libraries(
     my_project
@@ -46,6 +59,11 @@ target_include_directories(my_project PRIVATE
     ${waveshare_epaper}/c/lib/Fonts
     #${waveshare_epaper}/c/examples
 )
+
+target_include_directories(my_project PRIVATE
+    ./../Common
+)
+
 
 pico_enable_stdio_usb(my_project 1)
 pico_enable_stdio_uart(my_project 0)

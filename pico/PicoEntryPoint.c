@@ -13,11 +13,10 @@ void check_reboot_button();
 
 #include "HardwareAbstraction.h"
 #include "StringUtils.h"
-
-// Screen assumptions
-#define SCREEN_BUFFER_SIZE  32
-
-void DirectWriteToDisplay(unsigned char* contents);
+#include "Display.h"
+#include "Rtc.h"
+ 
+// User program is provided at link time
 void UserProgram();
 
 // Globals declared here
@@ -31,92 +30,161 @@ GetInputPortValuesDelegate  pGetInputPortValues;
 SetOutputPortValuesDelegate pSetOutputPortValues;
 CrashDumpDelegate           pCrashDump;
 
+// Forwward declare various APIs available from this board
+void Hardware_InitialiseHardware();
+void Hardware_RegisterForTimer(int cookie, int milliSeconds, CallbackDelegate callback);
+void Hardware_EnableTimer(int cookie, int enabled);
+void Hardware_WriteDisplayBuffer(unsigned char*);
+void Hardware_SetRtc(DateTimeStruct* pdts);
+void Hardware_GetRtc(DateTimeStruct* pdts);
+void Hardware_GetKeyState(int* keys);
+void Hardware_GetInputPortValues(unsigned char* pValue);
+void Hardware_SetOutputPortValues(unsigned char value);
+void Hardware_CrashDump(unsigned char* message);
+void Hardware_ScheduleUserCalls();
+
 
 int main()
 {
     stdio_init_all();
+    
+    DEV_Module_Init();
 
-    // Separate RTOS-style non-blocking reboot thread
-    multicore_launch_core1(check_reboot_button);
-
-    DEV_Delay_ms(500);
-
-    printf("EPD_2in13_V3_test Demo\r\n");
-    if (DEV_Module_Init() != 0) {
-        return -1;
-    }
-
-    printf("e-Paper Init and Clear...\r\n");
-    EPD_2in13_V3_Init();
-    EPD_2in13_V3_Clear();
-
-    DirectWriteToDisplay("Hello World of warcraft");
-
-    return 0;
+    PicoCH_InitialiseDisplay();
 
     // Initialise the hardware calls
-    pRegisterForTimer = Hardware_CrashDump;
-    pEnableTimer = Hardware_CrashDump;
-    pGetRtc = Hardware_CrashDump;
-    pSetRtc = Hardware_CrashDump;
-    pWriteDisplayBuffer = Hardware_CrashDump;
-    pGetKeyState = Hardware_CrashDump;
-    pGetInputPortValues = Hardware_CrashDump;
-    pSetOutputPortValues = Hardware_CrashDump;
+    pRegisterForTimer = Hardware_RegisterForTimer;
+    pEnableTimer =Hardware_EnableTimer;
+    pGetRtc = Hardware_GetRtc;
+    pSetRtc = Hardware_SetRtc;
+    pWriteDisplayBuffer = Hardware_WriteDisplayBuffer;
+    pGetKeyState = Hardware_GetKeyState;
+    pGetInputPortValues = Hardware_GetInputPortValues;
+    pSetOutputPortValues = Hardware_SetOutputPortValues;
     pCrashDump = Hardware_CrashDump;
-
 
     UserProgram();
 
+    Hardware_ScheduleUserCalls();
+
     return 0;
 
-}
-
-
-
-void check_reboot_button()
-{
-    const uint BUTTON_PIN = 14;
-
-    gpio_init(BUTTON_PIN);
-    gpio_set_dir(BUTTON_PIN, GPIO_IN);
-    gpio_pull_up(BUTTON_PIN);
-
-    while (true)
-    {
-        if (gpio_get(BUTTON_PIN) == 0)
-        {
-            sleep_ms(50); // debounce
-
-            if (gpio_get(BUTTON_PIN) == 0)
-            {
-                reset_usb_boot(0, 0);  // jumps to BOOTSEL
-            }
-        }
-
-        sleep_ms(10);
-    }
 }
 
 void Hardware_CrashDump(unsigned char* message) REENTRANT
 {
-    unsigned char buffer[SCREEN_BUFFER_SIZE + 1];
+    PicoCH_DirectWriteToDisplay(message);
+    while (1);
+}
+
+void Hardware_GetInputPortValues(unsigned char* pValue) REENTRANT
+{
+    *pValue = 0;
+}
+
+void Hardware_SetOutputPortValues(unsigned char value) REENTRANT
+{
+    
+}
+
+void Hardware_SetRtc(DateTimeStruct* dts) REENTRANT
+{
+    Rtc_WriteClock(dts);
+}
+
+void Hardware_GetRtc(DateTimeStruct* dts) REENTRANT
+{
+    Rtc_ReadClock(dts);
+}
+
+void Hardware_GetKeyState(int* keys)
+{
+    unsigned char rowCount, colCount, portValue;
+
+    *keys = 0;
+}
+
+// Our timers
+typedef struct tagTimerSetup
+{
+    int cookie;
+    int periodMilliseconds;
+    int ticksSoFar;
+    unsigned char enabled;
+    CallbackDelegate callback;
+} TimerSetup;
+
+// An array of timers
+#define MAX_TIMERS	10
+TimerSetup timers[MAX_TIMERS];
+
+
+void Hardware_RegisterForTimer(int cookie, int milliSeconds, CallbackDelegate callback) REENTRANT
+{
     int i;
-    for (i = 0; i < SCREEN_BUFFER_SIZE; ++i)
+
+    for (i = 0; i < MAX_TIMERS; ++i)
     {
-        if (*message != 0)
+        if (timers[i].cookie == 0 || timers[i].cookie == cookie)
         {
-            buffer[i] = *message;
-            ++message;
+            timers[i].cookie = cookie;
+            timers[i].periodMilliseconds = milliSeconds;
+            timers[i].ticksSoFar = 0;
+            timers[i].enabled = 1;
+            timers[i].callback = callback;
+            return;
         }
-        else
+    }
+
+    pCrashDump("OutOfTimers");
+
+}
+
+
+void Hardware_EnableTimer(int cookie, int enabled) REENTRANT
+{
+    int i;
+    for (i = 0; i < MAX_TIMERS; ++i)
+    {
+        if (timers[i].cookie == 0 || timers[i].cookie == cookie)
         {
-            buffer[i] = ' ';
+            timers[i].enabled = enabled;
+            return;
+        }
+    }
+}
+
+void Hardware_ScheduleUserCalls()
+{
+    while (1)
+    {
+        int timerCounter;
+        long c;
+
+        for (timerCounter = 0; timerCounter < MAX_TIMERS; ++timerCounter)
+        {
+            TimerSetup* pTimer = timers + timerCounter;
+            if (pTimer->cookie != 0 && pTimer->periodMilliseconds <= pTimer->ticksSoFar && pTimer->enabled)
+            {
+                // Fire this
+                pTimer->ticksSoFar = 0;
+                pTimer->callback(pTimer->cookie);
+            }
+            else
+            {
+                pTimer->ticksSoFar++;
+            }
+
+        }
+
+        for (c = 0; c < 100; ++c)
+        {
         }
 
     }
+}
 
-    DirectWriteToDisplay(buffer);
-    while (1);
-
+void Hardware_WriteDisplayBuffer(unsigned char* buffer) REENTRANT
+{
+    PicoCH_DirectWriteToDisplay(buffer);
 }

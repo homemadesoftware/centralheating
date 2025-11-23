@@ -7,7 +7,9 @@ if (Test-Path $uf2) {
 
 # Run the container once again. It is already attached to our source and is warm
 docker start -a pico-compiler
-    
+$rc = $LASTEXITCODE
+Write-Host "Exit code was: $rc"
+
 
 if (Test-Path $uf2)
 {

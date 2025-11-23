@@ -35,6 +35,7 @@ void UnsignedCharToString(unsigned char *p, unsigned char v)
     *p = 0;
 }
 
+#ifndef PICO_BOARD
 
 void strcat(unsigned char *p, unsigned char *s)
 {
@@ -63,3 +64,4 @@ void strcpy(unsigned char *p, unsigned char *s)
     *p = 0;
 }
 
+#endif
