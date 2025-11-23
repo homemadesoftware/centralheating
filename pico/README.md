@@ -3,9 +3,8 @@
 ##  Build instructions
 
 1. `build-base.ps1` builds the `BaseDockerFile` image. This includes OS and C compiler
-2. `setup-compiler.ps1` sets up the RP Pico SDK and ePaper repos, and configures
-   cmake ready to be built
-3. `compile.ps1` builds the project with make, and flashes pico
+2. `setup-compiler.ps1` sets up the RP Pico SDK and ePaper repos, and configures cmake and build once
+3. `compile.ps1` builds the project with, make subsequently, and flashes pico
 
 ## Development instructions
 
