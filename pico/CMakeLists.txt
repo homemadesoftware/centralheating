@@ -30,7 +30,7 @@ add_subdirectory(${waveshare_epaper_SOURCE_DIR}/c)
 # 3. Main project decleration
 #
 
-add_executable(my_project main.c)
+add_executable(my_project PicoEntryPoint.c)
 
 target_link_libraries(
     my_project

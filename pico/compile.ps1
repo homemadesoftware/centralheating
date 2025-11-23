@@ -16,7 +16,7 @@ docker run `
     --name compiler `
     -v ${PWD}:/usr/src/project `
     compiler-image `
-    bash -c "make -C build -j4"
+    bash -c "make -C build -j10"
 
 if (Test-Path $uf2)
 {
@@ -32,17 +32,30 @@ else
 # Copy to E: if available
 if (Test-Path "E:\")
 {
-    Write-Host "E: drive detected. Copying UF2 file..." -ForegroundColor Cyan
+    $picoPath = "E:\INFO_UF2.TXT"
 
-    try
+    if (Test-Path $picoPath) 
     {
-        Copy-Item -Path $uf2 -Destination "E:\" -Force
-        Write-Host "Copied to E:\ successfully." -ForegroundColor Green
+        $content = Get-Content -Path $picoPath -Raw
+    } 
+    else 
+    {
+        $content = ""
     }
-    catch
+    if ($content.StartsWith("UF2 Bootloader v3.0"))
     {
-        Write-Host "Failed to copy to E:\" -ForegroundColor Red
-        Write-Host $_
+        Write-Host "E: drive detected. Copying UF2 file..." -ForegroundColor Cyan
+
+        try
+        {
+            Copy-Item -Path $uf2 -Destination "E:\" -Force
+            Write-Host "Copied to E:\ successfully." -ForegroundColor Green
+        }
+        catch
+        {
+            Write-Host "Failed to copy to E:\" -ForegroundColor Red
+            Write-Host $_
+        }
     }
 }
 else

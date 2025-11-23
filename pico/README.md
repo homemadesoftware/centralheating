@@ -23,3 +23,19 @@ if available. The pico should be ready to be written to.
 
 You DON'T need to unplug the pico, there is a special setup that allows the
 reset button to be pressed when plugged in.
+
+
+
+---------------
+
+Step 1				Artifact
+build-base.ps1		mybase
+
+Step 2
+setup-sdk.ps1		compiler-image
+
+Step 3
+compile.ps1		   UF2 file on mounted
+
+
+
