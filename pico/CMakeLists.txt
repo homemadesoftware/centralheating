@@ -23,7 +23,8 @@ add_executable(my_project
     #main.c
     PicoEntryPoint.c
     Display.c
-    Rtc.c
+    Rtc1307.c
+    KeyMatrix.c
 
     ../Common/MenuMgr.c
     ../Common/CentralHeating.c
@@ -40,6 +41,7 @@ target_link_libraries(
     # Pico libs
     pico_stdlib
     pico_stdio
+    hardware_i2c
     pico_multicore
     pico_cyw43_arch_none
     hardware_spi

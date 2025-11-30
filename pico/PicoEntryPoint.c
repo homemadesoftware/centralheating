@@ -14,7 +14,8 @@ void check_reboot_button();
 #include "HardwareAbstraction.h"
 #include "StringUtils.h"
 #include "Display.h"
-#include "Rtc.h"
+#include "Rtc1307.h"
+#include "KeyMatrix.h"
  
 // User program is provided at link time
 void UserProgram();
@@ -51,7 +52,9 @@ int main()
     DEV_Module_Init();
 
     PicoCH_InitialiseDisplay();
-
+    Rtc_Initialise();
+    KeyMatrix_Init();
+    
     // Initialise the hardware calls
     pRegisterForTimer = Hardware_RegisterForTimer;
     pEnableTimer =Hardware_EnableTimer;
@@ -99,9 +102,7 @@ void Hardware_GetRtc(DateTimeStruct* dts) REENTRANT
 
 void Hardware_GetKeyState(int* keys)
 {
-    unsigned char rowCount, colCount, portValue;
-
-    *keys = 0;
+    KeyMatrix_Read(keys);
 }
 
 // Our timers
@@ -111,6 +112,7 @@ typedef struct tagTimerSetup
     int periodMilliseconds;
     int ticksSoFar;
     unsigned char enabled;
+    bool fired;
     CallbackDelegate callback;
 } TimerSetup;
 
@@ -132,6 +134,7 @@ void Hardware_RegisterForTimer(int cookie, int milliSeconds, CallbackDelegate ca
             timers[i].ticksSoFar = 0;
             timers[i].enabled = 1;
             timers[i].callback = callback;
+            timers[i].fired = false;
             return;
         }
     }
@@ -158,29 +161,32 @@ void Hardware_ScheduleUserCalls()
 {
     while (1)
     {
-        int timerCounter;
-        long c;
-
-        for (timerCounter = 0; timerCounter < MAX_TIMERS; ++timerCounter)
+        for (int timerCounter = 0; timerCounter < MAX_TIMERS; ++timerCounter)
         {
             TimerSetup* pTimer = timers + timerCounter;
+            pTimer->fired = false;
             if (pTimer->cookie != 0 && pTimer->periodMilliseconds <= pTimer->ticksSoFar && pTimer->enabled)
             {
                 // Fire this
                 pTimer->ticksSoFar = 0;
-                pTimer->callback(pTimer->cookie);
+                pTimer->fired = true;
             }
             else
             {
                 pTimer->ticksSoFar++;
             }
-
         }
 
-        for (c = 0; c < 100; ++c)
+        for (int timerCounter = 0; timerCounter < MAX_TIMERS; ++timerCounter)
         {
+            TimerSetup* pTimer = timers + timerCounter;
+            if (pTimer->fired)
+            {
+                pTimer->callback(pTimer->cookie);
+            }
         }
 
+        sleep_ms(1);
     }
 }
 
