@@ -5,7 +5,7 @@
 #include "../Common/CentralHeatingMenus.h"
 #include "../Common/StringUtils.h"
 
-#define COMPILED_AT "20250502"
+#define COMPILED_AT "20251227"
 
 
 #define SCREEN_BUFFER_SIZE  32
@@ -42,6 +42,8 @@
 #define OUTPUT_ACTUATOR4   (0x08)
 #define OUTPUT_HWACTUATOR  (0x10)
 #define OUTPUT_BOILER      (0x20)
+#define OUTPUT_ACTUATOR5   (0x40)
+#define OUTPUT_ACTUATOR6   (0x80)
 
 #define ANIMATE_INPUTS      (0)
 #define ANIMATE_OUTPUTS     (1)
@@ -536,6 +538,20 @@ void HandleMenuCommand(int menuItem, int eventType)
             }
             break;
 
+        case MENUID_TEST_ZONE5:
+            if (eventType == MENU_COMMAND)
+            {
+                TestAndDisplay("Zone 5", OUTPUT_ACTUATOR5);
+            }
+            break;
+
+        case MENUID_TEST_ZONE6:
+            if (eventType == MENU_COMMAND)
+            {
+                TestAndDisplay("Zone 6", OUTPUT_ACTUATOR6);
+            }
+            break;
+
         case MENUID_TEST_HW:
             if (eventType == MENU_COMMAND)
             {
@@ -680,6 +696,14 @@ void ProcessHeating()
 	{
         output |= OUTPUT_ACTUATOR4;
 	}
+    if (zones[3])
+    {
+        output |= OUTPUT_ACTUATOR5;
+    }
+    if (zones[4])
+    {
+        output |= OUTPUT_ACTUATOR6;
+    }
     
     pSetOutputPortValues(output);
     lastOutputState = output;
@@ -691,7 +715,7 @@ void AnimateScreen()
     unsigned char strBuffer[11];
     unsigned char numericValue[2];
     unsigned char zones[5];
-    unsigned char outputs[4];
+    unsigned char outputs[6];
     unsigned char index;
 
     if (animationType == ANIMATE_INPUTS)
@@ -703,7 +727,7 @@ void AnimateScreen()
         zones[4] = lastInputState & INPUT_ZONE5;
 
 
-        strcpy(strBuffer, "Zone ");
+        strcpy(strBuffer, "Z ");
         for (index = 0; index < 5; ++index)
         {
             if (zones[index])
@@ -724,9 +748,11 @@ void AnimateScreen()
         outputs[1] = lastOutputState & OUTPUT_ACTUATOR2;
         outputs[2] = lastOutputState & OUTPUT_ACTUATOR3;
         outputs[3] = lastOutputState & OUTPUT_ACTUATOR4;
+        outputs[4] = lastOutputState & OUTPUT_ACTUATOR5;
+        outputs[5] = lastOutputState & OUTPUT_ACTUATOR6;
         
-        strcpy(strBuffer, "Out ");
-        for (index = 0; index < 4; ++index)
+        strcpy(strBuffer, "O ");
+        for (index = 0; index < 6; ++index)
         {
             if (outputs[index])
             {

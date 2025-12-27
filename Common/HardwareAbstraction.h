@@ -10,6 +10,12 @@
 #define EXPORTEDFUNCTION 
 #define REENTRANT __reentrant 
 
+#elif defined(PICO_BOARD)
+
+#define STDCALL 
+#define EXPORTEDFUNCTION 
+#define REENTRANT 
+
 
 #else
 
@@ -18,7 +24,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #define REENTRANT
 
-#endif
+#endif 
 
 typedef struct tagDateTimeStruct
 {
