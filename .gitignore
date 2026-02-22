@@ -19,3 +19,5 @@
 /**/*.user
 /**/DefaultOutput
 /pico/build
+/pico/build
+/pico/build-outputs/my_project.uf2
