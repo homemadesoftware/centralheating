@@ -222,7 +222,7 @@ void Hardware_GetInputPortValues(unsigned char *pValue) REENTRANT
 
 void Hardware_SetOutputPortValues(unsigned char value) REENTRANT
 {
-    P2 = value;	
+    P2 = ~value;	
 }
 
 void Hardware_CrashDump(unsigned char* message) REENTRANT

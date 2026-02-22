@@ -14,8 +14,10 @@ void check_reboot_button();
 #include "HardwareAbstraction.h"
 #include "StringUtils.h"
 #include "Display.h"
+#include "i2c.h"
 #include "Rtc1307.h"
 #include "KeyMatrix.h"
+#include "IoExpander.h"
  
 // User program is provided at link time
 void UserProgram();
@@ -45,6 +47,9 @@ void Hardware_CrashDump(unsigned char* message);
 void Hardware_ScheduleUserCalls();
 
 
+// currently selected/used i2c port
+i2c_inst_t* i2cPort;
+
 int main()
 {
     stdio_init_all();
@@ -52,7 +57,11 @@ int main()
     DEV_Module_Init();
 
     PicoCH_InitialiseDisplay();
-    Rtc_Initialise();
+
+    i2cPort = InitialiseI2C(1, 10000);
+
+    IoExpander_Initialise(i2cPort);
+
     KeyMatrix_Init();
     
     // Initialise the hardware calls
@@ -87,17 +96,18 @@ void Hardware_GetInputPortValues(unsigned char* pValue) REENTRANT
 
 void Hardware_SetOutputPortValues(unsigned char value) REENTRANT
 {
-    
+    value = 0b10101010;
+    IoExpander_Write(i2cPort, value);
 }
 
 void Hardware_SetRtc(DateTimeStruct* dts) REENTRANT
 {
-    Rtc_WriteClock(dts);
+    Rtc_WriteClock(i2cPort, dts);
 }
 
 void Hardware_GetRtc(DateTimeStruct* dts) REENTRANT
 {
-    Rtc_ReadClock(dts);
+    Rtc_ReadClock(i2cPort, dts);
 }
 
 void Hardware_GetKeyState(int* keys)
