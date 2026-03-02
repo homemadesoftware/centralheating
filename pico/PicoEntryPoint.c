@@ -18,6 +18,7 @@ void check_reboot_button();
 #include "Rtc1307.h"
 #include "KeyMatrix.h"
 #include "IoExpander.h"
+#include "ButtonPad.h"
  
 // User program is provided at link time
 void UserProgram();
@@ -96,7 +97,6 @@ void Hardware_GetInputPortValues(unsigned char* pValue) REENTRANT
 
 void Hardware_SetOutputPortValues(unsigned char value) REENTRANT
 {
-    value = 0b10101010;
     IoExpander_Write(i2cPort, value);
 }
 
@@ -112,7 +112,8 @@ void Hardware_GetRtc(DateTimeStruct* dts) REENTRANT
 
 void Hardware_GetKeyState(int* keys)
 {
-    KeyMatrix_Read(keys);
+    //KeyMatrix_Read(keys);
+    ButtonPad_ReadKeys(i2cPort, keys);
 }
 
 // Our timers

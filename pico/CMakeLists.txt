@@ -27,6 +27,7 @@ add_executable(my_project
     KeyMatrix.c
     i2c.c
     IoExpander.c
+    ButtonPad.c
 
     ../Common/MenuMgr.c
     ../Common/CentralHeating.c
