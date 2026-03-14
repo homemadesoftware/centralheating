@@ -56,7 +56,11 @@ typedef void (STDCALL *SetRtcDelegate)(DateTimeStruct* dts) REENTRANT;
 // Write to display
 typedef void (STDCALL *WriteDisplayBufferDelegate)(unsigned char* buffer) REENTRANT;
 
-// Read key state
+// Number of chars waiting to be processed - if readCount is 0xff this type of input is not supported
+// Read at most 32 chars into buffer as input keys.
+typedef void (STDCALL* GetWaitingKeysDelegate)(unsigned char* buffer, unsigned char* readCount) REENTRANT;
+
+// Read OLD style key state
 typedef void (STDCALL *GetKeyStateDelegate)(int* keys) REENTRANT;
 
 // Get input ports
@@ -64,6 +68,9 @@ typedef void (STDCALL *GetInputPortValuesDelegate)(unsigned char *value) REENTRA
 
 // Set output ports
 typedef void (STDCALL *SetOutputPortValuesDelegate)(unsigned char value) REENTRANT;
+
+// Heart beat
+typedef void (STDCALL* HeartBeatDelegate)() REENTRANT;
 
 // Crash Dump
 typedef void (STDCALL *CrashDumpDelegate)(unsigned char* buffer) REENTRANT;
@@ -73,9 +80,11 @@ extern EnableTimerDelegate pEnableTimer;
 extern GetRtcDelegate pGetRtc;
 extern SetRtcDelegate pSetRtc;
 extern WriteDisplayBufferDelegate pWriteDisplayBuffer;
+extern GetWaitingKeysDelegate pGetWaitingKeys;
 extern GetKeyStateDelegate pGetKeyState;
 extern GetInputPortValuesDelegate pGetInputPortValues;
 extern SetOutputPortValuesDelegate pSetOutputPortValues;
+extern HeartBeatDelegate pHeartBeat;
 extern CrashDumpDelegate pCrashDump;
   
 

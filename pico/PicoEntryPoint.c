@@ -31,8 +31,10 @@ GetRtcDelegate              pGetRtc;
 SetRtcDelegate              pSetRtc;
 WriteDisplayBufferDelegate  pWriteDisplayBuffer;
 GetKeyStateDelegate         pGetKeyState;
+GetWaitingKeysDelegate      pGetWaitingKeys;
 GetInputPortValuesDelegate  pGetInputPortValues;
 SetOutputPortValuesDelegate pSetOutputPortValues;
+HeartBeatDelegate           pHeartBeat;
 CrashDumpDelegate           pCrashDump;
 
 // Forwward declare various APIs available from this board
@@ -43,8 +45,10 @@ void Hardware_WriteDisplayBuffer(unsigned char*);
 void Hardware_SetRtc(DateTimeStruct* pdts);
 void Hardware_GetRtc(DateTimeStruct* pdts);
 void Hardware_GetKeyState(int* keys);
+void Hardware_GetWaitingKeys(unsigned char* buffer, unsigned char* readCount);
 void Hardware_GetInputPortValues(unsigned char* pValue);
 void Hardware_SetOutputPortValues(unsigned char value);
+void Hardware_HeartBeat();
 void Hardware_CrashDump(unsigned char* message);
 void Hardware_ScheduleUserCalls();
 
@@ -53,9 +57,7 @@ void Hardware_ScheduleUserCalls();
 i2c_inst_t* i2cPortForIo;
 i2c_inst_t* i2cPortForRtc;
 
-bool heartBeatState;
-
-uint8_t testValue = 0b10101010;
+bool heartBeatState = true;
 
 int main()
 {
@@ -81,8 +83,10 @@ int main()
     pSetRtc = Hardware_SetRtc;
     pWriteDisplayBuffer = Hardware_WriteDisplayBuffer;
     pGetKeyState = Hardware_GetKeyState;
+    pGetWaitingKeys = Hardware_GetWaitingKeys;
     pGetInputPortValues = Hardware_GetInputPortValues;
     pSetOutputPortValues = Hardware_SetOutputPortValues;
+    pHeartBeat = Hardware_HeartBeat;
     pCrashDump = Hardware_CrashDump;
 
     UserProgram();
@@ -101,14 +105,12 @@ void Hardware_CrashDump(unsigned char* message) REENTRANT
 
 void Hardware_GetInputPortValues(unsigned char* pValue) REENTRANT
 {
-    *pValue = 0;
+    IoExpander_Read(i2cPortForIo, pValue);
 }
 
 void Hardware_SetOutputPortValues(unsigned char value) REENTRANT
 {
-    value = testValue;
     IoExpander_Write(i2cPortForIo, value);
-    testValue = ~testValue;
 }
 
 void Hardware_SetRtc(DateTimeStruct* dts) REENTRANT
@@ -119,6 +121,21 @@ void Hardware_SetRtc(DateTimeStruct* dts) REENTRANT
 void Hardware_GetRtc(DateTimeStruct* dts) REENTRANT
 {
     Rtc_ReadClock(i2cPortForRtc, dts);
+}
+
+void Hardware_GetKeyState(int* keys)
+{
+    uint8_t key = ButtonPad_ReadKeyState(i2cPortForIo);
+    *keys = key;
+}
+
+void Hardware_GetWaitingKeys(unsigned char* buffer, unsigned char* readCount)
+{
+    ButtonPad_ReadBufferedKeys(i2cPortForIo, buffer, readCount);
+}
+
+void Hardware_HeartBeat()
+{
     if (heartBeatState)
     {
         cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1); // on
@@ -128,12 +145,6 @@ void Hardware_GetRtc(DateTimeStruct* dts) REENTRANT
         cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 0); // off
     }
     heartBeatState = !heartBeatState;
-}
-
-void Hardware_GetKeyState(int* keys)
-{
-    //KeyMatrix_Read(keys);
-    ButtonPad_ReadKeys(i2cPortForIo, keys);
 }
 
 // Our timers

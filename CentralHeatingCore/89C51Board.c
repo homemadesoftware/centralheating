@@ -10,6 +10,7 @@ EnableTimerDelegate         pEnableTimer;
 GetRtcDelegate              pGetRtc;
 SetRtcDelegate              pSetRtc;
 WriteDisplayBufferDelegate  pWriteDisplayBuffer;
+GetWaitingKeysDelegate      pGetWaitingKeys;
 GetKeyStateDelegate         pGetKeyState;
 GetInputPortValuesDelegate  pGetInputPortValues;
 SetOutputPortValuesDelegate pSetOutputPortValues;
@@ -24,6 +25,7 @@ void Hardware_WriteDisplayBuffer(unsigned char*) REENTRANT;
 void Hardware_SetRtc(DateTimeStruct* pdts) REENTRANT;
 void Hardware_GetRtc(DateTimeStruct* pdts) REENTRANT;
 void Hardware_GetKeyState(int *keys) REENTRANT;
+void Hardware_GetWaitingKeys(unsigned char* buffer, unsigned char* readCount) REENTRANT;
 void Hardware_GetInputPortValues(unsigned char *pValue) REENTRANT;
 void Hardware_SetOutputPortValues(unsigned char value) REENTRANT;
 void Hardware_CrashDump(unsigned char* message) REENTRANT;
@@ -125,6 +127,7 @@ void Hardware_InitialiseHardware() REENTRANT
     pSetRtc = Hardware_SetRtc;
     pWriteDisplayBuffer = Hardware_WriteDisplayBuffer;
     pGetKeyState = Hardware_GetKeyState;
+    pGetWaitingKeys = Hardware_GetWaitingKeys;
     pGetInputPortValues = Hardware_GetInputPortValues;
     pSetOutputPortValues = Hardware_SetOutputPortValues;
     pCrashDump = Hardware_CrashDump;
@@ -207,7 +210,12 @@ void Hardware_GetKeyState(int *keys) REENTRANT
             }
         }
     }
-    
+}
+
+
+void Hardware_GetWaitingKeys(unsigned char* buffer, unsigned char* readCount) REENTRANT
+{
+    *readCount = 0xff;
 }
 
 
