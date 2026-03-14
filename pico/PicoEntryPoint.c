@@ -2,6 +2,7 @@
 #include "pico/stdlib.h"
 #include "pico/bootrom.h"
 #include "pico/multicore.h"
+#include "pico/cyw43_arch.h"
 
 // E-paper
 #include "EPD_2in13_V3.h"
@@ -48,8 +49,13 @@ void Hardware_CrashDump(unsigned char* message);
 void Hardware_ScheduleUserCalls();
 
 
-// currently selected/used i2c port
-i2c_inst_t* i2cPort;
+// currently selected/used i2c port for RTC
+i2c_inst_t* i2cPortForIo;
+i2c_inst_t* i2cPortForRtc;
+
+bool heartBeatState;
+
+uint8_t testValue = 0b10101010;
 
 int main()
 {
@@ -57,11 +63,14 @@ int main()
     
     DEV_Module_Init();
 
+    cyw43_arch_init();
+
     PicoCH_InitialiseDisplay();
 
-    i2cPort = InitialiseI2C(1, 10000);
+    i2cPortForIo = InitialiseI2C(0, 10000);
+    i2cPortForRtc = InitialiseI2C(1, 10000);
 
-    IoExpander_Initialise(i2cPort);
+    IoExpander_Initialise(i2cPortForIo);
 
     KeyMatrix_Init();
     
@@ -97,23 +106,34 @@ void Hardware_GetInputPortValues(unsigned char* pValue) REENTRANT
 
 void Hardware_SetOutputPortValues(unsigned char value) REENTRANT
 {
-    IoExpander_Write(i2cPort, value);
+    value = testValue;
+    IoExpander_Write(i2cPortForIo, value);
+    testValue = ~testValue;
 }
 
 void Hardware_SetRtc(DateTimeStruct* dts) REENTRANT
 {
-    Rtc_WriteClock(i2cPort, dts);
+    Rtc_WriteClock(i2cPortForRtc, dts);
 }
 
 void Hardware_GetRtc(DateTimeStruct* dts) REENTRANT
 {
-    Rtc_ReadClock(i2cPort, dts);
+    Rtc_ReadClock(i2cPortForRtc, dts);
+    if (heartBeatState)
+    {
+        cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1); // on
+    }
+    else
+    {
+        cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 0); // off
+    }
+    heartBeatState = !heartBeatState;
 }
 
 void Hardware_GetKeyState(int* keys)
 {
     //KeyMatrix_Read(keys);
-    ButtonPad_ReadKeys(i2cPort, keys);
+    ButtonPad_ReadKeys(i2cPortForIo, keys);
 }
 
 // Our timers
