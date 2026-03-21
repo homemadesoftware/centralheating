@@ -5,7 +5,7 @@
 #include "../Common/CentralHeatingMenus.h"
 #include "../Common/StringUtils.h"
 
-#define COMPILED_AT "20260314"
+#define COMPILED_AT "20260321"
 
 
 #define SCREEN_BUFFER_SIZE  32
@@ -696,9 +696,11 @@ void ProcessHeating()
     }
 
     // check if we need hot water!
-    if (CompareDateTime(&currentDateTime, &provideHotwaterUntil) < 0 ||
+    if (CompareDateTime(&currentDateTime, &provideHotwaterUntil) < 0 )
+        /* ||
         (currentDateTime.hours == 18 && currentDateTime.minutes <= 30) ||
         (currentDateTime.hours == 06 && currentDateTime.minutes <= 30))
+        */
     {
         hotWaterNeeded = 1;
         boiler = 1;

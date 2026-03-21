@@ -15,6 +15,7 @@ GetKeyStateDelegate         pGetKeyState;
 GetInputPortValuesDelegate  pGetInputPortValues;
 SetOutputPortValuesDelegate pSetOutputPortValues;
 CrashDumpDelegate           pCrashDump;
+HeartBeatDelegate           pHeartBeat;
 
 
 // Various APIs available from the 89C51 board
@@ -28,6 +29,7 @@ void Hardware_GetKeyState(int *keys) REENTRANT;
 void Hardware_GetWaitingKeys(unsigned char* buffer, unsigned char* readCount) REENTRANT;
 void Hardware_GetInputPortValues(unsigned char *pValue) REENTRANT;
 void Hardware_SetOutputPortValues(unsigned char value) REENTRANT;
+void Hardware_HeartBeat() REENTRANT;
 void Hardware_CrashDump(unsigned char* message) REENTRANT;
 void Hardware_ScheduleUserCalls() REENTRANT;
 
@@ -130,7 +132,9 @@ void Hardware_InitialiseHardware() REENTRANT
     pGetWaitingKeys = Hardware_GetWaitingKeys;
     pGetInputPortValues = Hardware_GetInputPortValues;
     pSetOutputPortValues = Hardware_SetOutputPortValues;
+    pHeartBeat = Hardware_HeartBeat;
     pCrashDump = Hardware_CrashDump;
+
 
 
     // LCD and RTC
@@ -257,3 +261,7 @@ void Hardware_CrashDump(unsigned char* message) REENTRANT
 }
 
 
+void Hardware_HeartBeat() REENTRANT
+{
+
+}
