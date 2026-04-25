@@ -24,3 +24,5 @@
 
 **/obj/
 **/bin/
+
+/pico/build-outputs/compile_commands.json

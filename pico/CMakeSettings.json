@@ -8,6 +8,7 @@
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
       "ctestCommandArgs": "",
+      "compileCommandsFile": "${projectDir}\\build-outputs\\compile_commands.json",
       "variables": [
         {
           "name": "PICO_BOARD",
