@@ -1,16 +1,8 @@
 FROM pico-compiler-base
 
-WORKDIR /usr/src
-RUN git clone https://github.com/raspberrypi/pico-sdk.git
-ENV PICO_SDK_PATH=/usr/src/pico-sdk
-
-WORKDIR /usr/src/pico-sdk
-RUN git submodule update --init lib/btstack lib/cyw43-driver lib/lwip
-
-WORKDIR /usr/src
-RUN git clone https://github.com/waveshare/Pico_ePaper_Code.git
-ENV waveshare_epaper=/usr/src/Pico_ePaper_Code
-
+# Pico SDK and Waveshare ePaper are provided via mounted submodules
+ENV PICO_SDK_PATH=/usr/src/project/pico/libs/pico-sdk
+ENV waveshare_epaper=/usr/src/project/pico/libs/waveshare
 
 WORKDIR /usr/src
 RUN git clone https://github.com/raspberrypi/picotool.git
