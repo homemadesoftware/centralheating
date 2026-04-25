@@ -5,16 +5,18 @@
 #include "../Common/CentralHeatingMenus.h"
 #include "../Common/StringUtils.h"
 
-#define COMPILED_AT "20251227"
+#define COMPILED_AT "20260321"
 
 
 #define SCREEN_BUFFER_SIZE  32
 
 // Timer cookies
-#define RTCUPDATECOOKIE		1
-#define READKEYSCOOKIE		2
-#define PROCESSHEATING  	3
-#define SCREENACTIVITY   	4
+#define RTCUPDATECOOKIE		    1
+#define READKEYSCOOKIE		    2
+#define PROCESSHEATING  	    3
+#define SCREENACTIVITY   	    4
+#define READKEYSBUFFERCOOKIE    5
+#define HEARTBEATCOOKIE         6
 
 
 
@@ -121,12 +123,27 @@ void STDCALL UserProgram()
     // Reset to home screen
     currentScreen = SCREEN_HOME;
 
-    
-	// Do the registrations
+    // Do the registrations
     pRegisterForTimer(RTCUPDATECOOKIE, 400, Callback);
-    pRegisterForTimer(READKEYSCOOKIE, 10, Callback);
+
+    // Does the hardware support multiple key reads?
+    unsigned char keyBufferSupported;
+    unsigned char keyBuffer[16];
+    pGetWaitingKeys(keyBuffer, &keyBufferSupported);
+    if (keyBufferSupported == 0xff)
+    {
+        // Old school keys
+        pRegisterForTimer(READKEYSCOOKIE, 10, Callback);
+    }
+    else
+    {
+        // New buffered keys
+        pRegisterForTimer(READKEYSBUFFERCOOKIE, 10, Callback);
+    }
+	
 	pRegisterForTimer(PROCESSHEATING, 1000, Callback);
     pRegisterForTimer(SCREENACTIVITY, 1000, Callback);
+    pRegisterForTimer(HEARTBEATCOOKIE, 330, Callback);
 
 
     // Init menu defs
@@ -143,6 +160,8 @@ void STDCALL UserProgram()
 void STDCALL Callback(int cookie)
 {
 	int keys;
+    unsigned char keysBuffer[16];
+    unsigned char readCount;
     
     switch (cookie)
     {
@@ -202,6 +221,36 @@ void STDCALL Callback(int cookie)
            }
            break;
 
+       case READKEYSBUFFERCOOKIE :
+           for (unsigned char i = 0; i < 16; ++i)
+           {
+               keysBuffer[i] = 0;
+           }
+           pGetWaitingKeys(keysBuffer, &readCount);
+           if (readCount != 0xff)
+           {
+               for (unsigned char i = 0; i < readCount; ++i)
+               {
+                   unsigned char keys = keysBuffer[i];
+                   if (keys == 1)
+                   {
+                       // L key pressed
+                       MenuNavigation(NAVTYPE_LEFT);
+                   }
+                   else if (keys == 2)
+                   {
+                       MenuNavigation(NAVTYPE_SELECTITEM);
+                   }
+                   else if (keys == 3)
+                   {
+                       MenuNavigation(NAVTYPE_RIGHT);
+                   }
+                   DisplayMenuOnHardware();
+               }
+           }
+           break;
+           
+
 	   case PROCESSHEATING :
            if (currentScreen != SCREEN_OUTPUTTEST)
            {
@@ -214,6 +263,10 @@ void STDCALL Callback(int cookie)
            {
                AnimateScreen();
            }
+           break;
+
+       case HEARTBEATCOOKIE: 
+           pHeartBeat();
            break;
 
     }
@@ -643,9 +696,11 @@ void ProcessHeating()
     }
 
     // check if we need hot water!
-    if (CompareDateTime(&currentDateTime, &provideHotwaterUntil) < 0 ||
-        currentDateTime.hours == 18 || 
-        currentDateTime.hours == 06)
+    if (CompareDateTime(&currentDateTime, &provideHotwaterUntil) < 0 )
+        /* ||
+        (currentDateTime.hours == 18 && currentDateTime.minutes <= 30) ||
+        (currentDateTime.hours == 06 && currentDateTime.minutes <= 30))
+        */
     {
         hotWaterNeeded = 1;
         boiler = 1;

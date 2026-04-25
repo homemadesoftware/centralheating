@@ -8,8 +8,10 @@ typedef struct tagBoardCalls
 	SetRtcDelegate pSetRtc;
 	WriteDisplayBufferDelegate pWriteDisplayBuffer;
 	GetKeyStateDelegate pGetKeyState;
-	GetInputPortValuesDelegate pGetInputPortValues;
+    GetWaitingKeysDelegate pGetWaitingKeys;
+    GetInputPortValuesDelegate pGetInputPortValues;
 	SetOutputPortValuesDelegate pSetOutputPortValues;
+    HeartBeatDelegate pHeartBeat;
 	CrashDumpDelegate pCrashDump;
 } BoardCalls;
 
@@ -20,9 +22,11 @@ EnableTimerDelegate         pEnableTimer;
 GetRtcDelegate              pGetRtc;
 SetRtcDelegate              pSetRtc;
 WriteDisplayBufferDelegate  pWriteDisplayBuffer;
+GetWaitingKeysDelegate      pGetWaitingKeys;
 GetKeyStateDelegate         pGetKeyState;
 GetInputPortValuesDelegate  pGetInputPortValues;
 SetOutputPortValuesDelegate pSetOutputPortValues;
+HeartBeatDelegate           pHeartBeat;
 CrashDumpDelegate           pCrashDump;
 
 
@@ -34,8 +38,10 @@ EXPORTEDFUNCTION void StartEmulatedHardware(BoardCalls *pCalls)
     pSetRtc                 = pCalls->pSetRtc;
     pWriteDisplayBuffer     = pCalls->pWriteDisplayBuffer;
     pGetKeyState            = pCalls->pGetKeyState;
+    pGetWaitingKeys         = pCalls->pGetWaitingKeys;
     pGetInputPortValues     = pCalls->pGetInputPortValues;
     pSetOutputPortValues    = pCalls->pSetOutputPortValues;
+    pHeartBeat              = pCalls->pHeartBeat;
     pCrashDump              = pCalls->pCrashDump;
 
     UserProgram();

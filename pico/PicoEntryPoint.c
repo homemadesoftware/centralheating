@@ -2,6 +2,7 @@
 #include "pico/stdlib.h"
 #include "pico/bootrom.h"
 #include "pico/multicore.h"
+#include "pico/cyw43_arch.h"
 
 // E-paper
 #include "EPD_2in13_V3.h"
@@ -14,8 +15,11 @@ void check_reboot_button();
 #include "HardwareAbstraction.h"
 #include "StringUtils.h"
 #include "Display.h"
+#include "i2c.h"
 #include "Rtc1307.h"
 #include "KeyMatrix.h"
+#include "IoExpander.h"
+#include "ButtonPad.h"
  
 // User program is provided at link time
 void UserProgram();
@@ -27,8 +31,10 @@ GetRtcDelegate              pGetRtc;
 SetRtcDelegate              pSetRtc;
 WriteDisplayBufferDelegate  pWriteDisplayBuffer;
 GetKeyStateDelegate         pGetKeyState;
+GetWaitingKeysDelegate      pGetWaitingKeys;
 GetInputPortValuesDelegate  pGetInputPortValues;
 SetOutputPortValuesDelegate pSetOutputPortValues;
+HeartBeatDelegate           pHeartBeat;
 CrashDumpDelegate           pCrashDump;
 
 // Forwward declare various APIs available from this board
@@ -39,11 +45,19 @@ void Hardware_WriteDisplayBuffer(unsigned char*);
 void Hardware_SetRtc(DateTimeStruct* pdts);
 void Hardware_GetRtc(DateTimeStruct* pdts);
 void Hardware_GetKeyState(int* keys);
+void Hardware_GetWaitingKeys(unsigned char* buffer, unsigned char* readCount);
 void Hardware_GetInputPortValues(unsigned char* pValue);
 void Hardware_SetOutputPortValues(unsigned char value);
+void Hardware_HeartBeat();
 void Hardware_CrashDump(unsigned char* message);
 void Hardware_ScheduleUserCalls();
 
+
+// currently selected/used i2c port for RTC
+i2c_inst_t* i2cPortForIo;
+i2c_inst_t* i2cPortForRtc;
+
+bool heartBeatState = true;
 
 int main()
 {
@@ -51,8 +65,15 @@ int main()
     
     DEV_Module_Init();
 
+    cyw43_arch_init();
+
     PicoCH_InitialiseDisplay();
-    Rtc_Initialise();
+
+    i2cPortForIo = InitialiseI2C(0, 10000);
+    i2cPortForRtc = InitialiseI2C(1, 10000);
+
+    IoExpander_Initialise(i2cPortForIo);
+
     KeyMatrix_Init();
     
     // Initialise the hardware calls
@@ -62,8 +83,10 @@ int main()
     pSetRtc = Hardware_SetRtc;
     pWriteDisplayBuffer = Hardware_WriteDisplayBuffer;
     pGetKeyState = Hardware_GetKeyState;
+    pGetWaitingKeys = Hardware_GetWaitingKeys;
     pGetInputPortValues = Hardware_GetInputPortValues;
     pSetOutputPortValues = Hardware_SetOutputPortValues;
+    pHeartBeat = Hardware_HeartBeat;
     pCrashDump = Hardware_CrashDump;
 
     UserProgram();
@@ -82,27 +105,46 @@ void Hardware_CrashDump(unsigned char* message) REENTRANT
 
 void Hardware_GetInputPortValues(unsigned char* pValue) REENTRANT
 {
-    *pValue = 0;
+    IoExpander_Read(i2cPortForIo, pValue);
 }
 
 void Hardware_SetOutputPortValues(unsigned char value) REENTRANT
 {
-    
+    IoExpander_Write(i2cPortForIo, value);
 }
 
 void Hardware_SetRtc(DateTimeStruct* dts) REENTRANT
 {
-    Rtc_WriteClock(dts);
+    Rtc_WriteClock(i2cPortForRtc, dts);
 }
 
 void Hardware_GetRtc(DateTimeStruct* dts) REENTRANT
 {
-    Rtc_ReadClock(dts);
+    Rtc_ReadClock(i2cPortForRtc, dts);
 }
 
 void Hardware_GetKeyState(int* keys)
 {
-    KeyMatrix_Read(keys);
+    uint8_t key = ButtonPad_ReadKeyState(i2cPortForIo);
+    *keys = key;
+}
+
+void Hardware_GetWaitingKeys(unsigned char* buffer, unsigned char* readCount)
+{
+    ButtonPad_ReadBufferedKeys(i2cPortForIo, buffer, readCount);
+}
+
+void Hardware_HeartBeat()
+{
+    if (heartBeatState)
+    {
+        cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1); // on
+    }
+    else
+    {
+        cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 0); // off
+    }
+    heartBeatState = !heartBeatState;
 }
 
 // Our timers

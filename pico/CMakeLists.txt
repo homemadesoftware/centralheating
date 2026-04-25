@@ -25,6 +25,9 @@ add_executable(my_project
     Display.c
     Rtc1307.c
     KeyMatrix.c
+    i2c.c
+    IoExpander.c
+    ButtonPad.c
 
     ../Common/MenuMgr.c
     ../Common/CentralHeating.c

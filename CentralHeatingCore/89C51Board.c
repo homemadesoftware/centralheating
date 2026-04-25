@@ -10,10 +10,12 @@ EnableTimerDelegate         pEnableTimer;
 GetRtcDelegate              pGetRtc;
 SetRtcDelegate              pSetRtc;
 WriteDisplayBufferDelegate  pWriteDisplayBuffer;
+GetWaitingKeysDelegate      pGetWaitingKeys;
 GetKeyStateDelegate         pGetKeyState;
 GetInputPortValuesDelegate  pGetInputPortValues;
 SetOutputPortValuesDelegate pSetOutputPortValues;
 CrashDumpDelegate           pCrashDump;
+HeartBeatDelegate           pHeartBeat;
 
 
 // Various APIs available from the 89C51 board
@@ -24,8 +26,10 @@ void Hardware_WriteDisplayBuffer(unsigned char*) REENTRANT;
 void Hardware_SetRtc(DateTimeStruct* pdts) REENTRANT;
 void Hardware_GetRtc(DateTimeStruct* pdts) REENTRANT;
 void Hardware_GetKeyState(int *keys) REENTRANT;
+void Hardware_GetWaitingKeys(unsigned char* buffer, unsigned char* readCount) REENTRANT;
 void Hardware_GetInputPortValues(unsigned char *pValue) REENTRANT;
 void Hardware_SetOutputPortValues(unsigned char value) REENTRANT;
+void Hardware_HeartBeat() REENTRANT;
 void Hardware_CrashDump(unsigned char* message) REENTRANT;
 void Hardware_ScheduleUserCalls() REENTRANT;
 
@@ -125,9 +129,12 @@ void Hardware_InitialiseHardware() REENTRANT
     pSetRtc = Hardware_SetRtc;
     pWriteDisplayBuffer = Hardware_WriteDisplayBuffer;
     pGetKeyState = Hardware_GetKeyState;
+    pGetWaitingKeys = Hardware_GetWaitingKeys;
     pGetInputPortValues = Hardware_GetInputPortValues;
     pSetOutputPortValues = Hardware_SetOutputPortValues;
+    pHeartBeat = Hardware_HeartBeat;
     pCrashDump = Hardware_CrashDump;
+
 
 
     // LCD and RTC
@@ -207,7 +214,12 @@ void Hardware_GetKeyState(int *keys) REENTRANT
             }
         }
     }
-    
+}
+
+
+void Hardware_GetWaitingKeys(unsigned char* buffer, unsigned char* readCount) REENTRANT
+{
+    *readCount = 0xff;
 }
 
 
@@ -222,7 +234,7 @@ void Hardware_GetInputPortValues(unsigned char *pValue) REENTRANT
 
 void Hardware_SetOutputPortValues(unsigned char value) REENTRANT
 {
-    P2 = value;	
+    P2 = ~value;	
 }
 
 void Hardware_CrashDump(unsigned char* message) REENTRANT
@@ -249,3 +261,7 @@ void Hardware_CrashDump(unsigned char* message) REENTRANT
 }
 
 
+void Hardware_HeartBeat() REENTRANT
+{
+
+}

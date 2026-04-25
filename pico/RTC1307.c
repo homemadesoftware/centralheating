@@ -1,25 +1,10 @@
 #include "HardwareAbstraction.h"
-#include "RTC1307.h"
 #include "pico/stdlib.h"
 #include "hardware/i2c.h"
+#include "RTC1307.h"
 
-#define I2C_CONTROLLER  i2c1
-#define SDA_PIN  6
-#define SCL_PIN  7
-
-#define DS1307ADDRESS	(0b1101000)
+#define DS1307ADDRESS	(0x68)
 #define BUFFER_LEN	9
-
-void Rtc_Initialise()
-{
-	i2c_init(i2c1, 100000);
-
-	gpio_set_function(SDA_PIN, GPIO_FUNC_I2C);
-	gpio_set_function(SCL_PIN, GPIO_FUNC_I2C);
-
-	gpio_pull_up(SDA_PIN);
-	gpio_pull_up(SCL_PIN);
-}
 
 unsigned char EncodeAsBcd(unsigned char value)
 {
@@ -33,7 +18,7 @@ unsigned char DecodeBcd(unsigned char value)
 	return (10 * ((value & 0xf0) >> 4)) + (value & 0xf);
 }
 
-unsigned char Rtc_ReadClock(DateTimeStruct *dateTime)
+unsigned char Rtc_ReadClock(i2c_inst_t* i2cPort, DateTimeStruct *dateTime)
 {
 	unsigned char buffer[BUFFER_LEN];
     int i;
@@ -43,10 +28,10 @@ unsigned char Rtc_ReadClock(DateTimeStruct *dateTime)
     }
 
     // Set the data pointer to 0 by sending a single byte
-	i2c_write_blocking(I2C_CONTROLLER, DS1307ADDRESS, buffer, 1, true);
+	i2c_write_blocking(i2cPort, DS1307ADDRESS, buffer, 1, false);
 
 	// Now read back
-    if (!i2c_read_blocking(I2C_CONTROLLER, DS1307ADDRESS, buffer, 7, true))
+    if (!i2c_read_blocking(i2cPort, DS1307ADDRESS, buffer, 7, false))
 	{
 		return 0;
 	}
@@ -64,7 +49,7 @@ unsigned char Rtc_ReadClock(DateTimeStruct *dateTime)
 }
 
 
-unsigned char Rtc_WriteClock(DateTimeStruct *dateTime)
+unsigned char Rtc_WriteClock(i2c_inst_t* i2cPort, DateTimeStruct *dateTime)
 {
 	// Convert it all to a buffer
 	unsigned char buffer[BUFFER_LEN];
@@ -78,7 +63,7 @@ unsigned char Rtc_WriteClock(DateTimeStruct *dateTime)
 	buffer[7] = EncodeAsBcd(dateTime->year);
     //buffer[7] = 0; // Control register
 
-	return i2c_write_blocking(I2C_CONTROLLER, DS1307ADDRESS, buffer, 8, true);
+	return i2c_write_blocking(i2cPort, DS1307ADDRESS, buffer, 8, false);
 }
 	
 

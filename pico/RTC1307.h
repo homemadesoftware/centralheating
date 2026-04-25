@@ -1,5 +1,4 @@
 // DS1307 Real time clock
-void Rtc_Initialise();
-unsigned char Rtc_ReadClock(DateTimeStruct *dateTime);
-unsigned char Rtc_WriteClock(DateTimeStruct *dateTime);
+unsigned char Rtc_ReadClock(i2c_inst_t* ic2Port, DateTimeStruct *dateTime);
+unsigned char Rtc_WriteClock(i2c_inst_t* ic2Port, DateTimeStruct *dateTime);
 	
