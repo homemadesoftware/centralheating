@@ -8,7 +8,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{73E2A65B-33DB-4631-ACDB-465FD5EBE7D5}</ProjectGuid>
-    <RootNamespace>mf</RootNamespace>
+    <RootNamespace>Atmel89C51</RootNamespace>
     <Keyword>MakeFileProj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

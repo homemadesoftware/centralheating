@@ -87,26 +87,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Common\CentralHeating.c" />
-    <ClCompile Include="..\Common\CentralHeatingMenus.c" />
-    <ClCompile Include="..\Common\DateTime.c" />
-    <ClCompile Include="..\Common\MenuMgr.c" />
-    <ClCompile Include="..\Common\StringUtils.c" />
+    <ClCompile Include="..\..\Common\CentralHeating.c" />
+    <ClCompile Include="..\..\Common\CentralHeatingMenus.c" />
+    <ClCompile Include="..\..\Common\DateTime.c" />
+    <ClCompile Include="..\..\Common\MenuMgr.c" />
+    <ClCompile Include="..\..\Common\StringUtils.c" />
     <ClCompile Include="CrashDump.c" />
     <ClCompile Include="EmulatorEntryPoint.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Common\CentralHeatingMenus.h" />
-    <ClInclude Include="..\Common\DateTime.h" />
-    <ClInclude Include="..\Common\HardwareAbstraction.h" />
-    <ClInclude Include="..\Common\MenuMgr.h" />
-    <ClInclude Include="..\Common\StringUtils.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="HardwareAbstraction.h---" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="ReadMe.txt" />
+    <ClInclude Include="..\..\Common\CentralHeatingMenus.h" />
+    <ClInclude Include="..\..\Common\DateTime.h" />
+    <ClInclude Include="..\..\Common\HardwareAbstraction.h" />
+    <ClInclude Include="..\..\Common\MenuMgr.h" />
+    <ClInclude Include="..\..\Common\StringUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
