@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.13...3.27)
 #
 # Fall back to local submodule if env var not set (e.g. building in VS locally)
 if(NOT DEFINED ENV{PICO_SDK_PATH})
-    set(ENV{PICO_SDK_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/libs/pico-sdk")
+    set(ENV{PICO_SDK_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../PicoBuild/libs/pico-sdk")
 endif()
 
 set(PICO_BOARD pico_w)
@@ -20,7 +20,7 @@ pico_sdk_init()
 if(DEFINED ENV{waveshare_epaper})
     set(waveshare_epaper $ENV{waveshare_epaper})
 else()
-    set(waveshare_epaper "${CMAKE_CURRENT_SOURCE_DIR}/libs/waveshare")
+    set(waveshare_epaper "${CMAKE_CURRENT_SOURCE_DIR}/../PicoBuild/libs/waveshare")
 endif()
 
 add_subdirectory(${waveshare_epaper}/c waveshare_build)

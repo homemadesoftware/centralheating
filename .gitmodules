@@ -1,6 +1,6 @@
-[submodule "pico/libs/pico-sdk"]
-	path = pico/libs/pico-sdk
+[submodule "PicoBuild/libs/pico-sdk"]
+	path = PicoBuild/libs/pico-sdk
 	url = https://github.com/raspberrypi/pico-sdk.git
-[submodule "pico/libs/waveshare"]
-	path = pico/libs/waveshare
+[submodule "PicoBuild/libs/waveshare"]
+	path = PicoBuild/libs/waveshare
 	url = https://github.com/waveshare/Pico_ePaper_Code.git

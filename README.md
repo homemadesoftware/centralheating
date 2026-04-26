@@ -10,7 +10,8 @@ clock and a simple menu UI on a 2-line LCD or ePaper display.
 |--------|-------------|
 | `Common/` | Shared C application logic — runs on all platforms |
 | `Atmel89C51/` | 89C51 firmware and SDCC build (retiring) |
-| `pico/` | Raspberry Pi Pico W firmware and Docker build (current) |
+| `PicoBuild/` | Shared Docker build infrastructure for all Pico projects |
+| `pico-central-heating/` | Central heating Pico W firmware |
 | `Simulator/` | Windows WinForms emulator for running the firmware on a PC |
 | `Simulator/x86Emulated/` | x86 DLL that the Simulator loads at runtime |
 | `Archive/` | Old code and utilities no longer in active use |
@@ -28,7 +29,7 @@ at compile time via preprocessor defines in `Common/HardwareAbstraction.h`:
 
 ## Build instructions
 
-- **Pico (current hardware):** see [`pico/README.md`](pico/README.md)
+- **Pico (current hardware):** see [`pico-central-heating/README.md`](pico-central-heating/README.md) and [`PicoBuild/README.md`](PicoBuild/README.md)
 - **89C51 (retiring):** see [`Atmel89C51/README.md`](Atmel89C51/README.md)
 - **Simulator:** open `Simulator/CentralHeatingEmulator.sln` in Visual Studio.
   Build `Simulator/x86Emulated` first (produces the DLL), then build and run the `CentralHeatingEmulator` project.

@@ -18,8 +18,8 @@
       ],
       "environments": [
         {
-          "PICO_SDK_PATH": "${projectDir}\\libs\\pico-sdk",
-          "waveshare_epaper": "${projectDir}\\libs\\waveshare"
+          "PICO_SDK_PATH": "${projectDir}\\..\\PicoBuild\\libs\\pico-sdk",
+          "waveshare_epaper": "${projectDir}\\..\\PicoBuild\\libs\\waveshare"
         }
       ]
     }

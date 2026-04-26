@@ -18,11 +18,8 @@
 /**/*.mem
 /**/*.user
 /**/DefaultOutput
-/pico/build
-/pico/build
-/pico/build-outputs/my_project.uf2
 
 **/obj/
 **/bin/
-
-/pico/build-outputs/compile_commands.json
+**/build/
+**/build-outputs/
