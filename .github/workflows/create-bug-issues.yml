@@ -1,13 +1,10 @@
 name: Create bug tracking issues
 
 on:
-  push:
-    branches:
-      - 'copilot/fix-date-time-bugs'
+  workflow_dispatch:
 
 jobs:
   create-issues:
-    if: "contains(github.event.head_commit.message, 'chore: create bug tracking issues')"
     runs-on: ubuntu-latest
     permissions:
       issues: write
