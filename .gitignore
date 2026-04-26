@@ -21,4 +21,5 @@
 
 **/obj/
 **/bin/
-**/build-outputs/compile_commands.json
+**/build/
+**/build-outputs/
