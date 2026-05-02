@@ -5,7 +5,7 @@ FROM pico-compiler-base
 WORKDIR /usr/src
 RUN git clone https://github.com/raspberrypi/pico-sdk.git
 WORKDIR /usr/src/pico-sdk
-RUN git submodule update --init lib/btstack lib/cyw43-driver lib/lwip
+RUN git submodule update --init lib/btstack lib/cyw43-driver lib/lwip lib/tinyusb
 ENV PICO_SDK_PATH=/usr/src/pico-sdk
 
 # Clone Waveshare ePaper library
