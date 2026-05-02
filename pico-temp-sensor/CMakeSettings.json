@@ -1,0 +1,26 @@
+{
+  "configurations": [
+    {
+      "name": "Pico-Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "buildRoot": "${projectDir}\\out\\build\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": "",
+      "compileCommandsFile": "${projectDir}\\build-outputs\\compile_commands.json",
+      "variables": [
+        {
+          "name": "PICO_BOARD",
+          "value": "pico2_w",
+          "type": "STRING"
+        }
+      ],
+      "environments": [
+        {
+          "PICO_SDK_PATH": "${projectDir}\\..\\PicoBuild\\libs\\pico-sdk"
+        }
+      ]
+    }
+  ]
+}
