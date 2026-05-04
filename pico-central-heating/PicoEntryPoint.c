@@ -79,7 +79,7 @@ int main()
 
     KeyMatrix_Init();
 
-    StartReceivingTemperatureReadings();
+    Tortoise_StartReceivingTemperatureReadings();
     
     // Initialise the hardware calls
     pRegisterForTimer = Hardware_RegisterForTimer;
@@ -246,5 +246,8 @@ void Hardware_WriteDisplayBuffer(unsigned char* buffer) REENTRANT
 
 void Hardware_ReadHotWaterTemperature(float* pfValue) REENTRANT
 {
-    GetLatestReading(pfValue);
+    if (!Tortoise_GetLatestReading(pfValue))
+    {
+        *pfValue = -200;
+    }
 }

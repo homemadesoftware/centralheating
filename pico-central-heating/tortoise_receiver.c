@@ -9,16 +9,18 @@ uint8_t assumedDataPin = 17;
 
 #define TORTOISE_FRAME_START (0x7f7f)
 #define INVALID_VALUE TORTOISE_FRAME_START
+#define READ_TIMEOUT (3 * 1000000) // 3 seconds
 
 uint16_t shiftRegister = 0;
 int remainingDataBits = 0;
 uint16_t rawValue = INVALID_VALUE;
+absolute_time_t lastSuccessfulReading = 0;
 
 void SharedHandler();
 void HandleIncomingData();
 void PushBit(uint8_t bit);
 
-void StartReceivingTemperatureReadings()
+void Tortoise_StartReceivingTemperatureReadings()
 {
     gpio_init(assumedClockPin);
     gpio_set_dir(assumedClockPin, GPIO_IN);
@@ -35,18 +37,25 @@ void StartReceivingTemperatureReadings()
     irq_set_enabled(IO_IRQ_BANK0, true);
 }
 
-bool GetLatestReading(float *pfReading)
+bool Tortoise_GetLatestReading(float *pfReading)
 {
-    if (rawValue != INVALID_VALUE)
+    absolute_time_t currentTime = get_absolute_time();
+
+    absolute_time_t elapsed = absolute_time_diff_us(lastSuccessfulReading, currentTime);
+    if (elapsed > READ_TIMEOUT)
     {
-        *pfReading = ((float)rawValue) / 16.0f;
-        return true;
-    }
-    else
-    {
-        *pfReading = 123;
+        *pfReading = 0;
         return false;
     }
+
+    if (rawValue == INVALID_VALUE)
+    {
+        *pfReading = 0;
+        return false;
+    }
+
+    *pfReading = ((float)rawValue) / 16.0f;
+    return true;
 }
 
 void SharedHandler()
@@ -70,29 +79,26 @@ void HandleIncomingData()
 // The sentinel can re-start at any time
 void PushBit(uint8_t bit)
 {
+    // Make room for the incoming bit at MSB
+    shiftRegister >>= 1;
+    shiftRegister |= bit ? 0x8000 : 0;
+
+    // Have we hit a double sentinel?
+    if (shiftRegister == TORTOISE_FRAME_START)
+    {
+        // Sentinel received, Next 16 bits will be data
+        remainingDataBits = 16;
+        shiftRegister = 0;
+        return;
+    }
+
     if (remainingDataBits > 0)
     {
-        shiftRegister >>= 1;
-        shiftRegister |= bit ? 0x8000 : 0;
-
-        --remainingDataBits;
-
+        remainingDataBits--;
         if (remainingDataBits == 0)
         {
             rawValue = shiftRegister;
-            shiftRegister = 0;
-        }
-    }
-    else
-    {
-        shiftRegister >>= 1;
-        shiftRegister |= bit ? 0x8000 : 0;
-
-        if (shiftRegister == TORTOISE_FRAME_START)
-        {
-            // Sentinel received, Next 16 bits will be data
-            remainingDataBits = 16;
-            shiftRegister = 0;
+            lastSuccessfulReading = get_absolute_time();
         }
     }
 }

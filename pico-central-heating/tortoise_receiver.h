@@ -1,2 +1,2 @@
-void StartReceivingTemperatureReadings();
-bool GetLatestReading(float* pfReading);
+void Tortoise_StartReceivingTemperatureReadings();
+bool Tortoise_GetLatestReading(float* pfReading);
