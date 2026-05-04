@@ -72,6 +72,9 @@ typedef void (STDCALL *SetOutputPortValuesDelegate)(unsigned char value) REENTRA
 // Heart beat
 typedef void (STDCALL* HeartBeatDelegate)() REENTRANT;
 
+// Hot Water temp
+typedef void (STDCALL* ReadHotWaterTemperatureDelegate)(float *fValue) REENTRANT;
+
 // Crash Dump
 typedef void (STDCALL *CrashDumpDelegate)(unsigned char* buffer) REENTRANT;
   
@@ -85,6 +88,7 @@ extern GetKeyStateDelegate pGetKeyState;
 extern GetInputPortValuesDelegate pGetInputPortValues;
 extern SetOutputPortValuesDelegate pSetOutputPortValues;
 extern HeartBeatDelegate pHeartBeat;
+extern ReadHotWaterTemperatureDelegate pReadHotWaterTemperature;
 extern CrashDumpDelegate pCrashDump;
   
 

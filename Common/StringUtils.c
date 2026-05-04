@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 
 void IntToString(unsigned char *p, unsigned int v)
 {
@@ -14,6 +16,15 @@ void IntToString(unsigned char *p, unsigned int v)
     }
     while (divider > 0);
     *p = 0;
+}
+
+void FloatToString(char* p, int size, float value)
+{
+#if WIN32
+    sprintf_s(p, size, "%.2f", value);
+#else
+    sprintf(p, "%.2f", value);
+#endif
 }
 
 

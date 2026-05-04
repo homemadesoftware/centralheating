@@ -20,22 +20,24 @@ void check_reboot_button();
 #include "KeyMatrix.h"
 #include "IoExpander.h"
 #include "ButtonPad.h"
+#include "tortoise_receiver.h"
  
 // User program is provided at link time
 void UserProgram();
 
 // Globals declared here
-RegisterForTimerDelegate    pRegisterForTimer;
-EnableTimerDelegate         pEnableTimer;
-GetRtcDelegate              pGetRtc;
-SetRtcDelegate              pSetRtc;
-WriteDisplayBufferDelegate  pWriteDisplayBuffer;
-GetKeyStateDelegate         pGetKeyState;
-GetWaitingKeysDelegate      pGetWaitingKeys;
-GetInputPortValuesDelegate  pGetInputPortValues;
-SetOutputPortValuesDelegate pSetOutputPortValues;
-HeartBeatDelegate           pHeartBeat;
-CrashDumpDelegate           pCrashDump;
+RegisterForTimerDelegate        pRegisterForTimer;
+EnableTimerDelegate             pEnableTimer;
+GetRtcDelegate                  pGetRtc;
+SetRtcDelegate                  pSetRtc;
+WriteDisplayBufferDelegate      pWriteDisplayBuffer;
+GetKeyStateDelegate             pGetKeyState;
+GetWaitingKeysDelegate          pGetWaitingKeys;
+GetInputPortValuesDelegate      pGetInputPortValues;
+SetOutputPortValuesDelegate     pSetOutputPortValues;
+ReadHotWaterTemperatureDelegate pReadHotWaterTemperature;
+HeartBeatDelegate               pHeartBeat;
+CrashDumpDelegate               pCrashDump;
 
 // Forwward declare various APIs available from this board
 void Hardware_InitialiseHardware();
@@ -50,6 +52,7 @@ void Hardware_GetInputPortValues(unsigned char* pValue);
 void Hardware_SetOutputPortValues(unsigned char value);
 void Hardware_HeartBeat();
 void Hardware_CrashDump(unsigned char* message);
+void Hardware_ReadHotWaterTemperature(float* pfValue);
 void Hardware_ScheduleUserCalls();
 
 
@@ -75,6 +78,8 @@ int main()
     IoExpander_Initialise(i2cPortForIo);
 
     KeyMatrix_Init();
+
+    StartReceivingTemperatureReadings();
     
     // Initialise the hardware calls
     pRegisterForTimer = Hardware_RegisterForTimer;
@@ -86,6 +91,7 @@ int main()
     pGetWaitingKeys = Hardware_GetWaitingKeys;
     pGetInputPortValues = Hardware_GetInputPortValues;
     pSetOutputPortValues = Hardware_SetOutputPortValues;
+    pReadHotWaterTemperature = Hardware_ReadHotWaterTemperature;
     pHeartBeat = Hardware_HeartBeat;
     pCrashDump = Hardware_CrashDump;
 
@@ -235,4 +241,10 @@ void Hardware_ScheduleUserCalls()
 void Hardware_WriteDisplayBuffer(unsigned char* buffer) REENTRANT
 {
     PicoCH_DirectWriteToDisplay(buffer);
+}
+
+
+void Hardware_ReadHotWaterTemperature(float* pfValue) REENTRANT
+{
+    GetLatestReading(pfValue);
 }

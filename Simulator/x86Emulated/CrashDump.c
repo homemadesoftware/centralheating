@@ -1,4 +1,4 @@
-#include "../Common/HardwareAbstraction.h"
+#include "../../Common/HardwareAbstraction.h"
 
 // The global variable defined
 CrashDumpDelegate pCallCrashDump;

@@ -5,17 +5,18 @@
 #include "StringUtils.h"
 
 // Globals declared here
-RegisterForTimerDelegate    pRegisterForTimer;
-EnableTimerDelegate         pEnableTimer;
-GetRtcDelegate              pGetRtc;
-SetRtcDelegate              pSetRtc;
-WriteDisplayBufferDelegate  pWriteDisplayBuffer;
-GetWaitingKeysDelegate      pGetWaitingKeys;
-GetKeyStateDelegate         pGetKeyState;
-GetInputPortValuesDelegate  pGetInputPortValues;
-SetOutputPortValuesDelegate pSetOutputPortValues;
-CrashDumpDelegate           pCrashDump;
-HeartBeatDelegate           pHeartBeat;
+RegisterForTimerDelegate        pRegisterForTimer;
+EnableTimerDelegate             pEnableTimer;
+GetRtcDelegate                  pGetRtc;
+SetRtcDelegate                  pSetRtc;
+WriteDisplayBufferDelegate      pWriteDisplayBuffer;
+GetWaitingKeysDelegate          pGetWaitingKeys;
+GetKeyStateDelegate             pGetKeyState;
+GetInputPortValuesDelegate      pGetInputPortValues;
+SetOutputPortValuesDelegate     pSetOutputPortValues;
+CrashDumpDelegate               pCrashDump;
+ReadHotWaterTemperatureDelegate pReadHotWaterTemperature;
+HeartBeatDelegate               pHeartBeat;
 
 
 // Various APIs available from the 89C51 board
@@ -30,6 +31,7 @@ void Hardware_GetWaitingKeys(unsigned char* buffer, unsigned char* readCount) RE
 void Hardware_GetInputPortValues(unsigned char *pValue) REENTRANT;
 void Hardware_SetOutputPortValues(unsigned char value) REENTRANT;
 void Hardware_HeartBeat() REENTRANT;
+void Hardware_ReadHotWaterTemperature(float* fValue) REENTRANT;
 void Hardware_CrashDump(unsigned char* message) REENTRANT;
 void Hardware_ScheduleUserCalls() REENTRANT;
 
@@ -133,8 +135,8 @@ void Hardware_InitialiseHardware() REENTRANT
     pGetInputPortValues = Hardware_GetInputPortValues;
     pSetOutputPortValues = Hardware_SetOutputPortValues;
     pHeartBeat = Hardware_HeartBeat;
+    pReadHotWaterTemperature = Hardware_ReadHotWaterTemperature;
     pCrashDump = Hardware_CrashDump;
-
 
 
     // LCD and RTC
@@ -264,4 +266,9 @@ void Hardware_CrashDump(unsigned char* message) REENTRANT
 void Hardware_HeartBeat() REENTRANT
 {
 
+}
+
+void Hardware_ReadHotWaterTemperature(float* fValue) REENTRANT
+{
+    *value = 12.34f;
 }

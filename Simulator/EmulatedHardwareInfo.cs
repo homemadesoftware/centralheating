@@ -60,9 +60,15 @@ namespace CentralHeatingEmulator
     public delegate void SetOutputPortValuesDelegate(byte value);
 
 
+    /// <summary>
+    /// Reads the hotwater temp if possible
+    /// </summary>
+    /// <param name="value"></param>
+    public delegate void ReadHotWaterTemperatureDelegate(ref float value);
+
+
     // Delegate for Heart beat
     public delegate void HeartBeatDelegate();
-
 
     /// <summary>
     /// Displays a message and dies
@@ -122,7 +128,16 @@ namespace CentralHeatingEmulator
         public SetOutputPortValuesDelegate SetOutputPortValues;
 
 
+        /// <summary>
+        /// Reads hot water temp
+        /// </summary>
+        public ReadHotWaterTemperatureDelegate ReadHotWaterTemperature;
+
+
+        /// Provides a heart beat
         public HeartBeatDelegate HeartBeat;
+
+
 
         /// <summary>
         /// Provides a crash dump

@@ -1,0 +1,1 @@
+void TransmitTemperatureValue(uint8_t clockPin, uint8_t dataPin, int16_t rawValue);

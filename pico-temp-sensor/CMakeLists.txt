@@ -11,6 +11,8 @@ pico_sdk_init()
 
 add_executable(my_project
     main.c
+    DS18B20.c
+    tortoise.c
 )
 
 target_link_libraries(my_project

@@ -38,6 +38,7 @@ add_executable(my_project
     i2c.c
     IoExpander.c
     ButtonPad.c
+    tortoise_receiver.c
 
     ../Common/MenuMgr.c
     ../Common/CentralHeating.c
@@ -79,6 +80,9 @@ target_include_directories(my_project PRIVATE
     ./../Common
 )
 
+target_compile_definitions(my_project PRIVATE
+    PICO_MAX_SHARED_IRQ_HANDLERS=10
+)
 
 pico_enable_stdio_usb(my_project 1)
 pico_enable_stdio_uart(my_project 0)

@@ -103,6 +103,7 @@ namespace CentralHeatingEmulator
             hwInfo.GetWaitingKeys = GetWaitingKeys;
             hwInfo.SetOutputPortValues = SetOutputPortValues;
             hwInfo.GetInputPortValues = GetInputPortValues;
+            hwInfo.ReadHotWaterTemperature = ReadHotWaterTemperature;
             hwInfo.HeartBeat = HeartBeat;
             hwInfo.CrashDump = CrashDump;
 
@@ -267,6 +268,11 @@ namespace CentralHeatingEmulator
             value |= (byte)(chkInput3.Checked ? INPUT_ZONE3 : 0);
             value |= (byte)(chkInput4.Checked ? INPUT_ZONE4 : 0);
             value |= (byte)(chkInput5.Checked ? INPUT_ZONE5 : 0);
+        }
+
+        private void ReadHotWaterTemperature(ref float value)
+        {
+            value = (float)numTemperature.Value;
         }
 
         private void SetOutputPortValues(byte value)
