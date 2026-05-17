@@ -64,6 +64,9 @@ bool heartBeatState = true;
 
 int main()
 {
+    // Hack. Make sure to pull up the outputs first thing
+    IoExpander_Pull_Up_Output_On_I2C0_At_Startup();
+
     stdio_init_all();
     
     DEV_Module_Init();
@@ -116,7 +119,8 @@ void Hardware_GetInputPortValues(unsigned char* pValue) REENTRANT
 
 void Hardware_SetOutputPortValues(unsigned char value) REENTRANT
 {
-    IoExpander_Write(i2cPortForIo, value);
+    // The outputs are active low
+    IoExpander_Write(i2cPortForIo, ~value);
 }
 
 void Hardware_SetRtc(DateTimeStruct* dts) REENTRANT
