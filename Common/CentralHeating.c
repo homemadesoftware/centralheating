@@ -5,7 +5,7 @@
 #include "../Common/CentralHeatingMenus.h"
 #include "../Common/StringUtils.h"
 
-#define COMPILED_AT "20260526"
+#define COMPILED_AT "20260530"
 
 
 #define SCREEN_BUFFER_SIZE  32
