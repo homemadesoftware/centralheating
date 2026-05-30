@@ -31,6 +31,12 @@
             this.components = new System.ComponentModel.Container();
             this.lblDisplay = new System.Windows.Forms.Label();
             this.uiGroup = new System.Windows.Forms.GroupBox();
+            this.btnSelect = new System.Windows.Forms.Button();
+            this.btnFire = new System.Windows.Forms.Button();
+            this.btnRight = new System.Windows.Forms.Button();
+            this.btnUp = new System.Windows.Forms.Button();
+            this.btnDown = new System.Windows.Forms.Button();
+            this.btnLeft = new System.Windows.Forms.Button();
             this.tmrMain = new System.Windows.Forms.Timer(this.components);
             this.timerInterruptGroup = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -82,6 +88,12 @@
             // 
             // uiGroup
             // 
+            this.uiGroup.Controls.Add(this.btnSelect);
+            this.uiGroup.Controls.Add(this.btnFire);
+            this.uiGroup.Controls.Add(this.btnRight);
+            this.uiGroup.Controls.Add(this.btnUp);
+            this.uiGroup.Controls.Add(this.btnDown);
+            this.uiGroup.Controls.Add(this.btnLeft);
             this.uiGroup.Controls.Add(this.lblDisplay);
             this.uiGroup.Location = new System.Drawing.Point(12, 12);
             this.uiGroup.Name = "uiGroup";
@@ -89,6 +101,91 @@
             this.uiGroup.TabIndex = 2;
             this.uiGroup.TabStop = false;
             this.uiGroup.Text = "User Interface";
+            // 
+            // btnSelect
+            // 
+            this.btnSelect.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.btnSelect.ForeColor = System.Drawing.Color.White;
+            this.btnSelect.Location = new System.Drawing.Point(47, 98);
+            this.btnSelect.Name = "btnSelect";
+            this.btnSelect.Size = new System.Drawing.Size(30, 30);
+            this.btnSelect.TabIndex = 1;
+            this.btnSelect.Tag = "2";
+            this.btnSelect.Text = "✔";
+            this.btnSelect.UseVisualStyleBackColor = false;
+            this.btnSelect.MouseDown += new System.Windows.Forms.MouseEventHandler(this.newButton_MouseDown);
+            this.btnSelect.MouseUp += new System.Windows.Forms.MouseEventHandler(this.newButton_MouseUp);
+            // 
+            // btnFire
+            // 
+            this.btnFire.BackColor = System.Drawing.Color.White;
+            this.btnFire.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFire.ForeColor = System.Drawing.Color.Red;
+            this.btnFire.Location = new System.Drawing.Point(121, 98);
+            this.btnFire.Name = "btnFire";
+            this.btnFire.Size = new System.Drawing.Size(30, 30);
+            this.btnFire.TabIndex = 1;
+            this.btnFire.Tag = "6";
+            this.btnFire.Text = "🔥";
+            this.btnFire.UseVisualStyleBackColor = false;
+            this.btnFire.MouseDown += new System.Windows.Forms.MouseEventHandler(this.newButton_MouseDown);
+            this.btnFire.MouseUp += new System.Windows.Forms.MouseEventHandler(this.newButton_MouseUp);
+            // 
+            // btnRight
+            // 
+            this.btnRight.BackColor = System.Drawing.Color.Black;
+            this.btnRight.ForeColor = System.Drawing.Color.White;
+            this.btnRight.Location = new System.Drawing.Point(84, 98);
+            this.btnRight.Name = "btnRight";
+            this.btnRight.Size = new System.Drawing.Size(30, 30);
+            this.btnRight.TabIndex = 1;
+            this.btnRight.Tag = "3";
+            this.btnRight.Text = "▶";
+            this.btnRight.UseVisualStyleBackColor = false;
+            this.btnRight.MouseDown += new System.Windows.Forms.MouseEventHandler(this.newButton_MouseDown);
+            this.btnRight.MouseUp += new System.Windows.Forms.MouseEventHandler(this.newButton_MouseUp);
+            // 
+            // btnUp
+            // 
+            this.btnUp.BackColor = System.Drawing.Color.Black;
+            this.btnUp.ForeColor = System.Drawing.Color.White;
+            this.btnUp.Location = new System.Drawing.Point(48, 61);
+            this.btnUp.Name = "btnUp";
+            this.btnUp.Size = new System.Drawing.Size(30, 30);
+            this.btnUp.TabIndex = 1;
+            this.btnUp.Tag = "4";
+            this.btnUp.Text = "▲";
+            this.btnUp.UseVisualStyleBackColor = false;
+            this.btnUp.MouseDown += new System.Windows.Forms.MouseEventHandler(this.newButton_MouseDown);
+            this.btnUp.MouseUp += new System.Windows.Forms.MouseEventHandler(this.newButton_MouseUp);
+            // 
+            // btnDown
+            // 
+            this.btnDown.BackColor = System.Drawing.Color.Black;
+            this.btnDown.ForeColor = System.Drawing.Color.White;
+            this.btnDown.Location = new System.Drawing.Point(47, 137);
+            this.btnDown.Name = "btnDown";
+            this.btnDown.Size = new System.Drawing.Size(30, 30);
+            this.btnDown.TabIndex = 1;
+            this.btnDown.Tag = "5";
+            this.btnDown.Text = "▼";
+            this.btnDown.UseVisualStyleBackColor = false;
+            this.btnDown.MouseDown += new System.Windows.Forms.MouseEventHandler(this.newButton_MouseDown);
+            this.btnDown.MouseUp += new System.Windows.Forms.MouseEventHandler(this.newButton_MouseUp);
+            // 
+            // btnLeft
+            // 
+            this.btnLeft.BackColor = System.Drawing.Color.Black;
+            this.btnLeft.ForeColor = System.Drawing.Color.White;
+            this.btnLeft.Location = new System.Drawing.Point(10, 98);
+            this.btnLeft.Name = "btnLeft";
+            this.btnLeft.Size = new System.Drawing.Size(30, 30);
+            this.btnLeft.TabIndex = 1;
+            this.btnLeft.Tag = "1";
+            this.btnLeft.Text = "◀";
+            this.btnLeft.UseVisualStyleBackColor = false;
+            this.btnLeft.MouseDown += new System.Windows.Forms.MouseEventHandler(this.newButton_MouseDown);
+            this.btnLeft.MouseUp += new System.Windows.Forms.MouseEventHandler(this.newButton_MouseUp);
             // 
             // tmrMain
             // 
@@ -533,6 +630,12 @@
         private System.Windows.Forms.Label lblCrashMessage;
         private System.Windows.Forms.NumericUpDown numTemperature;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button btnSelect;
+        private System.Windows.Forms.Button btnFire;
+        private System.Windows.Forms.Button btnRight;
+        private System.Windows.Forms.Button btnUp;
+        private System.Windows.Forms.Button btnDown;
+        private System.Windows.Forms.Button btnLeft;
     }
 }
 

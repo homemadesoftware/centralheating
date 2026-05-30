@@ -7,7 +7,6 @@ typedef struct tagBoardCalls
 	GetRtcDelegate pGetRtc;
 	SetRtcDelegate pSetRtc;
 	WriteDisplayBufferDelegate pWriteDisplayBuffer;
-	GetKeyStateDelegate pGetKeyState;
     GetWaitingKeysDelegate pGetWaitingKeys;
     GetInputPortValuesDelegate pGetInputPortValues;
 	SetOutputPortValuesDelegate pSetOutputPortValues;
@@ -24,7 +23,6 @@ GetRtcDelegate                  pGetRtc;
 SetRtcDelegate                  pSetRtc;
 WriteDisplayBufferDelegate      pWriteDisplayBuffer;
 GetWaitingKeysDelegate          pGetWaitingKeys;
-GetKeyStateDelegate             pGetKeyState;
 GetInputPortValuesDelegate      pGetInputPortValues;
 SetOutputPortValuesDelegate     pSetOutputPortValues;
 ReadHotWaterTemperatureDelegate pReadHotWaterTemperature;
@@ -39,7 +37,6 @@ EXPORTEDFUNCTION void StartEmulatedHardware(BoardCalls *pCalls)
     pGetRtc                     = pCalls->pGetRtc;
     pSetRtc                     = pCalls->pSetRtc;
     pWriteDisplayBuffer         = pCalls->pWriteDisplayBuffer;
-    pGetKeyState                = pCalls->pGetKeyState;
     pGetWaitingKeys             = pCalls->pGetWaitingKeys;
     pGetInputPortValues         = pCalls->pGetInputPortValues;
     pSetOutputPortValues        = pCalls->pSetOutputPortValues;

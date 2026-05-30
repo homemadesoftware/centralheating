@@ -15,7 +15,7 @@ namespace CentralHeatingEmulator
         int timerInterruptCount = 0;
         EmulatedHardwareInfo hwInfo;
         List<TimerSetup> timers = new List<TimerSetup>();
-        bool[] buttonDown = new bool[16];
+        bool[] buttonDown = new bool[6];
         bool heartShown = true;
         List<byte> inputBuffer = new List<byte>();
 
@@ -30,14 +30,14 @@ namespace CentralHeatingEmulator
         private const int INPUT_ZONE6 = (0x80); // busted
 
 
-        private const int OUTPUT_ACTUATOR1  = (0x01);
-        private const int OUTPUT_ACTUATOR2  = (0x02);
-        private const int OUTPUT_ACTUATOR3  = (0x04);
-        private const int OUTPUT_ACTUATOR4  = (0x08);
+        private const int OUTPUT_ACTUATOR1 = (0x01);
+        private const int OUTPUT_ACTUATOR2 = (0x02);
+        private const int OUTPUT_ACTUATOR3 = (0x04);
+        private const int OUTPUT_ACTUATOR4 = (0x08);
         private const int OUTPUT_HWACTUATOR = (0x10);
-        private const int OUTPUT_BOILER     = (0x20);
-        private const int OUTPUT_ACTUATOR5  = (0x40);
-        private const int OUTPUT_ACTUATOR6  = (0x80);
+        private const int OUTPUT_BOILER = (0x20);
+        private const int OUTPUT_ACTUATOR5 = (0x40);
+        private const int OUTPUT_ACTUATOR6 = (0x80);
 
 
 
@@ -68,26 +68,6 @@ namespace CentralHeatingEmulator
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // Expand buttons
-            for (int i = 0; i < 4; ++i)
-            {
-                for (int j = 0; j < 4; ++j)
-                {
-                    int buttonIndex = i * 4 + j + 1;
-                    Button newButton = new Button();
-                    newButton.Location = new System.Drawing.Point(6 + 30 * j, 60 + 30 * i);
-                    newButton.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
-                    newButton.Name = "button" + buttonIndex.ToString("00");
-                    newButton.Size = new System.Drawing.Size(28, 25);
-                    newButton.TabIndex = buttonIndex;
-                    newButton.Text = buttonIndex.ToString("00");
-                    newButton.UseVisualStyleBackColor = true;
-                    newButton.MouseDown += new MouseEventHandler(newButton_MouseDown);
-                    newButton.MouseUp += new MouseEventHandler(newButton_MouseUp);
-                    uiGroup.Controls.Add(newButton);
-                }
-            }
-
             // Initialise RTC like a DS1307
             txtRtcInternal.Text = DateTime.Now.ToFileTime().ToString();
             //txtRtcInternal.Text = new DateTime(2025, 05, 02, 17, 30, 0).ToFileTime().ToString();
@@ -99,7 +79,6 @@ namespace CentralHeatingEmulator
             hwInfo.WriteDisplayBuffer = WriteDisplayBuffer;
             hwInfo.RegisterForTimer = RegisterForTimer;
             hwInfo.EnableTimer = EnableTimer;
-            hwInfo.GetKeyState = GetKeyState;
             hwInfo.GetWaitingKeys = GetWaitingKeys;
             hwInfo.SetOutputPortValues = SetOutputPortValues;
             hwInfo.GetInputPortValues = GetInputPortValues;
@@ -115,7 +94,7 @@ namespace CentralHeatingEmulator
             if (sender is Button)
             {
                 Button button = (Button)sender;
-                buttonDown[int.Parse(button.Text) - 1] = true;
+                buttonDown[int.Parse((string)button.Tag) - 1] = true;
             }
         }
 
@@ -124,7 +103,7 @@ namespace CentralHeatingEmulator
             if (sender is Button)
             {
                 Button button = (Button)sender;
-                int index = int.Parse(button.Text) - 1;
+                int index = int.Parse((string)button.Tag) - 1;
                 bool previousState = buttonDown[index];
 
                 if (previousState && inputBuffer.Count < 16)
@@ -154,7 +133,7 @@ namespace CentralHeatingEmulator
         {
             TimerSetup ts =
                 timers.Find(
-                    delegate(TimerSetup t)
+                    delegate (TimerSetup t)
                     {
                         return t.Cookie == cookie;
                     });
@@ -181,7 +160,7 @@ namespace CentralHeatingEmulator
         {
             TimerSetup ts =
                 timers.Find(
-                    delegate(TimerSetup t)
+                    delegate (TimerSetup t)
                     {
                         return t.Cookie == cookie;
                     });
@@ -232,24 +211,14 @@ namespace CentralHeatingEmulator
             dts.year = (byte)(dt.Year - 2000);
         }
 
-        private void GetKeyState(ref int keys)
-        {
-            keys = 0;
-            for (int i = 0; i < 16; ++i)
-            {
-                if (buttonDown[i])
-                {
-                    keys = i + 1;
-                    return;
-                }
-            }
-        }
-
-        private void GetWaitingKeys(IntPtr buffer, ref byte readCount)
+        private void GetWaitingKeys(byte[] buffer, ref byte readCount)
         {
             if (inputBuffer.Count > 0)
             {
-                Marshal.Copy(inputBuffer.ToArray(), 0, buffer, inputBuffer.Count);
+                for (int i = 0; i < inputBuffer.Count; ++i)
+                {
+                    buffer[i] = inputBuffer[i];
+                }
                 readCount = (byte)inputBuffer.Count;
                 inputBuffer.Clear();
             }

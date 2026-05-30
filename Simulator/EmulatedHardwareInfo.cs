@@ -38,16 +38,10 @@ namespace CentralHeatingEmulator
         [MarshalAs(UnmanagedType.LPArray, SizeConst = 32)]
         byte[] buffer);
 
-    /// <summary>
-    /// Gets the keys
-    /// 1 = Left
-    /// 2 = Enter
-    /// 4 = Right
-    /// </summary>
-    public delegate void GetKeyStateDelegate(ref int keys);
-
-
-    public delegate void GetWaitingKeysDelegate(IntPtr buffer, ref byte readCount);
+    
+    public delegate void GetWaitingKeysDelegate(
+        [In, Out][MarshalAs(UnmanagedType.LPArray, SizeConst = 16)]
+        byte[] buffer, ref byte readCount);
 
     /// <summary>
     /// Uses 5 bits to read the status of the inputs
@@ -105,11 +99,6 @@ namespace CentralHeatingEmulator
         /// Blat the buffer
         /// </summary>
         public WriteDisplayBufferDelegate WriteDisplayBuffer;
-
-        /// <summary>
-        /// Get Key state
-        /// </summary>
-        public GetKeyStateDelegate GetKeyState;
 
         /// <summary>
         /// Get Key state

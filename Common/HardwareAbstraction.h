@@ -60,9 +60,6 @@ typedef void (STDCALL *WriteDisplayBufferDelegate)(unsigned char* buffer) REENTR
 // Read at most 32 chars into buffer as input keys.
 typedef void (STDCALL* GetWaitingKeysDelegate)(unsigned char* buffer, unsigned char* readCount) REENTRANT;
 
-// Read OLD style key state
-typedef void (STDCALL *GetKeyStateDelegate)(int* keys) REENTRANT;
-
 // Get input ports
 typedef void (STDCALL *GetInputPortValuesDelegate)(unsigned char *value) REENTRANT;
 
@@ -84,13 +81,21 @@ extern GetRtcDelegate pGetRtc;
 extern SetRtcDelegate pSetRtc;
 extern WriteDisplayBufferDelegate pWriteDisplayBuffer;
 extern GetWaitingKeysDelegate pGetWaitingKeys;
-extern GetKeyStateDelegate pGetKeyState;
 extern GetInputPortValuesDelegate pGetInputPortValues;
 extern SetOutputPortValuesDelegate pSetOutputPortValues;
 extern HeartBeatDelegate pHeartBeat;
 extern ReadHotWaterTemperatureDelegate pReadHotWaterTemperature;
 extern CrashDumpDelegate pCrashDump;
-  
+
+// Keybard constants
+#define KEY_LEFT	1
+#define KEY_SELECT	2
+#define KEY_RIGHT	3
+#define KEY_UP		4
+#define KEY_DOWN	5
+#define KEY_FIRE	6
+
+
 
 #ifdef MC8051
 
@@ -104,3 +109,4 @@ void Start8051Board();
 
 void STDCALL UserProgram() REENTRANT;
 void STDCALL Callback(int cookie) REENTRANT;
+

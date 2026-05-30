@@ -12,11 +12,10 @@
 
 // Timer cookies
 #define RTCUPDATECOOKIE		    1
-#define READKEYSCOOKIE		    2
-#define PROCESSHEATING  	    3
-#define SCREENACTIVITY   	    4
-#define READKEYSBUFFERCOOKIE    5
-#define HEARTBEATCOOKIE         6
+#define PROCESSHEATING  	    2
+#define SCREENACTIVITY   	    3
+#define READKEYSBUFFERCOOKIE    4
+#define HEARTBEATCOOKIE         5
 
 
 
@@ -85,6 +84,7 @@ void TestAndDisplay(char *description, unsigned char output);
 void WriteCurrentTime();
 void AnimateScreen();
 void ProcessHeating();
+void StartHotWater();
 
 
 
@@ -128,20 +128,7 @@ void STDCALL UserProgram()
     pRegisterForTimer(RTCUPDATECOOKIE, 400, Callback);
 
     // Does the hardware support multiple key reads?
-    unsigned char keyBufferSupported;
-    unsigned char keyBuffer[16];
-    pGetWaitingKeys(keyBuffer, &keyBufferSupported);
-    if (keyBufferSupported == 0xff)
-    {
-        // Old school keys
-        pRegisterForTimer(READKEYSCOOKIE, 10, Callback);
-    }
-    else
-    {
-        // New buffered keys
-        pRegisterForTimer(READKEYSBUFFERCOOKIE, 10, Callback);
-    }
-	
+    pRegisterForTimer(READKEYSBUFFERCOOKIE, 10, Callback);
 	pRegisterForTimer(PROCESSHEATING, 1000, Callback);
     pRegisterForTimer(SCREENACTIVITY, 1000, Callback);
     pRegisterForTimer(HEARTBEATCOOKIE, 330, Callback);
@@ -200,28 +187,6 @@ void STDCALL Callback(int cookie)
            }
            break;
 
-       case READKEYSCOOKIE :
-           pGetKeyState(&keys);
-           if (keys != lastKeys)
-           {
-               lastKeys = keys;
-               if (keys == 1)
-               {
-                   // L key pressed
-                   MenuNavigation(NAVTYPE_LEFT);
-               }
-               else if (keys == 2)
-               {
-                   MenuNavigation(NAVTYPE_SELECTITEM);
-               }
-               else if (keys == 3)
-               {
-                   MenuNavigation(NAVTYPE_RIGHT);
-               }
-               DisplayMenuOnHardware();
-           }
-           break;
-
        case READKEYSBUFFERCOOKIE :
            for (unsigned char i = 0; i < 16; ++i)
            {
@@ -233,18 +198,21 @@ void STDCALL Callback(int cookie)
                for (unsigned char i = 0; i < readCount; ++i)
                {
                    unsigned char keys = keysBuffer[i];
-                   if (keys == 1)
+                   if (keys == KEY_LEFT)
                    {
-                       // L key pressed
                        MenuNavigation(NAVTYPE_LEFT);
                    }
-                   else if (keys == 2)
+                   else if (keys == KEY_SELECT)
                    {
                        MenuNavigation(NAVTYPE_SELECTITEM);
                    }
-                   else if (keys == 3)
+                   else if (keys == KEY_RIGHT)
                    {
                        MenuNavigation(NAVTYPE_RIGHT);
+                   }
+                   else if (keys == KEY_FIRE && currentScreen != SCREEN_OUTPUTTEST)
+                   {
+                       StartHotWater();
                    }
                    DisplayMenuOnHardware();
                }
@@ -333,7 +301,7 @@ void HandleMenuCommand(int menuItem, int eventType)
     switch (menuItem)
     {
         case MENUID_HOTWATER1HR :
-            AddSecondsToDateTime(&currentDateTime, 3600, &provideHotwaterUntil);
+            StartHotWater();
             break;
 
         case MENUID_HOTWATERRST :
@@ -879,3 +847,7 @@ void AnimateScreen()
 }
 
 
+void StartHotWater()
+{
+    AddSecondsToDateTime(&currentDateTime, 3600, &provideHotwaterUntil);
+}
