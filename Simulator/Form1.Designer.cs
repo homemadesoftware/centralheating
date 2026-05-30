@@ -55,14 +55,18 @@
             this.chkOutput3 = new System.Windows.Forms.CheckBox();
             this.chkOutput2 = new System.Windows.Forms.CheckBox();
             this.chkOutput1 = new System.Windows.Forms.CheckBox();
-            this.lblCrashMessage = new System.Windows.Forms.Label();
             this.picHeart = new System.Windows.Forms.PictureBox();
+            this.lblCrashMessage = new System.Windows.Forms.Label();
+            this.numTemperature = new System.Windows.Forms.NumericUpDown();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.uiGroup.SuspendLayout();
             this.timerInterruptGroup.SuspendLayout();
             this.rtcGroup.SuspendLayout();
             this.inputsGroup.SuspendLayout();
             this.outputsGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picHeart)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numTemperature)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblDisplay
@@ -407,15 +411,6 @@
             this.chkOutput1.Text = "1";
             this.chkOutput1.UseVisualStyleBackColor = false;
             // 
-            // lblCrashMessage
-            // 
-            this.lblCrashMessage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblCrashMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCrashMessage.Location = new System.Drawing.Point(12, 270);
-            this.lblCrashMessage.Name = "lblCrashMessage";
-            this.lblCrashMessage.Size = new System.Drawing.Size(480, 44);
-            this.lblCrashMessage.TabIndex = 4;
-            // 
             // picHeart
             // 
             this.picHeart.Image = global::CentralHeatingEmulator.Properties.Resources.heart2;
@@ -425,12 +420,61 @@
             this.picHeart.TabIndex = 5;
             this.picHeart.TabStop = false;
             // 
+            // lblCrashMessage
+            // 
+            this.lblCrashMessage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblCrashMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCrashMessage.Location = new System.Drawing.Point(12, 336);
+            this.lblCrashMessage.Name = "lblCrashMessage";
+            this.lblCrashMessage.Size = new System.Drawing.Size(480, 44);
+            this.lblCrashMessage.TabIndex = 4;
+            // 
+            // numTemperature
+            // 
+            this.numTemperature.DecimalPlaces = 2;
+            this.numTemperature.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.numTemperature.Location = new System.Drawing.Point(110, 21);
+            this.numTemperature.Maximum = new decimal(new int[] {
+            180,
+            0,
+            0,
+            0});
+            this.numTemperature.Minimum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            -2147483648});
+            this.numTemperature.Name = "numTemperature";
+            this.numTemperature.Size = new System.Drawing.Size(78, 20);
+            this.numTemperature.TabIndex = 6;
+            this.numTemperature.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.numTemperature.Value = new decimal(new int[] {
+            185,
+            0,
+            0,
+            65536});
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.numTemperature);
+            this.groupBox1.Location = new System.Drawing.Point(12, 273);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(200, 56);
+            this.groupBox1.TabIndex = 7;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Temperature (C)";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.ClientSize = new System.Drawing.Size(504, 322);
+            this.ClientSize = new System.Drawing.Size(504, 392);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.picHeart);
             this.Controls.Add(this.lblCrashMessage);
             this.Controls.Add(this.rtcGroup);
@@ -451,6 +495,8 @@
             this.outputsGroup.ResumeLayout(false);
             this.outputsGroup.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picHeart)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numTemperature)).EndInit();
+            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -481,10 +527,12 @@
         private System.Windows.Forms.CheckBox chkOutput2;
         private System.Windows.Forms.CheckBox chkOutput1;
         private System.Windows.Forms.CheckBox chkOutput6;
-        private System.Windows.Forms.Label lblCrashMessage;
         private System.Windows.Forms.CheckBox chkOutput8;
         private System.Windows.Forms.CheckBox chkOutput7;
         private System.Windows.Forms.PictureBox picHeart;
+        private System.Windows.Forms.Label lblCrashMessage;
+        private System.Windows.Forms.NumericUpDown numTemperature;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }
 

@@ -5,7 +5,7 @@
 #include "../Common/CentralHeatingMenus.h"
 #include "../Common/StringUtils.h"
 
-#define COMPILED_AT "20260321"
+#define COMPILED_AT "20260530"
 
 
 #define SCREEN_BUFFER_SIZE  32
@@ -51,6 +51,7 @@
 #define ANIMATE_OUTPUTS     (1)
 #define ANIMATE_HW          (2)
 #define ANIMATE_VERSION     (3)
+#define ANIMATE_TEMPERATURE (4)
 
 
 // The boiler stops the pump 5 minutes after the boiler stops. 
@@ -855,10 +856,23 @@ void AnimateScreen()
     {
         strcpy(strBuffer, COMPILED_AT);
     }
+    else if (animationType == ANIMATE_TEMPERATURE)
+    {
+        float value;
+        pReadHotWaterTemperature(&value);
+        if (value >= -55 && value <= 125)
+        {
+            FloatToString(strBuffer, 10, (float)value);
+        }
+        else
+        { 
+            strcpy(strBuffer, "NO_READING");
+        }
+    }
 
     PartialWriteToScreen(0, 10, strBuffer);
     animationType++;
-    if (animationType > ANIMATE_VERSION)
+    if (animationType > ANIMATE_TEMPERATURE)
     {
         animationType = ANIMATE_INPUTS;
     }

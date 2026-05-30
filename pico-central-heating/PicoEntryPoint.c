@@ -20,22 +20,24 @@ void check_reboot_button();
 #include "KeyMatrix.h"
 #include "IoExpander.h"
 #include "ButtonPad.h"
+#include "tortoise_receiver.h"
  
 // User program is provided at link time
 void UserProgram();
 
 // Globals declared here
-RegisterForTimerDelegate    pRegisterForTimer;
-EnableTimerDelegate         pEnableTimer;
-GetRtcDelegate              pGetRtc;
-SetRtcDelegate              pSetRtc;
-WriteDisplayBufferDelegate  pWriteDisplayBuffer;
-GetKeyStateDelegate         pGetKeyState;
-GetWaitingKeysDelegate      pGetWaitingKeys;
-GetInputPortValuesDelegate  pGetInputPortValues;
-SetOutputPortValuesDelegate pSetOutputPortValues;
-HeartBeatDelegate           pHeartBeat;
-CrashDumpDelegate           pCrashDump;
+RegisterForTimerDelegate        pRegisterForTimer;
+EnableTimerDelegate             pEnableTimer;
+GetRtcDelegate                  pGetRtc;
+SetRtcDelegate                  pSetRtc;
+WriteDisplayBufferDelegate      pWriteDisplayBuffer;
+GetKeyStateDelegate             pGetKeyState;
+GetWaitingKeysDelegate          pGetWaitingKeys;
+GetInputPortValuesDelegate      pGetInputPortValues;
+SetOutputPortValuesDelegate     pSetOutputPortValues;
+ReadHotWaterTemperatureDelegate pReadHotWaterTemperature;
+HeartBeatDelegate               pHeartBeat;
+CrashDumpDelegate               pCrashDump;
 
 // Forwward declare various APIs available from this board
 void Hardware_InitialiseHardware();
@@ -50,6 +52,7 @@ void Hardware_GetInputPortValues(unsigned char* pValue);
 void Hardware_SetOutputPortValues(unsigned char value);
 void Hardware_HeartBeat();
 void Hardware_CrashDump(unsigned char* message);
+void Hardware_ReadHotWaterTemperature(float* pfValue);
 void Hardware_ScheduleUserCalls();
 
 
@@ -61,6 +64,9 @@ bool heartBeatState = true;
 
 int main()
 {
+    // Hack. Make sure to pull up the outputs first thing
+    IoExpander_Pull_Up_Output_On_I2C0_At_Startup();
+
     stdio_init_all();
     
     DEV_Module_Init();
@@ -75,10 +81,12 @@ int main()
     IoExpander_Initialise(i2cPortForIo);
 
     KeyMatrix_Init();
+
+    Tortoise_StartReceivingTemperatureReadings();
     
     // Initialise the hardware calls
     pRegisterForTimer = Hardware_RegisterForTimer;
-    pEnableTimer =Hardware_EnableTimer;
+    pEnableTimer = Hardware_EnableTimer;
     pGetRtc = Hardware_GetRtc;
     pSetRtc = Hardware_SetRtc;
     pWriteDisplayBuffer = Hardware_WriteDisplayBuffer;
@@ -86,6 +94,7 @@ int main()
     pGetWaitingKeys = Hardware_GetWaitingKeys;
     pGetInputPortValues = Hardware_GetInputPortValues;
     pSetOutputPortValues = Hardware_SetOutputPortValues;
+    pReadHotWaterTemperature = Hardware_ReadHotWaterTemperature;
     pHeartBeat = Hardware_HeartBeat;
     pCrashDump = Hardware_CrashDump;
 
@@ -105,12 +114,34 @@ void Hardware_CrashDump(unsigned char* message) REENTRANT
 
 void Hardware_GetInputPortValues(unsigned char* pValue) REENTRANT
 {
-    IoExpander_Read(i2cPortForIo, pValue);
+    unsigned char newLayoutReading;
+
+    IoExpander_Read(i2cPortForIo, &newLayoutReading);
+
+    // Map new layout to old layout
+
+// CH output constants
+#define INPUT_ZONENC1 (0x01) // not used
+#define INPUT_ZONENC2 (0x02) // not used
+#define INPUT_ZONE3   (0x04)  // P3_2
+#define INPUT_ZONE4   (0x08)  // P3_3, currently not used
+#define INPUT_ZONE1   (0x10)  // P3_4
+#define INPUT_ZONE2   (0x20)  // P3_5
+#define INPUT_ZONE5   (0x40)  // P3_6, currently not used
+#define INPUT_ZONE6   (0x80) // busted
+
+    * pValue = 
+        ((newLayoutReading & 0x01) ? INPUT_ZONE1 : 0) |
+        ((newLayoutReading & 0x02) ? INPUT_ZONE2 : 0) |
+        ((newLayoutReading & 0x04) ? INPUT_ZONE3 : 0) |
+        ((newLayoutReading & 0x08) ? INPUT_ZONE4 : 0) |
+        ((newLayoutReading & 0x10) ? INPUT_ZONE5 : 0);
 }
 
 void Hardware_SetOutputPortValues(unsigned char value) REENTRANT
 {
-    IoExpander_Write(i2cPortForIo, value);
+    // The outputs are active low
+    IoExpander_Write(i2cPortForIo, ~value);
 }
 
 void Hardware_SetRtc(DateTimeStruct* dts) REENTRANT
@@ -235,4 +266,13 @@ void Hardware_ScheduleUserCalls()
 void Hardware_WriteDisplayBuffer(unsigned char* buffer) REENTRANT
 {
     PicoCH_DirectWriteToDisplay(buffer);
+}
+
+
+void Hardware_ReadHotWaterTemperature(float* pfValue) REENTRANT
+{
+    if (!Tortoise_GetLatestReading(pfValue))
+    {
+        *pfValue = -200;
+    }
 }
