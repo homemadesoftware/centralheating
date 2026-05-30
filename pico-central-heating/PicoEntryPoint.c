@@ -31,7 +31,6 @@ EnableTimerDelegate             pEnableTimer;
 GetRtcDelegate                  pGetRtc;
 SetRtcDelegate                  pSetRtc;
 WriteDisplayBufferDelegate      pWriteDisplayBuffer;
-GetKeyStateDelegate             pGetKeyState;
 GetWaitingKeysDelegate          pGetWaitingKeys;
 GetInputPortValuesDelegate      pGetInputPortValues;
 SetOutputPortValuesDelegate     pSetOutputPortValues;
@@ -46,7 +45,6 @@ void Hardware_EnableTimer(int cookie, int enabled);
 void Hardware_WriteDisplayBuffer(unsigned char*);
 void Hardware_SetRtc(DateTimeStruct* pdts);
 void Hardware_GetRtc(DateTimeStruct* pdts);
-void Hardware_GetKeyState(int* keys);
 void Hardware_GetWaitingKeys(unsigned char* buffer, unsigned char* readCount);
 void Hardware_GetInputPortValues(unsigned char* pValue);
 void Hardware_SetOutputPortValues(unsigned char value);
@@ -90,7 +88,6 @@ int main()
     pGetRtc = Hardware_GetRtc;
     pSetRtc = Hardware_SetRtc;
     pWriteDisplayBuffer = Hardware_WriteDisplayBuffer;
-    pGetKeyState = Hardware_GetKeyState;
     pGetWaitingKeys = Hardware_GetWaitingKeys;
     pGetInputPortValues = Hardware_GetInputPortValues;
     pSetOutputPortValues = Hardware_SetOutputPortValues;
@@ -152,12 +149,6 @@ void Hardware_SetRtc(DateTimeStruct* dts) REENTRANT
 void Hardware_GetRtc(DateTimeStruct* dts) REENTRANT
 {
     Rtc_ReadClock(i2cPortForRtc, dts);
-}
-
-void Hardware_GetKeyState(int* keys)
-{
-    uint8_t key = ButtonPad_ReadKeyState(i2cPortForIo);
-    *keys = key;
 }
 
 void Hardware_GetWaitingKeys(unsigned char* buffer, unsigned char* readCount)

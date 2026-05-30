@@ -14,7 +14,6 @@ namespace CentralHeatingEmulator
         const int rtcUpdateCookie = 1;
         const int readKeysCookie = 2;
         static byte[] buffer = new byte[32];
-        static int lastKeys = 0;
         static EmulatedHardwareInfo pCalls;
 
         static public void HardwareCall(ref EmulatedHardwareInfo info)
@@ -63,12 +62,12 @@ namespace CentralHeatingEmulator
                     break;
 
                 case readKeysCookie:
-                    int keys = 0;
-                    pCalls.GetKeyState(ref keys);
-                    if (keys != lastKeys)
+                    byte[] keys = new byte[16];
+                    byte readCount = 0;
+                    pCalls.GetWaitingKeys(keys, ref readCount);
+                    for (int i =0; i< readCount; ++i)
                     {
-                        lastKeys = keys;
-                        formatted = string.Format("{0}", keys);
+                        formatted = string.Format("{0}", keys[i]);
                         buffer[0] = (byte)formatted[0];
                         pCalls.WriteDisplayBuffer(buffer);
                     }

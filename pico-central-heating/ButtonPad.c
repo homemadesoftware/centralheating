@@ -1,3 +1,4 @@
+#include "HardwareAbstraction.h"
 #include "pico/stdlib.h"
 #include "hardware/i2c.h"
 #include "ButtonPad.h"
@@ -28,36 +29,12 @@ enum MLINK_BPAD_REGISTERS
 
 int ConvertKey(uint8_t key);
 uint8_t ReadFromRegister(i2c_inst_t* i2cPort, uint8_t reg);
-bool ButtonPad_IsLeftDown(i2c_inst_t* i2cPort);
-bool ButtonPad_IsMiddleDown(i2c_inst_t* i2cPort);
-bool ButtonPad_IsRightDown(i2c_inst_t* i2cPort);
 
-
-uint8_t ButtonPad_ReadKeyState(i2c_inst_t* i2cPort)
-{
-	if (ButtonPad_IsLeftDown(i2cPort))
-	{
-		return 1;
-	}
-	else if (ButtonPad_IsMiddleDown(i2cPort))
-	{
-		return 2;
-	}
-	else if (ButtonPad_IsRightDown(i2cPort))
-	{
-		return 3;
-	}
-	return 0;
-}
-
-#include "HardwareAbstraction.h"
-extern CrashDumpDelegate           pCrashDump;
-void IntToString(unsigned char* p, unsigned int v);
 
 void ButtonPad_ReadBufferedKeys(i2c_inst_t* i2cPort, uint8_t* keys, uint8_t* read)
 {
 	*read = 0;
-	for (uint8_t i = 0; i < 32; ++i)
+	for (uint8_t i = 0; i < 16; ++i)
 	{
 		if (ReadFromRegister(i2cPort, MLINK_BPAD_BUFF_STATUS_REG) & (1 << BPAD_BUFF_EMPTY_BIT))
 		{
@@ -65,30 +42,31 @@ void ButtonPad_ReadBufferedKeys(i2c_inst_t* i2cPort, uint8_t* keys, uint8_t* rea
 		}
 		keys[i] = ConvertKey(ReadFromRegister(i2cPort, MLINK_BPAD_BUFFER_REG));
 
-		/*
-		char buf[10];
-		IntToString(buf, keys[i]);
-		pCrashDump(buf);
-		*/
-
-
 		++(*read);
 	}
 }
 
 int ConvertKey(uint8_t key)
 {
-	if (key == 1)
+	switch (key)
 	{
-		return 1;
-	}
-	else if (key == 4)
-	{
-		return 2;
-	}
-	else if (key == 3)
-	{
-		return 3;
+		case BPAD_LEFT_BIT:
+			return KEY_LEFT;
+
+		case BPAD_SELECT_BIT:
+			return KEY_SELECT;
+
+		case BPAD_RIGHT_BIT:
+			return KEY_RIGHT;
+
+		case BPAD_UP_BIT:
+			return KEY_UP;
+
+		case BPAD_DOWN_BIT:
+			return KEY_DOWN;
+
+		case BPAD_BACK_BIT:
+			return KEY_FIRE;
 	}
 	return 0;
 }
@@ -104,19 +82,3 @@ uint8_t ReadFromRegister(i2c_inst_t* i2cPort, uint8_t reg)
 	return buffer[0];
 }
 
-bool ButtonPad_IsLeftDown(i2c_inst_t* i2cPort)
-{
-	return ReadFromRegister(i2cPort, MLINK_BPAD_KEYSTATE_REG) & (1 << BPAD_LEFT_BIT);
-}
-
-
-bool ButtonPad_IsMiddleDown(i2c_inst_t* i2cPort)
-{
-	return ReadFromRegister(i2cPort, MLINK_BPAD_KEYSTATE_REG) & (1 << BPAD_SELECT_BIT);
-}
-
-
-bool ButtonPad_IsRightDown(i2c_inst_t* i2cPort)
-{
-	return ReadFromRegister(i2cPort, MLINK_BPAD_KEYSTATE_REG) & (1 << BPAD_RIGHT_BIT);
-}
