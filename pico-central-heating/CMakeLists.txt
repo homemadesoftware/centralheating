@@ -8,7 +8,7 @@ if(NOT DEFINED ENV{PICO_SDK_PATH})
     set(ENV{PICO_SDK_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../PicoBuild/libs/pico-sdk")
 endif()
 
-set(PICO_BOARD pico_w)
+set(PICO_BOARD pico2_w)
 include(${CMAKE_CURRENT_SOURCE_DIR}/../PicoBuild/libs/pico-sdk/external/pico_sdk_import.cmake)
 project(my_project)
 pico_sdk_init()

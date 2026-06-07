@@ -4,17 +4,37 @@ Raspberry Pi Pico W (RP2040)
 
 ## ePaper Display
 
-Waveshare 2.13" e-paper V3. Connected via SPI1 at 4 MHz. The display plugs onto Pico pins 11–17.
+Waveshare 2.13" e-paper V3. Connected via SPI1 at 4 MHz.
 
-| Signal | GPIO | Pin |
-|--------|------|-----|
-| DC     | 8    | 11  |
-| CS     | 9    | 12  |
-| GND    | —    | 13  |
-| CLK    | 10   | 14  |
-| DIN    | 11   | 15  |
-| RST    | 12   | 16  |
-| BUSY   | 13   | 17  |
+The display board is mounted separately and connected to the main board via a 10-pin IDC cable. The cable extends the Waveshare data lines and carries power from Pico VSYS.
+
+### Pico signal mapping
+
+| Signal | GPIO | Pico pin |
+|--------|------|----------|
+| DC     | 8    | 11       |
+| CS     | 9    | 12       |
+| GND    | —    | 13       |
+| CLK    | 10   | 14       |
+| DIN    | 11   | 15       |
+| RST    | 12   | 16       |
+| BUSY   | 13   | 17       |
+| VCC    | —    | 39 (VSYS)|
+
+### IDC 10-pin cable pinout
+
+| IDC pin | Signal | Wire colour |
+|---------|--------|-------------|
+| 1       | DC     | Red         |
+| 2       | CS     | Yellow      |
+| 3       | GND    | —           |
+| 4       | CLK    | White       |
+| 5       | DIN    | Green       |
+| 6       | RST    | Black       |
+| 7       | BUSY   | Blue        |
+| 8       | NC     | —           |
+| 9       | GND    | —           |
+| 10      | VCC    | —           |
 
 ## IO Expander
 
