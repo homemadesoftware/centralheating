@@ -1,52 +1,55 @@
-# Micro Windows — Design Plan
+# PicoWindows — Design Plan
 
 ## Overview
 
-Micro Windows is a new, independent UI system built around the Waveshare 2.13" e-paper display on the Raspberry Pi Pico 2 W. It is a clean-slate project — it shares no code, patterns, or legacy with the central heating system. The goal is a properly designed display and windowing layer that respects the physical characteristics of the e-paper hardware.
+PicoWindows is a new, independent UI system built around the Waveshare 2.13" e-paper display on the Raspberry Pi Pico 2 W. It is a clean-slate project — it shares no code, patterns, or legacy with the central heating system. The goal is a properly designed display and windowing layer that respects the physical characteristics of the e-paper hardware.
 
 The system has two parallel implementations:
 
-- **`pico-micro-windows/`** — firmware running on Pico 2 W hardware
-- **`MicroWindowsEmulator/`** — C# WinForms application on Windows that runs the same C code in an x86 DLL, with a display panel that simulates e-paper physics visually
+- **`pico-windows/`** — firmware running on Pico 2 W hardware
+- **`PicoWindowsEmulator/`** — C# WinForms application on Windows that runs the same C code in an x86 DLL, with a display panel that simulates e-paper physics visually
 
 ---
 
 ## Project Structure
 
 ```
-pico-micro-windows/         Pico 2 W firmware (exists)
+pico-windows/               Pico 2 W firmware (exists)
   main.c                    Entry point stub
   ButtonPad.c/h             mLink 6-button pad driver (I2C)
   RTC1307.c/h               DS1307 RTC driver (I2C)
   i2c.c/h                   I2C initialisation
   CMakeLists.txt            pico2_w target, no Waveshare yet
-  compile.ps1               Docker build (container: micro-windows-pico)
+  compile.ps1               Docker build (container: pico-windows)
 
-MicroWindowsEmulator/       C# WinForms emulator (to be created)
-  MicroWindowsEmulator.sln
-  MicroWindowsEmulator.csproj
+PicoWindowsCommon/          Shared C code — PW_Init, PW_Tick, drawing logic (to be created)
+
+x86-emulated-pico-windows/  x86 DLL entry point and wiring (to be created)
+
+PicoWindowsEmulator/        C# WinForms emulator (to be created)
+  PicoWindowsEmulator.sln
+  PicoWindowsEmulator.csproj
   Form1.cs / Form1.Designer.cs
-  x86Emulated/              x86 DLL compiled from the same C source
 ```
 
-The C application code (drawing logic, UI state) will live in a shared folder alongside `pico-micro-windows/` once that layer exists, analogous to `Common/` for central heating. Not created yet.
+The C application code (drawing logic, UI state) lives in `PicoWindowsCommon/`, analogous to `Common/` for central heating. Both `pico-windows/` and `x86-emulated-pico-windows/` include from it.
 
 ---
 
 ## Architecture: Render Loop
 
-Central heating used a timer-callback pattern. Micro Windows uses a **render loop**:
+Central heating used a timer-callback pattern. PicoWindows uses a **render loop**:
 
 ```
-MW_Init()       — allocate buffer, init display, draw initial frame
+PW_Init()       — allocate buffer, init display, draw initial frame
 loop:
-  MW_Tick()     — read input, update state, draw to buffer if dirty, push display
+  PW_Tick()     — read input, update state, draw to buffer if dirty, push display
   sleep / yield
 ```
 
-On Pico: `main()` calls `MW_Init()` then `while(1) { MW_Tick(); sleep_ms(N); }`.
+On Pico: `main()` calls `PW_Init()` then `while(1) { PW_Tick(); sleep_ms(N); }`.
 
-On the emulator: a dedicated .NET thread calls `MW_Init()` once, then loops calling `MW_Tick()` with a sleep between iterations. The WinForms message loop runs independently on the UI thread.
+On the emulator: a dedicated .NET thread calls `PW_Init()` once, then loops calling `PW_Tick()` with a sleep between iterations. The WinForms message loop runs independently on the UI thread.
 
 ---
 
@@ -84,7 +87,7 @@ On the emulator: a dedicated .NET thread calls `MW_Init()` once, then loops call
 
 ## Hardware Abstraction Interface
 
-The interface between application C code and the hardware (or emulator) is small and purpose-built for micro-windows. No inheritance from central heating's `HardwareAbstraction.h`.
+The interface between application C code and the hardware (or emulator) is small and purpose-built for PicoWindows. No inheritance from central heating's `HardwareAbstraction.h`.
 
 ```c
 // Push finished frame — full refresh (slow, clears ghosting)
@@ -116,9 +119,9 @@ UI Thread (WinForms)
   ├── Timer (e.g. 16ms) → dequeue latest frame → render to panel
   └── Button MouseDown/Up → enqueue key to input queue
 
-MW Thread (dedicated .NET Thread)
-  ├── Calls MW_Init() once
-  └── Loop: MW_Tick() → sleep(16ms)
+PW Thread (dedicated .NET Thread)
+  ├── Calls PW_Init() once
+  └── Loop: PW_Tick() → sleep(16ms)
         ├── calls GetWaitingKeys delegate → drains input queue
         └── calls DisplayFullRefresh or DisplayPartialRefresh delegate
               → copies unmanaged buffer to new managed byte[3904]
@@ -227,5 +230,7 @@ Note: no `MeasureString` equivalent. Text width must be calculated manually as `
 - Periodic full refresh cadence — how many partial updates before forcing `Display_Base`?
 - Screen transition API — explicit "new screen" call that triggers full refresh
 - Power management — `Sleep()` / wake cycle on Pico
-- MicroWindows application code folder (shared between Pico and x86 DLL) — name and structure TBD
-- `MicroWindowsEmulator/` Visual Studio solution — to be created when implementation begins
+- Periodic full refresh cadence — how many partial updates before forcing `Display_Base`?
+- `PicoWindowsCommon/` shared code folder — to be created when implementation begins
+- `x86-emulated-pico-windows/` DLL entry point — to be created when implementation begins
+- `PicoWindowsEmulator/` Visual Studio solution — to be created when implementation begins
