@@ -1,1 +1,1 @@
-& "$PSScriptRoot/../PicoBuild/compile-shared.ps1" -ContainerName "pico-windows"
+& "$PSScriptRoot/../PicoBuild/compile-shared.ps1" -ContainerName "pico-windows" -SharedFolder "PicoWindowsCommon"

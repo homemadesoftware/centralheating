@@ -1,4 +1,4 @@
-#include "HardwareAbstraction.h"
+#include "PW_HardwareAbstraction.h"
 #include "pico/stdlib.h"
 #include "hardware/i2c.h"
 #include "ButtonPad.h"
@@ -51,22 +51,22 @@ int ConvertKey(uint8_t key)
 	switch (key)
 	{
 		case BPAD_LEFT_BIT:
-			return KEY_LEFT;
+			return PW_KEY_LEFT;
 
 		case BPAD_SELECT_BIT:
-			return KEY_SELECT;
+			return PW_KEY_SELECT;
 
 		case BPAD_RIGHT_BIT:
-			return KEY_RIGHT;
+			return PW_KEY_RIGHT;
 
 		case BPAD_UP_BIT:
-			return KEY_UP;
+			return PW_KEY_UP;
 
 		case BPAD_DOWN_BIT:
-			return KEY_DOWN;
+			return PW_KEY_DOWN;
 
 		case BPAD_BACK_BIT:
-			return KEY_FIRE;
+			return PW_KEY_FIRE;
 	}
 	return 0;
 }

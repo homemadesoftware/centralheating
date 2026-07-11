@@ -9,11 +9,14 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/../PicoBuild/libs/pico-sdk/external/pico_sdk
 project(pico_windows)
 pico_sdk_init()
 
+file(GLOB PW_COMMON_SOURCES "../PicoWindowsCommon/*.c")
+
 add_executable(pico_windows
     main.c
     ButtonPad.c
     RTC1307.c
     i2c.c
+    ${PW_COMMON_SOURCES}
 )
 
 target_link_libraries(pico_windows
@@ -22,7 +25,7 @@ target_link_libraries(pico_windows
 )
 
 target_include_directories(pico_windows PRIVATE
-    ./../Common
+    ./../PicoWindowsCommon
 )
 
 pico_enable_stdio_usb(pico_windows 1)
