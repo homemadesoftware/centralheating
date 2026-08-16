@@ -11,6 +11,7 @@ pico_sdk_init()
 
 add_executable(udp_pusher
     main.c
+    network_io.c
 )
 
 target_link_libraries(udp_pusher
