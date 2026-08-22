@@ -16,4 +16,7 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)main.c" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)udp_io.h" />
+  </ItemGroup>
 </Project>
