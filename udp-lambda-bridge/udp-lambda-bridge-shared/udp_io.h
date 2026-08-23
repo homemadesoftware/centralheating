@@ -8,11 +8,11 @@ typedef void OnDataReceived(const unsigned char* pszDataReceived);
 // A buffer is already allocated and null terminated. 
 // The response must be written to it, with thr null terminator. The maximum number of 
 // chars that can be written is maxLength - 1.
-typedef void OnResponseRequired(unsigned char* pszReceiveBuffer, int maxLength);
+typedef void OnResponseRequired(unsigned char* pszReceiveBuffer, unsigned short maxLength);
 
 
-int Initalise_UdpModule(int udpPort, OnDataReceived *pOnDataReceived, OnResponseRequired *pOnResponseRequired);
 
-void ListenAndRespond();
+int UdpModule_ListenAndRespond(unsigned short udpPort, OnDataReceived* pOnDataReceived, OnResponseRequired* pOnResponseRequired);
 
-void Shutdown();
+#define UDP_MODULE_MAX_RECEIVE_BUFFER 512
+#define UDP_MODULE_MAX_SEND_BUFFER    512
