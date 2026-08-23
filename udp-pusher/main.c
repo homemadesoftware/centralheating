@@ -8,6 +8,7 @@
 #include "network_io.h"
 
 #define WIFI_SSID       "You will be hacked"
+#define WIFI_PASSWORD   ""
 #define UDP_PORT        12345
 #define BASE_FAKE_UTC   1786291200UL
 
@@ -45,7 +46,7 @@ int main(void)
 
     NetworkIo io;
 
-    if (NetworkIo_Init(&io, WIFI_SSID, UDP_PORT, Receive) != 0)
+    if (NetworkIo_Init(&io, WIFI_SSID, WIFI_PASSWORD, UDP_PORT, Receive) != 0)
     {
         printf("Failed to Init\n");
         return 1;
