@@ -9,7 +9,13 @@
 #include "GUI_Paint.h"
 #include "Debug.h"
 
-void check_reboot_button();
+// network io - push udp
+#include "network_io.h"
+
+#define WIFI_SSID       "You will be hacked"
+#define WIFI_PASSWORD   ""
+#define UDP_PORT        12345
+
 
 
 #include "HardwareAbstraction.h"
@@ -37,9 +43,11 @@ SetOutputPortValuesDelegate     pSetOutputPortValues;
 ReadHotWaterTemperatureDelegate pReadHotWaterTemperature;
 HeartBeatDelegate               pHeartBeat;
 CrashDumpDelegate               pCrashDump;
+ReadLastNetworkPacketDelegate   pReadLastNetworkPacket;
+SendNetworkPacketDelegate       pSendNetworkPacket;
+
 
 // Forwward declare various APIs available from this board
-void Hardware_InitialiseHardware();
 void Hardware_RegisterForTimer(int cookie, int milliSeconds, CallbackDelegate callback);
 void Hardware_EnableTimer(int cookie, int enabled);
 void Hardware_WriteDisplayBuffer(unsigned char*);
@@ -48,10 +56,12 @@ void Hardware_GetRtc(DateTimeStruct* pdts);
 void Hardware_GetWaitingKeys(unsigned char* buffer, unsigned char* readCount);
 void Hardware_GetInputPortValues(unsigned char* pValue);
 void Hardware_SetOutputPortValues(unsigned char value);
-void Hardware_HeartBeat();
+void Hardware_HeartBeat() ;
 void Hardware_CrashDump(unsigned char* message);
 void Hardware_ReadHotWaterTemperature(float* pfValue);
 void Hardware_ScheduleUserCalls();
+void Hardware_ReadLastNetworkPacket(unsigned char* buffer, int maxLength);
+void Hardware_SendNetworkPacket(unsigned char* buffer);
 
 
 // currently selected/used i2c port for RTC
@@ -59,6 +69,9 @@ i2c_inst_t* i2cPortForIo;
 i2c_inst_t* i2cPortForRtc;
 
 bool heartBeatState = true;
+
+NetworkIo networkIo;
+void ReceiveDataFromNetwork(const unsigned char* pszDataIn);
 
 int main()
 {
@@ -70,7 +83,7 @@ int main()
     DEV_Module_Init();
 
     cyw43_arch_init();
-
+    
     PicoCH_InitialiseDisplay();
 
     i2cPortForIo = InitialiseI2C(0, 10000);
@@ -81,6 +94,9 @@ int main()
     KeyMatrix_Init();
 
     Tortoise_StartReceivingTemperatureReadings();
+
+    // Connect to network
+    NetworkIo_Init(&networkIo, WIFI_SSID, WIFI_PASSWORD, UDP_PORT, ReceiveDataFromNetwork);
     
     // Initialise the hardware calls
     pRegisterForTimer = Hardware_RegisterForTimer;
@@ -93,6 +109,8 @@ int main()
     pSetOutputPortValues = Hardware_SetOutputPortValues;
     pReadHotWaterTemperature = Hardware_ReadHotWaterTemperature;
     pHeartBeat = Hardware_HeartBeat;
+    pReadLastNetworkPacket = Hardware_ReadLastNetworkPacket;
+    pSendNetworkPacket = Hardware_SendNetworkPacket;
     pCrashDump = Hardware_CrashDump;
 
     UserProgram();
@@ -103,13 +121,13 @@ int main()
 
 }
 
-void Hardware_CrashDump(unsigned char* message) REENTRANT
+void Hardware_CrashDump(unsigned char* message)
 {
     PicoCH_DirectWriteToDisplay(message);
     while (1);
 }
 
-void Hardware_GetInputPortValues(unsigned char* pValue) REENTRANT
+void Hardware_GetInputPortValues(unsigned char* pValue)
 {
     unsigned char newLayoutReading;
 
@@ -135,18 +153,18 @@ void Hardware_GetInputPortValues(unsigned char* pValue) REENTRANT
         ((newLayoutReading & 0x10) ? INPUT_ZONE5 : 0);
 }
 
-void Hardware_SetOutputPortValues(unsigned char value) REENTRANT
+void Hardware_SetOutputPortValues(unsigned char value)
 {
     // The outputs are active low
     IoExpander_Write(i2cPortForIo, ~value);
 }
 
-void Hardware_SetRtc(DateTimeStruct* dts) REENTRANT
+void Hardware_SetRtc(DateTimeStruct* dts)
 {
     Rtc_WriteClock(i2cPortForRtc, dts);
 }
 
-void Hardware_GetRtc(DateTimeStruct* dts) REENTRANT
+void Hardware_GetRtc(DateTimeStruct* dts)
 {
     Rtc_ReadClock(i2cPortForRtc, dts);
 }
@@ -185,7 +203,7 @@ typedef struct tagTimerSetup
 TimerSetup timers[MAX_TIMERS];
 
 
-void Hardware_RegisterForTimer(int cookie, int milliSeconds, CallbackDelegate callback) REENTRANT
+void Hardware_RegisterForTimer(int cookie, int milliSeconds, CallbackDelegate callback)
 {
     int i;
 
@@ -208,7 +226,7 @@ void Hardware_RegisterForTimer(int cookie, int milliSeconds, CallbackDelegate ca
 }
 
 
-void Hardware_EnableTimer(int cookie, int enabled) REENTRANT
+void Hardware_EnableTimer(int cookie, int enabled)
 {
     int i;
     for (i = 0; i < MAX_TIMERS; ++i)
@@ -247,23 +265,40 @@ void Hardware_ScheduleUserCalls()
             if (pTimer->fired)
             {
                 pTimer->callback(pTimer->cookie);
+                NetworkIo_Poll(&networkIo);
             }
         }
 
         sleep_ms(1);
+        NetworkIo_Poll(&networkIo);
     }
 }
 
-void Hardware_WriteDisplayBuffer(unsigned char* buffer) REENTRANT
+void Hardware_WriteDisplayBuffer(unsigned char* buffer)
 {
     PicoCH_DirectWriteToDisplay(buffer);
 }
 
 
-void Hardware_ReadHotWaterTemperature(float* pfValue) REENTRANT
+void Hardware_ReadHotWaterTemperature(float* pfValue)
 {
     if (!Tortoise_GetLatestReading(pfValue))
     {
         *pfValue = -200;
     }
+}
+
+void ReceiveDataFromNetwork(const unsigned char* pszDataIn)
+{
+    printf("%s\n", pszDataIn);
+}
+
+void Hardware_ReadLastNetworkPacket(unsigned char* buffer, int maxLength)
+{
+
+}
+
+void Hardware_SendNetworkPacket(unsigned char* buffer)
+{
+    NetworkIo_Send(&networkIo, buffer);
 }

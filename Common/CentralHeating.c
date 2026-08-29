@@ -8,7 +8,8 @@
 #define COMPILED_AT "20260530"
 
 
-#define SCREEN_BUFFER_SIZE  32
+#define SCREEN_BUFFER_SIZE      32
+#define TEMPERATURE_BUFFER_SIZE 16
 
 // Timer cookies
 #define RTCUPDATECOOKIE		    1
@@ -16,6 +17,7 @@
 #define SCREENACTIVITY   	    3
 #define READKEYSBUFFERCOOKIE    4
 #define HEARTBEATCOOKIE         5
+#define READTEMPERATURECOOKIE   6
 
 
 
@@ -61,6 +63,7 @@
 
 // Globals
 unsigned char screenBuffer[SCREEN_BUFFER_SIZE + 1];
+unsigned char temperatureBuffer[TEMPERATURE_BUFFER_SIZE];
 unsigned char lastKeys;
 unsigned char currentScreen;
 unsigned char flashDateTime;
@@ -85,6 +88,7 @@ void WriteCurrentTime();
 void AnimateScreen();
 void ProcessHeating();
 void StartHotWater();
+void ReadTemperatureData();
 
 
 
@@ -132,6 +136,7 @@ void STDCALL UserProgram()
 	pRegisterForTimer(PROCESSHEATING, 1000, Callback);
     pRegisterForTimer(SCREENACTIVITY, 1000, Callback);
     pRegisterForTimer(HEARTBEATCOOKIE, 330, Callback);
+    pRegisterForTimer(READTEMPERATURECOOKIE, 1000, Callback);
 
 
     // Init menu defs
@@ -236,6 +241,11 @@ void STDCALL Callback(int cookie)
 
        case HEARTBEATCOOKIE: 
            pHeartBeat();
+           break;
+
+       case READTEMPERATURECOOKIE: 
+           ReadTemperatureData();
+           pSendNetworkPacket(temperatureBuffer);
            break;
 
     }
@@ -826,16 +836,7 @@ void AnimateScreen()
     }
     else if (animationType == ANIMATE_TEMPERATURE)
     {
-        float value;
-        pReadHotWaterTemperature(&value);
-        if (value >= -55 && value <= 125)
-        {
-            FloatToString(strBuffer, 10, (float)value);
-        }
-        else
-        { 
-            strcpy(strBuffer, "NO_READING");
-        }
+        strcpy(strBuffer, temperatureBuffer);
     }
 
     PartialWriteToScreen(0, 10, strBuffer);
@@ -850,4 +851,18 @@ void AnimateScreen()
 void StartHotWater()
 {
     AddSecondsToDateTime(&currentDateTime, 3600, &provideHotwaterUntil);
+}
+
+void ReadTemperatureData()
+{
+    float value;
+    pReadHotWaterTemperature(&value);
+    if (value >= -55 && value <= 125)
+    {
+        FloatToString(temperatureBuffer, TEMPERATURE_BUFFER_SIZE, (float)value);
+    }
+    else
+    {
+        strcpy(temperatureBuffer, "NO_READING");
+    }
 }

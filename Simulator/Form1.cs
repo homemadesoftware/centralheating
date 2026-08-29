@@ -84,6 +84,8 @@ namespace CentralHeatingEmulator
             hwInfo.GetInputPortValues = GetInputPortValues;
             hwInfo.ReadHotWaterTemperature = ReadHotWaterTemperature;
             hwInfo.HeartBeat = HeartBeat;
+            hwInfo.ReadLastNetworkPacket = ReadLastNetworkPacket;
+            hwInfo.SendNetworkPacket = SendNetworkPacket;
             hwInfo.CrashDump = CrashDump;
 
             CallProgramEntryPoint();
@@ -260,6 +262,16 @@ namespace CentralHeatingEmulator
         {
             heartShown = !heartShown;
             picHeart.Visible = heartShown;
+        }
+
+        private void ReadLastNetworkPacket(IntPtr data, int maxLength)
+        {
+
+        }
+
+        private void SendNetworkPacket(string data)
+        {
+            txtNetworkPacketOut.Text = data;
         }
 
         private void CrashDump(string message)

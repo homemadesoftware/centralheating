@@ -12,6 +12,8 @@ typedef struct tagBoardCalls
 	SetOutputPortValuesDelegate pSetOutputPortValues;
     ReadHotWaterTemperatureDelegate pReadHotWaterTemperature;
     HeartBeatDelegate pHeartBeat;
+    ReadLastNetworkPacketDelegate pReadLastNetworkPacket;
+    SendNetworkPacketDelegate pSendNetworkPacket;
 	CrashDumpDelegate pCrashDump;
 } BoardCalls;
 
@@ -27,6 +29,8 @@ GetInputPortValuesDelegate      pGetInputPortValues;
 SetOutputPortValuesDelegate     pSetOutputPortValues;
 ReadHotWaterTemperatureDelegate pReadHotWaterTemperature;
 HeartBeatDelegate               pHeartBeat;
+ReadLastNetworkPacketDelegate   pReadLastNetworkPacket;
+SendNetworkPacketDelegate       pSendNetworkPacket;
 CrashDumpDelegate               pCrashDump;
 
 
@@ -42,6 +46,8 @@ EXPORTEDFUNCTION void StartEmulatedHardware(BoardCalls *pCalls)
     pSetOutputPortValues        = pCalls->pSetOutputPortValues;
     pReadHotWaterTemperature    = pCalls->pReadHotWaterTemperature;
     pHeartBeat                  = pCalls->pHeartBeat;
+    pReadLastNetworkPacket      = pCalls->pReadLastNetworkPacket;
+    pSendNetworkPacket          = pCalls->pSendNetworkPacket;
     pCrashDump                  = pCalls->pCrashDump;
 
     UserProgram();

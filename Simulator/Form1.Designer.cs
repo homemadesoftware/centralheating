@@ -65,6 +65,8 @@
             this.lblCrashMessage = new System.Windows.Forms.Label();
             this.numTemperature = new System.Windows.Forms.NumericUpDown();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.txtNetworkPacketOut = new System.Windows.Forms.TextBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.uiGroup.SuspendLayout();
             this.timerInterruptGroup.SuspendLayout();
             this.rtcGroup.SuspendLayout();
@@ -73,6 +75,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.picHeart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTemperature)).BeginInit();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblDisplay
@@ -521,7 +524,7 @@
             // 
             this.lblCrashMessage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblCrashMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCrashMessage.Location = new System.Drawing.Point(12, 336);
+            this.lblCrashMessage.Location = new System.Drawing.Point(12, 461);
             this.lblCrashMessage.Name = "lblCrashMessage";
             this.lblCrashMessage.Size = new System.Drawing.Size(480, 44);
             this.lblCrashMessage.TabIndex = 4;
@@ -565,12 +568,32 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Temperature (C)";
             // 
+            // txtNetworkPacketOut
+            // 
+            this.txtNetworkPacketOut.Location = new System.Drawing.Point(11, 19);
+            this.txtNetworkPacketOut.Multiline = true;
+            this.txtNetworkPacketOut.Name = "txtNetworkPacketOut";
+            this.txtNetworkPacketOut.ReadOnly = true;
+            this.txtNetworkPacketOut.Size = new System.Drawing.Size(200, 75);
+            this.txtNetworkPacketOut.TabIndex = 8;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.txtNetworkPacketOut);
+            this.groupBox2.Location = new System.Drawing.Point(12, 344);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(480, 100);
+            this.groupBox2.TabIndex = 9;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Network";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.ClientSize = new System.Drawing.Size(504, 392);
+            this.ClientSize = new System.Drawing.Size(504, 514);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.picHeart);
             this.Controls.Add(this.lblCrashMessage);
@@ -594,6 +617,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.picHeart)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTemperature)).EndInit();
             this.groupBox1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -636,6 +661,8 @@
         private System.Windows.Forms.Button btnUp;
         private System.Windows.Forms.Button btnDown;
         private System.Windows.Forms.Button btnLeft;
+        private System.Windows.Forms.TextBox txtNetworkPacketOut;
+        private System.Windows.Forms.GroupBox groupBox2;
     }
 }
 

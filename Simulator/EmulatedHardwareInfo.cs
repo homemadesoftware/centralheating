@@ -64,6 +64,20 @@ namespace CentralHeatingEmulator
     // Delegate for Heart beat
     public delegate void HeartBeatDelegate();
 
+
+    /// <summary>
+    /// Read the last network packet from the host/
+    /// Unmanaged allocates the buffer, with fixed length, and hands over to managed to fill in as needed
+    /// </summary>
+    public delegate void ReadLastNetworkPacketDelegate(IntPtr data, int maxLength);
+
+
+    /// <summary>
+    /// Sends a new null terminated string on to the network interface.
+    /// </summary>
+    /// <param name="data"></param>
+    public delegate void SendNetworkPacketDelegate([In][MarshalAs(UnmanagedType.LPStr)]string data);
+
     /// <summary>
     /// Displays a message and dies
     /// </summary>
@@ -126,6 +140,17 @@ namespace CentralHeatingEmulator
         /// Provides a heart beat
         public HeartBeatDelegate HeartBeat;
 
+        /// <summary>
+        /// Reads last network packet
+        /// </summary>
+        public ReadLastNetworkPacketDelegate ReadLastNetworkPacket;
+
+
+        /// <summary>
+        /// Send a network packet to the host
+        /// </summary>
+        /// <param name="data"></param>
+        public SendNetworkPacketDelegate SendNetworkPacket;
 
 
         /// <summary>

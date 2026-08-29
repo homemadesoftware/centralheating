@@ -39,6 +39,7 @@ add_executable(my_project
     IoExpander.c
     ButtonPad.c
     tortoise_receiver.c
+    network_io.c
 
     ../Common/MenuMgr.c
     ../Common/CentralHeating.c
@@ -57,7 +58,7 @@ target_link_libraries(
     pico_stdio
     hardware_i2c
     pico_multicore
-    pico_cyw43_arch_none
+    pico_cyw43_arch_lwip_poll
     hardware_spi
     
     # ePaper libs (order here matters)
@@ -78,6 +79,7 @@ target_include_directories(my_project PRIVATE
 
 target_include_directories(my_project PRIVATE
     ./../Common
+    .
 )
 
 target_compile_definitions(my_project PRIVATE
