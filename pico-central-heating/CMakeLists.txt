@@ -46,6 +46,7 @@ add_executable(my_project
     ../Common/CentralHeatingMenus.c
     ../Common/StringUtils.c
     ../Common/DateTime.c
+    ../Common/StatusBuilder.c
 )
 
 

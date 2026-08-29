@@ -524,7 +524,7 @@
             // 
             this.lblCrashMessage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblCrashMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCrashMessage.Location = new System.Drawing.Point(12, 461);
+            this.lblCrashMessage.Location = new System.Drawing.Point(12, 528);
             this.lblCrashMessage.Name = "lblCrashMessage";
             this.lblCrashMessage.Size = new System.Drawing.Size(480, 44);
             this.lblCrashMessage.TabIndex = 4;
@@ -574,7 +574,8 @@
             this.txtNetworkPacketOut.Multiline = true;
             this.txtNetworkPacketOut.Name = "txtNetworkPacketOut";
             this.txtNetworkPacketOut.ReadOnly = true;
-            this.txtNetworkPacketOut.Size = new System.Drawing.Size(200, 75);
+            this.txtNetworkPacketOut.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtNetworkPacketOut.Size = new System.Drawing.Size(200, 156);
             this.txtNetworkPacketOut.TabIndex = 8;
             // 
             // groupBox2
@@ -582,7 +583,7 @@
             this.groupBox2.Controls.Add(this.txtNetworkPacketOut);
             this.groupBox2.Location = new System.Drawing.Point(12, 344);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(480, 100);
+            this.groupBox2.Size = new System.Drawing.Size(480, 181);
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Network";
@@ -592,7 +593,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.ClientSize = new System.Drawing.Size(504, 514);
+            this.ClientSize = new System.Drawing.Size(504, 580);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.picHeart);

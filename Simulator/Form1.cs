@@ -271,7 +271,11 @@ namespace CentralHeatingEmulator
 
         private void SendNetworkPacket(string data)
         {
-            txtNetworkPacketOut.Text = data;
+            string expanded = data.Replace("\n", "\r\n");
+            if (txtNetworkPacketOut.Text != expanded)
+            {
+                txtNetworkPacketOut.Text = expanded;
+            }
         }
 
         private void CrashDump(string message)

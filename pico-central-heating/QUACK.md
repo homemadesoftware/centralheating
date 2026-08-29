@@ -35,37 +35,40 @@ Sent periodically (piggybacking on the existing timer-driven heartbeat in
 | Key | Meaning |
 |-----|---------|
 | `uptime` | Seconds since boot |
-| `time` | Current time, from the RTC |
-| `Z1`..`Z5` | Zone input status — `On`/`Off`, one line per zone |
-| `O1`..`O6` | Actuator output status — `On`/`Off`, one line per actuator |
-| `HW` | Hot water actuator status — `On`/`Off` |
-| `Boiler` | Boiler output status — `On`/`Off` |
-| `heating` | Heating-on flag — `On`/`Off` |
+| `time` | Current time, from the RTC, ISO 8601 (`YYYY-MM-DDTHH:MM:SS`, no timezone offset — the RTC is naive local time) |
+| `z1`..`z5` | Zone input status — `on`/`off`, one line per zone |
+| `o1`..`o6` | Actuator output status — `on`/`off`, one line per actuator |
+| `hw` | Hot water actuator status — `on`/`off` |
+| `boiler` | Boiler output status — `on`/`off` |
+| `heating` | Heating-on flag — `on`/`off` |
 | `version` | Firmware version (`COMPILED_AT` in `CentralHeating.c`) |
 | `temperature` | Hot water temperature |
-| `fulfilled_state_id` | Id of the last desired state successfully applied (see below) |
+| `fulfilled-state-id` | Id of the last desired state successfully applied (see below) |
+
+Keys and values are both all lower-case, keys in kebab-case, consistently on
+both directions of the protocol.
 
 Sensors and outputs are human-readable, one line each, the same way the
 e-paper screen already renders them (`AnimateScreen`/`TestAndDisplay` in
 `Common/CentralHeating.c`) rather than packed into a bitmask:
 
 ```
-Z1 On
-Z2 Off
-Z3 On
-Z4 Off
-Z5 Off
-O1 On
-O2 Off
-O3 Off
-O4 Off
-O5 Off
-O6 Off
-HW On
-Boiler On
+z1 on
+z2 off
+z3 on
+z4 off
+z5 off
+o1 on
+o2 off
+o3 off
+o4 off
+o5 off
+o6 off
+hw on
+boiler on
 ```
 
-(`Z6`/`ZONENC1`/`ZONENC2` are unused inputs per `PicoEntryPoint.c` and aren't
+(`z6`/`zonenc1`/`zonenc2` are unused inputs per `PicoEntryPoint.c` and aren't
 emitted.)
 
 All fields are sent as a single packet — one `\n`-joined payload per
@@ -76,13 +79,13 @@ multiple sends. The full field list comfortably fits under the link MTU.
 
 | Key | Meaning |
 |-----|---------|
-| `desired_state` | The state the hub wants applied — see vocabulary below |
-| `desired_state_id` | Increasing but otherwise random number identifying this desired state (not necessarily an S3/bucket version id — may be *generated from* one, but the Pico shouldn't assume the two are interchangeable) |
+| `desired-state` | The state the hub wants applied — see vocabulary below |
+| `desired-state-id` | Increasing but otherwise random number identifying this desired state (not necessarily an S3/bucket version id — may be *generated from* one, but the Pico shouldn't assume the two are interchangeable) |
 
 Unknown keys are ignored rather than treated as an error, so the format can
 grow without breaking older firmware.
 
-### `desired_state` vocabulary
+### `desired-state` vocabulary
 
 The only desired state right now is hot water boost — the network
 equivalent of someone pressing the physical hot water button
@@ -92,9 +95,9 @@ boolean, because "the hub has no opinion" is meaningfully different from
 
 | Value | Meaning |
 |-------|---------|
-| `None` | The hub isn't overriding anything — hot water is left to the Pico's own local state (physical button, existing boost timer) |
-| `On` | The hub wants hot water boost switched on |
-| `Off` | The hub wants hot water boost switched off (e.g. "we think the water is hot enough") |
+| `none` | The hub isn't overriding anything — hot water is left to the Pico's own local state (physical button, existing boost timer) |
+| `on` | The hub wants hot water boost switched on |
+| `off` | The hub wants hot water boost switched off (e.g. "we think the water is hot enough") |
 
 ## Processing model
 
@@ -103,22 +106,22 @@ boolean, because "the hub has no opinion" is meaningfully different from
   request/response coupling between what the Pico last sent and what it next
   receives; the two directions are independent.
 - **Highest id wins, not last received.** Because UDP can deliver packets out
-  of order, the Pico keeps track of the highest `desired_state_id` it has
-  applied so far. An incoming packet with a `desired_state_id` lower than
+  of order, the Pico keeps track of the highest `desired-state-id` it has
+  applied so far. An incoming packet with a `desired-state-id` lower than
   (or equal to) that is a stale/reordered duplicate and is dropped without
-  being applied — `desired_state_id` being monotonically increasing is
+  being applied — `desired-state-id` being monotonically increasing is
   exactly what makes this cheap to check.
 - Because UDP is unreliable and unordered, the hub is expected to keep
   resending the current desired state until it sees the matching
-  `fulfilled_state_id` come back, rather than the Pico acknowledging a
+  `fulfilled-state-id` come back, rather than the Pico acknowledging a
   specific packet.
 
 ## Fulfilled-state acknowledgement
 
-Best-effort — no dedicated out-of-band ack packet. `fulfilled_state_id`
+Best-effort — no dedicated out-of-band ack packet. `fulfilled-state-id`
 simply rides along in the regular heartbeat like every other field, and
 starts appearing (and updating) once the Pico has actually *applied* the
-corresponding `desired_state` — not merely received or parsed it. Until
+corresponding `desired-state` — not merely received or parsed it. Until
 then, the field reflects whatever the last successfully applied id still is.
 The hub is expected to keep resending the current desired state until it
 observes that value come back, since there's no separate acknowledgement to

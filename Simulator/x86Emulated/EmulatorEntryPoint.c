@@ -1,4 +1,10 @@
+#include <windows.h>
 #include "../../Common/HardwareAbstraction.h"
+
+void STDCALL Hardware_GetUptimeSeconds(unsigned long* pValue)
+{
+    *pValue = (unsigned long)(GetTickCount64() / 1000);
+}
 
 typedef struct tagBoardCalls
 {
@@ -28,6 +34,7 @@ GetWaitingKeysDelegate          pGetWaitingKeys;
 GetInputPortValuesDelegate      pGetInputPortValues;
 SetOutputPortValuesDelegate     pSetOutputPortValues;
 ReadHotWaterTemperatureDelegate pReadHotWaterTemperature;
+GetUptimeSecondsDelegate        pGetUptimeSeconds;
 HeartBeatDelegate               pHeartBeat;
 ReadLastNetworkPacketDelegate   pReadLastNetworkPacket;
 SendNetworkPacketDelegate       pSendNetworkPacket;
@@ -45,6 +52,7 @@ EXPORTEDFUNCTION void StartEmulatedHardware(BoardCalls *pCalls)
     pGetInputPortValues         = pCalls->pGetInputPortValues;
     pSetOutputPortValues        = pCalls->pSetOutputPortValues;
     pReadHotWaterTemperature    = pCalls->pReadHotWaterTemperature;
+    pGetUptimeSeconds           = Hardware_GetUptimeSeconds;
     pHeartBeat                  = pCalls->pHeartBeat;
     pReadLastNetworkPacket      = pCalls->pReadLastNetworkPacket;
     pSendNetworkPacket          = pCalls->pSendNetworkPacket;

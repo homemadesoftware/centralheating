@@ -63,6 +63,9 @@ typedef void (STDCALL* HeartBeatDelegate)();
 // Hot Water temp
 typedef void (STDCALL* ReadHotWaterTemperatureDelegate)(float *fValue);
 
+// Seconds since boot
+typedef void (STDCALL* GetUptimeSecondsDelegate)(unsigned long* value);
+
 // Get the last received network packet
 typedef void (STDCALL* ReadLastNetworkPacketDelegate)(unsigned char* buffer, int maxLength);
 
@@ -82,6 +85,7 @@ extern GetInputPortValuesDelegate pGetInputPortValues;
 extern SetOutputPortValuesDelegate pSetOutputPortValues;
 extern HeartBeatDelegate pHeartBeat;
 extern ReadHotWaterTemperatureDelegate pReadHotWaterTemperature;
+extern GetUptimeSecondsDelegate pGetUptimeSeconds;
 extern CrashDumpDelegate pCrashDump;
 extern ReadLastNetworkPacketDelegate pReadLastNetworkPacket;
 extern SendNetworkPacketDelegate pSendNetworkPacket;

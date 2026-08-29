@@ -15,51 +15,49 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Common\CentralHeating.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Common\CentralHeatingMenus.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CrashDump.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Common\DateTime.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="EmulatorEntryPoint.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\MenuMgr.c">
+    <ClCompile Include="..\..\Common\CentralHeating.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\StringUtils.c">
+    <ClCompile Include="..\..\Common\CentralHeatingMenus.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\DateTime.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\MenuMgr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\StringUtils.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\StatusBuilder.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Common\CentralHeatingMenus.h">
+    <ClInclude Include="..\..\Common\CentralHeatingMenus.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\DateTime.h">
+    <ClInclude Include="..\..\Common\DateTime.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\HardwareAbstraction.h">
+    <ClInclude Include="..\..\Common\HardwareAbstraction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\MenuMgr.h">
+    <ClInclude Include="..\..\Common\MenuMgr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\StringUtils.h">
+    <ClInclude Include="..\..\Common\StringUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="HardwareAbstraction.h---">
+    <ClInclude Include="..\..\Common\StatusBuilder.h">
       <Filter>Header Files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="ReadMe.txt" />
+    </ClInclude>
   </ItemGroup>
 </Project>

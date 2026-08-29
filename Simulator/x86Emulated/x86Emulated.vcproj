@@ -198,6 +198,10 @@
 				RelativePath="..\Common\StringUtils.c"
 				>
 			</File>
+      <File
+				RelativePath="..\Common\StatusBuilder.c"
+				>
+      </File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -228,6 +232,10 @@
 				RelativePath="..\Common\StringUtils.h"
 				>
 			</File>
+      <File
+				RelativePath="..\Common\StatusBuilder.h"
+				>
+      </File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

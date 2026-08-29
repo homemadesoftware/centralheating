@@ -91,6 +91,7 @@
     <ClCompile Include="..\..\Common\CentralHeatingMenus.c" />
     <ClCompile Include="..\..\Common\DateTime.c" />
     <ClCompile Include="..\..\Common\MenuMgr.c" />
+    <ClCompile Include="..\..\Common\StatusBuilder.c" />
     <ClCompile Include="..\..\Common\StringUtils.c" />
     <ClCompile Include="CrashDump.c" />
     <ClCompile Include="EmulatorEntryPoint.c" />
@@ -100,6 +101,7 @@
     <ClInclude Include="..\..\Common\DateTime.h" />
     <ClInclude Include="..\..\Common\HardwareAbstraction.h" />
     <ClInclude Include="..\..\Common\MenuMgr.h" />
+    <ClInclude Include="..\..\Common\StatusBuilder.h" />
     <ClInclude Include="..\..\Common\StringUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

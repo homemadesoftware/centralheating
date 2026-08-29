@@ -3,6 +3,7 @@
 #include "pico/bootrom.h"
 #include "pico/multicore.h"
 #include "pico/cyw43_arch.h"
+#include "pico/time.h"
 
 // E-paper
 #include "EPD_2in13_V3.h"
@@ -27,6 +28,7 @@
 #include "IoExpander.h"
 #include "ButtonPad.h"
 #include "tortoise_receiver.h"
+#include "OutputPins.h"
  
 // User program is provided at link time
 void UserProgram();
@@ -41,6 +43,7 @@ GetWaitingKeysDelegate          pGetWaitingKeys;
 GetInputPortValuesDelegate      pGetInputPortValues;
 SetOutputPortValuesDelegate     pSetOutputPortValues;
 ReadHotWaterTemperatureDelegate pReadHotWaterTemperature;
+GetUptimeSecondsDelegate        pGetUptimeSeconds;
 HeartBeatDelegate               pHeartBeat;
 CrashDumpDelegate               pCrashDump;
 ReadLastNetworkPacketDelegate   pReadLastNetworkPacket;
@@ -59,6 +62,7 @@ void Hardware_SetOutputPortValues(unsigned char value);
 void Hardware_HeartBeat() ;
 void Hardware_CrashDump(unsigned char* message);
 void Hardware_ReadHotWaterTemperature(float* pfValue);
+void Hardware_GetUptimeSeconds(unsigned long* pValue);
 void Hardware_ScheduleUserCalls();
 void Hardware_ReadLastNetworkPacket(unsigned char* buffer, int maxLength);
 void Hardware_SendNetworkPacket(unsigned char* buffer);
@@ -108,6 +112,7 @@ int main()
     pGetInputPortValues = Hardware_GetInputPortValues;
     pSetOutputPortValues = Hardware_SetOutputPortValues;
     pReadHotWaterTemperature = Hardware_ReadHotWaterTemperature;
+    pGetUptimeSeconds = Hardware_GetUptimeSeconds;
     pHeartBeat = Hardware_HeartBeat;
     pReadLastNetworkPacket = Hardware_ReadLastNetworkPacket;
     pSendNetworkPacket = Hardware_SendNetworkPacket;
@@ -134,17 +139,6 @@ void Hardware_GetInputPortValues(unsigned char* pValue)
     IoExpander_Read(i2cPortForIo, &newLayoutReading);
 
     // Map new layout to old layout
-
-// CH output constants
-#define INPUT_ZONENC1 (0x01) // not used
-#define INPUT_ZONENC2 (0x02) // not used
-#define INPUT_ZONE3   (0x04)  // P3_2
-#define INPUT_ZONE4   (0x08)  // P3_3, currently not used
-#define INPUT_ZONE1   (0x10)  // P3_4
-#define INPUT_ZONE2   (0x20)  // P3_5
-#define INPUT_ZONE5   (0x40)  // P3_6, currently not used
-#define INPUT_ZONE6   (0x80) // busted
-
     * pValue = 
         ((newLayoutReading & 0x01) ? INPUT_ZONE1 : 0) |
         ((newLayoutReading & 0x02) ? INPUT_ZONE2 : 0) |
@@ -286,6 +280,11 @@ void Hardware_ReadHotWaterTemperature(float* pfValue)
     {
         *pfValue = -200;
     }
+}
+
+void Hardware_GetUptimeSeconds(unsigned long* pValue)
+{
+    *pValue = to_ms_since_boot(get_absolute_time()) / 1000;
 }
 
 void ReceiveDataFromNetwork(const unsigned char* pszDataIn)
