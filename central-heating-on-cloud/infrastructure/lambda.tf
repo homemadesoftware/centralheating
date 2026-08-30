@@ -1,15 +1,7 @@
 # Both functions run the same image (built from
 # ../CentralHeatingOnCloud.Lambda/Dockerfile) — HANDLER_TYPE picks which
 # routes each one serves. See AWS-BACKEND-SPEC.md §1/§4.
-#
-# TEMPORARILY COMMENTED OUT (2026-08-30): no image has been pushed to ECR
-# yet, so `apply` fails trying to create these — which also blocks
-# cd-user.tf's policy (scoped to these functions' ARNs) and all of
-# apigateway.tf (which is commented out too, for the same reason) from
-# ever being created. Apply with these commented out first so the cd-user
-# gets real ECR push permissions, push a real image via CI, then uncomment
-# and apply again.
-/*
+
 resource "aws_lambda_function" "status_ingest" {
   function_name = "${var.service_name}-status-ingest"
   role          = aws_iam_role.status_ingest.arn
@@ -20,9 +12,9 @@ resource "aws_lambda_function" "status_ingest" {
 
   environment {
     variables = {
-      HANDLER_TYPE          = "status-ingest"
-      DESIRED_STATE_BUCKET  = aws_s3_bucket.desired_state.bucket
-      STATUS_KEY_PREFIX     = "status/"
+      HANDLER_TYPE         = "status-ingest"
+      DESIRED_STATE_BUCKET = aws_s3_bucket.desired_state.bucket
+      STATUS_KEY_PREFIX    = "status/"
     }
   }
 
@@ -32,9 +24,7 @@ resource "aws_lambda_function" "status_ingest" {
     ignore_changes = [image_uri]
   }
 }
-*/
 
-/*
 resource "aws_lambda_function" "mint_desired_state_url" {
   function_name = "${var.service_name}-mint-desired-state-url"
   role          = aws_iam_role.mint_desired_state_url.arn
@@ -58,4 +48,3 @@ resource "aws_lambda_function" "mint_desired_state_url" {
     ignore_changes = [image_uri]
   }
 }
-*/

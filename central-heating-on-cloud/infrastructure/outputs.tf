@@ -1,15 +1,12 @@
-# TEMPORARILY COMMENTED OUT (2026-08-30): aws_api_gateway_stage.write/read
-# are commented out in apigateway.tf until a real image exists. Uncomment
-# together.
-# output "write_api_invoke_url" {
-#   description = "POST here (with the write API key) to send a status heartbeat."
-#   value       = "${aws_api_gateway_stage.write.invoke_url}/status"
-# }
-#
-# output "read_api_invoke_url" {
-#   description = "GET here (with the read API key) to mint a presigned desired-state URL."
-#   value       = "${aws_api_gateway_stage.read.invoke_url}/desired-state-url"
-# }
+output "write_api_invoke_url" {
+  description = "POST here (with the write API key) to send a status heartbeat."
+  value       = "${aws_api_gateway_stage.write.invoke_url}/status"
+}
+
+output "read_api_invoke_url" {
+  description = "GET here (with the read API key) to mint a presigned desired-state URL."
+  value       = "${aws_api_gateway_stage.read.invoke_url}/desired-state-url"
+}
 
 output "write_api_key_id" {
   value = aws_api_gateway_api_key.write.id
