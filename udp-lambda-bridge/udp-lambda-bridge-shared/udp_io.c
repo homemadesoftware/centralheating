@@ -13,7 +13,9 @@ typedef SOCKET udp_socket_t;
 
 #else
 
+#ifndef _DEFAULT_SOURCE
 #define _DEFAULT_SOURCE
+#endif
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -83,7 +85,7 @@ int UdpModule_ListenAndRespond(unsigned short udpPort, OnDataReceived* pOnDataRe
 
 		printf("Received. Sender: %s, Received: %d, Buffer: %s\n", ipStr, received, buffer);
 
-		pOnDataReceived(buffer);
+		pOnDataReceived((const unsigned char*)buffer);
 
 		// send back
 
@@ -91,7 +93,7 @@ int UdpModule_ListenAndRespond(unsigned short udpPort, OnDataReceived* pOnDataRe
 		memset(&sendBuffer, 0, sizeof(sendBuffer));
 
 		// Notify new data arriving
-		pOnResponseRequired(sendBuffer, UDP_MODULE_MAX_SEND_BUFFER - 1);
+		pOnResponseRequired((unsigned char*)sendBuffer, UDP_MODULE_MAX_SEND_BUFFER - 1);
 
 		printf("Sending back %s\n", sendBuffer);
 		sendto(udpSocket, sendBuffer, sizeof(sendBuffer), 0, (struct sockaddr*) & senderAddress, senderAddresLength);

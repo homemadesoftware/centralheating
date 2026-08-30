@@ -18,7 +18,7 @@ void OnDataReceivedCallback(const unsigned char* pszDataReceived)
 
 void OnResponseRequiredCallback(unsigned char* pszReceiveBuffer, unsigned short maxLength)
 {
-    snprintf(pszReceiveBuffer, maxLength, "%s", responses[responseCounter++ % 4]);
+    snprintf((char*)pszReceiveBuffer, maxLength, "%s", responses[responseCounter++ % 4]);
 
 }
 

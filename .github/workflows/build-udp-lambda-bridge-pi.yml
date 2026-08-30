@@ -30,4 +30,4 @@ jobs:
         working-directory: udp-lambda-bridge/udp-lambda-bridge-shared
         run: |
           mkdir -p build
-          gcc -I. -Wall main.c udp_io.c -o build/udp-lambda-bridge-pi
+          gcc -I. -Wall -Werror main.c udp_io.c -o build/udp-lambda-bridge-pi
