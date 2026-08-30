@@ -2,7 +2,7 @@
 
 Runs on `toadmail-hub` (a 2012 Raspberry Pi Model B, ARMv6, headless — no screen by design).
 
-Listens for UDP messages from `udp-pusher` devices, replies immediately from its
+Listens for UDP messages from Pico devices (`pico-central-heating`, `pico-temp-sensor`), replies immediately from its
 last-known-response cache (so the sending device's tight receive loop never blocks
 on internet/AWS latency), then refreshes that cache via a synchronous call to
 API Gateway → Lambda on a separate thread.

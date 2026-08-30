@@ -30,11 +30,11 @@ The powerline bridge between the two routers carries traffic between them fine â
 
 ## Known limitation: WPA2 reconnect reliability on the Pico
 
-An attempt to move the Pico onto the Draytek's WPA2-secured WiFi connected successfully once, then failed to reconnect on every subsequent attempt despite the retry loop in `network_io.c` (`udp-pusher` project) running every 30 seconds. Reverted to `"You will be hacked"` (open, `CYW43_AUTH_OPEN`) as the known-working configuration.
+An attempt to move the Pico onto the Draytek's WPA2-secured WiFi connected successfully once, then failed to reconnect on every subsequent attempt despite the retry loop in `network_io.c` (`pico-central-heating` project) running every 30 seconds. Reverted to `"You will be hacked"` (open, `CYW43_AUTH_OPEN`) as the known-working configuration.
 
 Suspected cause: `cyw43_arch_wifi_connect_async` being called repeatedly on failure can leave the cyw43 chip's internal join state machine wedged for secured networks specifically â€” much more sensitive than open auth, which has no handshake to get wrong. A full power cycle (not just a soft reset/reflash) was suspected but not confirmed as a fix. The SDK's `cyw43_arch_wifi_connect_timeout_ms()` (a synchronous connect-with-timeout helper) may be more robust than the current manual `connect_async` + poll retry loop, if WPA2 support on the Pico side is revisited.
 
-`network_io.c`/`.h` (in `udp-pusher/`) already have the `password` field and `NetworkIo_Init` parameter plumbed through, unused for now, in case this is picked up again.
+`network_io.c`/`.h` (in `pico-central-heating/`) already have the `password` field and `NetworkIo_Init` parameter plumbed through, unused for now, in case this is picked up again.
 
 ## Verification status
 
