@@ -4,6 +4,8 @@ using CentralHeatingOnCloud.Lambda;
 var handlerType = Environment.GetEnvironmentVariable("HANDLER_TYPE")
     ?? throw new InvalidOperationException("HANDLER_TYPE environment variable is required.");
 
+Console.WriteLine($"central-heating-on-cloud starting, HANDLER_TYPE={handlerType}");
+
 var builder = WebApplication.CreateBuilder(args);
 
 // AddAWSLambdaHosting runs this under Kestrel locally and under the Lambda
