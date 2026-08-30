@@ -26,6 +26,10 @@ resource "aws_api_gateway_method" "status_post" {
   api_key_required = true
 }
 
+resource "aws_api_gateway_api_key" "write" {
+  name = "${var.service_name}-write"
+}
+
 resource "aws_api_gateway_integration" "status_post" {
   rest_api_id             = aws_api_gateway_rest_api.write.id
   resource_id             = aws_api_gateway_resource.status.id
@@ -67,10 +71,6 @@ resource "aws_api_gateway_stage" "write" {
   stage_name    = "prod"
 }
 
-resource "aws_api_gateway_api_key" "write" {
-  name = "${var.service_name}-write"
-}
-
 resource "aws_api_gateway_usage_plan" "write" {
   name = "${var.service_name}-write"
 
@@ -104,6 +104,10 @@ resource "aws_api_gateway_method" "desired_state_url_get" {
   http_method      = "GET"
   authorization    = "NONE"
   api_key_required = true
+}
+
+resource "aws_api_gateway_api_key" "read" {
+  name = "${var.service_name}-read"
 }
 
 resource "aws_api_gateway_integration" "desired_state_url_get" {
@@ -145,10 +149,6 @@ resource "aws_api_gateway_stage" "read" {
   rest_api_id   = aws_api_gateway_rest_api.read.id
   deployment_id = aws_api_gateway_deployment.read.id
   stage_name    = "prod"
-}
-
-resource "aws_api_gateway_api_key" "read" {
-  name = "${var.service_name}-read"
 }
 
 resource "aws_api_gateway_usage_plan" "read" {

@@ -12,9 +12,9 @@ resource "aws_lambda_function" "status_ingest" {
 
   environment {
     variables = {
-      HANDLER_TYPE          = "status-ingest"
-      DESIRED_STATE_BUCKET  = aws_s3_bucket.desired_state.bucket
-      STATUS_KEY_PREFIX     = "status/"
+      HANDLER_TYPE         = "status-ingest"
+      DESIRED_STATE_BUCKET = aws_s3_bucket.desired_state.bucket
+      STATUS_KEY_PREFIX    = "status/"
     }
   }
 
