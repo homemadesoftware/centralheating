@@ -27,6 +27,13 @@ data "aws_iam_policy_document" "cd" {
     resources = [aws_ecr_repository.lambda.arn]
   }
 
+  # TEMPORARILY COMMENTED OUT (2026-08-30): references the two
+  # aws_lambda_function resources in lambda.tf, which don't exist yet (no
+  # image pushed to ECR). Without this statement the cd-user still gets
+  # ECR push access from the statement above, which is all it needs for the
+  # first push. Uncomment together with lambda.tf/apigateway.tf once an
+  # image exists.
+  /*
   statement {
     sid = "UpdateTheseFunctionsOnly"
     actions = [
@@ -38,6 +45,7 @@ data "aws_iam_policy_document" "cd" {
       aws_lambda_function.mint_desired_state_url.arn,
     ]
   }
+  */
 }
 
 resource "aws_iam_user_policy" "cd" {
