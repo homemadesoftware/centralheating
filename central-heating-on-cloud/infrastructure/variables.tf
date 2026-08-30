@@ -9,6 +9,18 @@ variable "service_name" {
   default     = "central-heating-on-cloud"
 }
 
+variable "state_encryption_passphrase" {
+  description = <<-EOT
+    Passphrase for OpenTofu's state encryption (see providers.tf's
+    `encryption` block) — what makes it safe to commit terraform.tfstate to
+    git. Must be supplied via the TF_VAR_state_encryption_passphrase
+    environment variable. Never put the real value in a .tf/.tfvars file or
+    commit it anywhere.
+  EOT
+  type        = string
+  sensitive   = true
+}
+
 variable "image_uri" {
   description = <<-EOT
     ECR image URI both Lambda functions run. Set here for the first
