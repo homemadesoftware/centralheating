@@ -5,13 +5,11 @@
 
 #define PW_STDCALL
 #define PW_EXPORTEDFUNCTION
-#define PW_REENTRANT
 
 #else
 
 #define PW_STDCALL          _stdcall
 #define PW_EXPORTEDFUNCTION __declspec(dllexport)
-#define PW_REENTRANT
 
 #endif
 

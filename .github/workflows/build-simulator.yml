@@ -1,0 +1,35 @@
+name: Build Simulator
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "Simulator/**"
+      - "Common/**"
+      - ".github/workflows/build-simulator.yml"
+  pull_request:
+    paths:
+      - "Simulator/**"
+      - "Common/**"
+      - ".github/workflows/build-simulator.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Setup NuGet
+        uses: nuget/setup-nuget@v2
+
+      - name: Restore
+        run: nuget restore Simulator/CentralHeatingEmulator.sln
+
+      - name: Build
+        run: msbuild Simulator/CentralHeatingEmulator.sln /p:Configuration=Debug /p:Platform=x86 /m

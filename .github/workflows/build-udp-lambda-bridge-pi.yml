@@ -1,0 +1,33 @@
+name: Build udp-lambda-bridge-pi
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "udp-lambda-bridge/udp-lambda-bridge-shared/**"
+      - "udp-lambda-bridge/udp-lambda-bridge-pi/**"
+      - ".github/workflows/build-udp-lambda-bridge-pi.yml"
+  pull_request:
+    paths:
+      - "udp-lambda-bridge/udp-lambda-bridge-shared/**"
+      - "udp-lambda-bridge/udp-lambda-bridge-pi/**"
+      - ".github/workflows/build-udp-lambda-bridge-pi.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Native gcc compile-check, not a real ARMv6 cross-build — this only
+      # catches compile errors early. The real target build/deploy still
+      # happens via Visual Studio's remote-SSH build to the actual Pi
+      # (see udp-lambda-bridge-pi/README's own project, "Build setup").
+      - name: Compile-check
+        working-directory: udp-lambda-bridge/udp-lambda-bridge-shared
+        run: |
+          mkdir -p build
+          gcc -I. -Wall -Werror main.c udp_io.c -o build/udp-lambda-bridge-pi

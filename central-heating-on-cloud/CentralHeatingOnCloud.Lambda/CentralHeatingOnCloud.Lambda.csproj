@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>CentralHeatingOnCloud.Lambda</RootNamespace>
+    <AWSProjectType>Lambda</AWSProjectType>
+    <!-- Self-contained container-image deploy (see Dockerfile) rather than the
+         zip/managed-runtime path, so this doesn't need an AWS Lambda tools
+         "function-handler" entry point. -->
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Amazon.Lambda.AspNetCoreServer.Hosting" Version="2.2.1" />
+    <PackageReference Include="AWSSDK.S3" Version="4.0.102.4" />
+  </ItemGroup>
+
+</Project>

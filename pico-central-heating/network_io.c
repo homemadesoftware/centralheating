@@ -13,17 +13,11 @@
 void on_recv(void* arg, struct udp_pcb* pcb, struct pbuf* p, const ip_addr_t* addr, u16_t port);
 bool has_time_passed_ms(absolute_time_t start_time, uint32_t interval_ms);
 
-int NetworkIo_Init(NetworkIo* pIo, const unsigned char* ssid, int port, OnReceiveCallback onReceive)
+int NetworkIo_Init(NetworkIo* pIo, const unsigned char* ssid, const unsigned char* password, int port, OnReceiveCallback onReceive)
 {
 	memset(pIo, 0, sizeof(NetworkIo));
-	if (cyw43_arch_init())
-	{
-		printf("WiFi init failed\n");
-		pIo->initFailure = 1;
-		return pIo->initFailure;
-	}
-
 	strncpy(pIo->ssid, ssid, MAX_SSID_LEN);
+	strncpy(pIo->password, password, MAX_PASSWORD_LEN);
 	pIo->port = port;
 	IP4_ADDR(&pIo->broadcastTarget, 255, 255, 255, 255);
 
@@ -59,7 +53,7 @@ int NetworkIo_Send(NetworkIo* pIo, const unsigned char* pszDataOut)
 		strcpy(p->payload, pszDataOut);
 
 		// If we know the IP of the last sender, talk directly to that as long as it was not a long time ago. If it was a long time ago so maybe they re-iped themselves.
-		if (is_nil_time(pIo->lastResponseAt) || has_time_passed_ms(pIo->lastResponseAt, 600 * 1000)) // never heard from anyone, or 600 seconds passed?
+		if (is_nil_time(pIo->lastResponseAt) || has_time_passed_ms(pIo->lastResponseAt, 300 * 1000)) // never heard from anyone, or 300 seconds passed?
 		{
 			int ret = udp_sendto(pIo->udpBroadcast, p, &pIo->broadcastTarget, pIo->port);
 			printf("Broadcast: %s, target: %s, ret: %d\n", pszDataOut, ip4addr_ntoa(&pIo->broadcastTarget), ret);

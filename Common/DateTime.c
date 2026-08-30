@@ -1,4 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
 #include "../Common/HardwareAbstraction.h"
 #include "../Common/DateTime.h"
 
@@ -75,6 +76,14 @@ void FormatDate(char *buffer, DateTimeStruct *pdt)
     buffer[6] = (pdt->year / 10) + '0';
     buffer[7] = (pdt->year % 10) + '0';
     buffer[8] = 0;
+}
+
+
+void FormatIso8601DateTime(char *buffer, int size, DateTimeStruct *pdt)
+{
+    snprintf(buffer, size, "%04d-%02d-%02dT%02d:%02d:%02d",
+        pdt->year + 2000, pdt->month, pdt->day,
+        pdt->hours, pdt->minutes, pdt->seconds);
 }
 
 

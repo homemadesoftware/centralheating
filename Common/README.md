@@ -1,6 +1,6 @@
 # Common
 
-Shared C application logic that runs on all three hardware targets without
+Shared C application logic that runs on all hardware targets without
 modification. Nothing in this folder knows which platform it is running on —
 that is determined entirely at compile time by the build system.
 
@@ -8,12 +8,12 @@ that is determined entirely at compile time by the build system.
 
 | File | Description |
 |------|-------------|
-| `HardwareAbstraction.h` | Platform abstraction layer — defines the `DateTimeStruct`, all hardware delegate types, and the `STDCALL`/`REENTRANT`/`EXPORTEDFUNCTION` macros that resolve differently per platform |
+| `HardwareAbstraction.h` | Platform abstraction layer — defines the `DateTimeStruct`, all hardware delegate types, and the `STDCALL`/`EXPORTEDFUNCTION` macros that resolve differently per platform |
 | `CentralHeating.c/h` | Main application: `UserProgram()` entry point, timer callbacks, heating logic, menu command handler, screen animation |
 | `CentralHeatingMenus.c/h` | Builds the menu tree (Hot Water, Set Clock, Test Outputs) by calling `AddMenuDefinition()` |
 | `MenuMgr.c/h` | Generic hierarchical menu engine — handles left/select/right navigation and fires `HandleMenuCommand()` callbacks |
 | `DateTime.c/h` | Date/time arithmetic: days-in-month, add seconds, compare two `DateTimeStruct` values, format time/date strings |
-| `StringUtils.c/h` | Minimal string helpers needed because the 8051 C runtime is limited |
+| `StringUtils.c/h` | Minimal string helpers shared across platforms |
 
 ## How platform selection works
 
@@ -21,14 +21,9 @@ that is determined entirely at compile time by the build system.
 calling conventions and type aliases:
 
 ```c
-#ifdef MC8051
-    #define REENTRANT __reentrant   // SDCC: force stack-based calling for fn pointers
-    #define STDCALL
-#elif defined(PICO_BOARD)
-    #define REENTRANT               // Pico: no special calling convention needed
+#ifdef PICO_BOARD
     #define STDCALL
 #else
-    #define REENTRANT               // x86 DLL / Simulator
     #define STDCALL _stdcall
     #define EXPORTEDFUNCTION __declspec(dllexport)
 #endif
@@ -36,9 +31,8 @@ calling conventions and type aliases:
 
 The hardware itself is accessed only through function pointers declared in this
 header (`pGetRtc`, `pSetRtc`, `pWriteDisplayBuffer`, etc.). Each platform's
-entry point (`89C51Board.c`, `PicoEntryPoint.c`, `EmulatorEntryPoint.c`) wires
-these pointers to its own real or emulated implementations before calling
-`UserProgram()`.
+entry point (`PicoEntryPoint.c`, `EmulatorEntryPoint.c`) wires these pointers
+to its own real or emulated implementations before calling `UserProgram()`.
 
 ## Adding a new platform
 

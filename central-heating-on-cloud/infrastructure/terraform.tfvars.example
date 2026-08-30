@@ -1,0 +1,8 @@
+aws_region   = "eu-west-2"
+service_name = "central-heating-on-cloud"
+
+# Any valid image reference works for the first `tofu apply` — the functions
+# just need to exist. Push a real image first (see the ecr_push_commands
+# output) and use that URI, or point at a placeholder public image; CI
+# takes over from here on every deploy after that.
+image_uri = "123456789012.dkr.ecr.eu-west-2.amazonaws.com/central-heating-on-cloud-lambda:latest"
