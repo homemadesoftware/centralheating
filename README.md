@@ -13,6 +13,8 @@ clock and a simple menu UI on a 2-line LCD or ePaper display.
 | `pico-central-heating/` | Central heating Pico W firmware |
 | `Simulator/` | Windows WinForms emulator for running the firmware on a PC |
 | `Simulator/x86Emulated/` | x86 DLL that the Simulator loads at runtime |
+| `udp-lambda-bridge/` | Runs on `toadmail-hub`, bridges Pico UDP traffic to AWS |
+| `central-heating-on-cloud/` | The AWS backend `udp-lambda-bridge` talks to — see its own `AWS-BACKEND-SPEC.md` |
 | `Archive/` | Old code and utilities no longer in active use |
 
 ## Hardware targets

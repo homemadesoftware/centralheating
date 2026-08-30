@@ -1,0 +1,69 @@
+name: Deploy central-heating-on-cloud
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "central-heating-on-cloud/CentralHeatingOnCloud.Lambda/**"
+      - ".github/workflows/deploy-central-heating-on-cloud.yml"
+  pull_request:
+    paths:
+      - "central-heating-on-cloud/CentralHeatingOnCloud.Lambda/**"
+      - ".github/workflows/deploy-central-heating-on-cloud.yml"
+
+permissions:
+  contents: read
+
+env:
+  AWS_REGION: eu-west-2
+  ECR_REPOSITORY: central-heating-on-cloud-lambda
+  LAMBDA_FUNCTIONS: >-
+    central-heating-on-cloud-status-ingest
+    central-heating-on-cloud-mint-desired-state-url
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build image
+        working-directory: central-heating-on-cloud/CentralHeatingOnCloud.Lambda
+        run: docker build -t "$ECR_REPOSITORY:${{ github.sha }}" .
+
+      # PRs stop here — build-only sanity check, no AWS credentials involved.
+      # Infra changes (new bucket, new Lambda, new IAM policy) are applied by
+      # hand via `tofu apply`, never from CI — see AWS-BACKEND-SPEC.md §1.
+
+      - name: Configure AWS credentials
+        if: github.event_name == 'push'
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.CENTRAL_HEATING_ON_CLOUD_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.CENTRAL_HEATING_ON_CLOUD_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Log in to ECR
+        if: github.event_name == 'push'
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Push image
+        if: github.event_name == 'push'
+        env:
+          REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+        run: |
+          docker tag "$ECR_REPOSITORY:${{ github.sha }}" "$REGISTRY/$ECR_REPOSITORY:${{ github.sha }}"
+          docker push "$REGISTRY/$ECR_REPOSITORY:${{ github.sha }}"
+
+      - name: Update Lambda functions
+        if: github.event_name == 'push'
+        env:
+          REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+        run: |
+          for fn in $LAMBDA_FUNCTIONS; do
+            aws lambda update-function-code \
+              --function-name "$fn" \
+              --image-uri "$REGISTRY/$ECR_REPOSITORY:${{ github.sha }}"
+          done

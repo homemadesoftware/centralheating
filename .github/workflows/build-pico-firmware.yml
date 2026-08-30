@@ -1,0 +1,46 @@
+name: Build Pico firmware
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "pico-central-heating/**"
+      - "pico-temp-sensor/**"
+      - "Common/**"
+      - "PicoBuild/**"
+      - ".github/workflows/build-pico-firmware.yml"
+  pull_request:
+    paths:
+      - "pico-central-heating/**"
+      - "pico-temp-sensor/**"
+      - "Common/**"
+      - "PicoBuild/**"
+      - ".github/workflows/build-pico-firmware.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [pico-central-heating, pico-temp-sensor]
+    steps:
+      - uses: actions/checkout@v4
+
+      # Same Docker images the local dev workflow uses (PicoBuild/README.md) —
+      # built fresh each run rather than published to a registry, since this
+      # is a low-frequency personal project and one less credential to manage.
+      - name: Build pico-compiler-base image
+        working-directory: PicoBuild
+        run: docker build . -f BaseDockerfile -t pico-compiler-base
+
+      - name: Build pico-compiler-image
+        working-directory: PicoBuild
+        run: docker build . -f Dockerfile -t pico-compiler-image
+
+      - name: Compile ${{ matrix.project }}
+        working-directory: ${{ matrix.project }}
+        run: pwsh -File ./compile.ps1
