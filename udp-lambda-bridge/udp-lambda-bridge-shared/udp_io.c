@@ -1,3 +1,13 @@
+// _DEFAULT_SOURCE alone turned out not to be enough to expose struct
+// sigaction/sigaction()/sigemptyset() on toadmail-hub's (old, ARMv6)
+// glibc, even placed before every include — _GNU_SOURCE is the maximal,
+// "just expose everything" macro glibc has supported for 20+ years, and a
+// safer bet across whatever glibc vintage a given remote target turns out
+// to have. Must be defined before any libc header is included anywhere in
+// this translation unit, hence right at the top, unconditionally (a no-op
+// on Windows, which has no concept of it).
+#define _GNU_SOURCE
+
 #include <udp_io.h>
 #include <stdio.h>
 #include <memory.h>
@@ -14,13 +24,6 @@ typedef SOCKET udp_socket_t;
 
 #else
 
-// Must come before <signal.h> — struct sigaction/sigaction()/sigemptyset()
-// are gated behind this feature-test macro at the point signal.h is first
-// included; defining it after would be too late (header guards lock the
-// declarations out for good on that translation unit).
-#ifndef _DEFAULT_SOURCE
-#define _DEFAULT_SOURCE
-#endif
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
