@@ -17,9 +17,7 @@ permissions:
 env:
   AWS_REGION: eu-west-2
   ECR_REPOSITORY: central-heating-on-cloud-lambda
-  LAMBDA_FUNCTIONS: >-
-    central-heating-on-cloud-status-ingest
-    central-heating-on-cloud-mint-desired-state-url
+  LAMBDA_FUNCTIONS: central-heating-on-cloud-command-centre
 
 jobs:
   build-and-deploy:

@@ -36,13 +36,13 @@ resource "aws_api_gateway_integration" "status_post" {
   http_method             = aws_api_gateway_method.status_post.http_method
   integration_http_method = "POST" # Lambda proxy integrations are always invoked via POST
   type                    = "AWS_PROXY"
-  uri                     = aws_lambda_function.status_ingest.invoke_arn
+  uri                     = aws_lambda_function.command_centre.invoke_arn
 }
 
 resource "aws_lambda_permission" "status_post" {
   statement_id  = "AllowWriteApiInvoke"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.status_ingest.function_name
+  function_name = aws_lambda_function.command_centre.function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_api_gateway_rest_api.write.execution_arn}/*/*"
 }
@@ -116,13 +116,13 @@ resource "aws_api_gateway_integration" "desired_state_url_get" {
   http_method             = aws_api_gateway_method.desired_state_url_get.http_method
   integration_http_method = "POST" # Lambda proxy integrations are always invoked via POST
   type                    = "AWS_PROXY"
-  uri                     = aws_lambda_function.mint_desired_state_url.invoke_arn
+  uri                     = aws_lambda_function.command_centre.invoke_arn
 }
 
 resource "aws_lambda_permission" "desired_state_url_get" {
   statement_id  = "AllowReadApiInvoke"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.mint_desired_state_url.function_name
+  function_name = aws_lambda_function.command_centre.function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_api_gateway_rest_api.read.execution_arn}/*/*"
 }

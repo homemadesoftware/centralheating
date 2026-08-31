@@ -28,15 +28,12 @@ data "aws_iam_policy_document" "cd" {
   }
 
   statement {
-    sid = "UpdateTheseFunctionsOnly"
+    sid = "UpdateThisFunctionOnly"
     actions = [
       "lambda:GetFunction",
       "lambda:UpdateFunctionCode",
     ]
-    resources = [
-      aws_lambda_function.status_ingest.arn,
-      aws_lambda_function.mint_desired_state_url.arn,
-    ]
+    resources = [aws_lambda_function.command_centre.arn]
   }
 }
 

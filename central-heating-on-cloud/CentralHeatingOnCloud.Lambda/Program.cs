@@ -1,10 +1,7 @@
 using Amazon.Lambda.AspNetCoreServer.Hosting;
 using CentralHeatingOnCloud.Lambda;
 
-var handlerType = Environment.GetEnvironmentVariable("HANDLER_TYPE")
-    ?? throw new InvalidOperationException("HANDLER_TYPE environment variable is required.");
-
-Console.WriteLine($"central-heating-on-cloud starting, HANDLER_TYPE={handlerType}");
+Console.WriteLine("central-heating-on-cloud starting");
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +12,6 @@ builder.Services.AddAWSLambdaHosting(LambdaEventSource.RestApi);
 
 var app = builder.Build();
 
-Routes.MapForHandlerType(app, handlerType);
+Routes.MapAll(app);
 
 app.Run();

@@ -26,6 +26,10 @@ output "read_api_key_value" {
   sensitive = true
 }
 
+output "status_table_name" {
+  value = aws_dynamodb_table.status.name
+}
+
 output "desired_state_bucket" {
   value = aws_s3_bucket.desired_state.bucket
 }
