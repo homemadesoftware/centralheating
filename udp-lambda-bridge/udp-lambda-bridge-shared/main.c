@@ -26,6 +26,12 @@ void OnResponseRequiredCallback(unsigned char* pszReceiveBuffer, unsigned short 
 
 int main(void)
 {
+    // stdout is fully buffered (not line-buffered) whenever it isn't an
+    // interactive terminal — e.g. piped over SSH or redirected to a log
+    // file — so printf output would otherwise only appear once the buffer
+    // fills or the process exits, not as it happens.
+    setvbuf(stdout, NULL, _IONBF, 0);
+
 #ifndef _WIN32
     if (CommandCentre_Init() != 0)
     {
