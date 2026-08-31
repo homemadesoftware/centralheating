@@ -4,13 +4,11 @@ on:
   push:
     branches: [master]
     paths:
-      - "udp-lambda-bridge/udp-lambda-bridge-shared/**"
-      - "udp-lambda-bridge/udp-lambda-bridge-pi/**"
+      - "udp-lambda-bridge/**"
       - ".github/workflows/build-udp-lambda-bridge-pi.yml"
   pull_request:
     paths:
-      - "udp-lambda-bridge/udp-lambda-bridge-shared/**"
-      - "udp-lambda-bridge/udp-lambda-bridge-pi/**"
+      - "udp-lambda-bridge/**"
       - ".github/workflows/build-udp-lambda-bridge-pi.yml"
 
 permissions:
@@ -27,21 +25,12 @@ jobs:
 
       # Native compile-check, not a real ARMv6 cross-build — this only
       # catches compile errors early. The real target build happens on
-      # toadmail-hub itself, via udp-lambda-bridge-pi/build-pi.ps1 (see
+      # toadmail-hub itself, via udp-lambda-bridge/build-pi.ps1 (see
       # that project's README, "Build setup"). Uses the same
-      # CMakeLists.txt as that script, flattened into one directory the
-      # same way build-pi.ps1's scp step does, so CI and the real build
-      # can't quietly drift apart into two different build definitions.
+      # CMakeLists.txt as that script, so CI and the real build can't
+      # quietly drift apart into two different build definitions.
       - name: Compile-check
         run: |
-          mkdir -p /tmp/udp-lambda-bridge-pi-build
-          cp udp-lambda-bridge/udp-lambda-bridge-shared/main.c \
-             udp-lambda-bridge/udp-lambda-bridge-shared/udp_io.c \
-             udp-lambda-bridge/udp-lambda-bridge-shared/udp_io.h \
-             udp-lambda-bridge/udp-lambda-bridge-pi/CommandCentreClient.c \
-             udp-lambda-bridge/udp-lambda-bridge-pi/CommandCentreClient.h \
-             udp-lambda-bridge/udp-lambda-bridge-pi/CMakeLists.txt \
-             /tmp/udp-lambda-bridge-pi-build/
-          cd /tmp/udp-lambda-bridge-pi-build
+          cd udp-lambda-bridge
           cmake -S . -B build
           cmake --build build

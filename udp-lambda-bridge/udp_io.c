@@ -4,25 +4,12 @@
 // "just expose everything" macro glibc has supported for 20+ years, and a
 // safer bet across whatever glibc vintage a given remote target turns out
 // to have. Must be defined before any libc header is included anywhere in
-// this translation unit, hence right at the top, unconditionally (a no-op
-// on Windows, which has no concept of it).
+// this translation unit, hence right at the top.
 #define _GNU_SOURCE
 
 #include <udp_io.h>
 #include <stdio.h>
 #include <memory.h>
-
-#ifdef _WIN32
-
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#include <signal.h>
-#pragma comment(lib, "ws2_32.lib")
-
-typedef SOCKET udp_socket_t;
-#define UDP_CLOSE(s) closesocket(s)
-
-#else
 
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -34,8 +21,6 @@ typedef int udp_socket_t;
 #define UDP_CLOSE(s) close(s)
 
 #define INVALID_SOCKET (-1)
-
-#endif
 
 
 int Initalise();
@@ -143,47 +128,6 @@ int UdpModule_ListenAndRespond(unsigned short udpPort, OnDataReceived* pOnDataRe
 }
 
 
-#ifdef _WIN32
-
-static int initialiseCount;
-
-
-int Initalise()
-{
-	if (initialiseCount == 0)
-	{
-		WSADATA wsaData;
-		int ret = WSAStartup(MAKEWORD(2, 2), &wsaData);
-		if (ret != 0)
-		{
-			printf("Failed WSAStartup");
-			return ret;
-		}
-
-		char hostname[32];
-		gethostname(hostname, sizeof(hostname));
-		printf("WSAStartup Ready. Host: %s\n", hostname);
-
-		signal(SIGINT, HandleShutdownSignal);
-		signal(SIGTERM, HandleShutdownSignal);
-
-		initialiseCount++;
-	}
-
-	return 0;
-}
-
-
-void Shutdown()
-{
-	if (initialiseCount == 1)
-	{
-		WSACleanup();
-		initialiseCount--;
-	}
-}
-
-#else
 int Initalise()
 {
 	// sa_flags left at 0 (no SA_RESTART) deliberately — recvfrom() in the
@@ -204,5 +148,3 @@ void Shutdown()
 {
 
 }
-
-#endif

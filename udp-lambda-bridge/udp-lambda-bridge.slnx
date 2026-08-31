@@ -1,9 +1,0 @@
-<Solution>
-  <!-- udp-lambda-bridge-pi's .vcxproj was removed 2026-08-31 — VS's Linux
-       remote build was too unreliable (flaky remote connection, opaque
-       generated link command line, no usable verbose output) to keep
-       debugging blind. Replaced with build-pi.ps1, a plain scp/ssh script
-       with full visibility into the actual commands run. -->
-  <Project Path="udp-lambda-bridge-shared/udp-lambda-bridge-shared.vcxitems" Id="a4df11a5-042f-4434-abeb-838099209906" />
-  <Project Path="udp-lambda-bridge-x86/udp-lambda-bridge-x86.vcxproj" Id="9d949c82-e834-4089-9660-85598d05ae8c" />
-</Solution>

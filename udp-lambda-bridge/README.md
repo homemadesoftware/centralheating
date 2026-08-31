@@ -26,22 +26,22 @@ in front of the Lambda.
 
 ## Build setup
 
-`udp-lambda-bridge-pi/build-pi.ps1` builds this by `scp`-ing sources to
-`toadmail-hub` and running `cmake`/`gcc` there directly over `ssh` — the
-same "build on the target, don't cross-compile" idea VS's Linux remote
-build used, but as a plain, fully visible script instead. VS's remote
-build (a `.vcxproj`) was tried first and abandoned 2026-08-31: the remote
-connection was unreliable independent of actual network quality, the
-generated link command line was opaque and didn't behave as its own
-project-file settings implied, and enabling verbose build output produced
-no more detail. A script that runs exactly the commands written in it, with
-no IDE-generated command line to reverse-engineer, was more debuggable.
+`build-pi.ps1` builds this by `scp`-ing sources to `toadmail-hub` and
+running `cmake`/`gcc` there directly over `ssh` — deliberately a plain,
+fully visible script rather than an IDE-managed remote build. A Visual
+Studio Linux remote-build project (`.vcxproj`) was tried first and
+abandoned 2026-08-31: the remote connection was unreliable independent of
+actual network quality, the generated link command line was opaque and
+didn't behave as its own project-file settings implied, and enabling
+verbose build output produced no more detail. This is Pi-only code now —
+there's no separate Windows build, so no platform split in the source
+either.
 
 Prerequisites on `toadmail-hub` itself (build happens on the real target,
 not a cross-compiler sysroot, so its exact package versions matter):
 `cmake`, `gcc`, `libcurl4-openssl-dev` (or equivalent).
 
-Run from `udp-lambda-bridge-pi/`:
+Run from `udp-lambda-bridge/`:
 
 ```
 .\build-pi.ps1
@@ -54,8 +54,8 @@ password-prompt handling.
 ## Configuration
 
 Two environment variables, required for the write path
-(`udp-lambda-bridge-pi/CommandCentreClient.c`) — no config file, no values
-committed anywhere in this repo:
+(`CommandCentreClient.c`) — no config file, no values committed anywhere
+in this repo:
 
 | Variable | Value |
 |---|---|
@@ -68,7 +68,7 @@ real deployment (e.g. a systemd unit), set them via that unit's
 
 ## Status
 
-UDP listener works (`UdpModule_ListenAndRespond` in `udp-lambda-bridge-shared`).
+UDP listener works (`UdpModule_ListenAndRespond` in `udp_io.c`).
 On every packet received from a Pico, the raw QUACK payload is forwarded
 as-is to the Command Centre's write endpoint
 (`CommandCentre_PostStatus` — synchronous for now, not yet moved to the

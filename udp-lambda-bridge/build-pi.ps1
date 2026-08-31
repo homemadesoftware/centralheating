@@ -22,12 +22,11 @@ if (-not (Get-Module -ListAvailable -Name Posh-SSH)) {
 Import-Module Posh-SSH
 
 $scriptDir = $PSScriptRoot
-$sharedDir = Join-Path $scriptDir "..\udp-lambda-bridge-shared"
 
 $sourceFiles = @(
-    (Join-Path $sharedDir "main.c")
-    (Join-Path $sharedDir "udp_io.c")
-    (Join-Path $sharedDir "udp_io.h")
+    (Join-Path $scriptDir "main.c")
+    (Join-Path $scriptDir "udp_io.c")
+    (Join-Path $scriptDir "udp_io.h")
     (Join-Path $scriptDir "CommandCentreClient.c")
     (Join-Path $scriptDir "CommandCentreClient.h")
     (Join-Path $scriptDir "CMakeLists.txt")
