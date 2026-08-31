@@ -47,9 +47,14 @@ Run from `udp-lambda-bridge/`:
 .\build-pi.ps1
 ```
 
-Requires SSH key auth already set up for `pi@toadmail-hub` (or pass
-`-RemoteUser`/`-RemoteHost` for a different setup) — the script has no
-password-prompt handling.
+Uses password auth (`-RemotePassword`, defaulting to the stock Raspberry
+Pi password) rather than SSH keys — deliberately not hardened, since
+`toadmail-hub` is a home-LAN-only device; override `-RemoteUser`/
+`-RemoteHost`/`-RemotePassword` for a different setup.
+
+Once the build succeeds, the script also (re)installs and restarts the
+`udp-lambda-bridge-pi` systemd service — see "Deploying as a service"
+below for the one-time setup that needs before the very first run.
 
 ## Configuration
 
@@ -64,9 +69,43 @@ config file, no values committed anywhere in this repo:
 | `READ_API_URL` | `read_api_invoke_url` output from the same |
 | `READ_API_KEY` | `read_api_key_value` output (sensitive) from the same |
 
-If running interactively, `export` them in the shell before launching. For a
-real deployment (e.g. a systemd unit), set them via that unit's
-`Environment=`/`EnvironmentFile=`, not baked into the binary or this repo.
+If running interactively, `export` them in the shell before launching. For
+the real deployment, they're read from `/etc/udp-lambda-bridge-pi.env` —
+see "Deploying as a service" below.
+
+## Deploying as a service
+
+`udp-lambda-bridge-pi.service` (committed, no secrets in it) runs the
+built binary under systemd: `Restart=always`, starts after networking is
+up, and reads its environment from `/etc/udp-lambda-bridge-pi.env`.
+`build-pi.ps1` installs/updates and restarts this service automatically
+after every successful build, via passwordless `sudo` (the Raspberry Pi
+OS default for the `pi` user).
+
+**One-time setup**, before the first `build-pi.ps1` run on a given Pi:
+create `/etc/udp-lambda-bridge-pi.env` by hand over SSH, root-owned and
+not world-readable, since it holds two API keys — this file is
+deliberately not managed by this repo or the deploy script:
+
+```
+sudo tee /etc/udp-lambda-bridge-pi.env > /dev/null <<'EOF'
+WRITE_API_URL=...
+WRITE_API_KEY=...
+READ_API_URL=...
+READ_API_KEY=...
+EOF
+sudo chmod 600 /etc/udp-lambda-bridge-pi.env
+```
+
+A re-imaged SD card loses this file, so it has to be recreated by hand
+again after any full Pi rebuild.
+
+Useful commands once it's running:
+
+```
+systemctl status udp-lambda-bridge-pi
+journalctl -u udp-lambda-bridge-pi -f
+```
 
 ## Read path (desired-state)
 

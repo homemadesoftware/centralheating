@@ -62,6 +62,41 @@ try {
     }
 
     Write-Host "Build succeeded: $RemoteDir/build/udp-lambda-bridge-pi" -ForegroundColor Green
+
+    Write-Host "Installing systemd service ..." -ForegroundColor Cyan
+    # ExecStart needs an absolute path, which depends on -RemoteDir - templated
+    # here rather than hardcoded in the committed .service file so the two
+    # can't drift apart.
+    # Forced to LF - a stray CRLF in a systemd unit file (easy to pick up
+    # editing on Windows) can leave an invisible trailing \r on a line like
+    # ExecStart=, which then fails with a confusing "No such file or
+    # directory" since the \r becomes part of the path.
+    $serviceTemplate = (Get-Content (Join-Path $scriptDir "udp-lambda-bridge-pi.service") -Raw) -replace "`r`n", "`n"
+    $servicePath = Join-Path $env:TEMP "udp-lambda-bridge-pi.service"
+    $serviceTemplate.Replace("@REMOTE_DIR@", $RemoteDir) | Set-Content -Path $servicePath -NoNewline
+
+    Set-SCPItem -ComputerName $RemoteHost -Credential $credential -Path $servicePath -Destination $RemoteDir -AcceptKey | Out-Null
+    Remove-Item $servicePath
+
+    # Requires passwordless sudo for $RemoteUser, which is the Raspberry Pi
+    # OS default for the "pi" user - matches this script's already-relaxed
+    # security posture (stock SSH password) for a home-LAN-only device.
+    $installCommand = "sudo cp $RemoteDir/udp-lambda-bridge-pi.service /etc/systemd/system/udp-lambda-bridge-pi.service " +
+        "&& sudo systemctl daemon-reload " +
+        "&& sudo systemctl enable udp-lambda-bridge-pi " +
+        "&& sudo systemctl restart udp-lambda-bridge-pi"
+    $result = Invoke-SSHCommand -SSHSession $session -Command $installCommand
+    Write-Host $result.Output
+    if ($result.Error) {
+        Write-Host $result.Error -ForegroundColor Yellow
+    }
+
+    if ($result.ExitStatus -ne 0) {
+        Write-Host "Service install failed - is /etc/udp-lambda-bridge-pi.env set up? See README's 'Deploying as a service'." -ForegroundColor Red
+        exit 1
+    }
+
+    Write-Host "Service installed and running: systemctl status udp-lambda-bridge-pi" -ForegroundColor Green
 }
 finally {
     Remove-SSHSession -SSHSession $session | Out-Null
