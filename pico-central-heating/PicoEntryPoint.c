@@ -77,6 +77,9 @@ bool heartBeatState = true;
 NetworkIo networkIo;
 void ReceiveDataFromNetwork(const unsigned char* pszDataIn);
 
+#define MAX_NETWORK_RECEIVED_DATA_BUFFER 384
+unsigned char networkReceivedDataBuffer[MAX_NETWORK_RECEIVED_DATA_BUFFER];
+
 int main()
 {
     // Hack. Make sure to pull up the outputs first thing
@@ -289,12 +292,13 @@ void Hardware_GetUptimeSeconds(unsigned long* pValue)
 
 void ReceiveDataFromNetwork(const unsigned char* pszDataIn)
 {
-    printf("%s\n", pszDataIn);
+    //printf("%s\n", pszDataIn);
+    snprintf(networkReceivedDataBuffer, MAX_NETWORK_RECEIVED_DATA_BUFFER, "%s", pszDataIn);
 }
 
 void Hardware_ReadLastNetworkPacket(unsigned char* buffer, int maxLength)
 {
-
+    snprintf(buffer, maxLength, "%s", networkReceivedDataBuffer);
 }
 
 void Hardware_SendNetworkPacket(unsigned char* buffer)

@@ -47,6 +47,8 @@ add_executable(my_project
     ../Common/StringUtils.c
     ../Common/DateTime.c
     ../Common/StatusBuilder.c
+    ../Common/DesiredStateParser.c
+    ../Common/MyLittleParser.c
 )
 
 
