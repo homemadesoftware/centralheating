@@ -1,6 +1,2 @@
-# VS C++ build artifacts specific to this project
-Win32/
-x64/
-ARM/
-ARM64/
-udp-lamb.*/
+# CMake build output (local compile-checks, and the remote build on toadmail-hub)
+build/

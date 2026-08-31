@@ -4,13 +4,11 @@ on:
   push:
     branches: [master]
     paths:
-      - "udp-lambda-bridge/udp-lambda-bridge-shared/**"
-      - "udp-lambda-bridge/udp-lambda-bridge-pi/**"
+      - "udp-lambda-bridge/**"
       - ".github/workflows/build-udp-lambda-bridge-pi.yml"
   pull_request:
     paths:
-      - "udp-lambda-bridge/udp-lambda-bridge-shared/**"
-      - "udp-lambda-bridge/udp-lambda-bridge-pi/**"
+      - "udp-lambda-bridge/**"
       - ".github/workflows/build-udp-lambda-bridge-pi.yml"
 
 permissions:
@@ -22,12 +20,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Native gcc compile-check, not a real ARMv6 cross-build — this only
-      # catches compile errors early. The real target build/deploy still
-      # happens via Visual Studio's remote-SSH build to the actual Pi
-      # (see udp-lambda-bridge-pi/README's own project, "Build setup").
+      - name: Install build tools
+        run: sudo apt-get update && sudo apt-get install -y cmake libcurl4-openssl-dev
+
+      # Native compile-check, not a real ARMv6 cross-build — this only
+      # catches compile errors early. The real target build happens on
+      # toadmail-hub itself, via udp-lambda-bridge/build-pi.ps1 (see
+      # that project's README, "Build setup"). Uses the same
+      # CMakeLists.txt as that script, so CI and the real build can't
+      # quietly drift apart into two different build definitions.
       - name: Compile-check
-        working-directory: udp-lambda-bridge/udp-lambda-bridge-shared
         run: |
-          mkdir -p build
-          gcc -I. -Wall -Werror main.c udp_io.c -o build/udp-lambda-bridge-pi
+          cd udp-lambda-bridge
+          cmake -S . -B build
+          cmake --build build

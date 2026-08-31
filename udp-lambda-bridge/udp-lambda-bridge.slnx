@@ -1,8 +1,0 @@
-<Solution>
-  <Project Path="udp-lambda-bridge-pi/udp-lambda-bridge-pi.vcxproj" Id="636ee4de-3eeb-43fb-92ed-c91b61dbc6df">
-    <Platform Project="ARM" />
-    <Deploy />
-  </Project>
-  <Project Path="udp-lambda-bridge-shared/udp-lambda-bridge-shared.vcxitems" Id="a4df11a5-042f-4434-abeb-838099209906" />
-  <Project Path="udp-lambda-bridge-x86/udp-lambda-bridge-x86.vcxproj" Id="9d949c82-e834-4089-9660-85598d05ae8c" />
-</Solution>

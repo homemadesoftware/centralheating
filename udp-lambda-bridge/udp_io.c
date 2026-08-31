@@ -1,36 +1,41 @@
+// _DEFAULT_SOURCE alone turned out not to be enough to expose struct
+// sigaction/sigaction()/sigemptyset() on toadmail-hub's (old, ARMv6)
+// glibc, even placed before every include — _GNU_SOURCE is the maximal,
+// "just expose everything" macro glibc has supported for 20+ years, and a
+// safer bet across whatever glibc vintage a given remote target turns out
+// to have. Must be defined before any libc header is included anywhere in
+// this translation unit, hence right at the top.
+#define _GNU_SOURCE
+
 #include <udp_io.h>
 #include <stdio.h>
 #include <memory.h>
 
-#ifdef _WIN32
-
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#pragma comment(lib, "ws2_32.lib")
-
-typedef SOCKET udp_socket_t;
-#define UDP_CLOSE(s) closesocket(s)
-
-#else
-
-#ifndef _DEFAULT_SOURCE
-#define _DEFAULT_SOURCE
-#endif
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <signal.h>
 
 typedef int udp_socket_t;
 #define UDP_CLOSE(s) close(s)
 
 #define INVALID_SOCKET (-1)
 
-#endif
-
 
 int Initalise();
 void Shutdown();
+
+// Set by the SIGINT/SIGTERM handler, checked by the receive loop below so a
+// blocking recvfrom() can actually be stopped rather than the process
+// having to be killed outright.
+static volatile sig_atomic_t g_shutdownRequested = 0;
+
+static void HandleShutdownSignal(int signum)
+{
+	(void)signum;
+	g_shutdownRequested = 1;
+}
 
 
 int UdpModule_ListenAndRespond(unsigned short udpPort, OnDataReceived* pOnDataReceived, OnResponseRequired* pOnResponseRequired)
@@ -66,7 +71,7 @@ int UdpModule_ListenAndRespond(unsigned short udpPort, OnDataReceived* pOnDataRe
 
 	printf("Socket bind complete with %d\n", ret);
 
-	while (1)
+	while (!g_shutdownRequested)
 	{
 		struct sockaddr_in senderAddress;
 		memset(&senderAddress, 0, sizeof(senderAddress));
@@ -79,6 +84,19 @@ int UdpModule_ListenAndRespond(unsigned short udpPort, OnDataReceived* pOnDataRe
 		printf("Start Receive\n");
 		int received = recvfrom(udpSocket, buffer, sizeof(buffer), 0, (struct sockaddr*)&senderAddress, &senderAddresLength);
 
+		if (received < 0)
+		{
+			// Shutdown signal interrupting the blocked recvfrom() looks the
+			// same as any other error here (a negative return) — this is
+			// the expected, clean way out of the loop, not a real error.
+			if (g_shutdownRequested)
+			{
+				break;
+			}
+
+			printf("recvfrom failed\n");
+			continue;
+		}
 
 		char ipStr[INET_ADDRSTRLEN];
 		inet_ntop(AF_INET, &senderAddress.sin_addr, ipStr, sizeof(ipStr));
@@ -110,46 +128,19 @@ int UdpModule_ListenAndRespond(unsigned short udpPort, OnDataReceived* pOnDataRe
 }
 
 
-#ifdef _WIN32
-
-static int initialiseCount;
-
-
 int Initalise()
 {
-	if (initialiseCount == 0)
-	{
-		WSADATA wsaData;
-		int ret = WSAStartup(MAKEWORD(2, 2), &wsaData);
-		if (ret != 0)
-		{
-			printf("Failed WSAStartup");
-			return ret;
-		}
+	// sa_flags left at 0 (no SA_RESTART) deliberately — recvfrom() in the
+	// receive loop above needs to come back with EINTR on these signals,
+	// not have the kernel silently restart it, or SIGTERM would never
+	// actually stop the loop.
+	struct sigaction sa;
+	memset(&sa, 0, sizeof(sa));
+	sa.sa_handler = HandleShutdownSignal;
+	sigemptyset(&sa.sa_mask);
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGTERM, &sa, NULL);
 
-		char hostname[32];
-		gethostname(hostname, sizeof(hostname));
-		printf("WSAStartup Ready. Host: %s\n", hostname);
-
-		initialiseCount++;
-	}
-
-	return 0;
-}
-
-
-void Shutdown()
-{
-	if (initialiseCount == 1)
-	{
-		WSACleanup();
-		initialiseCount--;
-	}
-}
-
-#else
-int Initalise()
-{
 	return 0;
 }
 
@@ -157,5 +148,3 @@ void Shutdown()
 {
 
 }
-
-#endif
