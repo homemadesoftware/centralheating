@@ -50,11 +50,16 @@
   <PropertyGroup Label="UserMacros" />
   <ItemDefinitionGroup>
     <Link>
-      <!-- -lcurl. Requires libcurl4-openssl-dev (or equivalent) installed
-           on the remote build target (toadmail-hub) — VS's Linux remote
-           build compiles/links against the actual headers/libs on the Pi
+      <!-- -lcurl, passed as a raw linker flag rather than via
+           AdditionalDependencies — VS's Linux project system appears to
+           treat that property as a literal filename to locate rather than
+           translating it to -lcurl, which fails ("cannot find curl: No
+           such file or directory") even with the headers/lib genuinely
+           installed. Requires libcurl4-openssl-dev (or equivalent) on the
+           remote build target (toadmail-hub) — VS's Linux remote build
+           compiles/links against the actual headers/libs on the Pi
            itself, not a local cross-compiler sysroot. -->
-      <AdditionalDependencies>curl;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>-lcurl %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
