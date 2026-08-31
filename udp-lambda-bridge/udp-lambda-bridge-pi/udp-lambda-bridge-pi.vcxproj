@@ -50,17 +50,32 @@
   <PropertyGroup Label="UserMacros" />
   <ItemDefinitionGroup>
     <Link>
-      <!-- -lcurl, passed as a raw linker flag rather than via
-           AdditionalDependencies — VS's Linux project system appears to
+      <!-- lcurl, passed as a raw linker flag rather than via
+           AdditionalDependencies: VS's Linux project system appears to
            treat that property as a literal filename to locate rather than
-           translating it to -lcurl, which fails ("cannot find curl: No
-           such file or directory") even with the headers/lib genuinely
-           installed. Requires libcurl4-openssl-dev (or equivalent) on the
-           remote build target (toadmail-hub) — VS's Linux remote build
-           compiles/links against the actual headers/libs on the Pi
-           itself, not a local cross-compiler sysroot. -->
-      <AdditionalOptions>-lcurl %(AdditionalOptions)</AdditionalOptions>
+           translating it to the proper linker flag, which fails ("cannot
+           find curl: No such file or directory") even with the headers/lib
+           genuinely installed. Requires libcurl4-openssl-dev (or
+           equivalent) on the remote build target (toadmail-hub); VS's
+           Linux remote build compiles/links against the actual
+           headers/libs on the Pi itself, not a local cross-compiler
+           sysroot.
+
+           Wrapped in the linker's group-start/group-end markers below:
+           the classic BFD ld on toadmail-hub resolves libraries in a
+           single left to right pass, so the plain flag alone produced
+           "undefined reference to curl_..." once the library itself was
+           actually found; it was ordered before the object files that
+           reference it in whatever command line VS generates from
+           AdditionalOptions, and a single pass linker will not revisit it
+           afterwards. The group markers make ld keep re-scanning the
+           enclosed libraries until everything resolves, regardless of
+           position. -->
+      <AdditionalOptions>-Wl,--start-group -lcurl -Wl,--end-group %(AdditionalOptions)</AdditionalOptions>
     </Link>
+    <ClCompile>
+      <Verbose Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">true</Verbose>
+    </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CommandCentreClient.c" />
