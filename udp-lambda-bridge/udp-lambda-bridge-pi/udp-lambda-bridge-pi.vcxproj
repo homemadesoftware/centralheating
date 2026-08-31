@@ -57,6 +57,12 @@
       <AdditionalDependencies>curl;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="CommandCentreClient.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CommandCentreClient.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
 </Project>

@@ -37,12 +37,30 @@ Manager, or via "Manage Configurations" for a CMake remote target) — that's
 IDE-side state, not tracked in this repo. Point it at this folder's
 `CMakeLists.txt` once the connection exists.
 
+## Configuration
+
+Two environment variables, required for the write path
+(`udp-lambda-bridge-pi/CommandCentreClient.c`) — no config file, no values
+committed anywhere in this repo:
+
+| Variable | Value |
+|---|---|
+| `WRITE_API_URL` | `write_api_invoke_url` output from `central-heating-on-cloud/infrastructure` |
+| `WRITE_API_KEY` | `write_api_key_value` output (sensitive) from the same |
+
+If running interactively, `export` them in the shell before launching. For a
+real deployment (e.g. a systemd unit), set them via that unit's
+`Environment=`/`EnvironmentFile=`, not baked into the binary or this repo.
+
 ## Status
 
-UDP listener works (`UdpModule_ListenAndRespond` in `udp-lambda-bridge-shared`),
-but its response is currently just an empty placeholder — no response cache
-or API Gateway/Lambda call yet. libcurl is now linked (`-lcurl` in
-`udp-lambda-bridge-pi.vcxproj`) ready for that work; requires
+UDP listener works (`UdpModule_ListenAndRespond` in `udp-lambda-bridge-shared`).
+On every packet received from a Pico, the raw QUACK payload is forwarded
+as-is to the Command Centre's write endpoint
+(`CommandCentre_PostStatus` — synchronous for now, not yet moved to the
+background thread the design above describes). The reply sent back to the
+Pico is still an empty placeholder — the read path (desired-state via a
+presigned S3 URL) isn't wired up yet. Requires
 `libcurl4-openssl-dev` (or equivalent) installed on `toadmail-hub` itself,
 since VS's remote build compiles/links against the actual libraries on the
 Pi, not a local cross-compiler sysroot.

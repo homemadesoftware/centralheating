@@ -22,6 +22,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install libcurl headers
+        run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev
+
       # Native gcc compile-check, not a real ARMv6 cross-build — this only
       # catches compile errors early. The real target build/deploy still
       # happens via Visual Studio's remote-SSH build to the actual Pi
@@ -30,4 +33,4 @@ jobs:
         working-directory: udp-lambda-bridge/udp-lambda-bridge-shared
         run: |
           mkdir -p build
-          gcc -I. -Wall -Werror main.c udp_io.c -o build/udp-lambda-bridge-pi
+          gcc -I. -Wall -Werror main.c udp_io.c ../udp-lambda-bridge-pi/CommandCentreClient.c -lcurl -o build/udp-lambda-bridge-pi
