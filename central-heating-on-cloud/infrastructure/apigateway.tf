@@ -50,11 +50,18 @@ resource "aws_lambda_permission" "status_post" {
 resource "aws_api_gateway_deployment" "write" {
   rest_api_id = aws_api_gateway_rest_api.write.id
 
+  # Includes .uri, not just .id — an integration's id doesn't change when
+  # only its target (uri) does, so a plain id-only hash misses exactly the
+  # case that matters most: repointing this API at a different Lambda
+  # function. Learned the hard way (2026-08-31): the prod stage kept
+  # serving a deployment from before the Lambda consolidation, silently
+  # invoking a function ARN that no longer existed.
   triggers = {
     redeployment = sha1(jsonencode([
       aws_api_gateway_resource.status.id,
       aws_api_gateway_method.status_post.id,
       aws_api_gateway_integration.status_post.id,
+      aws_api_gateway_integration.status_post.uri,
     ]))
   }
 
@@ -130,11 +137,13 @@ resource "aws_lambda_permission" "desired_state_url_get" {
 resource "aws_api_gateway_deployment" "read" {
   rest_api_id = aws_api_gateway_rest_api.read.id
 
+  # See the write-side deployment above for why .uri is included, not just .id.
   triggers = {
     redeployment = sha1(jsonencode([
       aws_api_gateway_resource.desired_state_url.id,
       aws_api_gateway_method.desired_state_url_get.id,
       aws_api_gateway_integration.desired_state_url_get.id,
+      aws_api_gateway_integration.desired_state_url_get.uri,
     ]))
   }
 

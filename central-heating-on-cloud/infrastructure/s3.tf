@@ -1,16 +1,11 @@
 # Bucket names must be globally unique across all of AWS — adjust
 # service_name (or add a suffix here) if these are already taken.
 
+# One known key, always overwritten in place — no versioning. Plain text
+# content, not JSON (see infrastructure/lambda.tf's DESIRED_STATE_KEY and
+# AWS-BACKEND-SPEC.md §5).
 resource "aws_s3_bucket" "desired_state" {
   bucket = "${var.service_name}-desired-state"
-}
-
-resource "aws_s3_bucket_versioning" "desired_state" {
-  bucket = aws_s3_bucket.desired_state.id
-
-  versioning_configuration {
-    status = "Enabled"
-  }
 }
 
 resource "aws_s3_bucket_public_access_block" "desired_state" {

@@ -25,3 +25,11 @@
 - **NEVER commit or push directly to `master`/`main`. No exceptions** — not for
   a test script, not for a "trivial" one-liner. Always create a branch and go
   through a PR, exactly like every other piece of work.
+- **NEVER run any `tofu` command, and never touch `.terraform/`**, in
+  `central-heating-on-cloud/infrastructure/` (or any other Tofu directory) —
+  not `init`, `validate`, `plan`, `apply`, and not even cleanup/deletion of
+  `.terraform/`. State is encrypted and the passphrase is never given to
+  Claude. Edit `.tf` files and stop; the user runs Tofu themselves and
+  reports back. Do not try to work around this (dummy passphrases,
+  `-backend=false`, scratch-dir copies, etc.) — just say what changed and
+  that it needs a `tofu plan`/`apply` on the user's end.

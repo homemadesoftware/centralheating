@@ -38,7 +38,7 @@ data "aws_iam_policy_document" "command_centre_inline" {
   statement {
     sid       = "PresignDesiredStateRead"
     actions   = ["s3:GetObject"]
-    resources = ["${aws_s3_bucket.desired_state.arn}/current.json"]
+    resources = ["${aws_s3_bucket.desired_state.arn}/current.txt"]
   }
 }
 
