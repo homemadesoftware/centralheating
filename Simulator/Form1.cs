@@ -266,7 +266,43 @@ namespace CentralHeatingEmulator
 
         private void ReadLastNetworkPacket(IntPtr data, int maxLength)
         {
+            // Whatever is currently in txtDesiredState is served verbatim -
+            // freely editable by hand too, not just via the three buttons
+            // below, so malformed/edge-case blocks can be tested directly.
+            byte[] bytes = Encoding.ASCII.GetBytes(txtDesiredState.Text);
+            int copyLength = Math.Min(bytes.Length, maxLength - 1);
+            Marshal.Copy(bytes, 0, data, copyLength);
+            Marshal.WriteByte(data, copyLength, 0);
+        }
 
+        // Same id format the real Command Centre uses (AWS-BACKEND-SPEC.md) -
+        // zero-padded epoch-ms so plain string comparison agrees with
+        // chronological order, plus a GUID to guarantee a new id even if two
+        // clicks land in the same millisecond.
+        private static string GenerateDesiredStateId()
+        {
+            long epochMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            return epochMs.ToString("D16") + Guid.NewGuid().ToString("N");
+        }
+
+        private void SetDesiredState(string desiredState)
+        {
+            txtDesiredState.Text = "desired-state " + desiredState + "\r\ndesired-state-id " + GenerateDesiredStateId() + "\r\n";
+        }
+
+        private void btnDesiredStateNone_Click(object sender, EventArgs e)
+        {
+            SetDesiredState("none");
+        }
+
+        private void btnDesiredStateOn_Click(object sender, EventArgs e)
+        {
+            SetDesiredState("on");
+        }
+
+        private void btnDesiredStateOff_Click(object sender, EventArgs e)
+        {
+            SetDesiredState("off");
         }
 
         private void SendNetworkPacket(string data)

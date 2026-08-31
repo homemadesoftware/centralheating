@@ -66,6 +66,10 @@
             this.numTemperature = new System.Windows.Forms.NumericUpDown();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.txtNetworkPacketOut = new System.Windows.Forms.TextBox();
+            this.txtDesiredState = new System.Windows.Forms.TextBox();
+            this.btnDesiredStateNone = new System.Windows.Forms.Button();
+            this.btnDesiredStateOn = new System.Windows.Forms.Button();
+            this.btnDesiredStateOff = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.uiGroup.SuspendLayout();
             this.timerInterruptGroup.SuspendLayout();
@@ -577,9 +581,52 @@
             this.txtNetworkPacketOut.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtNetworkPacketOut.Size = new System.Drawing.Size(200, 156);
             this.txtNetworkPacketOut.TabIndex = 8;
-            // 
+            //
+            // txtDesiredState
+            //
+            this.txtDesiredState.Location = new System.Drawing.Point(220, 19);
+            this.txtDesiredState.Multiline = true;
+            this.txtDesiredState.Name = "txtDesiredState";
+            this.txtDesiredState.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtDesiredState.Size = new System.Drawing.Size(250, 80);
+            this.txtDesiredState.TabIndex = 9;
+            //
+            // btnDesiredStateNone
+            //
+            this.btnDesiredStateNone.Location = new System.Drawing.Point(220, 105);
+            this.btnDesiredStateNone.Name = "btnDesiredStateNone";
+            this.btnDesiredStateNone.Size = new System.Drawing.Size(78, 23);
+            this.btnDesiredStateNone.TabIndex = 10;
+            this.btnDesiredStateNone.Text = "None";
+            this.btnDesiredStateNone.UseVisualStyleBackColor = true;
+            this.btnDesiredStateNone.Click += new System.EventHandler(this.btnDesiredStateNone_Click);
+            //
+            // btnDesiredStateOn
+            //
+            this.btnDesiredStateOn.Location = new System.Drawing.Point(302, 105);
+            this.btnDesiredStateOn.Name = "btnDesiredStateOn";
+            this.btnDesiredStateOn.Size = new System.Drawing.Size(78, 23);
+            this.btnDesiredStateOn.TabIndex = 11;
+            this.btnDesiredStateOn.Text = "HW On";
+            this.btnDesiredStateOn.UseVisualStyleBackColor = true;
+            this.btnDesiredStateOn.Click += new System.EventHandler(this.btnDesiredStateOn_Click);
+            //
+            // btnDesiredStateOff
+            //
+            this.btnDesiredStateOff.Location = new System.Drawing.Point(384, 105);
+            this.btnDesiredStateOff.Name = "btnDesiredStateOff";
+            this.btnDesiredStateOff.Size = new System.Drawing.Size(78, 23);
+            this.btnDesiredStateOff.TabIndex = 12;
+            this.btnDesiredStateOff.Text = "HW Off";
+            this.btnDesiredStateOff.UseVisualStyleBackColor = true;
+            this.btnDesiredStateOff.Click += new System.EventHandler(this.btnDesiredStateOff_Click);
+            //
             // groupBox2
-            // 
+            //
+            this.groupBox2.Controls.Add(this.btnDesiredStateOff);
+            this.groupBox2.Controls.Add(this.btnDesiredStateOn);
+            this.groupBox2.Controls.Add(this.btnDesiredStateNone);
+            this.groupBox2.Controls.Add(this.txtDesiredState);
             this.groupBox2.Controls.Add(this.txtNetworkPacketOut);
             this.groupBox2.Location = new System.Drawing.Point(12, 344);
             this.groupBox2.Name = "groupBox2";
@@ -663,6 +710,10 @@
         private System.Windows.Forms.Button btnDown;
         private System.Windows.Forms.Button btnLeft;
         private System.Windows.Forms.TextBox txtNetworkPacketOut;
+        private System.Windows.Forms.TextBox txtDesiredState;
+        private System.Windows.Forms.Button btnDesiredStateNone;
+        private System.Windows.Forms.Button btnDesiredStateOn;
+        private System.Windows.Forms.Button btnDesiredStateOff;
         private System.Windows.Forms.GroupBox groupBox2;
     }
 }
