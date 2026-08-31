@@ -22,3 +22,6 @@
 - Do not add comments to code unless the why is genuinely non-obvious
 - Do not add unnecessary abstractions or future-proofing beyond what the task needs
 - Do not summarise what you just did at length — he can read the diff
+- **NEVER commit or push directly to `master`/`main`. No exceptions** — not for
+  a test script, not for a "trivial" one-liner. Always create a branch and go
+  through a PR, exactly like every other piece of work.
