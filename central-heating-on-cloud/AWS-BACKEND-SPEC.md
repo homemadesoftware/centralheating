@@ -12,12 +12,11 @@ crossing that link originates from, or feeds back into, QUACK fields. See
 `udp-lambda-bridge/NETWORKING.md`/`udp-lambda-bridge/README.md` for why the
 hub exists as a separate hop rather than the Pico talking to AWS directly.
 
-Status: draft v0.1. As of the "create everything now" pass, the repo
-layout (§3), `infrastructure/*.tf` (§4), and the `CentralHeatingOnCloud.Lambda`
-project scaffold (routing, hosting, Dockerfile) exist — see that project's
-own `Routes.cs` for what's still a `501 Not Implemented` stub. The actual
-handler logic (parsing/storing status, minting the presigned URL) is
-deliberately not written yet.
+Status: both routes are implemented (see `CentralHeatingOnCloud.Lambda/Routes.cs`).
+Status-ingest is deployed and confirmed working end to end against real AWS
+(`central-heating-on-cloud-command-centre`) — writes are visible in
+DynamoDB. mint-desired-state-url builds clean locally but is not yet
+deployed/tested against real AWS.
 
 ## 1. Reference pattern (from HC's Reference Project)
 

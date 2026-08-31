@@ -1,5 +1,7 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
+using Amazon.S3;
+using Amazon.S3.Model;
 
 namespace CentralHeatingOnCloud.Lambda;
 
@@ -11,6 +13,7 @@ public static class Routes
     private const string Origin = "central-heating";
 
     private static readonly AmazonDynamoDBClient DynamoDb = new();
+    private static readonly AmazonS3Client S3 = new();
 
     public static void MapAll(WebApplication app)
     {
@@ -97,11 +100,38 @@ public static class Routes
     // Mints a presigned S3 GET URL for the current desired-state object so the
     // hub can poll S3 directly afterwards, with no further Lambda involvement
     // (see AWS-BACKEND-SPEC.md §2, "How the hub polls for desired state").
+    // Response is the URL alone, as plain text — deliberately not JSON, so
+    // the hub's C client needs no parsing at all, just to GET whatever body
+    // it gets back. Fully decoupled from the write path: no shared state,
+    // no shared response shape.
     //
-    // TODO: call S3 GetPreSignedURL for DESIRED_STATE_BUCKET/DESIRED_STATE_KEY
-    // (env vars set in infrastructure/lambda.tf) and return { url, expiresAt }.
+    // Presigning is a local SigV4 computation using the Lambda's own
+    // credentials, not a real call to AWS — it succeeds even if
+    // current.json doesn't exist yet (nothing writes it yet; that's a
+    // future Android app, out of scope here). The hub just gets a 404 when
+    // it actually polls, which is fine — indistinguishable from
+    // desired-state: none from the hub's point of view.
     private static void MapMintDesiredStateUrl(WebApplication app)
     {
-        app.MapGet("/desired-state-url", () => Results.StatusCode(StatusCodes.Status501NotImplemented));
+        var bucket = Environment.GetEnvironmentVariable("DESIRED_STATE_BUCKET")
+            ?? throw new InvalidOperationException("DESIRED_STATE_BUCKET environment variable is required.");
+        var key = Environment.GetEnvironmentVariable("DESIRED_STATE_KEY")
+            ?? throw new InvalidOperationException("DESIRED_STATE_KEY environment variable is required.");
+        var ttlSeconds = int.Parse(Environment.GetEnvironmentVariable("PRESIGNED_URL_TTL_SECONDS")
+            ?? throw new InvalidOperationException("PRESIGNED_URL_TTL_SECONDS environment variable is required."));
+
+        app.MapGet("/desired-state-url", () =>
+        {
+            var url = S3.GetPreSignedURL(new GetPreSignedUrlRequest
+            {
+                BucketName = bucket,
+                Key = key,
+                Verb = HttpVerb.GET,
+                Protocol = Protocol.HTTPS,
+                Expires = DateTime.UtcNow.AddSeconds(ttlSeconds),
+            });
+
+            return Results.Text(url, "text/plain");
+        });
     }
 }
