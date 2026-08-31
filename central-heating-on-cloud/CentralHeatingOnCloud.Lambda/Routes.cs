@@ -19,6 +19,8 @@ public static class Routes
     {
         MapStatusIngest(app);
         MapMintDesiredStateUrl(app);
+        MapLatestStatus(app);
+        MapSetDesiredState(app);
     }
 
     // Receives the QUACK heartbeat/status payload udp-lambda-bridge forwards
@@ -106,10 +108,9 @@ public static class Routes
     // no shared response shape.
     //
     // Presigning is a local SigV4 computation using the Lambda's own
-    // credentials, not a real call to AWS — it succeeds even if
-    // current.json doesn't exist yet (nothing writes it yet; that's a
-    // future Android app, out of scope here). The hub just gets a 404 when
-    // it actually polls, which is fine — indistinguishable from
+    // credentials, not a real call to AWS — it succeeds even before
+    // anything has ever called MapSetDesiredState below. The hub just gets
+    // a 404 when it actually polls, which is fine — indistinguishable from
     // desired-state: none from the hub's point of view.
     private static void MapMintDesiredStateUrl(WebApplication app)
     {
@@ -132,6 +133,85 @@ public static class Routes
             });
 
             return Results.Text(url, "text/plain");
+        });
+    }
+
+    // For the future Android app: the most recent status item, as JSON
+    // (unlike the hub-facing routes above, which deliberately avoid it) —
+    // a phone app has no reason to hand-parse QUACK wire text. Uses the
+    // same app-facing API key as MapSetDesiredState below (see
+    // infrastructure/apigateway.tf's "app" API).
+    private static void MapLatestStatus(WebApplication app)
+    {
+        var tableName = Environment.GetEnvironmentVariable("STATUS_TABLE_NAME")
+            ?? throw new InvalidOperationException("STATUS_TABLE_NAME environment variable is required.");
+
+        app.MapGet("/status/latest", async () =>
+        {
+            var response = await DynamoDb.QueryAsync(new QueryRequest
+            {
+                TableName = tableName,
+                KeyConditionExpression = "origin = :origin",
+                ExpressionAttributeValues = new Dictionary<string, AttributeValue>
+                {
+                    [":origin"] = new AttributeValue { S = Origin },
+                },
+                ScanIndexForward = false, // received_at descending - newest item first
+                Limit = 1,
+            });
+
+            if (response.Items.Count == 0)
+            {
+                return Results.NotFound();
+            }
+
+            // Every attribute is either S or N (see MapStatusIngest) and
+            // both are string-typed in the SDK, so this loses nothing.
+            var fields = response.Items[0].ToDictionary(pair => pair.Key, pair => pair.Value.S ?? pair.Value.N);
+            return Results.Json(fields);
+        });
+    }
+
+    // Accepts the new desired-state value as a plain-text body (same
+    // vocabulary as QUACK.md: none/on/off) from the future Android app,
+    // assigns a new desired-state-id, and overwrites the single
+    // desired-state object in S3 (still no bucket versioning - see s3.tf).
+    // Fully decoupled from the read path above - the hub just sees a new
+    // object next time it polls, with no idea a write even happened.
+    private static void MapSetDesiredState(WebApplication app)
+    {
+        var bucket = Environment.GetEnvironmentVariable("DESIRED_STATE_BUCKET")
+            ?? throw new InvalidOperationException("DESIRED_STATE_BUCKET environment variable is required.");
+        var key = Environment.GetEnvironmentVariable("DESIRED_STATE_KEY")
+            ?? throw new InvalidOperationException("DESIRED_STATE_KEY environment variable is required.");
+
+        app.MapPost("/desired-state", async (HttpRequest request) =>
+        {
+            using var reader = new StreamReader(request.Body);
+            var desiredState = (await reader.ReadToEndAsync()).Trim();
+
+            if (desiredState is not ("none" or "on" or "off"))
+            {
+                return Results.BadRequest("desired-state must be one of: none, on, off");
+            }
+
+            // Epoch milliseconds, zero-padded to a fixed width so plain
+            // string comparison agrees with numeric order, plus a GUID
+            // suffix to break ties between writes landing in the same
+            // millisecond - see QUACK.md's desired-state-id definition.
+            // 16 digits comfortably outlives epoch-ms (until the year 5138).
+            var desiredStateId = $"{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds():D16}{Guid.NewGuid():N}";
+
+            var content = $"desired-state {desiredState}\ndesired-state-id {desiredStateId}\n";
+
+            await S3.PutObjectAsync(new PutObjectRequest
+            {
+                BucketName = bucket,
+                Key = key,
+                ContentBody = content,
+            });
+
+            return Results.Text(desiredStateId, "text/plain");
         });
     }
 }

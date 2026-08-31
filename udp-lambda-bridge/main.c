@@ -1,6 +1,8 @@
 #include <stdio.h>
+#include <unistd.h>
 #include <udp_io.h>
 #include "CommandCentreClient.h"
+#include "DesiredStateReader.h"
 
 void OnDataReceivedCallback(const unsigned char* pszDataReceived)
 {
@@ -11,9 +13,7 @@ void OnDataReceivedCallback(const unsigned char* pszDataReceived)
 
 void OnResponseRequiredCallback(unsigned char* pszReceiveBuffer, unsigned short maxLength)
 {
-    // Placeholder until the read path (desired-state) is wired up too —
-    // see AWS-BACKEND-SPEC.md.
-    snprintf((char*)pszReceiveBuffer, maxLength, "%s", "");
+    DesiredStateReader_ReadCache((char*)pszReceiveBuffer, maxLength);
 }
 
 int main(void)
@@ -27,6 +27,20 @@ int main(void)
     if (CommandCentre_Init() != 0)
     {
         return 1;
+    }
+
+    // The desired-state read path runs in a forked child rather than a
+    // thread - no shared memory/locking to get right, just the cache file
+    // as the sole interface between the two. See DesiredStateReader.h.
+    pid_t readerPid = fork();
+    if (readerPid == 0)
+    {
+        DesiredStateReader_RunChildLoop();
+        return 0;
+    }
+    else if (readerPid < 0)
+    {
+        printf("Failed to fork desired-state reader - replies will stay empty\n");
     }
 
     UdpModule_ListenAndRespond(12345, OnDataReceivedCallback, OnResponseRequiredCallback);

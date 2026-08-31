@@ -1,0 +1,15 @@
+[Unit]
+Description=udp-lambda-bridge-pi - relays Pico QUACK status/desired-state to/from the Command Centre
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+EnvironmentFile=/etc/udp-lambda-bridge-pi.env
+ExecStart=@REMOTE_DIR@/build/udp-lambda-bridge-pi
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

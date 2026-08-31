@@ -19,15 +19,21 @@ resource "aws_iam_role_policy_attachment" "command_centre_basic_execution" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-# Union of what both routes need — status-ingest (writes to the status
-# table) and mint-desired-state-url (reads the desired-state object so its
-# presigned URL is actually usable) run in the same function/role now that
-# there's no differing memory/timeout need to justify splitting them. See
-# AWS-BACKEND-SPEC.md §5.
+# Union of what every route needs — status-ingest, mint-desired-state-url,
+# latest-status, and set-desired-state all run in the same function/role now
+# that there's no differing memory/timeout need to justify splitting them.
+# See AWS-BACKEND-SPEC.md §5.
 data "aws_iam_policy_document" "command_centre_inline" {
   statement {
     sid       = "WriteStatusHistory"
     actions   = ["dynamodb:PutItem"]
+    resources = [aws_dynamodb_table.status.arn]
+  }
+
+  # For the app's latest-status route.
+  statement {
+    sid       = "ReadLatestStatus"
+    actions   = ["dynamodb:Query"]
     resources = [aws_dynamodb_table.status.arn]
   }
 
@@ -38,6 +44,13 @@ data "aws_iam_policy_document" "command_centre_inline" {
   statement {
     sid       = "PresignDesiredStateRead"
     actions   = ["s3:GetObject"]
+    resources = ["${aws_s3_bucket.desired_state.arn}/current.txt"]
+  }
+
+  # For the app's set-desired-state route.
+  statement {
+    sid       = "WriteDesiredState"
+    actions   = ["s3:PutObject"]
     resources = ["${aws_s3_bucket.desired_state.arn}/current.txt"]
   }
 }
