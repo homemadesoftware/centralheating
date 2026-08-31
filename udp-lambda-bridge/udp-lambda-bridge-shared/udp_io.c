@@ -1,12 +1,12 @@
 #include <udp_io.h>
 #include <stdio.h>
 #include <memory.h>
-#include <signal.h>
 
 #ifdef _WIN32
 
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#include <signal.h>
 #pragma comment(lib, "ws2_32.lib")
 
 typedef SOCKET udp_socket_t;
@@ -14,6 +14,10 @@ typedef SOCKET udp_socket_t;
 
 #else
 
+// Must come before <signal.h> — struct sigaction/sigaction()/sigemptyset()
+// are gated behind this feature-test macro at the point signal.h is first
+// included; defining it after would be too late (header guards lock the
+// declarations out for good on that translation unit).
 #ifndef _DEFAULT_SOURCE
 #define _DEFAULT_SOURCE
 #endif
@@ -21,6 +25,7 @@ typedef SOCKET udp_socket_t;
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <signal.h>
 
 typedef int udp_socket_t;
 #define UDP_CLOSE(s) close(s)
