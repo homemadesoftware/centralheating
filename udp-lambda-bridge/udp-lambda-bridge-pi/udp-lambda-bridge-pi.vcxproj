@@ -48,7 +48,15 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
-  <ItemDefinitionGroup />
+  <ItemDefinitionGroup>
+    <Link>
+      <!-- -lcurl. Requires libcurl4-openssl-dev (or equivalent) installed
+           on the remote build target (toadmail-hub) — VS's Linux remote
+           build compiles/links against the actual headers/libs on the Pi
+           itself, not a local cross-compiler sysroot. -->
+      <AdditionalDependencies>curl;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
 </Project>

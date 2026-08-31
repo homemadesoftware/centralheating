@@ -39,5 +39,10 @@ IDE-side state, not tracked in this repo. Point it at this folder's
 
 ## Status
 
-Scaffold only — builds and prints a startup message. UDP listener, response
-cache, and the API Gateway/Lambda call are not implemented yet.
+UDP listener works (`UdpModule_ListenAndRespond` in `udp-lambda-bridge-shared`),
+but its response is currently just an empty placeholder — no response cache
+or API Gateway/Lambda call yet. libcurl is now linked (`-lcurl` in
+`udp-lambda-bridge-pi.vcxproj`) ready for that work; requires
+`libcurl4-openssl-dev` (or equivalent) installed on `toadmail-hub` itself,
+since VS's remote build compiles/links against the actual libraries on the
+Pi, not a local cross-compiler sysroot.

@@ -1,6 +1,7 @@
 #include <udp_io.h>
 #include <stdio.h>
 #include <memory.h>
+#include <signal.h>
 
 #ifdef _WIN32
 
@@ -31,6 +32,17 @@ typedef int udp_socket_t;
 
 int Initalise();
 void Shutdown();
+
+// Set by the SIGINT/SIGTERM handler, checked by the receive loop below so a
+// blocking recvfrom() can actually be stopped rather than the process
+// having to be killed outright.
+static volatile sig_atomic_t g_shutdownRequested = 0;
+
+static void HandleShutdownSignal(int signum)
+{
+	(void)signum;
+	g_shutdownRequested = 1;
+}
 
 
 int UdpModule_ListenAndRespond(unsigned short udpPort, OnDataReceived* pOnDataReceived, OnResponseRequired* pOnResponseRequired)
@@ -66,7 +78,7 @@ int UdpModule_ListenAndRespond(unsigned short udpPort, OnDataReceived* pOnDataRe
 
 	printf("Socket bind complete with %d\n", ret);
 
-	while (1)
+	while (!g_shutdownRequested)
 	{
 		struct sockaddr_in senderAddress;
 		memset(&senderAddress, 0, sizeof(senderAddress));
@@ -79,6 +91,19 @@ int UdpModule_ListenAndRespond(unsigned short udpPort, OnDataReceived* pOnDataRe
 		printf("Start Receive\n");
 		int received = recvfrom(udpSocket, buffer, sizeof(buffer), 0, (struct sockaddr*)&senderAddress, &senderAddresLength);
 
+		if (received < 0)
+		{
+			// Shutdown signal interrupting the blocked recvfrom() looks the
+			// same as any other error here (a negative return) — this is
+			// the expected, clean way out of the loop, not a real error.
+			if (g_shutdownRequested)
+			{
+				break;
+			}
+
+			printf("recvfrom failed\n");
+			continue;
+		}
 
 		char ipStr[INET_ADDRSTRLEN];
 		inet_ntop(AF_INET, &senderAddress.sin_addr, ipStr, sizeof(ipStr));
@@ -131,6 +156,9 @@ int Initalise()
 		gethostname(hostname, sizeof(hostname));
 		printf("WSAStartup Ready. Host: %s\n", hostname);
 
+		signal(SIGINT, HandleShutdownSignal);
+		signal(SIGTERM, HandleShutdownSignal);
+
 		initialiseCount++;
 	}
 
@@ -150,6 +178,17 @@ void Shutdown()
 #else
 int Initalise()
 {
+	// sa_flags left at 0 (no SA_RESTART) deliberately — recvfrom() in the
+	// receive loop above needs to come back with EINTR on these signals,
+	// not have the kernel silently restart it, or SIGTERM would never
+	// actually stop the loop.
+	struct sigaction sa;
+	memset(&sa, 0, sizeof(sa));
+	sa.sa_handler = HandleShutdownSignal;
+	sigemptyset(&sa.sa_mask);
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGTERM, &sa, NULL);
+
 	return 0;
 }
 
