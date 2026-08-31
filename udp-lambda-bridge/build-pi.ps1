@@ -29,6 +29,8 @@ $sourceFiles = @(
     (Join-Path $scriptDir "udp_io.h")
     (Join-Path $scriptDir "CommandCentreClient.c")
     (Join-Path $scriptDir "CommandCentreClient.h")
+    (Join-Path $scriptDir "DesiredStateReader.c")
+    (Join-Path $scriptDir "DesiredStateReader.h")
     (Join-Path $scriptDir "CMakeLists.txt")
 )
 

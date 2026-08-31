@@ -7,6 +7,7 @@ add_executable(udp-lambda-bridge-pi
     main.c
     udp_io.c
     CommandCentreClient.c
+    DesiredStateReader.c
 )
 
 target_include_directories(udp-lambda-bridge-pi PRIVATE .)

@@ -4,8 +4,8 @@ Runs on `toadmail-hub` (a 2012 Raspberry Pi Model B, ARMv6, headless — no scre
 
 Listens for UDP messages from Pico devices (`pico-central-heating`, `pico-temp-sensor`), replies immediately from its
 last-known-response cache (so the sending device's tight receive loop never blocks
-on internet/AWS latency), then refreshes that cache via a synchronous call to
-API Gateway → Lambda on a separate thread.
+on internet/AWS latency), while a forked child process keeps that cache fresh by
+polling API Gateway → Lambda in the background.
 
 `toadmail-hub` is a general-purpose host name, not specific to this project or to
 central heating — it may run other things later.
@@ -53,25 +53,45 @@ password-prompt handling.
 
 ## Configuration
 
-Two environment variables, required for the write path
-(`CommandCentreClient.c`) — no config file, no values committed anywhere
-in this repo:
+Four environment variables, required for the write path
+(`CommandCentreClient.c`) and read path (`DesiredStateReader.c`) — no
+config file, no values committed anywhere in this repo:
 
 | Variable | Value |
 |---|---|
 | `WRITE_API_URL` | `write_api_invoke_url` output from `central-heating-on-cloud/infrastructure` |
 | `WRITE_API_KEY` | `write_api_key_value` output (sensitive) from the same |
+| `READ_API_URL` | `read_api_invoke_url` output from the same |
+| `READ_API_KEY` | `read_api_key_value` output (sensitive) from the same |
 
 If running interactively, `export` them in the shell before launching. For a
 real deployment (e.g. a systemd unit), set them via that unit's
 `Environment=`/`EnvironmentFile=`, not baked into the binary or this repo.
 
+## Read path (desired-state)
+
+`main()` forks right after startup. The child runs
+`DesiredStateReader_RunChildLoop()` and never returns: every second it
+mints a fresh presigned URL (`GET /desired-state-url`), conditionally
+fetches it with `If-None-Match` against the last-seen ETag, and — only on
+an actual change — atomically replaces `/tmp/desired-state-cache.txt`
+(write to a `.tmp` file, then `rename()`, so the parent never reads a
+half-written file). A `404` from S3 (no desired state set yet) is treated
+as a valid "empty" state, not an error.
+
+The parent's `OnResponseRequiredCallback` just reads that cache file on
+every UDP reply — no locking, no shared memory, no threads. The two
+processes only communicate through that one file.
+
+A forked child inherits the parent's PID at fork time but gets reparented
+to init if the parent dies, so `prctl(PR_SET_PDEATHSIG, SIGTERM)` is set
+first thing in the child to make sure it's killed automatically rather
+than leaking as an orphan.
+
 ## Status
 
-UDP listener works (`UdpModule_ListenAndRespond` in `udp_io.c`).
-On every packet received from a Pico, the raw QUACK payload is forwarded
-as-is to the Command Centre's write endpoint
-(`CommandCentre_PostStatus` — synchronous for now, not yet moved to the
-background thread the design above describes). The reply sent back to the
-Pico is still an empty placeholder — the read path (desired-state via a
-presigned S3 URL) isn't wired up yet.
+UDP listener works (`UdpModule_ListenAndRespond` in `udp_io.c`). On every
+packet received from a Pico, the raw QUACK payload is forwarded as-is to
+the Command Centre's write endpoint (`CommandCentre_PostStatus` —
+synchronous, best-effort). The reply sent back to the Pico is the latest
+desired-state text from the read path described above.
