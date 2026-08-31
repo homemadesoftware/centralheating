@@ -8,12 +8,26 @@ output "read_api_invoke_url" {
   value       = "${aws_api_gateway_stage.read.invoke_url}/desired-state-url"
 }
 
+output "app_status_latest_url" {
+  description = "GET here (with the app API key) for the most recent status, as JSON."
+  value       = "${aws_api_gateway_stage.app.invoke_url}/status/latest"
+}
+
+output "app_set_desired_state_url" {
+  description = "POST here (with the app API key, body = none|on|off) to set the desired state."
+  value       = "${aws_api_gateway_stage.app.invoke_url}/desired-state"
+}
+
 output "write_api_key_id" {
   value = aws_api_gateway_api_key.write.id
 }
 
 output "read_api_key_id" {
   value = aws_api_gateway_api_key.read.id
+}
+
+output "app_api_key_id" {
+  value = aws_api_gateway_api_key.app.id
 }
 
 output "write_api_key_value" {
@@ -23,6 +37,11 @@ output "write_api_key_value" {
 
 output "read_api_key_value" {
   value     = aws_api_gateway_api_key.read.value
+  sensitive = true
+}
+
+output "app_api_key_value" {
+  value     = aws_api_gateway_api_key.app.value
   sensitive = true
 }
 

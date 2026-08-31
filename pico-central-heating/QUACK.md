@@ -80,7 +80,7 @@ multiple sends. The full field list comfortably fits under the link MTU.
 | Key | Meaning |
 |-----|---------|
 | `desired-state` | The state the hub wants applied — see vocabulary below |
-| `desired-state-id` | Increasing but otherwise random number identifying this desired state (not necessarily an S3/bucket version id — may be *generated from* one, but the Pico shouldn't assume the two are interchangeable) |
+| `desired-state-id` | Opaque, fixed-width token identifying this desired state — a zero-padded epoch-millisecond timestamp followed directly by a GUID (no separator), assigned when the state is written (not necessarily an S3/bucket version id — may be *generated from* one, but the Pico shouldn't assume the two are interchangeable) |
 
 Unknown keys are ignored rather than treated as an error, so the format can
 grow without breaking older firmware.
@@ -109,8 +109,12 @@ boolean, because "the hub has no opinion" is meaningfully different from
   of order, the Pico keeps track of the highest `desired-state-id` it has
   applied so far. An incoming packet with a `desired-state-id` lower than
   (or equal to) that is a stale/reordered duplicate and is dropped without
-  being applied — `desired-state-id` being monotonically increasing is
-  exactly what makes this cheap to check.
+  being applied. Comparison is a plain **string** compare, not numeric
+  parsing — `desired-state-id` isn't a number, it's the fixed-width epoch
+  prefix (which is what actually orders it) followed by a GUID tie-breaker.
+  The fixed width is what makes string and numeric order agree on the part
+  that matters; the GUID suffix is never itself compared for order, only
+  used to disambiguate two ids landing in the same millisecond.
 - Because UDP is unreliable and unordered, the hub is expected to keep
   resending the current desired state until it sees the matching
   `fulfilled-state-id` come back, rather than the Pico acknowledging a
