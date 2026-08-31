@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(git -C \"C:\\\\Users\\\\huseyin\\\\source\\\\repos\\\\centralheating\" status)",
-      "Bash(git -C \"C:\\\\Users\\\\huseyin\\\\source\\\\repos\\\\centralheatingsimulator\" status)"
+      "Bash(git -C \"C:\\\\Users\\\\huseyin\\\\source\\\\repos\\\\centralheatingsimulator\" status)",
+      "WebSearch"
     ]
   }
 }

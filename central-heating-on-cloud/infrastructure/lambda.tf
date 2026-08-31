@@ -16,7 +16,7 @@ resource "aws_lambda_function" "command_centre" {
   environment {
     variables = {
       DESIRED_STATE_BUCKET = aws_s3_bucket.desired_state.bucket
-      DESIRED_STATE_KEY    = "current.json"
+      DESIRED_STATE_KEY    = "current.txt"
       # Comfortably under the 7-day SigV4 presign cap and the hub's own
       # once-a-day re-mint cadence (AWS-BACKEND-SPEC.md §2).
       PRESIGNED_URL_TTL_SECONDS = "604800"
