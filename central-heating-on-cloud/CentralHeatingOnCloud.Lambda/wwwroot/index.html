@@ -2,11 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
+  <!-- The API Gateway invoke URL always has the stage ("prod", hardcoded in
+       apigateway.tf) as a path segment, with no custom domain/CloudFront in
+       front of it to hide that - so every relative URL in this page (and
+       in app.js's fetch calls) needs to resolve against it, not the bare
+       origin, regardless of whether the address bar has a trailing slash. -->
+  <base href="/prod/" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Central Heating</title>
-  <link rel="manifest" href="/manifest.json" />
-  <link rel="icon" href="/icons/icon-192.png" />
-  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <meta name="theme-color" content="#0b1220" />
   <style>
     :root { color-scheme: dark; }
@@ -122,6 +128,6 @@
       <button id="change-key" class="link">Change API key</button>
     </section>
   </main>
-  <script src="/app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

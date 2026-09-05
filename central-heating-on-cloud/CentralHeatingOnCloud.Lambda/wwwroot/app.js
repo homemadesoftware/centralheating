@@ -155,7 +155,7 @@ function render() {
 
 async function refresh() {
   try {
-    const response = await apiFetch("/status/latest");
+    const response = await apiFetch("status/latest");
     latestStatus = await response.json();
     elError.textContent = "";
   } catch (err) {
@@ -174,7 +174,7 @@ async function setDesiredState(desiredState) {
   }
   elError.textContent = "";
   try {
-    const response = await apiFetch("/desired-state", {
+    const response = await apiFetch("desired-state", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ "desired-state": desiredState, "boot-id": latestStatus["boot-id"] }),
@@ -219,7 +219,7 @@ elKeyInput.addEventListener("keydown", (event) => {
 });
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/sw.js");
+  navigator.serviceWorker.register("sw.js");
 }
 
 if (getApiKey()) {
