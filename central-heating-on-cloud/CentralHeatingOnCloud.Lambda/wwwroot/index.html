@@ -33,8 +33,20 @@
       text-align: center;
     }
     h1 { font-size: 18px; font-weight: 600; color: #9aa4b5; margin: 0 0 24px; }
-    #state { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
-    #temperature { font-size: 15px; color: #9aa4b5; margin-bottom: 8px; }
+    #state {
+      font-size: 20px;
+      font-weight: 700;
+      padding: 16px;
+      margin-bottom: 12px;
+      border-radius: 12px;
+      background: #131c2e;
+      border: 1px solid #2a3548;
+    }
+    #temperature { font-size: 48px; font-weight: 800; margin-bottom: 12px; min-height: 1.1em; }
+    .temp-cold { color: #3b82f6; }
+    .temp-lukewarm { color: #22d3ee; }
+    .temp-warm { color: #eab308; }
+    .temp-hot { color: #ef4444; }
     #last-command { font-size: 13px; color: #3ddc84; margin-bottom: 4px; min-height: 1em; }
     #last-heard { font-size: 13px; color: #9aa4b5; margin-bottom: 20px; }
     .screen {
@@ -71,8 +83,7 @@
       font-weight: 600;
       cursor: pointer;
     }
-    #boost { background: #ff7a1a; color: #0b1220; }
-    #cancel { background: #1a2333; color: #eef1f6; }
+    #boost, #cancel { background: #1a2333; color: #eef1f6; }
     #error { margin-top: 16px; font-size: 13px; color: #ff6b6b; min-height: 1em; }
     #key-setup p { color: #9aa4b5; font-size: 14px; margin-bottom: 16px; }
     #key-input {

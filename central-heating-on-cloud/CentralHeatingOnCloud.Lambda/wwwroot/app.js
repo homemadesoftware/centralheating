@@ -13,6 +13,18 @@ const POLL_INTERVAL_MS = 15000;
 const ZONE_KEYS = ["z1", "z2", "z3", "z4", "z5"];
 const ACTUATOR_KEYS = ["o1", "o2", "o3", "o4", "o5", "o6", "hw", "boiler"];
 
+// Upper bound (exclusive) for each band, checked in order.
+const TEMPERATURE_BANDS = [
+  { below: 30, className: "temp-cold" },
+  { below: 40, className: "temp-lukewarm" },
+  { below: 50, className: "temp-warm" },
+  { below: Infinity, className: "temp-hot" },
+];
+
+function temperatureClass(value) {
+  return TEMPERATURE_BANDS.find((band) => value < band.below).className;
+}
+
 const elKeySetup = document.getElementById("key-setup");
 const elKeyInput = document.getElementById("key-input");
 const elKeySave = document.getElementById("key-save");
@@ -143,7 +155,14 @@ function render() {
   }
 
   const temperature = latestStatus.temperature;
-  elTemperature.textContent = temperature && temperature !== "NO_READING" ? `${temperature}°C` : "";
+  const temperatureValue = temperature ? parseFloat(temperature) : NaN;
+  if (temperature && temperature !== "NO_READING" && !Number.isNaN(temperatureValue)) {
+    elTemperature.textContent = `${temperature}°C`;
+    elTemperature.className = temperatureClass(temperatureValue);
+  } else {
+    elTemperature.textContent = "";
+    elTemperature.className = "";
+  }
 
   const lastConfirmed = loadLastConfirmed();
   elLastCommand.textContent = !pending && lastConfirmed ? `Last command (hot water ${lastConfirmed.desiredState}) succeeded, confirmed ${formatAgo(lastConfirmed.at / 1000)}` : "";
