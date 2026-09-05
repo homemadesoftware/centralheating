@@ -18,6 +18,8 @@ namespace CentralHeatingEmulator
         bool[] buttonDown = new bool[6];
         bool heartShown = true;
         List<byte> inputBuffer = new List<byte>();
+        string lastKnownBootId = "";
+        EmulatedHardwareManager hardwareManager = new EmulatedHardwareManager();
 
         // CH output constants
         private const int INPUT_ZONENC1 = (0x01); // not used
@@ -88,7 +90,7 @@ namespace CentralHeatingEmulator
             hwInfo.SendNetworkPacket = SendNetworkPacket;
             hwInfo.CrashDump = CrashDump;
 
-            CallProgramEntryPoint();
+            // Starts powered off - see btnPowerOn_Click/btnPowerOff_Click.
         }
 
         void newButton_MouseDown(object sender, MouseEventArgs e)
@@ -118,10 +120,45 @@ namespace CentralHeatingEmulator
 
 
 
-        private void CallProgramEntryPoint()
+        private void btnPowerOn_Click(object sender, EventArgs e)
         {
-            //SampleProgramModule.HardwareCall(ref hwInfo);
-            PortedProgramToLink.StartEmulatedHardware(ref hwInfo);
+            hardwareManager.PowerOn(ref hwInfo);
+
+            btnPowerOn.Enabled = false;
+            btnPowerOff.Enabled = true;
+            uiGroup.Enabled = true;
+            outputsGroup.Enabled = true;
+            tmrMain.Enabled = true;
+        }
+
+        private void btnPowerOff_Click(object sender, EventArgs e)
+        {
+            // Stop feeding the native side timer ticks before freeing it -
+            // it's passive otherwise, so nothing else needs pausing.
+            tmrMain.Enabled = false;
+
+            hardwareManager.PowerOff();
+
+            // These held callbacks/state from the now-unloaded module - the
+            // next PowerOn starts a fresh instance and re-registers its own.
+            timers.Clear();
+            inputBuffer.Clear();
+
+            uiGroup.Enabled = false;
+            outputsGroup.Enabled = false;
+            foreach (Control control in outputsGroup.Controls)
+            {
+                if (control is CheckBox checkBox)
+                {
+                    checkBox.Checked = false;
+                }
+            }
+            picHeart.Visible = false;
+            lblDisplay.Text = "";
+            lastKnownBootId = "";
+
+            btnPowerOn.Enabled = true;
+            btnPowerOff.Enabled = false;
         }
 
 
@@ -148,7 +185,7 @@ namespace CentralHeatingEmulator
 
             ts.Cookie = cookie;
             ts.PeriodMilliseconds = milliSeconds;
-            ts.ActivatedAt = timerInterruptCount * 10;
+            ts.ActivatedAt = timerInterruptCount;
             ts.Callback = callback;
         }
 
@@ -287,7 +324,23 @@ namespace CentralHeatingEmulator
 
         private void SetDesiredState(string desiredState)
         {
-            txtDesiredState.Text = "desired-state " + desiredState + "\r\ndesired-state-id " + GenerateDesiredStateId() + "\r\n";
+            txtDesiredState.Text = "boot-id " + lastKnownBootId + "\r\ndesired-state " + desiredState + "\r\ndesired-state-id " + GenerateDesiredStateId() + "\r\n";
+        }
+
+        // Pulled out of the Pico's own outbound status packet, so the desired
+        // state we hand back always targets whatever boot-id the emulated
+        // hardware last reported - not the emulator's own idea of "now".
+        private static string ExtractBootId(string quackText)
+        {
+            const string prefix = "boot-id ";
+            foreach (string line in quackText.Split('\n'))
+            {
+                if (line.StartsWith(prefix))
+                {
+                    return line.Substring(prefix.Length).Trim();
+                }
+            }
+            return "";
         }
 
         private void btnDesiredStateNone_Click(object sender, EventArgs e)
@@ -307,6 +360,8 @@ namespace CentralHeatingEmulator
 
         private void SendNetworkPacket(string data)
         {
+            lastKnownBootId = ExtractBootId(data);
+
             string expanded = data.Replace("\n", "\r\n");
             if (txtNetworkPacketOut.Text != expanded)
             {

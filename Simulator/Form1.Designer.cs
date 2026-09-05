@@ -71,11 +71,15 @@
             this.btnDesiredStateOn = new System.Windows.Forms.Button();
             this.btnDesiredStateOff = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.powerGroup = new System.Windows.Forms.GroupBox();
+            this.btnPowerOn = new System.Windows.Forms.Button();
+            this.btnPowerOff = new System.Windows.Forms.Button();
             this.uiGroup.SuspendLayout();
             this.timerInterruptGroup.SuspendLayout();
             this.rtcGroup.SuspendLayout();
             this.inputsGroup.SuspendLayout();
             this.outputsGroup.SuspendLayout();
+            this.powerGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picHeart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTemperature)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -102,6 +106,7 @@
             this.uiGroup.Controls.Add(this.btnDown);
             this.uiGroup.Controls.Add(this.btnLeft);
             this.uiGroup.Controls.Add(this.lblDisplay);
+            this.uiGroup.Enabled = false;
             this.uiGroup.Location = new System.Drawing.Point(12, 12);
             this.uiGroup.Name = "uiGroup";
             this.uiGroup.Size = new System.Drawing.Size(200, 189);
@@ -196,7 +201,7 @@
             // 
             // tmrMain
             // 
-            this.tmrMain.Enabled = true;
+            this.tmrMain.Enabled = false;
             this.tmrMain.Interval = 10;
             this.tmrMain.Tick += new System.EventHandler(this.tmrMain_Tick);
             // 
@@ -267,7 +272,39 @@
             this.tmrInterruptCountDisplay.Enabled = true;
             this.tmrInterruptCountDisplay.Interval = 1000;
             this.tmrInterruptCountDisplay.Tick += new System.EventHandler(this.tmrInterruptCountDisplay_Tick);
-            // 
+            //
+            // powerGroup
+            //
+            this.powerGroup.Controls.Add(this.btnPowerOn);
+            this.powerGroup.Controls.Add(this.btnPowerOff);
+            this.powerGroup.Location = new System.Drawing.Point(228, 262);
+            this.powerGroup.Name = "powerGroup";
+            this.powerGroup.Size = new System.Drawing.Size(264, 50);
+            this.powerGroup.TabIndex = 4;
+            this.powerGroup.TabStop = false;
+            this.powerGroup.Text = "Power";
+            //
+            // btnPowerOn
+            //
+            this.btnPowerOn.Location = new System.Drawing.Point(10, 17);
+            this.btnPowerOn.Name = "btnPowerOn";
+            this.btnPowerOn.Size = new System.Drawing.Size(115, 25);
+            this.btnPowerOn.TabIndex = 0;
+            this.btnPowerOn.Text = "Power On";
+            this.btnPowerOn.UseVisualStyleBackColor = true;
+            this.btnPowerOn.Click += new System.EventHandler(this.btnPowerOn_Click);
+            //
+            // btnPowerOff
+            //
+            this.btnPowerOff.Enabled = false;
+            this.btnPowerOff.Location = new System.Drawing.Point(135, 17);
+            this.btnPowerOff.Name = "btnPowerOff";
+            this.btnPowerOff.Size = new System.Drawing.Size(115, 25);
+            this.btnPowerOff.TabIndex = 1;
+            this.btnPowerOff.Text = "Power Off";
+            this.btnPowerOff.UseVisualStyleBackColor = true;
+            this.btnPowerOff.Click += new System.EventHandler(this.btnPowerOff_Click);
+            //
             // inputsGroup
             // 
             this.inputsGroup.Controls.Add(this.chkInput5);
@@ -372,6 +409,7 @@
             this.outputsGroup.Controls.Add(this.chkOutput3);
             this.outputsGroup.Controls.Add(this.chkOutput2);
             this.outputsGroup.Controls.Add(this.chkOutput1);
+            this.outputsGroup.Enabled = false;
             this.outputsGroup.Location = new System.Drawing.Point(228, 73);
             this.outputsGroup.Name = "outputsGroup";
             this.outputsGroup.Size = new System.Drawing.Size(264, 55);
@@ -523,12 +561,13 @@
             this.picHeart.Size = new System.Drawing.Size(40, 41);
             this.picHeart.TabIndex = 5;
             this.picHeart.TabStop = false;
+            this.picHeart.Visible = false;
             // 
             // lblCrashMessage
             // 
             this.lblCrashMessage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblCrashMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCrashMessage.Location = new System.Drawing.Point(12, 528);
+            this.lblCrashMessage.Location = new System.Drawing.Point(12, 610);
             this.lblCrashMessage.Name = "lblCrashMessage";
             this.lblCrashMessage.Size = new System.Drawing.Size(480, 44);
             this.lblCrashMessage.TabIndex = 4;
@@ -579,20 +618,20 @@
             this.txtNetworkPacketOut.Name = "txtNetworkPacketOut";
             this.txtNetworkPacketOut.ReadOnly = true;
             this.txtNetworkPacketOut.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtNetworkPacketOut.Size = new System.Drawing.Size(200, 156);
+            this.txtNetworkPacketOut.Size = new System.Drawing.Size(200, 217);
             this.txtNetworkPacketOut.TabIndex = 8;
-            //
+            // 
             // txtDesiredState
-            //
+            // 
             this.txtDesiredState.Location = new System.Drawing.Point(220, 19);
             this.txtDesiredState.Multiline = true;
             this.txtDesiredState.Name = "txtDesiredState";
             this.txtDesiredState.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtDesiredState.Size = new System.Drawing.Size(250, 80);
             this.txtDesiredState.TabIndex = 9;
-            //
+            // 
             // btnDesiredStateNone
-            //
+            // 
             this.btnDesiredStateNone.Location = new System.Drawing.Point(220, 105);
             this.btnDesiredStateNone.Name = "btnDesiredStateNone";
             this.btnDesiredStateNone.Size = new System.Drawing.Size(78, 23);
@@ -600,9 +639,9 @@
             this.btnDesiredStateNone.Text = "None";
             this.btnDesiredStateNone.UseVisualStyleBackColor = true;
             this.btnDesiredStateNone.Click += new System.EventHandler(this.btnDesiredStateNone_Click);
-            //
+            // 
             // btnDesiredStateOn
-            //
+            // 
             this.btnDesiredStateOn.Location = new System.Drawing.Point(302, 105);
             this.btnDesiredStateOn.Name = "btnDesiredStateOn";
             this.btnDesiredStateOn.Size = new System.Drawing.Size(78, 23);
@@ -610,9 +649,9 @@
             this.btnDesiredStateOn.Text = "HW On";
             this.btnDesiredStateOn.UseVisualStyleBackColor = true;
             this.btnDesiredStateOn.Click += new System.EventHandler(this.btnDesiredStateOn_Click);
-            //
+            // 
             // btnDesiredStateOff
-            //
+            // 
             this.btnDesiredStateOff.Location = new System.Drawing.Point(384, 105);
             this.btnDesiredStateOff.Name = "btnDesiredStateOff";
             this.btnDesiredStateOff.Size = new System.Drawing.Size(78, 23);
@@ -620,9 +659,9 @@
             this.btnDesiredStateOff.Text = "HW Off";
             this.btnDesiredStateOff.UseVisualStyleBackColor = true;
             this.btnDesiredStateOff.Click += new System.EventHandler(this.btnDesiredStateOff_Click);
-            //
+            // 
             // groupBox2
-            //
+            // 
             this.groupBox2.Controls.Add(this.btnDesiredStateOff);
             this.groupBox2.Controls.Add(this.btnDesiredStateOn);
             this.groupBox2.Controls.Add(this.btnDesiredStateNone);
@@ -630,7 +669,7 @@
             this.groupBox2.Controls.Add(this.txtNetworkPacketOut);
             this.groupBox2.Location = new System.Drawing.Point(12, 344);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(480, 181);
+            this.groupBox2.Size = new System.Drawing.Size(480, 253);
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Network";
@@ -640,8 +679,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.ClientSize = new System.Drawing.Size(504, 580);
+            this.ClientSize = new System.Drawing.Size(504, 663);
             this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.powerGroup);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.picHeart);
             this.Controls.Add(this.lblCrashMessage);
@@ -662,6 +702,7 @@
             this.inputsGroup.PerformLayout();
             this.outputsGroup.ResumeLayout(false);
             this.outputsGroup.PerformLayout();
+            this.powerGroup.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picHeart)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTemperature)).EndInit();
             this.groupBox1.ResumeLayout(false);
@@ -715,6 +756,9 @@
         private System.Windows.Forms.Button btnDesiredStateOn;
         private System.Windows.Forms.Button btnDesiredStateOff;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox powerGroup;
+        private System.Windows.Forms.Button btnPowerOn;
+        private System.Windows.Forms.Button btnPowerOff;
     }
 }
 
