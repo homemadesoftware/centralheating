@@ -18,6 +18,11 @@ output "app_set_desired_state_url" {
   value       = "${aws_api_gateway_stage.app.invoke_url}/desired-state"
 }
 
+output "app_web_url" {
+  description = "The PWA - no API key needed, it's the unauthenticated static shell."
+  value       = aws_api_gateway_stage.app.invoke_url
+}
+
 output "write_api_key_id" {
   value = aws_api_gateway_api_key.write.id
 }

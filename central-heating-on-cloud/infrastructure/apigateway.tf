@@ -269,6 +269,13 @@ resource "aws_api_gateway_deployment" "app" {
       aws_api_gateway_method.desired_state_post.id,
       aws_api_gateway_integration.desired_state_post.id,
       aws_api_gateway_integration.desired_state_post.uri,
+      aws_api_gateway_method.web_root_get.id,
+      aws_api_gateway_integration.web_root_get.id,
+      aws_api_gateway_integration.web_root_get.uri,
+      aws_api_gateway_resource.web_proxy.id,
+      aws_api_gateway_method.web_proxy_any.id,
+      aws_api_gateway_integration.web_proxy_any.id,
+      aws_api_gateway_integration.web_proxy_any.uri,
     ]))
   }
 
@@ -279,6 +286,8 @@ resource "aws_api_gateway_deployment" "app" {
   depends_on = [
     aws_api_gateway_integration.status_latest_get,
     aws_api_gateway_integration.desired_state_post,
+    aws_api_gateway_integration.web_root_get,
+    aws_api_gateway_integration.web_proxy_any,
   ]
 }
 
@@ -301,4 +310,57 @@ resource "aws_api_gateway_usage_plan_key" "app" {
   key_id        = aws_api_gateway_api_key.app.id
   key_type      = "API_KEY"
   usage_plan_id = aws_api_gateway_usage_plan.app.id
+}
+
+# --- web: static PWA shell, unauthenticated --------------------------------
+#
+# index.html/manifest.json/sw.js/icons are fetched by the browser directly -
+# there's no way to attach an x-api-key header to a page navigation, only to
+# the page's own later fetch() calls against status/latest and desired-state
+# above - so these need their own unauthenticated routes. They still share
+# this REST API and the same command_centre Lambda, which serves them via
+# ASP.NET Core static-file middleware against wwwroot (see Program.cs). A
+# {proxy+} catch-all plus an explicit root method covers every static path
+# without declaring each filename here; API Gateway always resolves an
+# explicit literal resource (status/latest, desired-state) ahead of the
+# greedy proxy at the same level, so the two coexist without collision.
+
+resource "aws_api_gateway_method" "web_root_get" {
+  rest_api_id      = aws_api_gateway_rest_api.app.id
+  resource_id      = aws_api_gateway_rest_api.app.root_resource_id
+  http_method      = "GET"
+  authorization    = "NONE"
+  api_key_required = false
+}
+
+resource "aws_api_gateway_integration" "web_root_get" {
+  rest_api_id             = aws_api_gateway_rest_api.app.id
+  resource_id             = aws_api_gateway_rest_api.app.root_resource_id
+  http_method             = aws_api_gateway_method.web_root_get.http_method
+  integration_http_method = "POST" # Lambda proxy integrations are always invoked via POST
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.command_centre.invoke_arn
+}
+
+resource "aws_api_gateway_resource" "web_proxy" {
+  rest_api_id = aws_api_gateway_rest_api.app.id
+  parent_id   = aws_api_gateway_rest_api.app.root_resource_id
+  path_part   = "{proxy+}"
+}
+
+resource "aws_api_gateway_method" "web_proxy_any" {
+  rest_api_id      = aws_api_gateway_rest_api.app.id
+  resource_id      = aws_api_gateway_resource.web_proxy.id
+  http_method      = "ANY"
+  authorization    = "NONE"
+  api_key_required = false
+}
+
+resource "aws_api_gateway_integration" "web_proxy_any" {
+  rest_api_id             = aws_api_gateway_rest_api.app.id
+  resource_id             = aws_api_gateway_resource.web_proxy.id
+  http_method             = aws_api_gateway_method.web_proxy_any.http_method
+  integration_http_method = "POST" # Lambda proxy integrations are always invoked via POST
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.command_centre.invoke_arn
 }
