@@ -18,8 +18,7 @@ const TEMPERATURE_BANDS = [
   { below: 30, className: "temp-cold" },
   { below: 40, className: "temp-lukewarm" },
   { below: 50, className: "temp-warm" },
-  { below: 60, className: "temp-hot" },
-  { below: Infinity, className: "temp-scalding" },
+  { below: Infinity, className: "temp-hot" },
 ];
 
 function temperatureClass(value) {
