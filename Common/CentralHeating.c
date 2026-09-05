@@ -1,4 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
 #include "../Common/HardwareAbstraction.h"
 #include "../Common/DateTime.h"
 #include "../Common/MenuMgr.h"
@@ -8,7 +9,7 @@
 #include "../Common/StatusBuilder.h"
 #include "../Common/DesiredStateParser.h"
 
-#define COMPILED_AT "20260530"
+#define COMPILED_AT "20260905"
 
 
 #define SCREEN_BUFFER_SIZE          32
@@ -16,6 +17,8 @@
 #define NETWORK_BUFFER_SIZE         384
 #define DESIRED_STATE_SIZE          32
 #define DESIRED_STATE_ID_SIZE       64
+#define ISO_DATE_SIZE               20
+#define BOOT_ID_SIZE                (ISO_DATE_SIZE + 12)
 
 // Timer cookies
 #define RTCUPDATECOOKIE		    1
@@ -60,8 +63,8 @@ unsigned char hotWaterNeeded;
 DateTimeStruct currentDateTime;
 DateTimeStruct provideHotwaterUntil;
 DateTimeStruct pumpRunOffUntil;
-
 unsigned char lastDesiredStateId[DESIRED_STATE_ID_SIZE];
+unsigned char bootId[BOOT_ID_SIZE];
 
 
 // Helpers
@@ -865,21 +868,26 @@ void ReadTemperatureData()
 void ReportStatusAndProcessDesiredState()
 {
     unsigned char networkBuffer[NETWORK_BUFFER_SIZE];
-    unsigned char isoTimeBuffer[20];
+    unsigned char isoTimeBuffer[ISO_DATE_SIZE];
     unsigned long uptimeSeconds;
     DateTimeStruct rtcNow;
 
     pGetRtc(&rtcNow);
     FormatIso8601DateTime(isoTimeBuffer, sizeof(isoTimeBuffer), &rtcNow);
+    if (*bootId == 0)
+    {
+        snprintf(bootId, BOOT_ID_SIZE, "boot-id-%s", isoTimeBuffer);
+    }
+
     pGetUptimeSeconds(&uptimeSeconds);
-    BuildStatus(networkBuffer, NETWORK_BUFFER_SIZE, uptimeSeconds, isoTimeBuffer, lastInputState, lastOutputState, hotWaterNeeded != 0, COMPILED_AT, temperatureBuffer, lastDesiredStateId);
+    BuildStatus(networkBuffer, NETWORK_BUFFER_SIZE, bootId, uptimeSeconds, isoTimeBuffer, lastInputState, lastOutputState, hotWaterNeeded != 0, COMPILED_AT, temperatureBuffer, lastDesiredStateId);
     pSendNetworkPacket(networkBuffer);
     pReadLastNetworkPacket(networkBuffer, NETWORK_BUFFER_SIZE);
 
     unsigned char parsedDesiredStateId[DESIRED_STATE_ID_SIZE];
     unsigned char parsedDesiredState[DESIRED_STATE_SIZE];
     if (ParseDesiredStateBlock(
-        networkBuffer, lastDesiredStateId,
+        networkBuffer, bootId, lastDesiredStateId,
         parsedDesiredStateId,
         DESIRED_STATE_ID_SIZE,
         parsedDesiredState,

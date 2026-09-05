@@ -4,6 +4,7 @@
 #include "DesiredStateParser.h"
 #include "MyLittleParser.h"
 
+#define MAX_BOOT_ID_LENGTH 64
 
 typedef struct tagDesiredStateBlockParsingState
 {
@@ -11,6 +12,7 @@ typedef struct tagDesiredStateBlockParsingState
 	int parsedDesiredStateIdMaxLength;
 	unsigned char* parsedDesiredState;
 	int parsedDesiredStateMaxLength;
+	unsigned char parsedBootId[MAX_BOOT_ID_LENGTH];
 
 } DesiredStateBlockParsingState;
 
@@ -19,6 +21,7 @@ void ParseLine(unsigned char* line, DesiredStateBlockParsingState* parsingState)
 
 bool ParseDesiredStateBlock(
 	const unsigned char* desiredStateBlock,
+	const unsigned char* myBootId,
 	const unsigned char* lastDesiredStateId,
 	unsigned char* parsedDesiredStateId,
 	int parsedDesiredStateIdMaxLength,
@@ -34,6 +37,7 @@ bool ParseDesiredStateBlock(
 	// Initialise these in case we cannot parse anything.
 	blockParsingState.parsedDesiredState[0] = 0;
 	blockParsingState.parsedDesiredStateId[0] = 0;
+	blockParsingState.parsedBootId[0] = 0;
 
 	const unsigned char* delimiters = "\n\r";
 	ParserState s;
@@ -47,6 +51,14 @@ bool ParseDesiredStateBlock(
 		ParseLine(line, &blockParsingState);
 
 		free(line);
+	}
+
+	// Not for this boot - either a stale command from before the last
+	// reboot, or a block with no boot-id at all (e.g. an empty/404 bucket).
+	// Either way, there is nothing here to act on.
+	if (strcmp(blockParsingState.parsedBootId, myBootId) != 0)
+	{
+		return false;
 	}
 
 	if (strcmp(lastDesiredStateId, parsedDesiredStateId) < 0)
@@ -65,6 +77,7 @@ void ParseLine(unsigned char* line, DesiredStateBlockParsingState* parsingState)
 
 	bool nextTokenIsState = false;
 	bool nextTokenIsStateId = false;
+	bool nextTokenIsBootId = false;
 
 	while (Next(&s))
 	{
@@ -75,6 +88,10 @@ void ParseLine(unsigned char* line, DesiredStateBlockParsingState* parsingState)
 		else if (strncmp("desired-state-id", s.currentToken, s.currentTokenLength) == 0)
 		{
 			nextTokenIsStateId = true;
+		}
+		else if (strncmp("boot-id", s.currentToken, s.currentTokenLength) == 0)
+		{
+			nextTokenIsBootId = true;
 		}
 		else if (nextTokenIsState)
 		{
@@ -91,6 +108,14 @@ void ParseLine(unsigned char* line, DesiredStateBlockParsingState* parsingState)
 				parsingState->parsedDesiredStateIdMaxLength,
 				"%.*s", s.currentTokenLength, s.currentToken);
 			nextTokenIsStateId = false;
+		}
+		else if (nextTokenIsBootId)
+		{
+			snprintf(
+				parsingState->parsedBootId,
+				MAX_BOOT_ID_LENGTH,
+				"%.*s", s.currentTokenLength, s.currentToken);
+			nextTokenIsBootId = false;
 		}
 	}
 }

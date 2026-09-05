@@ -5,6 +5,7 @@
 
 bool ParseDesiredStateBlock(
 	const unsigned char* desiredStateBlock,
+	const unsigned char* myBootId,
 	const unsigned char* lastDesiredStateId,
 	unsigned char* parsedDesiredStateId,
 	int parsedDesiredStateIdMaxLength,

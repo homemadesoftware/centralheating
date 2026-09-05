@@ -172,12 +172,16 @@ public static class Routes
         });
     }
 
-    // Accepts the new desired-state value as a plain-text body (same
-    // vocabulary as QUACK.md: none/on/off) from the future Android app,
-    // assigns a new desired-state-id, and overwrites the single
+    // Accepts the new desired-state value as JSON from the future Android
+    // app, assigns a new desired-state-id, and overwrites the single
     // desired-state object in S3 (still no bucket versioning - see s3.tf).
     // Fully decoupled from the read path above - the hub just sees a new
     // object next time it polls, with no idea a write even happened.
+    //
+    // Requires the target boot-id (see QUACK.md) so the Pico only acts on a
+    // command issued against its current boot - the app is expected to have
+    // just read it off GET /status/latest before calling this, so it's
+    // always targeting whatever's actually running right now.
     private static void MapSetDesiredState(WebApplication app)
     {
         var bucket = Environment.GetEnvironmentVariable("DESIRED_STATE_BUCKET")
@@ -185,14 +189,16 @@ public static class Routes
         var key = Environment.GetEnvironmentVariable("DESIRED_STATE_KEY")
             ?? throw new InvalidOperationException("DESIRED_STATE_KEY environment variable is required.");
 
-        app.MapPost("/desired-state", async (HttpRequest request) =>
+        app.MapPost("/desired-state", async (SetDesiredStateRequest request) =>
         {
-            using var reader = new StreamReader(request.Body);
-            var desiredState = (await reader.ReadToEndAsync()).Trim();
-
-            if (desiredState is not ("none" or "on" or "off"))
+            if (request.DesiredState is not ("none" or "on" or "off"))
             {
                 return Results.BadRequest("desired-state must be one of: none, on, off");
+            }
+
+            if (string.IsNullOrWhiteSpace(request.BootId))
+            {
+                return Results.BadRequest("boot-id is required - read it off GET /status/latest first");
             }
 
             // Epoch milliseconds, zero-padded to a fixed width so plain
@@ -202,7 +208,7 @@ public static class Routes
             // 16 digits comfortably outlives epoch-ms (until the year 5138).
             var desiredStateId = $"{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds():D16}{Guid.NewGuid():N}";
 
-            var content = $"desired-state {desiredState}\ndesired-state-id {desiredStateId}\n";
+            var content = $"boot-id {request.BootId}\ndesired-state {request.DesiredState}\ndesired-state-id {desiredStateId}\n";
 
             await S3.PutObjectAsync(new PutObjectRequest
             {
@@ -215,3 +221,10 @@ public static class Routes
         });
     }
 }
+
+// JSON property names mirror QUACK.md's own field names (boot-id,
+// desired-state) rather than being camelCased, so the app can pass through
+// values it read verbatim from GET /status/latest without translating keys.
+public record SetDesiredStateRequest(
+    [property: System.Text.Json.Serialization.JsonPropertyName("desired-state")] string DesiredState,
+    [property: System.Text.Json.Serialization.JsonPropertyName("boot-id")] string BootId);
