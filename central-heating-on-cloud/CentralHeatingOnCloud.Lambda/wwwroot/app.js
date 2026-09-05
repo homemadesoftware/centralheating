@@ -8,7 +8,10 @@
 
 const API_KEY_STORAGE_KEY = "centralheating.apiKey";
 const PENDING_STORAGE_KEY = "centralheating.pendingDesiredStateId";
+const LAST_CONFIRMED_STORAGE_KEY = "centralheating.lastConfirmed";
 const POLL_INTERVAL_MS = 15000;
+const ZONE_KEYS = ["z1", "z2", "z3", "z4", "z5"];
+const ACTUATOR_KEYS = ["o1", "o2", "o3", "o4", "o5", "o6", "hw", "boiler"];
 
 const elKeySetup = document.getElementById("key-setup");
 const elKeyInput = document.getElementById("key-input");
@@ -16,7 +19,11 @@ const elKeySave = document.getElementById("key-save");
 const elKeyError = document.getElementById("key-error");
 const elDashboard = document.getElementById("dashboard");
 const elState = document.getElementById("state");
+const elTemperature = document.getElementById("temperature");
+const elLastCommand = document.getElementById("last-command");
 const elLastHeard = document.getElementById("last-heard");
+const elScreenZones = document.getElementById("screen-zones");
+const elScreenActuators = document.getElementById("screen-actuators");
 const elBoost = document.getElementById("boost");
 const elCancel = document.getElementById("cancel");
 const elError = document.getElementById("error");
@@ -48,6 +55,15 @@ function savePending(pending) {
   } else {
     localStorage.removeItem(PENDING_STORAGE_KEY);
   }
+}
+
+function loadLastConfirmed() {
+  const raw = localStorage.getItem(LAST_CONFIRMED_STORAGE_KEY);
+  return raw ? JSON.parse(raw) : null;
+}
+
+function saveLastConfirmed(lastConfirmed) {
+  localStorage.setItem(LAST_CONFIRMED_STORAGE_KEY, JSON.stringify(lastConfirmed));
 }
 
 function showKeySetup(message) {
@@ -89,28 +105,52 @@ function formatAgo(isoOrEpochSeconds) {
   return `${Math.round(seconds / 3600)}h ago`;
 }
 
+function renderCell(key) {
+  const on = latestStatus[key] === "on";
+  const span = document.createElement("span");
+  span.className = "cell" + (on ? " on" : "");
+  span.textContent = key.toUpperCase();
+  return span;
+}
+
+function renderScreen() {
+  elScreenZones.replaceChildren(...ZONE_KEYS.map(renderCell));
+  elScreenActuators.replaceChildren(...ACTUATOR_KEYS.map(renderCell));
+}
+
 function render() {
   if (!latestStatus) {
     elState.textContent = "…";
+    elTemperature.textContent = "";
     elLastHeard.textContent = "";
     return;
   }
 
-  const pending = loadPending();
+  let pending = loadPending();
   const hotwaterOn = latestStatus["hotwater"] === "on";
 
   if (pending && latestStatus["fulfilled-state-id"] === pending.id) {
+    saveLastConfirmed({ desiredState: pending.desiredState, at: Date.now() });
     savePending(null);
+    pending = null;
   }
 
-  if (pending && latestStatus["fulfilled-state-id"] !== pending.id) {
+  if (pending) {
     const waitedSeconds = Math.round((Date.now() - pending.since) / 1000);
     elState.textContent = waitedSeconds < 60 ? `Turning ${pending.desiredState}…` : `Requested ${pending.desiredState} ${formatAgo(pending.since / 1000)}, house hasn't confirmed yet`;
   } else {
     elState.textContent = hotwaterOn ? "Hot water: on" : "Hot water: off";
   }
 
+  const temperature = latestStatus.temperature;
+  elTemperature.textContent = temperature && temperature !== "NO_READING" ? `${temperature}°C` : "";
+
+  const lastConfirmed = loadLastConfirmed();
+  elLastCommand.textContent = !pending && lastConfirmed ? `Last command (hot water ${lastConfirmed.desiredState}) succeeded, confirmed ${formatAgo(lastConfirmed.at / 1000)}` : "";
+
   elLastHeard.textContent = latestStatus.received_at ? `Last heard from the house ${formatAgo(latestStatus.received_at)}` : "";
+
+  renderScreen();
 }
 
 async function refresh() {
