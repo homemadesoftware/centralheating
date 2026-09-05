@@ -91,7 +91,9 @@
     <ClCompile Include="..\..\Common\CentralHeating.c" />
     <ClCompile Include="..\..\Common\CentralHeatingMenus.c" />
     <ClCompile Include="..\..\Common\DateTime.c" />
+    <ClCompile Include="..\..\Common\DesiredStateParser.c" />
     <ClCompile Include="..\..\Common\MenuMgr.c" />
+    <ClCompile Include="..\..\Common\MyLittleParser.c" />
     <ClCompile Include="..\..\Common\StatusBuilder.c" />
     <ClCompile Include="..\..\Common\StringUtils.c" />
     <ClCompile Include="CrashDump.c" />
@@ -100,8 +102,10 @@
   <ItemGroup>
     <ClInclude Include="..\..\Common\CentralHeatingMenus.h" />
     <ClInclude Include="..\..\Common\DateTime.h" />
+    <ClInclude Include="..\..\Common\DesiredStateParser.h" />
     <ClInclude Include="..\..\Common\HardwareAbstraction.h" />
     <ClInclude Include="..\..\Common\MenuMgr.h" />
+    <ClInclude Include="..\..\Common\MyLittleParser.h" />
     <ClInclude Include="..\..\Common\StatusBuilder.h" />
     <ClInclude Include="..\..\Common\StringUtils.h" />
   </ItemGroup>

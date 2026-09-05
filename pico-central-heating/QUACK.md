@@ -34,16 +34,17 @@ Sent periodically (piggybacking on the existing timer-driven heartbeat in
 
 | Key | Meaning |
 |-----|---------|
+| `boot-id` | Opaque token identifying this boot of the Pico — generated once at startup from the RTC (`boot-id-<ISO 8601 boot time>`) and held for the life of the running process. Changes on every reboot. |
 | `uptime` | Seconds since boot |
 | `time` | Current time, from the RTC, ISO 8601 (`YYYY-MM-DDTHH:MM:SS`, no timezone offset — the RTC is naive local time) |
-| `z1`..`z5` | Zone input status — `on`/`off`, one line per zone |
-| `o1`..`o6` | Actuator output status — `on`/`off`, one line per actuator |
-| `hw` | Hot water actuator status — `on`/`off` |
-| `boiler` | Boiler output status — `on`/`off` |
-| `heating` | Heating-on flag — `on`/`off` |
-| `version` | Firmware version (`COMPILED_AT` in `CentralHeating.c`) |
 | `temperature` | Hot water temperature |
 | `fulfilled-state-id` | Id of the last desired state successfully applied (see below) |
+| `hotwater` | Whether the Pico currently wants hot water on — the business-logic desired state (physical button, boost timer, or an applied `desired-state`). Distinct from `hw` below, which reflects the physical relay and can stay on briefly after `hotwater` goes to `off` during pump run-off. |
+| `boiler` | Boiler output status — `on`/`off` |
+| `z1`..`z5` | Zone input status — `on`/`off`, one line per zone |
+| `hw` | Hot water actuator status — `on`/`off` (the physical relay; see `hotwater` above) |
+| `o1`..`o6` | Actuator output status — `on`/`off`, one line per actuator |
+| `version` | Firmware version (`COMPILED_AT` in `CentralHeating.c`) |
 
 Keys and values are both all lower-case, keys in kebab-case, consistently on
 both directions of the protocol.
@@ -53,19 +54,20 @@ e-paper screen already renders them (`AnimateScreen`/`TestAndDisplay` in
 `Common/CentralHeating.c`) rather than packed into a bitmask:
 
 ```
+hotwater on
+boiler on
 z1 on
 z2 off
 z3 on
 z4 off
 z5 off
+hw on
 o1 on
 o2 off
 o3 off
 o4 off
 o5 off
 o6 off
-hw on
-boiler on
 ```
 
 (`z6`/`zonenc1`/`zonenc2` are unused inputs per `PicoEntryPoint.c` and aren't
@@ -79,6 +81,7 @@ multiple sends. The full field list comfortably fits under the link MTU.
 
 | Key | Meaning |
 |-----|---------|
+| `boot-id` | The boot this command targets — must match the Pico's own current `boot-id` (see the outbound table above) for the command to be actionable at all. A mismatch, including a command left over from before the Pico's last reboot, is silently treated as nothing to apply. |
 | `desired-state` | The state the hub wants applied — see vocabulary below |
 | `desired-state-id` | Opaque, fixed-width token identifying this desired state — a zero-padded epoch-millisecond timestamp followed directly by a GUID (no separator), assigned when the state is written (not necessarily an S3/bucket version id — may be *generated from* one, but the Pico shouldn't assume the two are interchangeable) |
 
@@ -105,6 +108,17 @@ boolean, because "the hub has no opinion" is meaningfully different from
   callback path (`on_recv` → `ReceiveDataFromNetwork`). There is no
   request/response coupling between what the Pico last sent and what it next
   receives; the two directions are independent.
+- **Boot-id gate, checked first.** The Pico only acts on a desired-state
+  block if its `boot-id` matches the Pico's own current `boot-id` — otherwise
+  nothing is applied and `lastDesiredStateId`/`fulfilled-state-id` are left
+  untouched, exactly as if the block were empty. This is what stops a
+  command surviving a reboot: the bucket the hub serves is external state
+  that persists across a Pico power cycle, but `boot-id` is a fresh,
+  in-memory value generated at startup (see the outbound table), so a
+  command written before the last reboot can never match the boot that's
+  now running. A block with no `boot-id` at all (old-format, or an
+  empty/404 bucket) fails this the same way, since it never matches a real
+  `boot-id`. Only once this passes does the highest-id-wins check below run.
 - **Highest id wins, not last received.** Because UDP can deliver packets out
   of order, the Pico keeps track of the highest `desired-state-id` it has
   applied so far. An incoming packet with a `desired-state-id` lower than

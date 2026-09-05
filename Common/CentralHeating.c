@@ -1,4 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
 #include "../Common/HardwareAbstraction.h"
 #include "../Common/DateTime.h"
 #include "../Common/MenuMgr.h"
@@ -6,13 +7,18 @@
 #include "../Common/StringUtils.h"
 #include "../Common/OutputPins.h"
 #include "../Common/StatusBuilder.h"
+#include "../Common/DesiredStateParser.h"
 
-#define COMPILED_AT "20260530"
+#define COMPILED_AT "20260905"
 
 
-#define SCREEN_BUFFER_SIZE      32
-#define TEMPERATURE_BUFFER_SIZE 16
-#define NETWORK_BUFFER_SIZE     384
+#define SCREEN_BUFFER_SIZE          32
+#define TEMPERATURE_BUFFER_SIZE     16
+#define NETWORK_BUFFER_SIZE         384
+#define DESIRED_STATE_SIZE          32
+#define DESIRED_STATE_ID_SIZE       64
+#define ISO_DATE_SIZE               20
+#define BOOT_ID_SIZE                (ISO_DATE_SIZE + 12)
 
 // Timer cookies
 #define RTCUPDATECOOKIE		    1
@@ -20,7 +26,7 @@
 #define SCREENACTIVITY   	    3
 #define READKEYSBUFFERCOOKIE    4
 #define HEARTBEATCOOKIE         5
-#define READTEMPERATURECOOKIE   6
+#define STATUSREPORTCOOKIE      6
 
 
 
@@ -57,6 +63,8 @@ unsigned char hotWaterNeeded;
 DateTimeStruct currentDateTime;
 DateTimeStruct provideHotwaterUntil;
 DateTimeStruct pumpRunOffUntil;
+unsigned char lastDesiredStateId[DESIRED_STATE_ID_SIZE];
+unsigned char bootId[BOOT_ID_SIZE];
 
 
 // Helpers
@@ -71,7 +79,9 @@ void WriteCurrentTime();
 void AnimateScreen();
 void ProcessHeating();
 void StartHotWater();
+void StopHotWater();
 void ReadTemperatureData();
+void ReportStatusAndProcessDesiredState();
 
 
 
@@ -119,7 +129,7 @@ void STDCALL UserProgram()
 	pRegisterForTimer(PROCESSHEATING, 1000, Callback);
     pRegisterForTimer(SCREENACTIVITY, 1000, Callback);
     pRegisterForTimer(HEARTBEATCOOKIE, 330, Callback);
-    pRegisterForTimer(READTEMPERATURECOOKIE, 1000, Callback);
+    pRegisterForTimer(STATUSREPORTCOOKIE, 1000, Callback);
 
 
     // Init menu defs
@@ -226,17 +236,9 @@ void STDCALL Callback(int cookie)
            pHeartBeat();
            break;
 
-       case READTEMPERATURECOOKIE:
+       case STATUSREPORTCOOKIE:
            ReadTemperatureData();
-           unsigned char networkBuffer[NETWORK_BUFFER_SIZE];
-           unsigned char isoTimeBuffer[20];
-           unsigned long uptimeSeconds;
-           DateTimeStruct rtcNow;
-           pGetRtc(&rtcNow);
-           FormatIso8601DateTime(isoTimeBuffer, sizeof(isoTimeBuffer), &rtcNow);
-           pGetUptimeSeconds(&uptimeSeconds);
-           BuildStatus(networkBuffer, NETWORK_BUFFER_SIZE, uptimeSeconds, isoTimeBuffer, lastInputState, lastOutputState, hotWaterNeeded != 0, COMPILED_AT, temperatureBuffer, "");
-           pSendNetworkPacket(networkBuffer);
+           ReportStatusAndProcessDesiredState();
            break;
 
     }
@@ -306,7 +308,7 @@ void HandleMenuCommand(int menuItem, int eventType)
             break;
 
         case MENUID_HOTWATERRST :
-            provideHotwaterUntil.year = 0;
+            StopHotWater();
             break;
 
         case MENUID_SETDATE :
@@ -844,6 +846,11 @@ void StartHotWater()
     AddSecondsToDateTime(&currentDateTime, 3600, &provideHotwaterUntil);
 }
 
+void StopHotWater()
+{
+    provideHotwaterUntil.year = 0;
+}
+
 void ReadTemperatureData()
 {
     float value;
@@ -857,3 +864,47 @@ void ReadTemperatureData()
         strcpy(temperatureBuffer, "NO_READING");
     }
 }
+
+void ReportStatusAndProcessDesiredState()
+{
+    unsigned char networkBuffer[NETWORK_BUFFER_SIZE];
+    unsigned char isoTimeBuffer[ISO_DATE_SIZE];
+    unsigned long uptimeSeconds;
+    DateTimeStruct rtcNow;
+
+    pGetRtc(&rtcNow);
+    FormatIso8601DateTime(isoTimeBuffer, sizeof(isoTimeBuffer), &rtcNow);
+    if (*bootId == 0)
+    {
+        snprintf(bootId, BOOT_ID_SIZE, "boot-id-%s", isoTimeBuffer);
+    }
+
+    pGetUptimeSeconds(&uptimeSeconds);
+    BuildStatus(networkBuffer, NETWORK_BUFFER_SIZE, bootId, uptimeSeconds, isoTimeBuffer, lastInputState, lastOutputState, hotWaterNeeded != 0, COMPILED_AT, temperatureBuffer, lastDesiredStateId);
+    pSendNetworkPacket(networkBuffer);
+    pReadLastNetworkPacket(networkBuffer, NETWORK_BUFFER_SIZE);
+
+    unsigned char parsedDesiredStateId[DESIRED_STATE_ID_SIZE];
+    unsigned char parsedDesiredState[DESIRED_STATE_SIZE];
+    if (ParseDesiredStateBlock(
+        networkBuffer, bootId, lastDesiredStateId,
+        parsedDesiredStateId,
+        DESIRED_STATE_ID_SIZE,
+        parsedDesiredState,
+        DESIRED_STATE_SIZE))
+    {
+        // "none" is the hub not overriding anything - local state (physical
+        // button, existing boost timer) is left exactly as it is.
+        if (strcmp(parsedDesiredState, "on") == 0)
+        {
+            StartHotWater();
+        }
+        else if (strcmp(parsedDesiredState, "off") == 0)
+        {
+            StopHotWater();
+        }
+
+        strcpy(lastDesiredStateId, parsedDesiredStateId);
+    }
+}
+

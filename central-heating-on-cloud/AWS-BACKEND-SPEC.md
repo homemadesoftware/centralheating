@@ -12,13 +12,19 @@ crossing that link originates from, or feeds back into, QUACK fields. See
 `udp-lambda-bridge/NETWORKING.md`/`udp-lambda-bridge/README.md` for why the
 hub exists as a separate hop rather than the Pico talking to AWS directly.
 
-Status: all four routes are implemented (see
+Status (as of 2026-09-05): all four routes are implemented (see
 `CentralHeatingOnCloud.Lambda/Routes.cs`) — status-ingest and
 mint-desired-state-url (the hub-facing write/read paths) are deployed and
 confirmed working end to end against real AWS, including from
-`udp-lambda-bridge-pi` itself on `toadmail-hub`. latest-status and
-set-desired-state (the future Android app's routes) build clean locally
-but aren't yet exercised against real AWS.
+`udp-lambda-bridge-pi` itself on `toadmail-hub`. latest-status builds clean
+locally but isn't yet exercised against real AWS. set-desired-state's
+contract changed since it was last deployed — the body is now JSON
+(`desired-state` + a required `boot-id`, see QUACK.md) rather than a bare
+value — so it needs a fresh `tofu apply` and a real end-to-end pass before
+it can be considered confirmed again. The Pico-side processing this
+enables (parsing the desired-state block, gating on `boot-id`, and acting
+on it) is built and tested against the emulator, including a simulated
+Pico power-cycle, but not yet against a real device talking to real AWS.
 
 ## 1. Reference pattern (from HC's Reference Project)
 
@@ -128,9 +134,12 @@ state back to the hub, so "telemetry" undersells half of what it does.
 
 ### Desired-state storage: S3, one object, versioned
 
-Store desired state as a single small JSON object (e.g.
-`desired-state/current.json`, containing `desired-state` and something an
-id can be derived from) in a dedicated, versioned S3 bucket.
+Store desired state as a single small object in a dedicated, versioned S3
+bucket. In practice this ended up being plain QUACK-style key/value text
+(`boot-id ...\ndesired-state ...\ndesired-state-id ...\n`) mirroring the
+wire format the Pico already parses, rather than JSON as originally
+sketched here — see the "Who writes desired state" row below for the
+actual shape.
 
 - **`desired-state-id` is an abstract id, not necessarily open here.**
   QUACK.md is explicit that it's "not necessarily an S3/bucket version id
@@ -297,7 +306,7 @@ are wanted.
 | Language/runtime: C#/.NET, console-app-in-container, same pattern as HC's Reference Project | Not a lightweight scripted handler — this is deliberately the full pattern used there (ASP.NET Core via `Amazon.Lambda.AspNetCoreServer.Hosting`, one Docker image/ECR repo, ignore-image-changes-in-Tofu deploy split). Chosen with room to grow — this may end up backing a full dashboard/admin API later, not just the two endpoints described here. |
 | Naming convention: `central-heating-on-cloud` | This is the `service_name` value threaded through every resource name in `variables.tf`, replacing the placeholder used earlier in this doc. |
 | Cost | Expected near-zero at this volume — API Gateway, Lambda, S3, DynamoDB (on-demand), and ECR storage all sit within or close to AWS's always-free tier for a single-device, low-frequency workload. Not a factor in any decision above. |
-| Current status lives in DynamoDB, not S3/CloudWatch | New `status` table (`dynamodb.tf`), `PAY_PER_REQUEST` billing. One item per received heartbeat — a history log, not just a "last known" singleton — with 90-day retention via native TTL (`expires_at`, a Number/epoch-seconds attribute set on write; DynamoDB ignores TTL on any other attribute type). Partition key = a device id — currently a **hardcoded placeholder**, since nothing in QUACK's outbound fields identifies which device sent a given status; if a second real device ever POSTs here, it would collide into the same partition until this gets a real identity mechanism. Sort key = the **backend's own receipt time**, deliberately not QUACK's device-reported `time` field, since that's the device's RTC and explicitly "naive local time" with no correctness/monotonicity guarantee (QUACK.md) — the device-reported time is still stored, just as a plain attribute, which doubles as free RTC-drift visibility (compare it against the sort key). All other QUACK fields are stored as plain item attributes rather than one opaque blob, so they stay queryable later. |
+| Current status lives in DynamoDB, not S3/CloudWatch | New `status` table (`dynamodb.tf`), `PAY_PER_REQUEST` billing. One item per received heartbeat — a history log, not just a "last known" singleton — with 90-day retention via native TTL (`expires_at`, a Number/epoch-seconds attribute set on write; DynamoDB ignores TTL on any other attribute type). Partition key = a device id — currently a **hardcoded placeholder**, since nothing in QUACK's outbound fields identifies which device sent a given status; if a second real device ever POSTs here, it would collide into the same partition until this gets a real identity mechanism. `boot-id` (added to QUACK's outbound fields to let the Pico distinguish "before my last reboot" from "after it") is stored as a plain attribute like every other QUACK field, but doesn't solve this — it identifies a boot of *a* device, not *which* device, so it isn't used as the partition key. Sort key = the **backend's own receipt time**, deliberately not QUACK's device-reported `time` field, since that's the device's RTC and explicitly "naive local time" with no correctness/monotonicity guarantee (QUACK.md) — the device-reported time is still stored, just as a plain attribute, which doubles as free RTC-drift visibility (compare it against the sort key). All other QUACK fields are stored as plain item attributes rather than one opaque blob, so they stay queryable later. |
 | One Lambda function, not two | Originally built as two separate functions (status-ingest, mint-desired-state-url) sharing one image, mirroring how the reference-project text above was read. Collapsed into one (`command_centre`) since there's no differing memory/timeout need to justify the split, and `iam.tf`'s own stated convention is "one role per *trust boundary*, not one per function" — splitting them was inconsistent with that. Trade-off: the merged role has the union of every route's permissions rather than each being separately scoped. This does **not** weaken the write/read API-key separation below — that lives entirely at the API Gateway layer (separate REST APIs, each only wiring up its own routes), not the Lambda layer, so each key can still only ever reach its own endpoint(s) even though all are served by the same function. |
-| Who writes desired state, and how | A third REST API, `app` (`apigateway.tf`), for a future Android app: `GET /status/latest` (the newest DynamoDB item, as JSON — unlike the hub-facing routes, a phone app has no reason to hand-parse QUACK wire text) and `POST /desired-state` (body is the bare value — `none`/`on`/`off` — overwrites the same S3 object the hub's read path serves). Unlike the write/read split above, both routes share one API/key: there's a single trusted client (the phone) doing both, so the extra isolation a second key would buy isn't worth a second API Gateway resource. `desired-state-id` is assigned here, at write time — see the next row. |
+| Who writes desired state, and how | A third REST API, `app` (`apigateway.tf`), for a future Android app: `GET /status/latest` (the newest DynamoDB item, as JSON — unlike the hub-facing routes, a phone app has no reason to hand-parse QUACK wire text) and `POST /desired-state` (JSON body `{"desired-state": "none"\|"on"\|"off", "boot-id": "..."}` — keys deliberately hyphenated to mirror QUACK's own field names rather than camelCased, so the app can pass a value straight through from what it read off `/status/latest` without translating keys — overwrites the same S3 object the hub's read path serves). `boot-id` is required (400 without it): the Pico only acts on a desired-state block whose `boot-id` matches its own current one, so the app is expected to always read `/status/latest` immediately before posting, targeting whatever's actually running right now rather than a boot that may since have restarted — see QUACK.md's inbound field table. Unlike the write/read split above, both routes share one API/key: there's a single trusted client (the phone) doing both, so the extra isolation a second key would buy isn't worth a second API Gateway resource. `desired-state-id` is assigned here, at write time — see the next row. |
 | `desired-state-id` format: zero-padded epoch-ms + GUID | `QUACK.md` requires an id that's monotonically orderable but explicitly *not* tied to S3 version-id semantics (those are opaque with no ordering guarantee). Settled on epoch-milliseconds, zero-padded to a fixed 16-digit width, with a GUID (`N` format, no hyphens) appended directly with no separator. The fixed-width zero-padded prefix is what makes plain **string** comparison agree with numeric/chronological order — that's the part that actually matters for QUACK's "highest id wins" rule. The GUID suffix only exists to break ties between two writes landing in the same millisecond; those two writes' relative order is never meaningful, so an arbitrary (string-comparison) tie-break is fine. `QUACK.md` was updated to describe this as an opaque string, not a "number" — nothing on the Pico parses this field yet, so there was no existing numeric-parsing assumption to break. |

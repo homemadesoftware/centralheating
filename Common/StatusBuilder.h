@@ -5,11 +5,12 @@
 
 void BuildStatus(
 	unsigned char* destination, int maxLength,
+	unsigned char* bootId,
 	unsigned long uptime,
 	unsigned char* currentTime,
 	unsigned int inputs,
 	unsigned int outputs,
-	bool heatingOn,
+	bool hotWaterOn,
 	unsigned char* version,
 	unsigned char* temperature,
 	unsigned char* lastFullfilledState);
