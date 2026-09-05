@@ -2,23 +2,40 @@
 // Routes.cs (MapLatestStatus/MapSetDesiredState) and QUACK.md for the field
 // names below (hotwater, boot-id, fulfilled-state-id, received_at).
 //
-// TODO: replace with the real app API key (`tofu output -raw
-// app_api_key_value`). Deliberately not committed as a real secret - see
-// AWS-BACKEND-SPEC.md's "shared key, pragmatic for four family members"
-// note for why baking it into served client JS is an accepted trade-off,
-// but a *real* key still shouldn't sit in git history.
-const API_KEY = "REPLACE_WITH_APP_API_KEY";
+// The API key is entered on first use and kept in this device's
+// localStorage (see API_KEY_STORAGE_KEY below) - never hardcoded here, so
+// there's nothing sensitive in this file itself.
 
-const POLL_INTERVAL_MS = 15000;
+const API_KEY_STORAGE_KEY = "centralheating.apiKey";
 const PENDING_STORAGE_KEY = "centralheating.pendingDesiredStateId";
+const POLL_INTERVAL_MS = 15000;
 
+const elKeySetup = document.getElementById("key-setup");
+const elKeyInput = document.getElementById("key-input");
+const elKeySave = document.getElementById("key-save");
+const elKeyError = document.getElementById("key-error");
+const elDashboard = document.getElementById("dashboard");
 const elState = document.getElementById("state");
 const elLastHeard = document.getElementById("last-heard");
 const elBoost = document.getElementById("boost");
 const elCancel = document.getElementById("cancel");
 const elError = document.getElementById("error");
+const elChangeKey = document.getElementById("change-key");
 
 let latestStatus = null;
+let pollTimer = null;
+
+function getApiKey() {
+  return localStorage.getItem(API_KEY_STORAGE_KEY);
+}
+
+function setApiKey(key) {
+  localStorage.setItem(API_KEY_STORAGE_KEY, key);
+}
+
+function clearApiKey() {
+  localStorage.removeItem(API_KEY_STORAGE_KEY);
+}
 
 function loadPending() {
   const raw = localStorage.getItem(PENDING_STORAGE_KEY);
@@ -33,11 +50,31 @@ function savePending(pending) {
   }
 }
 
+function showKeySetup(message) {
+  stopPolling();
+  elDashboard.hidden = true;
+  elKeySetup.hidden = false;
+  elKeyError.textContent = message || "";
+  elKeyInput.value = "";
+  elKeyInput.focus();
+}
+
+function showDashboard() {
+  elKeySetup.hidden = true;
+  elDashboard.hidden = false;
+  startPolling();
+}
+
 async function apiFetch(path, options = {}) {
   const response = await fetch(path, {
     ...options,
-    headers: { ...(options.headers || {}), "x-api-key": API_KEY },
+    headers: { ...(options.headers || {}), "x-api-key": getApiKey() },
   });
+  if (response.status === 403) {
+    clearApiKey();
+    showKeySetup("That key was rejected - check it and try again.");
+    throw new Error("invalid API key");
+  }
   if (!response.ok) {
     throw new Error(`${path} -> ${response.status}`);
   }
@@ -82,7 +119,10 @@ async function refresh() {
     latestStatus = await response.json();
     elError.textContent = "";
   } catch (err) {
-    elError.textContent = "Couldn't reach the house - " + err.message;
+    if (getApiKey()) {
+      elError.textContent = "Couldn't reach the house - " + err.message;
+    }
+    return;
   }
   render();
 }
@@ -103,16 +143,47 @@ async function setDesiredState(desiredState) {
     savePending({ id, desiredState, since: Date.now() });
     render();
   } catch (err) {
-    elError.textContent = "Couldn't set desired state - " + err.message;
+    if (getApiKey()) {
+      elError.textContent = "Couldn't set desired state - " + err.message;
+    }
   }
+}
+
+function startPolling() {
+  if (pollTimer) return;
+  refresh();
+  pollTimer = setInterval(refresh, POLL_INTERVAL_MS);
+}
+
+function stopPolling() {
+  clearInterval(pollTimer);
+  pollTimer = null;
 }
 
 elBoost.addEventListener("click", () => setDesiredState("on"));
 elCancel.addEventListener("click", () => setDesiredState("off"));
+elChangeKey.addEventListener("click", () => showKeySetup());
+
+elKeySave.addEventListener("click", () => {
+  const key = elKeyInput.value.trim();
+  if (!key) {
+    elKeyError.textContent = "Enter a key first.";
+    return;
+  }
+  setApiKey(key);
+  showDashboard();
+});
+
+elKeyInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") elKeySave.click();
+});
 
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("/sw.js");
 }
 
-refresh();
-setInterval(refresh, POLL_INTERVAL_MS);
+if (getApiKey()) {
+  showDashboard();
+} else {
+  showKeySetup();
+}

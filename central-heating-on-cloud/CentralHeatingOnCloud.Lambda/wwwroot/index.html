@@ -42,18 +42,53 @@
     #boost { background: #ff7a1a; color: #0b1220; }
     #cancel { background: #1a2333; color: #eef1f6; }
     #error { margin-top: 16px; font-size: 13px; color: #ff6b6b; min-height: 1em; }
+    #key-setup p { color: #9aa4b5; font-size: 14px; margin-bottom: 16px; }
+    #key-input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 14px;
+      margin-bottom: 12px;
+      border-radius: 12px;
+      border: 1px solid #2a3548;
+      background: #131c2e;
+      color: #eef1f6;
+      font-size: 16px;
+    }
+    #key-save { width: 100%; background: #ff7a1a; color: #0b1220; }
+    #key-error { margin-top: 12px; font-size: 13px; color: #ff6b6b; min-height: 1em; }
+    .link {
+      margin-top: 20px;
+      background: none;
+      color: #9aa4b5;
+      font-size: 13px;
+      font-weight: 400;
+      text-decoration: underline;
+      padding: 4px;
+    }
+    [hidden] { display: none !important; }
   </style>
 </head>
 <body>
   <main>
     <h1>Central Heating</h1>
-    <div id="state">…</div>
-    <div id="last-heard"></div>
-    <div class="buttons">
-      <button id="boost">Boost hot water</button>
-      <button id="cancel">Cancel</button>
-    </div>
-    <div id="error"></div>
+
+    <section id="key-setup" hidden>
+      <p>Enter the app API key to connect to the house.</p>
+      <input id="key-input" type="text" placeholder="API key" autocomplete="off" autocapitalize="off" spellcheck="false" />
+      <button id="key-save">Save</button>
+      <div id="key-error"></div>
+    </section>
+
+    <section id="dashboard" hidden>
+      <div id="state">…</div>
+      <div id="last-heard"></div>
+      <div class="buttons">
+        <button id="boost">Boost hot water</button>
+        <button id="cancel">Cancel</button>
+      </div>
+      <div id="error"></div>
+      <button id="change-key" class="link">Change API key</button>
+    </section>
   </main>
   <script src="/app.js"></script>
 </body>
