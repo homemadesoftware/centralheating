@@ -12,6 +12,11 @@ builder.Services.AddAWSLambdaHosting(LambdaEventSource.RestApi);
 
 var app = builder.Build();
 
+// Serves the PWA shell (wwwroot/) - see apigateway.tf's unauthenticated
+// {proxy+}/root routes for why these can't sit behind the app API key.
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 Routes.MapAll(app);
 
 app.Run();
