@@ -14,5 +14,10 @@ typedef void OnResponseRequired(unsigned char* pszReceiveBuffer, unsigned short 
 
 int UdpModule_ListenAndRespond(unsigned short udpPort, OnDataReceived* pOnDataReceived, OnResponseRequired* pOnResponseRequired);
 
+// True once a shutdown signal has been received - lets a callback avoid
+// starting new work (e.g. respawning a child process) that would only
+// need tearing down again a moment later.
+int UdpModule_IsShutdownRequested(void);
+
 #define UDP_MODULE_MAX_RECEIVE_BUFFER 512
 #define UDP_MODULE_MAX_SEND_BUFFER    512

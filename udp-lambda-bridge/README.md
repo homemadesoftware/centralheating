@@ -52,9 +52,10 @@ Pi password) rather than SSH keys — deliberately not hardened, since
 `toadmail-hub` is a home-LAN-only device; override `-RemoteUser`/
 `-RemoteHost`/`-RemotePassword` for a different setup.
 
-Once the build succeeds, the script also (re)installs and restarts the
-`udp-lambda-bridge-pi` systemd service — see "Deploying as a service"
-below for the one-time setup that needs before the very first run.
+Once the build succeeds, the script also (re)installs the
+`udp-lambda-bridge-pi` systemd service — disabled and stopped, not
+started — see "Deploying as a service" below for the one-time setup that
+needs before the very first run, and for how to actually run it.
 
 ## Configuration
 
@@ -78,9 +79,19 @@ see "Deploying as a service" below.
 `udp-lambda-bridge-pi.service` (committed, no secrets in it) runs the
 built binary under systemd: `Restart=always`, starts after networking is
 up, and reads its environment from `/etc/udp-lambda-bridge-pi.env`.
-`build-pi.ps1` installs/updates and restarts this service automatically
-after every successful build, via passwordless `sudo` (the Raspberry Pi
-OS default for the `pi` user).
+`build-pi.ps1` installs/updates this service after every successful
+build, via passwordless `sudo` (the Raspberry Pi OS default for the `pi`
+user) — but deliberately leaves it disabled and stopped rather than
+starting it, so a build doesn't fight with (or silently replace) whatever
+you're currently doing on the Pi, e.g. running the binary by hand in a
+terminal. Start it explicitly when you actually want it running:
+
+```
+sudo systemctl start udp-lambda-bridge-pi
+```
+
+or `sudo systemctl enable --now udp-lambda-bridge-pi` for it to also
+survive reboots.
 
 **One-time setup**, before the first `build-pi.ps1` run on a given Pi:
 create `/etc/udp-lambda-bridge-pi.env` by hand over SSH, root-owned and

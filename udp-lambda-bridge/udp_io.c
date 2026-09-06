@@ -9,18 +9,31 @@
 
 #include <udp_io.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include <memory.h>
+#include <string.h>
 
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <signal.h>
+#include <errno.h>
+#include <time.h>
 
 typedef int udp_socket_t;
 #define UDP_CLOSE(s) close(s)
 
 #define INVALID_SOCKET (-1)
+#define RECEIVE_TIMEOUT_SECONDS 2
+
+// A reply only actually goes out when the content's genuinely new, or this
+// long has passed since the last one - QUACK has no request/response
+// coupling (the Pico just keeps reading whatever's cached), so replying to
+// every single heartbeat when nothing's changed is pure overhead. The
+// keepalive still comfortably beats the Pico's own 300s
+// broadcast-vs-unicast threshold in network_io.c, with a lot of margin.
+#define REPLY_KEEPALIVE_SECONDS 30
 
 
 int Initalise();
@@ -35,6 +48,39 @@ static void HandleShutdownSignal(int signum)
 {
 	(void)signum;
 	g_shutdownRequested = 1;
+}
+
+// QUACK payloads are \n-joined lines (see QUACK.md) - fine on the wire, but
+// it means logging one verbatim sprawls across a dozen-plus journal lines.
+// Flattens it to a single line for logging, trimming the separator left by
+// the payload's own trailing \n.
+static void FlattenForLog(const char* pSource, char* pDest, size_t destSize)
+{
+	static const char separator[] = " | ";
+	static const size_t separatorLen = sizeof(separator) - 1;
+	size_t out = 0;
+
+	for (size_t i = 0; pSource[i] != '\0' && out < destSize - 1; ++i)
+	{
+		if (pSource[i] == '\n')
+		{
+			for (size_t j = 0; j < separatorLen && out < destSize - 1; ++j)
+			{
+				pDest[out++] = separator[j];
+			}
+		}
+		else
+		{
+			pDest[out++] = pSource[i];
+		}
+	}
+
+	if (out >= separatorLen && strncmp(pDest + out - separatorLen, separator, separatorLen) == 0)
+	{
+		out -= separatorLen;
+	}
+
+	pDest[out] = '\0';
 }
 
 
@@ -71,18 +117,37 @@ int UdpModule_ListenAndRespond(unsigned short udpPort, OnDataReceived* pOnDataRe
 
 	printf("Socket bind complete with %d\n", ret);
 
+	// Without this, recvfrom() below blocks indefinitely whenever the Pico
+	// goes quiet, and the only way back to a point where g_shutdownRequested
+	// gets rechecked is a signal actually interrupting the blocked call.
+	// This bounds that to RECEIVE_TIMEOUT_SECONDS regardless, so a kill
+	// during a quiet spell doesn't depend on signal delivery/timing at all.
+	struct timeval recvTimeout;
+	recvTimeout.tv_sec = RECEIVE_TIMEOUT_SECONDS;
+	recvTimeout.tv_usec = 0;
+	setsockopt(udpSocket, SOL_SOCKET, SO_RCVTIMEO, &recvTimeout, sizeof(recvTimeout));
+
+	// Received content is logged in full only when it changes - every
+	// incoming packet still gets a "UDP from" pulse regardless, so the log
+	// stays a live liveness signal without repeating the same ~1s
+	// heartbeat content forever. Replies are different: they're not just
+	// logged conditionally, they're only actually *sent* when the content's
+	// new or the keepalive interval's due - see REPLY_KEEPALIVE_SECONDS.
+	char lastReceivedBuffer[UDP_MODULE_MAX_RECEIVE_BUFFER] = { 0 };
+	char lastSentBuffer[UDP_MODULE_MAX_SEND_BUFFER] = { 0 };
+	time_t lastSentAt = 0;
+
 	while (!g_shutdownRequested)
 	{
 		struct sockaddr_in senderAddress;
 		memset(&senderAddress, 0, sizeof(senderAddress));
 
-		unsigned int senderAddresLength = sizeof(senderAddress);
+		unsigned int senderAddressLength = sizeof(senderAddress);
 
 		char buffer[UDP_MODULE_MAX_RECEIVE_BUFFER];
 		memset(&buffer, 0, sizeof(buffer));
 
-		printf("Start Receive\n");
-		int received = recvfrom(udpSocket, buffer, sizeof(buffer), 0, (struct sockaddr*)&senderAddress, &senderAddresLength);
+		int received = recvfrom(udpSocket, buffer, sizeof(buffer), 0, (struct sockaddr*)&senderAddress, &senderAddressLength);
 
 		if (received < 0)
 		{
@@ -94,6 +159,13 @@ int UdpModule_ListenAndRespond(unsigned short udpPort, OnDataReceived* pOnDataRe
 				break;
 			}
 
+			// The periodic SO_RCVTIMEO wakeup, not a real failure - just
+			// means nothing arrived in the last RECEIVE_TIMEOUT_SECONDS.
+			if (errno == EAGAIN || errno == EWOULDBLOCK)
+			{
+				continue;
+			}
+
 			printf("recvfrom failed\n");
 			continue;
 		}
@@ -101,7 +173,15 @@ int UdpModule_ListenAndRespond(unsigned short udpPort, OnDataReceived* pOnDataRe
 		char ipStr[INET_ADDRSTRLEN];
 		inet_ntop(AF_INET, &senderAddress.sin_addr, ipStr, sizeof(ipStr));
 
-		printf("Received. Sender: %s, Received: %d, Buffer: %s\n", ipStr, received, buffer);
+		printf("UDP from %s\n", ipStr);
+		if (strcmp(buffer, lastReceivedBuffer) != 0)
+		{
+			char flattened[UDP_MODULE_MAX_RECEIVE_BUFFER];
+			FlattenForLog(buffer, flattened, sizeof(flattened));
+			printf("Received (changed): %s\n", flattened);
+			strncpy(lastReceivedBuffer, buffer, sizeof(lastReceivedBuffer) - 1);
+			lastReceivedBuffer[sizeof(lastReceivedBuffer) - 1] = '\0';
+		}
 
 		pOnDataReceived((const unsigned char*)buffer);
 
@@ -113,10 +193,25 @@ int UdpModule_ListenAndRespond(unsigned short udpPort, OnDataReceived* pOnDataRe
 		// Notify new data arriving
 		pOnResponseRequired((unsigned char*)sendBuffer, UDP_MODULE_MAX_SEND_BUFFER - 1);
 
-		printf("Sending back %s\n", sendBuffer);
-		sendto(udpSocket, sendBuffer, sizeof(sendBuffer), 0, (struct sockaddr*) & senderAddress, senderAddresLength);
+		bool contentChanged = strcmp(sendBuffer, lastSentBuffer) != 0;
+		bool keepaliveDue = lastSentAt == 0 || difftime(time(NULL), lastSentAt) >= REPLY_KEEPALIVE_SECONDS;
 
-		printf("Sending complete\n");
+		if (contentChanged || keepaliveDue)
+		{
+			char flattened[UDP_MODULE_MAX_SEND_BUFFER];
+			FlattenForLog(sendBuffer, flattened, sizeof(flattened));
+			printf("Replying to %s (%s): %s\n", ipStr, contentChanged ? "changed" : "keepalive", flattened);
+
+			int sent = sendto(udpSocket, sendBuffer, sizeof(sendBuffer), 0, (struct sockaddr*) & senderAddress, senderAddressLength);
+			if (sent < 0)
+			{
+				printf("sendto to %s failed: %s\n", ipStr, strerror(errno));
+			}
+
+			strncpy(lastSentBuffer, sendBuffer, sizeof(lastSentBuffer) - 1);
+			lastSentBuffer[sizeof(lastSentBuffer) - 1] = '\0';
+			lastSentAt = time(NULL);
+		}
 	}
 
 
@@ -125,6 +220,11 @@ int UdpModule_ListenAndRespond(unsigned short udpPort, OnDataReceived* pOnDataRe
 	printf("Socket closed\n");
 
 	return 0;
+}
+
+int UdpModule_IsShutdownRequested(void)
+{
+	return g_shutdownRequested;
 }
 
 

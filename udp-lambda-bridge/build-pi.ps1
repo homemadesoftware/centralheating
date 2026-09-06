@@ -81,10 +81,16 @@ try {
     # Requires passwordless sudo for $RemoteUser, which is the Raspberry Pi
     # OS default for the "pi" user - matches this script's already-relaxed
     # security posture (stock SSH password) for a home-LAN-only device.
+    #
+    # Deliberately installed disabled and stopped, not enabled/started - the
+    # unit file is dropped in place and systemd knows about it, but nothing
+    # runs automatically. Start it by hand (systemctl start
+    # udp-lambda-bridge-pi) once you're ready, or systemctl enable it again
+    # for it to survive reboots.
     $installCommand = "sudo cp $RemoteDir/udp-lambda-bridge-pi.service /etc/systemd/system/udp-lambda-bridge-pi.service " +
         "&& sudo systemctl daemon-reload " +
-        "&& sudo systemctl enable udp-lambda-bridge-pi " +
-        "&& sudo systemctl restart udp-lambda-bridge-pi"
+        "&& sudo systemctl disable udp-lambda-bridge-pi " +
+        "&& sudo systemctl stop udp-lambda-bridge-pi"
     $result = Invoke-SSHCommand -SSHSession $session -Command $installCommand
     Write-Host $result.Output
     if ($result.Error) {
@@ -96,7 +102,7 @@ try {
         exit 1
     }
 
-    Write-Host "Service installed and running: systemctl status udp-lambda-bridge-pi" -ForegroundColor Green
+    Write-Host "Service installed, disabled and stopped: sudo systemctl start udp-lambda-bridge-pi to run it" -ForegroundColor Green
 }
 finally {
     Remove-SSHSession -SSHSession $session | Out-Null

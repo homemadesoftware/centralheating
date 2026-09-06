@@ -138,6 +138,8 @@ void on_recv(void* arg, struct udp_pcb* pcb, struct pbuf* p, const ip_addr_t* ad
 	pbuf_copy_partial(p, payload, len, 0);
 	pbuf_free(p);
 
+	printf("UDP recv from %s: %s\n", ip4addr_ntoa(addr), payload);
+
 	if (pIo->receiveCallback != NULL)
 	{
 		pIo->receiveCallback(payload);
