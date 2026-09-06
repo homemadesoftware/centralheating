@@ -8,11 +8,20 @@
 // /tmp - it's a re-derivable cache, fine to lose on reboot.
 #define DESIRED_STATE_CACHE_PATH "/tmp/desired-state-cache.txt"
 
-// Entry point for the forked child process. Reads READ_API_URL/READ_API_KEY
-// from the environment, then loops forever (never returns): mints a fresh
-// presigned URL, conditionally GETs it (If-None-Match/ETag), and on a
-// change, atomically replaces the cache file. Exits the process outright on
-// setup failure (missing env vars) or once the parent process is gone.
+// Checks READ_API_URL/READ_API_KEY exist, printing an error if not. Called
+// from main() before forking, so a missing/bad config fails the whole
+// service loudly at startup (visible as a crash-looping systemd unit)
+// instead of only the child silently dying while the parent looks fine.
+int DesiredStateReader_ValidateEnv(void);
+
+// Entry point for the forked child process. Loops forever (never returns):
+// mints a presigned URL (once at start, then roughly every
+// MINT_INTERVAL_SECONDS, or immediately if a fetch comes back
+// unauthorized), conditionally GETs it (If-None-Match/ETag) every second
+// regardless, and on a change, atomically replaces the cache file. Exits
+// the process outright on setup failure (missing env vars, checked again
+// here as a cheap safety net even though main() already validated them) or
+// once the parent process is gone.
 void DesiredStateReader_RunChildLoop(void);
 
 // Copies the cached desired-state text into buffer, null-terminated and
