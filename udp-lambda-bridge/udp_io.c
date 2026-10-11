@@ -222,12 +222,6 @@ int UdpModule_ListenAndRespond(unsigned short udpPort, OnDataReceived* pOnDataRe
 	return 0;
 }
 
-int UdpModule_IsShutdownRequested(void)
-{
-	return g_shutdownRequested;
-}
-
-
 int Initalise()
 {
 	// sa_flags left at 0 (no SA_RESTART) deliberately — recvfrom() in the
