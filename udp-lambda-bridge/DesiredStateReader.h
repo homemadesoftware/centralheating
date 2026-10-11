@@ -3,26 +3,19 @@
 
 #include <stddef.h>
 
-// Path the reader child writes the latest fetched desired-state text to,
-// and the parent reads from when replying to the Pico. Deliberately under
-// /tmp - it's a re-derivable cache, fine to lose on reboot.
-#define DESIRED_STATE_CACHE_PATH "/tmp/desired-state-cache.txt"
-
 // Checks READ_API_URL/READ_API_KEY exist, printing an error if not. Called
-// from main() before forking, so a missing/bad config fails the whole
-// service loudly at startup (visible as a crash-looping systemd unit)
-// instead of only the child silently dying while the parent looks fine.
+// from main() at startup, so a missing/bad config fails the whole service
+// loudly immediately rather than only on the first tick.
 int DesiredStateReader_ValidateEnv(void);
 
-// Entry point for the forked child process. Loops forever (never returns):
-// mints a presigned URL (once at start, then roughly every
-// MINT_INTERVAL_SECONDS, or immediately if a fetch comes back
-// unauthorized), conditionally GETs it (If-None-Match/ETag) every second
-// regardless, and on a change, atomically replaces the cache file. Exits
-// the process outright on setup failure (missing env vars, checked again
-// here as a cheap safety net even though main() already validated them) or
-// once the parent process is gone.
-void DesiredStateReader_RunChildLoop(void);
+// Call once per main-loop iteration. Does nothing most of the time - only
+// when due (mint roughly every 6h, or immediately after a 401/403; fetch
+// every POLL_INTERVAL_SECONDS) does it actually make a blocking curl call
+// inline, updating the cache synchronously before returning. No thread, no
+// child process, no cache file - this and DesiredStateReader_ReadCache run
+// on the same single thread as the UDP loop, so there's nothing to
+// synchronize.
+void DesiredStateReader_Tick(void);
 
 // Copies the cached desired-state text into buffer, null-terminated and
 // truncated to fit maxLength. Copies an empty string if nothing has been

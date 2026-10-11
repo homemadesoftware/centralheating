@@ -2,10 +2,10 @@
 
 Runs on `toadmail-hub` (a 2012 Raspberry Pi Model B, ARMv6, headless — no screen by design).
 
-Listens for UDP messages from Pico devices (`pico-central-heating`, `pico-temp-sensor`), replies immediately from its
-last-known-response cache (so the sending device's tight receive loop never blocks
-on internet/AWS latency), while a forked child process keeps that cache fresh by
-polling API Gateway → Lambda in the background.
+Listens for UDP messages from Pico devices (`pico-central-heating`, `pico-temp-sensor`), replies from its
+last-known-response cache, refreshing that cache inline roughly every 30s (bounded
+by curl's own timeout) rather than on every packet — see "Read path (desired-state)"
+below for why that's fine as a single-threaded, single-process design.
 
 `toadmail-hub` is a general-purpose host name, not specific to this project or to
 central heating — it may run other things later.
@@ -120,28 +120,31 @@ journalctl -u udp-lambda-bridge-pi -f
 
 ## Read path (desired-state)
 
-`main()` forks right after startup. The child runs
-`DesiredStateReader_RunChildLoop()` and never returns: every second it
-mints a fresh presigned URL (`GET /desired-state-url`), conditionally
-fetches it with `If-None-Match` against the last-seen ETag, and — only on
-an actual change — atomically replaces `/tmp/desired-state-cache.txt`
-(write to a `.tmp` file, then `rename()`, so the parent never reads a
-half-written file). A `404` from S3 (no desired state set yet) is treated
-as a valid "empty" state, not an error.
+Single process, single thread, no `fork()`, no `pthread` — a plain
+sequential loop. `OnResponseRequiredCallback` runs three steps in order on
+every UDP reply cycle: `DesiredStateReader_Tick()`, then
+`PostLatestStatusIfDue()`, then `DesiredStateReader_ReadCache()`.
 
-The parent's `OnResponseRequiredCallback` just reads that cache file on
-every UDP reply — no locking, no shared memory, no threads. The two
-processes only communicate through that one file.
+`DesiredStateReader_Tick()` does nothing most of the time. Only when due
+(mint a fresh presigned URL roughly every 6h, or immediately after a
+401/403; fetch at most every 30s) does it make a blocking curl call
+inline — conditional on `If-None-Match` against the last-seen ETag — and
+update a plain in-memory buffer on an actual change. A `404` from S3 (no
+desired state set yet) is treated as a valid "empty" state, not an error.
 
-A forked child inherits the parent's PID at fork time but gets reparented
-to init if the parent dies, so `prctl(PR_SET_PDEATHSIG, SIGTERM)` is set
-first thing in the child to make sure it's killed automatically rather
-than leaking as an orphan.
+This replaces an earlier two-process design (a forked child running its
+own loop, communicating with the parent via a cache file). That design
+turned out to be the Pi hangs' prime suspect, so it was replaced outright
+rather than root-caused further — a plain blocking call every ~30s,
+bounded by curl's own timeout, is a world away from the original bug
+(blocking on every single packet), and has no process/signal lifecycle to
+get wrong.
 
 ## Status
 
 UDP listener works (`UdpModule_ListenAndRespond` in `udp_io.c`). On every
-packet received from a Pico, the raw QUACK payload is forwarded as-is to
-the Command Centre's write endpoint (`CommandCentre_PostStatus` —
-synchronous, best-effort). The reply sent back to the Pico is the latest
-desired-state text from the read path described above.
+reply cycle, the latest QUACK payload received from a Pico is posted
+in-line to the Command Centre's write endpoint
+(`CommandCentre_PostStatus`), at most once every 30s. The reply sent back
+to the Pico is the latest desired-state text from the read path described
+above.

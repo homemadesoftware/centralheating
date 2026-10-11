@@ -4,12 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
-#include <unistd.h>
-#include <signal.h>
 #include <time.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/prctl.h>
 #include <curl/curl.h>
 
 #define MINT_URL_BUFFER_SIZE 2048
@@ -18,11 +13,16 @@
 #define DESIRED_STATE_ID_BUFFER_SIZE 64
 #define TIMESTAMP_BUFFER_SIZE 32
 // AWS deliberately isn't on the Pico-facing critical path - this is how
-// often the hub itself checks S3 for a change, independent of how often it
-// replies to the Pico (which just keeps reading whatever's currently
-// cached - see DesiredStateReader_ReadCache).
+// often DesiredStateReader_Tick actually does any work, independent of how
+// often the hub replies to the Pico (which just keeps reading whatever's
+// currently cached - see DesiredStateReader_ReadCache). A blocking curl
+// call this infrequently, bounded by its own 10s CURLOPT_TIMEOUT, is a
+// world away from doing one on every single packet, which is what
+// actually caused the backlog this replaced.
 #define POLL_INTERVAL_SECONDS 30
 #define MINT_INTERVAL_SECONDS (6 * 60 * 60)
+
+static char g_cachedDesiredState[DESIRED_STATE_BODY_BUFFER_SIZE] = { 0 };
 
 int DesiredStateReader_ValidateEnv(void)
 {
@@ -144,29 +144,6 @@ static size_t CaptureETagHeader(char* pData, size_t size, size_t nmemb, void* pU
 	return length;
 }
 
-static void WriteCacheFile(const char* pContent, size_t length)
-{
-	const char* tempPath = DESIRED_STATE_CACHE_PATH ".tmp";
-
-	FILE* pFile = fopen(tempPath, "wb");
-	if (pFile == NULL)
-	{
-		printf("Failed to write %s\n", tempPath);
-		return;
-	}
-
-	fwrite(pContent, 1, length, pFile);
-	fclose(pFile);
-
-	// rename() is atomic on the same filesystem, so the parent (reading the
-	// same path concurrently, on every UDP reply) never sees a partially
-	// written file.
-	if (rename(tempPath, DESIRED_STATE_CACHE_PATH) != 0)
-	{
-		printf("Failed to publish %s\n", DESIRED_STATE_CACHE_PATH);
-	}
-}
-
 static int MintDesiredStateUrl(const char* pReadApiUrl, const char* pReadApiKey, char* pUrlBuffer)
 {
 	CURL* curl = curl_easy_init();
@@ -270,120 +247,89 @@ static long FetchDesiredState(const char* pPresignedUrl, char* pEtag, char* pBod
 	return statusCode;
 }
 
-void DesiredStateReader_RunChildLoop(void)
+void DesiredStateReader_Tick(void)
 {
-	pid_t originalParentPid = getppid();
-	prctl(PR_SET_PDEATHSIG, SIGTERM);
+	static int initialised = 0;
+	static const char* readApiUrl = NULL;
+	static const char* readApiKey = NULL;
+	static char presignedUrl[MINT_URL_BUFFER_SIZE];
+	static char etag[ETAG_BUFFER_SIZE];
+	static time_t nextMintAt = 0;
+	static time_t nextFetchAt = 0;
 
-	// prctl() above only arms the signal from this point on, so if the
-	// parent already died in the (tiny) window between fork() and here, no
-	// signal will ever arrive - catch that race explicitly.
-	if (getppid() != originalParentPid)
+	if (!initialised)
 	{
-		exit(0);
+		readApiUrl = getenv("READ_API_URL");
+		readApiKey = getenv("READ_API_KEY");
+		presignedUrl[0] = '\0';
+		etag[0] = '\0';
+		initialised = 1;
 	}
 
-	if (DesiredStateReader_ValidateEnv() != 0)
+	time_t now = time(NULL);
+	if (now < nextFetchAt)
 	{
-		exit(1);
+		return;
 	}
-	const char* readApiUrl = getenv("READ_API_URL");
-	const char* readApiKey = getenv("READ_API_KEY");
+	nextFetchAt = now + POLL_INTERVAL_SECONDS;
 
-	char presignedUrl[MINT_URL_BUFFER_SIZE];
-	presignedUrl[0] = '\0';
+	if (now >= nextMintAt)
+	{
+		if (MintDesiredStateUrl(readApiUrl, readApiKey, presignedUrl))
+		{
+			nextMintAt = now + MINT_INTERVAL_SECONDS;
+		}
+		else
+		{
+			nextMintAt = now + POLL_INTERVAL_SECONDS;
+		}
+	}
+
+	if (presignedUrl[0] == '\0')
+	{
+		return;
+	}
+
 	char bodyBuffer[DESIRED_STATE_BODY_BUFFER_SIZE];
-	char etag[ETAG_BUFFER_SIZE];
-	etag[0] = '\0';
+	long statusCode = FetchDesiredState(presignedUrl, etag, bodyBuffer);
 
-	// 0 forces an immediate mint on the very first iteration. Re-minted
-	// roughly every MINT_INTERVAL_SECONDS after that (well within the
-	// presigned URL's own multi-day TTL), retried sooner on a failed mint,
-	// and forced early if a fetch ever comes back unauthorized - see below.
-	time_t nextMintAt = 0;
-
-	for (;;)
+	if (statusCode == 401 || statusCode == 403)
 	{
-		if (time(NULL) >= nextMintAt)
+		// The URL may have gone bad early (bucket policy change, clock
+		// skew, etc.) - don't wait out the rest of the interval before
+		// trying a fresh one.
+		nextMintAt = 0;
+	}
+	else if (statusCode == 200)
+	{
+		snprintf(g_cachedDesiredState, sizeof(g_cachedDesiredState), "%s", bodyBuffer);
+
+		char id[DESIRED_STATE_ID_BUFFER_SIZE];
+		ExtractDesiredStateId(bodyBuffer, id, sizeof(id));
+		if (id[0] != '\0')
 		{
-			if (MintDesiredStateUrl(readApiUrl, readApiKey, presignedUrl))
-			{
-				nextMintAt = time(NULL) + MINT_INTERVAL_SECONDS;
-			}
-			else
-			{
-				nextMintAt = time(NULL) + POLL_INTERVAL_SECONDS;
-			}
+			char mintedAt[TIMESTAMP_BUFFER_SIZE];
+			char writtenAt[TIMESTAMP_BUFFER_SIZE];
+			FormatMintedAt(id, mintedAt, sizeof(mintedAt));
+			FormatUtcTimestamp(now, writtenAt, sizeof(writtenAt));
+			printf("[reader] New desired-state: id=%s minted=%s written=%s\n", id, mintedAt, writtenAt);
 		}
-
-		if (presignedUrl[0] != '\0')
-		{
-			long statusCode = FetchDesiredState(presignedUrl, etag, bodyBuffer);
-
-			if (statusCode == 401 || statusCode == 403)
-			{
-				// The URL may have gone bad early (bucket policy change,
-				// clock skew, etc.) - don't wait out the rest of the
-				// interval before trying a fresh one.
-				nextMintAt = 0;
-			}
-			else if (statusCode == 200)
-			{
-				WriteCacheFile(bodyBuffer, strlen(bodyBuffer));
-
-				char id[DESIRED_STATE_ID_BUFFER_SIZE];
-				ExtractDesiredStateId(bodyBuffer, id, sizeof(id));
-				if (id[0] != '\0')
-				{
-					char mintedAt[TIMESTAMP_BUFFER_SIZE];
-					char writtenAt[TIMESTAMP_BUFFER_SIZE];
-					FormatMintedAt(id, mintedAt, sizeof(mintedAt));
-					FormatUtcTimestamp(time(NULL), writtenAt, sizeof(writtenAt));
-					printf("[reader] New desired-state: id=%s minted=%s written=%s\n", id, mintedAt, writtenAt);
-				}
-			}
-			else if (statusCode == 404)
-			{
-				// Valid state - no desired-state object has been written
-				// yet. Reflect that as an empty cache rather than leaving
-				// a stale value in place.
-				etag[0] = '\0';
-				WriteCacheFile("", 0);
-			}
-			else if (statusCode != 304 && statusCode != 0)
-			{
-				printf("Fetch desired-state returned %ld\n", statusCode);
-			}
-		}
-
-		sleep(POLL_INTERVAL_SECONDS);
+	}
+	else if (statusCode == 404)
+	{
+		// Valid state - no desired-state object has been written yet.
+		// Reflect that as an empty cache rather than leaving a stale
+		// value in place.
+		etag[0] = '\0';
+		g_cachedDesiredState[0] = '\0';
+	}
+	else if (statusCode != 304 && statusCode != 0)
+	{
+		printf("Fetch desired-state returned %ld\n", statusCode);
 	}
 }
 
 void DesiredStateReader_ReadCache(char* buffer, size_t maxLength)
 {
-	// Logged only on change (once per actual rewrite, not once per reply)
-	// so it can be diffed against the child's "written" log line and the
-	// hub's own "Sending (changed)" line to see exactly how stale the file
-	// is at the point it's handed to the Pico.
-	static time_t lastLoggedMtime = 0;
-	struct stat cacheStat;
-	if (stat(DESIRED_STATE_CACHE_PATH, &cacheStat) == 0 && cacheStat.st_mtime != lastLoggedMtime)
-	{
-		lastLoggedMtime = cacheStat.st_mtime;
-		char writtenAt[TIMESTAMP_BUFFER_SIZE];
-		FormatUtcTimestamp(cacheStat.st_mtime, writtenAt, sizeof(writtenAt));
-		printf("[cache] file last written %s\n", writtenAt);
-	}
-
-	FILE* pFile = fopen(DESIRED_STATE_CACHE_PATH, "rb");
-	if (pFile == NULL)
-	{
-		snprintf(buffer, maxLength, "%s", "");
-		return;
-	}
-
-	size_t bytesRead = fread(buffer, 1, maxLength - 1, pFile);
-	buffer[bytesRead] = '\0';
-	fclose(pFile);
+	snprintf(buffer, maxLength, "%s", g_cachedDesiredState);
 }
