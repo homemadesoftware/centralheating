@@ -52,7 +52,7 @@ int CommandCentre_PostStatus(const unsigned char* statusPayload)
 	curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 	curl_easy_setopt(curl, CURLOPT_POSTFIELDS, (const char*)statusPayload);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, DiscardResponseBody);
-	curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);
+	curl_easy_setopt(curl, CURLOPT_TIMEOUT, 20L);
 
 	CURLcode result = curl_easy_perform(curl);
 
